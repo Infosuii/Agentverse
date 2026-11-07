@@ -1106,6 +1106,17 @@
             "title": "Contract Version",
             "type": "string"
           },
+          "data_dir_exists": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Dir Exists"
+          },
           "gemini_configured": {
             "title": "Gemini Configured",
             "type": "boolean"
@@ -1126,6 +1137,24 @@
           "model_fast": {
             "title": "Model Fast",
             "type": "string"
+          },
+          "placeholder_datasets": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Placeholder Datasets",
+            "type": "array"
+          },
+          "research_cache_dir_exists": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Research Cache Dir Exists"
           },
           "status": {
             "const": "ok",
