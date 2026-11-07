@@ -1,0 +1,14 @@
+{
+  "dataset_id": "obr_baseline",
+  "title": "Obr Baseline",
+  "description": "October 2026 EFO detailed forecast tables",
+  "publisher": "OBR",
+  "source_url": "https://obr.uk/download/october-2026-economic-and-fiscal-outlook-detailed-forecast-tables-zip-file/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "OBR EFO October 2026",
+  "file": "curated/obr_baseline.csv",
+  "source_id": "D-obr-efo",
+  "is_placeholder": false,
+  "notes": "CT: databank Receipts U (onshore); GDP: Aggregates AE. BI is a derived nominal projection, NOT an official nominal OBR forecast: ONS NPEK CP SA fiscal sum /1000 anchored at 2025-26, multiplied by OBR Table 1.1 F real BI ratio and Table 1.7 V GDP-deflator ratio relative to anchor. GDP deflator proxies the BI deflator; assumption agreed in #8 comment 6710911267. Formula: NPEK_base*(NPEL_t/NPEL_base)*(GDPdeflator_t/GDPdeflator_base). Current rates from rate history. Sources D-ons-investment, D-obr-efo and D-obr-databank.\nRaw SHA256: 06ac908c69fce7d69dbfda4e16fc3b091a83bd8140ecd2f24990acd13d945fc2"
+}

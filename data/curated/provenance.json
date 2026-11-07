@@ -1,0 +1,142 @@
+{
+  "hmrc_rates.html": {
+    "url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+    "sha256": "23e3a033d8c4ac773276432957737b597179da357ec3c5b5fee594d8d2e479bb",
+    "retrieved_at": "2026-11-07"
+  },
+  "hmrc_history.pdf": {
+    "url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+    "sha256": "b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d",
+    "retrieved_at": "2026-11-07"
+  },
+  "obr_databank.xlsx": {
+    "url": "https://obr.uk/download/public-finances-databank-october-2026-efo/",
+    "sha256": "16a4bf46d8692e18790e87add342c6c44aa909cebb19f68ae857126a36d36459",
+    "retrieved_at": "2026-11-07"
+  },
+  "obr_measures.xlsx": {
+    "url": "https://obr.uk/download/policy-measures-database/",
+    "sha256": "1364c625a62daab8ec9b97a81ca5f93044a067fdf471e1645a62d73fdfa498f6",
+    "retrieved_at": "2026-11-07"
+  },
+  "obr_oct_tables.zip": {
+    "url": "https://obr.uk/download/october-2026-economic-and-fiscal-outlook-detailed-forecast-tables-zip-file/",
+    "sha256": "06ac908c69fce7d69dbfda4e16fc3b091a83bd8140ecd2f24990acd13d945fc2",
+    "retrieved_at": "2026-11-07"
+  },
+  "hmrc_background.html": {
+    "url": "https://www.gov.uk/government/statistics/corporation-tax-statistics-2026/background-and-guidance-to-interpreting-corporation-tax-statistics-2026",
+    "sha256": "ea0b2d91510add0dc036f052202e4561223ddaab470b10f245effa89dd4908ba",
+    "retrieved_at": "2026-11-07"
+  },
+  "ons_investment.csv": {
+    "url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/businessinvestment/current/cxnv.csv",
+    "sha256": "13a14cce6e39c884721947a2ae595807856a542638f92205ca50a0dd24540622",
+    "retrieved_at": "2026-11-07"
+  },
+  "ons_real_gdp.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna",
+    "sha256": "dcaf17307f08611f96e859136a5ebff3381480c8abd4fa0d5ada9f7aeb415690",
+    "retrieved_at": "2026-11-07"
+  },
+  "ons_pnfc.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/caer/ukea",
+    "sha256": "93e582e6ba2e7471fe337927902925f5e0ff0bbcdbb700dd777cc09c393da98f",
+    "retrieved_at": "2026-11-07"
+  },
+  "ons_cpi.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7g7/mm23",
+    "sha256": "f849c7535125edb6532c3c24772247c2dccb241345e6b5122eaa4bf08f69610d",
+    "retrieved_at": "2026-11-07"
+  },
+  "ons_ct_receipts.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/n445/pusf",
+    "sha256": "efaa57cab8c1a44887ebdd56933a798a17da8f169570daf1b7ff69596ce3a804",
+    "retrieved_at": "2026-11-07"
+  },
+  "ons_unemployment.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms",
+    "sha256": "7b456303eb9db1939cb63adb72bfa3f7b38750b1cf6f6674409fadfbc480d68b",
+    "retrieved_at": "2026-11-07"
+  },
+  "boe_rate.html": {
+    "url": "https://www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp?CSVF=TT&DAT=ALL&FNY=Y&Filter=N&FromSeries=1&SeriesCodes=IUMABEDR%2CIUMTLMV%2CIUMBV34&ToSeries=50&Travel=NIxAZxSUx&UsingCodes=Y&html.x=66&html.y=26",
+    "sha256": "4cc2eecf391dc4ed0290f470852154179950778de80366bcb3b39a83f840e5c3",
+    "retrieved_at": "2026-11-07"
+  },
+  "budget1984.html": {
+    "url": "https://hansard.parliament.uk/Commons/1984-03-13/debates/6cf4b7c6-4a55-429a-a8a9-e7617b155785/CommonsChamber",
+    "sha256": null,
+    "retrieved_at": null,
+    "notes": "Download denied (403); documented manual transcription in policy_events.py and DATA.md."
+  },
+  "budget1991.html": {
+    "url": "https://hansard.parliament.uk/commons/1991-03-19/debates/37cfce8d-a615-420f-a132-917ccf219ef4/CommonsChamber",
+    "sha256": null,
+    "retrieved_at": null,
+    "notes": "Download denied (403); documented manual transcription in policy_events.py and DATA.md."
+  },
+  "budget1997.html": {
+    "url": "https://hansard.parliament.uk/Commons/1997-07-02/debates/25efc1ce-0352-4c6a-b353-def04ca4c618/CommonsChamber",
+    "sha256": null,
+    "retrieved_at": null,
+    "notes": "Download denied (403); documented manual transcription in policy_events.py and DATA.md."
+  },
+  "budget1998.html": {
+    "url": "https://hansard.parliament.uk/commons/1998-03-17/debates/b52b11d8-562f-4016-b28b-110f2f11b404/CommonsChamber",
+    "sha256": null,
+    "retrieved_at": null,
+    "notes": "Download denied (403); documented manual transcription in policy_events.py and DATA.md."
+  },
+  "budget2007.html": {
+    "url": "https://hansard.parliament.uk/Commons/2007-03-21/debates/d71fcb9d-858f-4a83-a532-3c88bb72b8be/CommonsChamber",
+    "sha256": null,
+    "retrieved_at": null,
+    "notes": "Download denied (403); documented manual transcription in policy_events.py and DATA.md."
+  },
+  "budget2011.html": {
+    "url": "https://www.gov.uk/government/news/2011-budget-britain-open-for-business",
+    "sha256": "057eeef636781d709db1094f0d915ed8e4b0315e92d4c74c7d92854ffc79e6d4",
+    "retrieved_at": "2026-11-07"
+  },
+  "budget2012.pdf": {
+    "url": "https://assets.publishing.service.gov.uk/media/5a7c923ced915d6969f45d0b/1853.pdf",
+    "sha256": "428cc6d22c6337301e91473f66f5543f6ac97e7aa7c5273906c1065f41133752",
+    "retrieved_at": "2026-11-07"
+  },
+  "autumn2012.html": {
+    "url": "https://www.gov.uk/government/news/autumn-statement-2012-an-overview",
+    "sha256": "281375a4425275ea34047b37bf9dfb8fd50c9d2f169f2f3d6ffb91c4b1bfbc5e",
+    "retrieved_at": "2026-11-07"
+  },
+  "budget2013.html": {
+    "url": "https://www.gov.uk/government/speeches/budget-2013-chancellors-statement",
+    "sha256": "db158d9943100c728b14004c889f102dc44eece7e4e7b8d2a66fb136d95cfa8b",
+    "retrieved_at": "2026-11-07"
+  },
+  "budget2015.html": {
+    "url": "https://www.gov.uk/government/publications/summer-budget-2015/summer-budget-2015",
+    "sha256": "cd8cd37a278a63bb0b704b60d23f637f5c18149691e3eccc0292ff19a4b42142",
+    "retrieved_at": "2026-11-07"
+  },
+  "budget2016.html": {
+    "url": "https://www.gov.uk/government/publications/budget-2016-documents/budget-2016",
+    "sha256": "2825201fbae999bb89a02faaab16b5a10fdbf6f8332bccadd9aed399a8932224",
+    "retrieved_at": "2026-11-07"
+  },
+  "budget2021.html": {
+    "url": "https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html",
+    "sha256": "48ccc15f25dbf227d37ab2fca8b56630767f11cf9a22ac98fe45b9ad5c4ff1f0",
+    "retrieved_at": "2026-11-07"
+  },
+  "reversal2020.html": {
+    "url": "https://www.gov.uk/government/publications/changes-to-corporation-tax-rates-from-1-april-2020/corporation-tax-main-rate-at-19-in-2020-and-charge-and-main-rate-for-2021",
+    "sha256": "12173af71221a77b75938b43800c90a715992cd25a9c003942218ef38bd356e2",
+    "retrieved_at": "2026-11-07"
+  },
+  "full_expensing.html": {
+    "url": "https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026",
+    "sha256": "b9047932683eec7400675ff84034f01b3c5d97db8fd2ad641a04dbfa08f0018a",
+    "retrieved_at": "2026-11-07"
+  }
+}

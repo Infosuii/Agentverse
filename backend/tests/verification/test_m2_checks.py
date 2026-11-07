@@ -276,3 +276,11 @@ def test_fault_suite_on_the_mock_golden_path_reports_honestly(golden_analysis: A
     assert "already flags the clean case" in result.notes  # DATA-001 flags the stub placeholders anyway
     assert result.detected == result.n_fault_cases, result.notes
     assert full_verify(golden_analysis).forecast_allowed
+
+
+@pytest.mark.parametrize(("token", "ok"), [("12.01", True), ("12.0", True), ("12", False), ("12.006584", True),
+                                           ("11.9", False)])
+def test_scenario_values_round_only_to_written_decimals(token: str, ok: bool) -> None:
+    from jane_avenue.verification.checks.report import _close_to_model
+
+    assert _close_to_model(token, 12.006584) == ok

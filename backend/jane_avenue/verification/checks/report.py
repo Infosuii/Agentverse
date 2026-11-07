@@ -61,11 +61,14 @@ def _close_to_evidence(value: float, evidence_value: float) -> bool:
         or abs(round(evidence_value, 1) - value) <= 1e-9 or abs(round(evidence_value, 2) - value) <= 1e-9
 
 
-def _close_to_model(value: float, model_value: float) -> bool:
-    """Scenario values may appear to 1 or 2 decimals (£11.9bn), never rounded to a whole number: with dozens of
-    modelled values, integer rounding would let almost any small number through."""
-    return abs(value - model_value) <= 1e-9 or abs(round(model_value, 1) - value) <= 1e-9 \
-        or abs(round(model_value, 2) - value) <= 1e-9
+def _close_to_model(token: str, model_value: float) -> bool:
+    """A scenario value may appear rounded to the decimals actually written, 1 or 2 (£11.9bn, £11.93bn), but never
+    as a whole number: with dozens of modelled values, integer rounding would let almost any small number through."""
+    value = _to_float(token)
+    if abs(value - model_value) <= 1e-9:
+        return True
+    decimals = len(token.split(".", 1)[1]) if "." in token else 0
+    return decimals in (1, 2) and abs(round(model_value, decimals) - value) <= 1e-9
 
 
 def allowed_fiscal_years(analysis: Analysis, report: PolicyAssessment) -> set[str]:
@@ -172,7 +175,7 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
                 value = _to_float(token)
                 if _matches(value, allowed) or _matches(value, quoted) \
                         or any(_close_to_evidence(value, v) for v in cited_values) \
-                        or any(_close_to_model(value, v) for v in modelled):
+                        or any(_close_to_model(token, v) for v in modelled):
                     continue
                 found.append((location, f"\"{token}\" in \"{sentence[:120]}\""))
     return found
