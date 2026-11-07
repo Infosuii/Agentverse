@@ -167,6 +167,7 @@ phased-package, reversed-proposal and pre-change recession caveats are surfaced.
 - D-autumn2012: [Autumn Statement 2012 overview, 5 December](https://www.gov.uk/government/news/autumn-statement-2012-an-overview)
 - D-budget2013: [Budget speech 20 March 2013: corporation tax unification](https://www.gov.uk/government/speeches/budget-2013-chancellors-statement)
 - D-budget2015: [Summer Budget 8 July 2015: corporation tax package](https://www.gov.uk/government/publications/summer-budget-2015/summer-budget-2015)
+- D-budget2016: [Budget 16 March 2016: planned corporation tax rate reduction](https://www.gov.uk/government/publications/budget-2016-documents/budget-2016)
 - D-budget2021: [Budget 3 March 2021: Table 2.1 row 22](https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html)
 - D-reversal2020: [HMRC March 2020: reversal of 2016-announced 17 percent rate](https://www.gov.uk/government/publications/changes-to-corporation-tax-rates-from-1-april-2020/corporation-tax-main-rate-at-19-in-2020-and-charge-and-main-rate-for-2021)
 - D-full_expensing: [HMRC 15 March 2023: introduction of full expensing](https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026)
