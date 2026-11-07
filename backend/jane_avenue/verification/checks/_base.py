@@ -39,6 +39,7 @@ class Outcome:
     detail: str
     affected_ids: list[str] = field(default_factory=list)
     severity: Severity | None = None  # overrides the catalogue severity (EVID-004 is a warning in mock mode)
+    method: Method | None = None  # overrides the catalogue method (CAUSAL-001 is "llm_critic" when the critic ran)
 
 
 CheckFn = Callable[[Analysis], VerificationCheck]
@@ -51,7 +52,7 @@ def build(meta: CheckMeta, outcome: Outcome) -> VerificationCheck:
     else:
         status = outcome.status
     return VerificationCheck(check_id=meta.check_id, category=meta.category, severity=severity, status=status,
-                             title=meta.title, detail=outcome.detail, method=meta.method,
+                             title=meta.title, detail=outcome.detail, method=outcome.method or meta.method,
                              affected_ids=list(dict.fromkeys(outcome.affected_ids)))
 
 

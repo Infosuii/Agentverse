@@ -2,7 +2,7 @@
 
 Each fault takes an `Analysis` and returns a deep copy with exactly one realistic defect injected. The input is never
 modified. `FAULT_TARGETS` names the check that must catch each fault. Agent-10's verifier evaluation applies every
-fault to a clean analysis and measures detection (M2 adds `run_fault_suite`).
+fault to an analysis and measures detection with `suite.run_fault_suite`.
 
 A fault raises `ValueError` if the analysis lacks the part it corrupts (for example, no research evidence).
 """
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from ..contracts import Analysis, EngineResult, Evidence, ScopeDecision, YearValue
+from ..contracts import Analysis, EngineResult, Evidence, ParameterEvidence, ReportSection, ScopeDecision, YearValue
 
 Fault = Callable[[Analysis], Analysis]
 
@@ -156,6 +156,77 @@ def stale_baseline(analysis: Analysis) -> Analysis:
     return a
 
 
+def fake_source_url(analysis: Analysis) -> Analysis:
+    """A source whose URL was made up: it points at a domain that cannot exist and was never fetched."""
+    a = _copy(analysis)
+    target = next((s for s in a.sources if not s.is_placeholder), None)
+    if target is None:
+        raise ValueError("this fault needs a non-placeholder source")
+    target.url = "https://www.obr-official-forecasts.invalid/efo/ct-costing-2027.pdf"
+    target.url_verified = False
+    return a
+
+
+def evidence_out_of_range(analysis: Analysis) -> Analysis:
+    """Verified evidence puts an elasticity in a range that excludes the model's central value."""
+    a = _copy(analysis)
+    if a.research is None or a.simulation is None:
+        raise ValueError("this fault needs research findings and model assumptions")
+    verified = [e.evidence_id for e in a.research.evidence if e.verification_status == "verified"]
+    target = next((x for x in a.simulation.assumptions if x.adjustable), None)
+    if not verified or target is None:
+        raise ValueError("this fault needs verified evidence and an adjustable assumption")
+    width = max(abs(target.value), 1.0)
+    a.research.parameter_evidence = [ParameterEvidence(
+        parameter=target.name, low=target.value + width, high=target.value + 2 * width, evidence_ids=verified[:1],
+        note="Injected fault: evidence range excludes the central assumption.")]
+    return a
+
+
+def contradicting_evidence(analysis: Analysis) -> Analysis:
+    """Counter-evidence on a topic that other evidence supports."""
+    a = _copy(analysis)
+    if a.research is None or not a.research.evidence:
+        raise ValueError("this fault needs research evidence")
+    first = a.research.evidence[0]
+    a.research.evidence.append(Evidence(
+        evidence_id=f"E{len(a.research.evidence) + 900}", source_id=first.source_id, kind="counter_evidence",
+        topic=first.topic, claim="Receipts after the last rise fell short of the official costing.",
+        verification_status="verified", confidence="medium"))
+    return a
+
+
+def causal_claim(analysis: Analysis) -> Analysis:
+    """An unsupported causal claim with no evidence reference in the research summary."""
+    a = _copy(analysis)
+    if a.research is None:
+        raise ValueError("this fault needs research findings")
+    a.research.summary = (a.research.summary.rstrip() + " Raising the rate will cause a collapse in business "
+                          "investment.").strip()
+    return a
+
+
+def mislabelled_interval(analysis: Analysis) -> Analysis:
+    """Assumption-driven Monte Carlo bands relabelled as calibrated prediction intervals."""
+    a = _copy(analysis)
+    if a.simulation is None or a.simulation.monte_carlo is None:
+        raise ValueError("this fault needs Monte Carlo results")
+    a.simulation.monte_carlo.interval_kind = "empirical_prediction_interval"
+    a.simulation.monte_carlo.empirical_interval = None
+    a.simulation.monte_carlo.empirical_calibration_note = None
+    return a
+
+
+def raw_number_in_report(analysis: Analysis) -> Analysis:
+    """Report prose containing a number that no key figure, evidence or policy field supplied."""
+    a = _copy(analysis)
+    if a.report is None:
+        raise ValueError("this fault needs a generated report")
+    a.report.sections.append(ReportSection(section_id="injected", heading="Modelled impacts",
+                                           body_markdown="Receipts would rise by £7.3bn in the first full year."))
+    return a
+
+
 FAULTS: dict[str, Fault] = {
     "out_of_scope_policy": out_of_scope_policy,
     "scope_warning_hidden": scope_warning_hidden,
@@ -169,6 +240,12 @@ FAULTS: dict[str, Fault] = {
     "inflated_static": inflated_static,
     "placeholder_data": placeholder_data,
     "stale_baseline": stale_baseline,
+    "fake_source_url": fake_source_url,
+    "evidence_out_of_range": evidence_out_of_range,
+    "contradicting_evidence": contradicting_evidence,
+    "causal_claim": causal_claim,
+    "mislabelled_interval": mislabelled_interval,
+    "raw_number_in_report": raw_number_in_report,
 }
 
 # fault name -> the check ID that must flag it
@@ -185,4 +262,10 @@ FAULT_TARGETS: dict[str, str] = {
     "inflated_static": "CALC-003",
     "placeholder_data": "DATA-001",
     "stale_baseline": "DATA-002",
+    "fake_source_url": "CITE-001",
+    "evidence_out_of_range": "EVID-002",
+    "contradicting_evidence": "EVID-003",
+    "causal_claim": "CAUSAL-001",
+    "mislabelled_interval": "UNC-001",
+    "raw_number_in_report": "REPORT-001",
 }
