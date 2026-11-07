@@ -58,18 +58,18 @@ def test_calc_checks_skip_when_there_is_no_forecast(clean_analysis: Analysis) ->
 
 
 def test_calc_002_warns_when_the_monte_carlo_median_drifts(clean_analysis: Analysis) -> None:
+    # Only the Monte Carlo median moves; the central scenario and its calc trace stay intact.
     assert clean_analysis.simulation is not None and clean_analysis.simulation.monte_carlo is not None
     central = clean_analysis.simulation.scenarios[0].result
-    for m in central.metrics:
-        if m.metric == "revenue_behavioural_gbp_bn":
-            for yv in m.values:
-                yv.value = 1.0
+    values = {yv.fiscal_year: yv.value for m in central.metrics if m.metric == "revenue_behavioural_gbp_bn"
+              for yv in m.values}
+    assert any(abs(v) > 0 for v in values.values())
     for dist in clean_analysis.simulation.monte_carlo.distributions:
         if dist.metric == "revenue_behavioural_gbp_bn":
             for band in dist.bands:
-                band.p50 = 2.0
+                band.p50 = 2.0 * values[band.fiscal_year] if values[band.fiscal_year] else 1.0
     result = calc_002(clean_analysis)
-    assert (result.severity, result.status) == ("error", "warn")
+    assert (result.severity, result.status) == ("error", "warn"), result.detail
 
 
 @pytest.mark.parametrize(("vintage", "expected"), [
