@@ -125,6 +125,10 @@ def _researching(run: _Run) -> dict[str, Any]:
     if not req.options.run_research:
         run.emit("log", "Research skipped (run_research=false)", stage="researching")
         return {}
+    if run.a.policy is None or run.a.policy.policy_type == "unsupported":
+        # Research is about UK corporation tax: for any other policy it would only add off-topic evidence.
+        run.emit("log", "Research skipped: the request is not a UK corporation tax change", stage="researching")
+        return {}
 
     def on_step(step: ResearchStep) -> None:
         run.emit("research_step", step.title, stage="researching", data=step.model_dump(mode="json"))

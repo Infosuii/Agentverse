@@ -408,13 +408,15 @@ def build_template_report(
     )
     title = f"Policy Assessment: {title_desc}"
 
-    decline_reasons: list[str] = []
-    if analysis.verification and analysis.verification.decline_reasons:
-        decline_reasons.extend(analysis.verification.decline_reasons)
-    if analysis.scope and not analysis.scope.forecast_allowed:
-        for r in analysis.scope.reasons:
-            if r not in decline_reasons:
-                decline_reasons.append(r)
+    # Scope reasons are listed one by one. SCOPE-001's decline reason restates them as one string, so it is skipped
+    # when it holds nothing but those reasons (otherwise every scope reason would be shown twice).
+    scope_reasons = list(analysis.scope.reasons) if analysis.scope and not analysis.scope.forecast_allowed else []
+    decline_reasons: list[str] = list(dict.fromkeys(scope_reasons))
+    if analysis.verification:
+        for r in analysis.verification.decline_reasons:
+            if r in decline_reasons or (scope_reasons and all(s in r for s in scope_reasons)):
+                continue
+            decline_reasons.append(r)
     if withheld and not decline_reasons:
         decline_reasons.append("Quantitative forecast withheld due to scope or verification constraints.")
 
@@ -440,11 +442,11 @@ def build_template_report(
     exec_fig_ids: list[str] = []
     exec_src_ids: list[str] = []
     if withheld:
-        reasons_str = "; ".join(decline_reasons)
-        executive_summary = (
-            f"Quantitative model projections are withheld for this request ({reasons_str}). "
-            "Empirical evidence from research and historical UK corporation tax precedents are summarised below."
-        )
+        reasons_str = "; ".join(r.rstrip(". ") for r in decline_reasons)
+        executive_summary = f"Quantitative model projections are withheld for this request: {reasons_str}."
+        if (analysis.research and analysis.research.evidence) or (analysis.precedents and analysis.precedents.matches):
+            executive_summary += (" Empirical evidence from research and historical UK corporation tax precedents are "
+                                  "summarised below.")
         exec_section_body = executive_summary
     elif f_y1 and f_fin:
         exec_fig_ids.extend([f_y1.figure_id, f_fin.figure_id])
