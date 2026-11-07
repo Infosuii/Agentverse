@@ -1,14 +1,156 @@
-name: tests
+name: CI
+
 on:
   push:
+    branches: [main]
   pull_request:
+
+env:
+  JANE_MODE: mock
+  JANE_DB_PATH: ":memory:"
+  PYTHONPATH: backend
+
 jobs:
-  pytest:
+  backend:
+    name: Backend (ruff + pytest)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Check if backend exists
+        id: check_backend
+        run: |
+          if [ -f "backend/requirements-dev.txt" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "backend/requirements-dev.txt not found yet; skipping backend job."
+          fi
+
+      - name: Set up Python 3.13
+        if: steps.check_backend.outputs.exists == 'true'
+        uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - run: pip install -r requirements.txt
-      - run: python -m pytest
+          cache: "pip"
+          cache-dependency-path: "backend/requirements*.txt"
+
+      - name: Install dependencies
+        if: steps.check_backend.outputs.exists == 'true'
+        run: pip install -r backend/requirements-dev.txt
+
+      - name: Lint with ruff
+        if: steps.check_backend.outputs.exists == 'true'
+        run: ruff check backend
+
+      - name: Run pytest (mock mode, no live tests)
+        if: steps.check_backend.outputs.exists == 'true'
+        env:
+          JANE_MODE: mock
+          JANE_DB_PATH: ":memory:"
+          PYTHONPATH: backend
+        run: pytest backend -m "not live"
+
+  frontend:
+    name: Frontend (typecheck + lint + test + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if frontend exists
+        id: check_frontend
+        run: |
+          if [ -f "frontend/package.json" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "frontend/package.json not found yet; skipping frontend job."
+          fi
+
+      - name: Set up Node 22
+        if: steps.check_frontend.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install frontend dependencies
+        if: steps.check_frontend.outputs.exists == 'true'
+        working-directory: frontend
+        run: |
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Typecheck
+        if: steps.check_frontend.outputs.exists == 'true'
+        working-directory: frontend
+        run: npm run typecheck
+
+      - name: Lint
+        if: steps.check_frontend.outputs.exists == 'true'
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Unit tests
+        if: steps.check_frontend.outputs.exists == 'true'
+        working-directory: frontend
+        run: npm test -- --run
+
+      - name: Build
+        if: steps.check_frontend.outputs.exists == 'true'
+        working-directory: frontend
+        run: npm run build
+
+  openapi-drift:
+    name: OpenAPI schema drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if backend export script and frontend exist
+        id: check_openapi
+        run: |
+          if [ -f "backend/scripts/export_openapi.py" ] && [ -f "frontend/package.json" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "backend/scripts/export_openapi.py or frontend/package.json not found yet; skipping OpenAPI drift check."
+          fi
+
+      - name: Set up Python 3.13
+        if: steps.check_openapi.outputs.exists == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: "backend/requirements*.txt"
+
+      - name: Set up Node 22
+        if: steps.check_openapi.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install backend and frontend dependencies
+        if: steps.check_openapi.outputs.exists == 'true'
+        run: |
+          pip install -r backend/requirements-dev.txt
+          cd frontend
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Verify OpenAPI export and generated TypeScript types are up to date
+        if: steps.check_openapi.outputs.exists == 'true'
+        env:
+          JANE_MODE: mock
+          JANE_DB_PATH: ":memory:"
+          PYTHONPATH: backend
+        run: |
+          python backend/scripts/export_openapi.py
+          (cd frontend && npm run gen:api)
+          git diff --exit-code frontend/src/api/
