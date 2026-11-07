@@ -1,0 +1,1740 @@
+{
+  "model_version": "engine-1.0.0",
+  "policy": {
+    "policy_type": "corporation_tax_main_rate",
+    "tax": "corporation_tax",
+    "baseline_rate_pct": 25.0,
+    "proposed_rate_pct": 28.0,
+    "effective_date": "2027-04-01",
+    "horizon_years": 5,
+    "jurisdiction": "UK",
+    "description": "Raise the CT main rate from 25% to 28% from 1 April 2027",
+    "raw_query": "What would happen if the UK increased corporation tax from 25% to 28%?",
+    "parse_method": "manual",
+    "parse_confidence": 1.0,
+    "ambiguities": []
+  },
+  "scenario": "central",
+  "baseline_vintage": "OBR EFO October 2026 (test snapshot)",
+  "fiscal_years": [
+    "2027-28",
+    "2028-29",
+    "2029-30",
+    "2030-31",
+    "2031-32"
+  ],
+  "metrics": [
+    {
+      "metric": "revenue_static_gbp_bn",
+      "label": "Static revenue change",
+      "unit": "£bn",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": 7.111481526614204
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": 12.483682038003
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": 12.992603519923769
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": 13.524765833803619
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": 14.078724912887585
+        }
+      ],
+      "confidence": "high",
+      "note": "Mechanical change: rate change × implied taxable profit base, before behaviour."
+    },
+    {
+      "metric": "revenue_behavioural_gbp_bn",
+      "label": "Behavioural revenue change",
+      "unit": "£bn",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": 6.841082610686234
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": 11.536285004703814
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": 12.006584011245423
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": 12.49836008364069
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": 13.010278746564126
+        }
+      ],
+      "confidence": "medium",
+      "note": "Conventional costing: the taxable profit base responds to the net-of-tax rate through the taxable profit elasticity."
+    },
+    {
+      "metric": "revenue_dynamic_gbp_bn",
+      "label": "Dynamic revenue change (indicative)",
+      "unit": "£bn",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": 6.83208216921016
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": 11.499234825000762
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": 11.944970930498314
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": 12.411584947384565
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": 12.898701090986663
+        }
+      ],
+      "confidence": "low",
+      "note": "Behavioural revenue plus the receipts effect of the GDP change. Indicative: partial equilibrium with labour held fixed; driven by the investment channel and assumption-heavy."
+    },
+    {
+      "metric": "business_investment_pct",
+      "label": "Business investment change",
+      "unit": "%",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": -0.26754781069462513
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": -0.40132171604193767
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": -0.468208668715594
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": -0.5016521450524222
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": -0.5183738832208362
+        }
+      ],
+      "confidence": "medium",
+      "note": "Under full expensing (covering 80% of plant & machinery here) the allowance is worth the whole cost, so the covered plant & machinery user cost does not depend on the CT rate. A rate change therefore bites through structures, intangibles and uncovered plant & machinery."
+    },
+    {
+      "metric": "business_investment_gbp_bn",
+      "label": "Business investment change",
+      "unit": "£bn",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": -0.8285555836307547
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": -1.2582097609530238
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": -1.4851708089563216
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": -1.6111131640488179
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": -1.685593716053341
+        }
+      ],
+      "confidence": "medium",
+      "note": "Percentage change in business investment applied to the baseline level."
+    },
+    {
+      "metric": "gdp_level_pct",
+      "label": "GDP level change (indicative)",
+      "unit": "%",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": -0.013615695369716959
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": -0.03205948908614481
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": -0.05122544215104585
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": -0.06930658922961877
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": -0.08560968232128034
+        }
+      ],
+      "confidence": "low",
+      "note": "Capital-stock gap × capital share. Indicative: partial equilibrium with labour held fixed; driven by the investment channel and assumption-heavy."
+    },
+    {
+      "metric": "cost_of_capital_pct",
+      "label": "Cost of capital change",
+      "unit": "%",
+      "values": [
+        {
+          "fiscal_year": "2027-28",
+          "value": 0.8918260356487505
+        },
+        {
+          "fiscal_year": "2028-29",
+          "value": 0.8918260356487505
+        },
+        {
+          "fiscal_year": "2029-30",
+          "value": 0.8918260356487505
+        },
+        {
+          "fiscal_year": "2030-31",
+          "value": 0.8918260356487505
+        },
+        {
+          "fiscal_year": "2031-32",
+          "value": 0.8918260356487505
+        }
+      ],
+      "confidence": "medium",
+      "note": "Investment-weighted change in the user cost of capital across asset types."
+    }
+  ],
+  "calc_trace": [
+    {
+      "step_id": "inv.allowance_pv.plant_machinery",
+      "label": "PV of capital allowances: plant & machinery",
+      "formula": "z_pm = f × 1 + (1 − f) × φ(1 + r)/(φ + r),  φ = 0.18 main-pool WDA",
+      "inputs": {
+        "f": 0.8,
+        "φ": 0.18,
+        "r": 0.05
+      },
+      "output": 0.9643478260869566,
+      "unit": "fraction",
+      "fiscal_year": null,
+      "parameter_names": [
+        "full_expensing_coverage",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.allowance_pv.structures",
+      "label": "PV of capital allowances: structures (SBA)",
+      "formula": "z_st = s × (1 − v^(1/s))/(1 − v),  v = 1/(1 + r),  s = 0.03 SBA straight line",
+      "inputs": {
+        "s": 0.03,
+        "r": 0.05,
+        "v": 0.9523809523809523
+      },
+      "output": 0.5061116181650145,
+      "unit": "fraction",
+      "fiscal_year": null,
+      "parameter_names": [
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.allowance_pv.intangibles",
+      "label": "PV of capital allowances: intangibles",
+      "formula": "z_in = allowance_pv_intangibles",
+      "inputs": {
+        "z_in": 0.9
+      },
+      "output": 0.9,
+      "unit": "fraction",
+      "fiscal_year": null,
+      "parameter_names": [
+        "allowance_pv_intangibles"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.baseline.plant_machinery",
+      "label": "User cost of capital at 25%: plant & machinery",
+      "formula": "c(t0) = (r + δ)(1 − t0·z)/(1 − t0)",
+      "inputs": {
+        "r": 0.05,
+        "δ": 0.175,
+        "z": 0.9643478260869566,
+        "t0": 0.25
+      },
+      "output": 0.2276739130434782,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "depreciation_plant_machinery",
+        "full_expensing_coverage",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.proposed.plant_machinery",
+      "label": "User cost of capital at 28%: plant & machinery",
+      "formula": "c(t1) = (r + δ)(1 − t1·z)/(1 − t1)",
+      "inputs": {
+        "r": 0.05,
+        "δ": 0.175,
+        "z": 0.9643478260869566,
+        "t1": 0.28
+      },
+      "output": 0.22811956521739127,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "depreciation_plant_machinery",
+        "full_expensing_coverage",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.plant_machinery",
+      "label": "Change in user cost: plant & machinery",
+      "formula": "Δc_a = (c(t1)/c(t0) − 1) × 100",
+      "inputs": {
+        "c(t0)": 0.2276739130434782,
+        "c(t1)": 0.22811956521739127
+      },
+      "output": 0.19574143034470914,
+      "unit": "%",
+      "fiscal_year": null,
+      "parameter_names": [
+        "depreciation_plant_machinery",
+        "full_expensing_coverage",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.baseline.structures",
+      "label": "User cost of capital at 25%: structures",
+      "formula": "c(t0) = (r + δ)(1 − t0·z)/(1 − t0)",
+      "inputs": {
+        "r": 0.05,
+        "δ": 0.0361,
+        "z": 0.5061116181650145,
+        "t0": 0.25
+      },
+      "output": 0.1002745965586641,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "depreciation_structures",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.proposed.structures",
+      "label": "User cost of capital at 28%: structures",
+      "formula": "c(t1) = (r + δ)(1 − t1·z)/(1 − t1)",
+      "inputs": {
+        "r": 0.05,
+        "δ": 0.0361,
+        "z": 0.5061116181650145,
+        "t1": 0.28
+      },
+      "output": 0.10263702931844143,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "depreciation_structures",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.structures",
+      "label": "Change in user cost: structures",
+      "formula": "Δc_a = (c(t1)/c(t0) − 1) × 100",
+      "inputs": {
+        "c(t0)": 0.1002745965586641,
+        "c(t1)": 0.10263702931844143
+      },
+      "output": 2.355963365452407,
+      "unit": "%",
+      "fiscal_year": null,
+      "parameter_names": [
+        "depreciation_structures",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.baseline.intangibles",
+      "label": "User cost of capital at 25%: intangibles",
+      "formula": "c(t0) = (r + δ)(1 − t0·z)/(1 − t0)",
+      "inputs": {
+        "r": 0.05,
+        "δ": 0.1535,
+        "z": 0.9,
+        "t0": 0.25
+      },
+      "output": 0.21028333333333335,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "allowance_pv_intangibles",
+        "depreciation_intangibles",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.proposed.intangibles",
+      "label": "User cost of capital at 28%: intangibles",
+      "formula": "c(t1) = (r + δ)(1 − t1·z)/(1 − t1)",
+      "inputs": {
+        "r": 0.05,
+        "δ": 0.1535,
+        "z": 0.9,
+        "t1": 0.28
+      },
+      "output": 0.21141388888888893,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "allowance_pv_intangibles",
+        "depreciation_intangibles",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.intangibles",
+      "label": "Change in user cost: intangibles",
+      "formula": "Δc_a = (c(t1)/c(t0) − 1) × 100",
+      "inputs": {
+        "c(t0)": 0.21028333333333335,
+        "c(t1)": 0.21141388888888893
+      },
+      "output": 0.5376344086021723,
+      "unit": "%",
+      "fiscal_year": null,
+      "parameter_names": [
+        "allowance_pv_intangibles",
+        "depreciation_intangibles",
+        "real_required_return"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.user_cost.weighted",
+      "label": "Change in the cost of capital (investment-weighted)",
+      "formula": "Δc = Σ_a w_a·Δc_a / Σ_a w_a",
+      "inputs": {
+        "w_plant_machinery": 0.4,
+        "w_structures": 0.27,
+        "w_intangibles": 0.33,
+        "Δc_plant_machinery": 0.19574143034470914,
+        "Δc_structures": 2.355963365452407,
+        "Δc_intangibles": 0.5376344086021723
+      },
+      "output": 0.8918260356487505,
+      "unit": "%",
+      "fiscal_year": null,
+      "parameter_names": [
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.long_run",
+      "label": "Long-run change in business investment",
+      "formula": "ΔI_LR = −σ × Δc",
+      "inputs": {
+        "σ": 0.6,
+        "Δc": 0.8918260356487505
+      },
+      "output": -0.5350956213892503,
+      "unit": "%",
+      "fiscal_year": null,
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "gdp.capital_turnover",
+      "label": "Capital-stock adjustment rate",
+      "formula": "d = Σ_a w_a·δ_a + g",
+      "inputs": {
+        "w_plant_machinery": 0.4,
+        "w_structures": 0.27,
+        "w_intangibles": 0.33,
+        "δ_plant_machinery": 0.175,
+        "δ_structures": 0.0361,
+        "δ_intangibles": 0.1535,
+        "g": 0.015
+      },
+      "output": 0.14540199999999998,
+      "unit": "fraction per year",
+      "fiscal_year": null,
+      "parameter_names": [
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "trend_real_growth"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "rev.base.2027-28",
+      "label": "Implied taxable profit base 2027-28",
+      "formula": "B0 = main_rate_profit_share × R × (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+        "R": 116.2006785394477,
+        "main_rate_profit_share": 0.85,
+        "profit_base_deviation_pct": 0.0,
+        "t0": 0.25
+      },
+      "output": 395.08230703412215,
+      "unit": "£bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.static.2027-28",
+      "label": "Static revenue change 2027-28",
+      "formula": "ΔR_static = (t1 − t0) × B0 × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 395.08230703412215,
+        "timing": 0.6
+      },
+      "output": 7.111481526614204,
+      "unit": "£bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "receipts_first_year_share"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base_response.2027-28",
+      "label": "Taxable profit base after behavioural response 2027-28",
+      "formula": "B1 = B0 × ((1 − t1)/(1 − t0))^ε  (ε = ε_LR × first-year share)",
+      "inputs": {
+        "B0": 395.08230703412215,
+        "t0": 0.25,
+        "t1": 0.28,
+        "ε": 0.1
+      },
+      "output": 393.47278967740806,
+      "unit": "£bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "behavioural_first_year_share"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.behavioural.2027-28",
+      "label": "Behavioural revenue change 2027-28",
+      "formula": "ΔR_behav = (t1 × B1 − t0 × B0) × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 395.08230703412215,
+        "B1": 393.47278967740806,
+        "timing": 0.6
+      },
+      "output": 6.841082610686234,
+      "unit": "£bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "behavioural_first_year_share",
+        "receipts_first_year_share"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "inv.change.2027-28",
+      "label": "Business investment change 2027-28",
+      "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
+      "inputs": {
+        "ΔI_LR": -0.5350956213892503,
+        "λ": 0.5,
+        "y": 1.0
+      },
+      "output": -0.26754781069462513,
+      "unit": "%",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.change_gbp.2027-28",
+      "label": "Business investment change 2027-28 (£bn)",
+      "formula": "ΔI_£ = ΔI_y/100 × I",
+      "inputs": {
+        "ΔI_y": -0.26754781069462513,
+        "I": 309.68505460000006
+      },
+      "output": -0.8285555836307547,
+      "unit": "£bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "gdp.capital_gap.2027-28",
+      "label": "Capital stock gap vs baseline 2027-28",
+      "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
+      "inputs": {
+        "x_{y−1}": 0.0,
+        "d": 0.14540199999999998,
+        "ΔI_y": -0.26754781069462513
+      },
+      "output": -0.03890198677061988,
+      "unit": "%",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "gdp.level.2027-28",
+      "label": "GDP level change 2027-28 (indicative)",
+      "formula": "ΔY_y = capital_share × x_y",
+      "inputs": {
+        "capital_share": 0.35,
+        "x_y": -0.03890198677061988
+      },
+      "output": -0.013615695369716959,
+      "unit": "%",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth",
+        "capital_share"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "rev.dynamic.2027-28",
+      "label": "Dynamic revenue change 2027-28 (indicative)",
+      "formula": "ΔR_dynamic = ΔR_behav + t1 × B1 × timing × ΔY_y/100 × η",
+      "inputs": {
+        "ΔR_behav": 6.841082610686234,
+        "t1": 0.28,
+        "B1": 393.47278967740806,
+        "timing": 0.6,
+        "ΔY_y": -0.013615695369716959,
+        "η": 1.0
+      },
+      "output": 6.83208216921016,
+      "unit": "£bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "behavioural_first_year_share",
+        "receipts_first_year_share",
+        "profit_gdp_elasticity",
+        "capital_share",
+        "investment_adjustment_speed",
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base.2028-29",
+      "label": "Implied taxable profit base 2028-29",
+      "formula": "B0 = main_rate_profit_share × R × (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+        "R": 122.38903958826461,
+        "main_rate_profit_share": 0.85,
+        "profit_base_deviation_pct": 0.0,
+        "t0": 0.25
+      },
+      "output": 416.12273460009965,
+      "unit": "£bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.static.2028-29",
+      "label": "Static revenue change 2028-29",
+      "formula": "ΔR_static = (t1 − t0) × B0 × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 416.12273460009965,
+        "timing": 1.0
+      },
+      "output": 12.483682038003,
+      "unit": "£bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base_response.2028-29",
+      "label": "Taxable profit base after behavioural response 2028-29",
+      "formula": "B1 = B0 × ((1 − t1)/(1 − t0))^ε",
+      "inputs": {
+        "B0": 416.12273460009965,
+        "t0": 0.25,
+        "t1": 0.28,
+        "ε": 0.2
+      },
+      "output": 412.73917376688826,
+      "unit": "£bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.behavioural.2028-29",
+      "label": "Behavioural revenue change 2028-29",
+      "formula": "ΔR_behav = (t1 × B1 − t0 × B0) × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 416.12273460009965,
+        "B1": 412.73917376688826,
+        "timing": 1.0
+      },
+      "output": 11.536285004703814,
+      "unit": "£bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "inv.change.2028-29",
+      "label": "Business investment change 2028-29",
+      "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
+      "inputs": {
+        "ΔI_LR": -0.5350956213892503,
+        "λ": 0.5,
+        "y": 2.0
+      },
+      "output": -0.40132171604193767,
+      "unit": "%",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.change_gbp.2028-29",
+      "label": "Business investment change 2028-29 (£bn)",
+      "formula": "ΔI_£ = ΔI_y/100 × I",
+      "inputs": {
+        "ΔI_y": -0.40132171604193767,
+        "I": 313.51649080000004
+      },
+      "output": -1.2582097609530238,
+      "unit": "£bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "gdp.capital_gap.2028-29",
+      "label": "Capital stock gap vs baseline 2028-29",
+      "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
+      "inputs": {
+        "x_{y−1}": -0.03890198677061988,
+        "d": 0.14540199999999998,
+        "ΔI_y": -0.40132171604193767
+      },
+      "output": -0.09159854024612803,
+      "unit": "%",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "gdp.level.2028-29",
+      "label": "GDP level change 2028-29 (indicative)",
+      "formula": "ΔY_y = capital_share × x_y",
+      "inputs": {
+        "capital_share": 0.35,
+        "x_y": -0.09159854024612803
+      },
+      "output": -0.03205948908614481,
+      "unit": "%",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth",
+        "capital_share"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "rev.dynamic.2028-29",
+      "label": "Dynamic revenue change 2028-29 (indicative)",
+      "formula": "ΔR_dynamic = ΔR_behav + t1 × B1 × timing × ΔY_y/100 × η",
+      "inputs": {
+        "ΔR_behav": 11.536285004703814,
+        "t1": 0.28,
+        "B1": 412.73917376688826,
+        "timing": 1.0,
+        "ΔY_y": -0.03205948908614481,
+        "η": 1.0
+      },
+      "output": 11.499234825000762,
+      "unit": "£bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "profit_gdp_elasticity",
+        "capital_share",
+        "investment_adjustment_speed",
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base.2029-30",
+      "label": "Implied taxable profit base 2029-30",
+      "formula": "B0 = main_rate_profit_share × R × (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+        "R": 127.37846588160546,
+        "main_rate_profit_share": 0.85,
+        "profit_base_deviation_pct": 0.0,
+        "t0": 0.25
+      },
+      "output": 433.08678399745855,
+      "unit": "£bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.static.2029-30",
+      "label": "Static revenue change 2029-30",
+      "formula": "ΔR_static = (t1 − t0) × B0 × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 433.08678399745855,
+        "timing": 1.0
+      },
+      "output": 12.992603519923769,
+      "unit": "£bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base_response.2029-30",
+      "label": "Taxable profit base after behavioural response 2029-30",
+      "formula": "B1 = B0 × ((1 − t1)/(1 − t0))^ε",
+      "inputs": {
+        "B0": 433.08678399745855,
+        "t0": 0.25,
+        "t1": 0.28,
+        "ε": 0.2
+      },
+      "output": 429.56528575217874,
+      "unit": "£bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.behavioural.2029-30",
+      "label": "Behavioural revenue change 2029-30",
+      "formula": "ΔR_behav = (t1 × B1 − t0 × B0) × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 433.08678399745855,
+        "B1": 429.56528575217874,
+        "timing": 1.0
+      },
+      "output": 12.006584011245423,
+      "unit": "£bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "inv.change.2029-30",
+      "label": "Business investment change 2029-30",
+      "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
+      "inputs": {
+        "ΔI_LR": -0.5350956213892503,
+        "λ": 0.5,
+        "y": 3.0
+      },
+      "output": -0.468208668715594,
+      "unit": "%",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.change_gbp.2029-30",
+      "label": "Business investment change 2029-30 (£bn)",
+      "formula": "ΔI_£ = ΔI_y/100 × I",
+      "inputs": {
+        "ΔI_y": -0.468208668715594,
+        "I": 317.20275770000006
+      },
+      "output": -1.4851708089563216,
+      "unit": "£bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "gdp.capital_gap.2029-30",
+      "label": "Capital stock gap vs baseline 2029-30",
+      "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
+      "inputs": {
+        "x_{y−1}": -0.09159854024612803,
+        "d": 0.14540199999999998,
+        "ΔI_y": -0.468208668715594
+      },
+      "output": -0.1463584061458453,
+      "unit": "%",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "gdp.level.2029-30",
+      "label": "GDP level change 2029-30 (indicative)",
+      "formula": "ΔY_y = capital_share × x_y",
+      "inputs": {
+        "capital_share": 0.35,
+        "x_y": -0.1463584061458453
+      },
+      "output": -0.05122544215104585,
+      "unit": "%",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth",
+        "capital_share"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "rev.dynamic.2029-30",
+      "label": "Dynamic revenue change 2029-30 (indicative)",
+      "formula": "ΔR_dynamic = ΔR_behav + t1 × B1 × timing × ΔY_y/100 × η",
+      "inputs": {
+        "ΔR_behav": 12.006584011245423,
+        "t1": 0.28,
+        "B1": 429.56528575217874,
+        "timing": 1.0,
+        "ΔY_y": -0.05122544215104585,
+        "η": 1.0
+      },
+      "output": 11.944970930498314,
+      "unit": "£bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "profit_gdp_elasticity",
+        "capital_share",
+        "investment_adjustment_speed",
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base.2030-31",
+      "label": "Implied taxable profit base 2030-31",
+      "formula": "B0 = main_rate_profit_share × R × (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+        "R": 132.59574346866282,
+        "main_rate_profit_share": 0.85,
+        "profit_base_deviation_pct": 0.0,
+        "t0": 0.25
+      },
+      "output": 450.82552779345355,
+      "unit": "£bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.static.2030-31",
+      "label": "Static revenue change 2030-31",
+      "formula": "ΔR_static = (t1 − t0) × B0 × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 450.82552779345355,
+        "timing": 1.0
+      },
+      "output": 13.524765833803619,
+      "unit": "£bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base_response.2030-31",
+      "label": "Taxable profit base after behavioural response 2030-31",
+      "formula": "B1 = B0 × ((1 − t1)/(1 − t0))^ε",
+      "inputs": {
+        "B0": 450.82552779345355,
+        "t0": 0.25,
+        "t1": 0.28,
+        "ε": 0.2
+      },
+      "output": 447.1597929714431,
+      "unit": "£bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.behavioural.2030-31",
+      "label": "Behavioural revenue change 2030-31",
+      "formula": "ΔR_behav = (t1 × B1 − t0 × B0) × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 450.82552779345355,
+        "B1": 447.1597929714431,
+        "timing": 1.0
+      },
+      "output": 12.49836008364069,
+      "unit": "£bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "inv.change.2030-31",
+      "label": "Business investment change 2030-31",
+      "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
+      "inputs": {
+        "ΔI_LR": -0.5350956213892503,
+        "λ": 0.5,
+        "y": 4.0
+      },
+      "output": -0.5016521450524222,
+      "unit": "%",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.change_gbp.2030-31",
+      "label": "Business investment change 2030-31 (£bn)",
+      "formula": "ΔI_£ = ΔI_y/100 × I",
+      "inputs": {
+        "ΔI_y": -0.5016521450524222,
+        "I": 321.16142229999997
+      },
+      "output": -1.6111131640488179,
+      "unit": "£bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "gdp.capital_gap.2030-31",
+      "label": "Capital stock gap vs baseline 2030-31",
+      "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
+      "inputs": {
+        "x_{y−1}": -0.1463584061458453,
+        "d": 0.14540199999999998,
+        "ΔI_y": -0.5016521450524222
+      },
+      "output": -0.19801882637033938,
+      "unit": "%",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "gdp.level.2030-31",
+      "label": "GDP level change 2030-31 (indicative)",
+      "formula": "ΔY_y = capital_share × x_y",
+      "inputs": {
+        "capital_share": 0.35,
+        "x_y": -0.19801882637033938
+      },
+      "output": -0.06930658922961877,
+      "unit": "%",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth",
+        "capital_share"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "rev.dynamic.2030-31",
+      "label": "Dynamic revenue change 2030-31 (indicative)",
+      "formula": "ΔR_dynamic = ΔR_behav + t1 × B1 × timing × ΔY_y/100 × η",
+      "inputs": {
+        "ΔR_behav": 12.49836008364069,
+        "t1": 0.28,
+        "B1": 447.1597929714431,
+        "timing": 1.0,
+        "ΔY_y": -0.06930658922961877,
+        "η": 1.0
+      },
+      "output": 12.411584947384565,
+      "unit": "£bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "profit_gdp_elasticity",
+        "capital_share",
+        "investment_adjustment_speed",
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base.2031-32",
+      "label": "Implied taxable profit base 2031-32",
+      "formula": "B0 = main_rate_profit_share × R × (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+        "R": 138.0267148322311,
+        "main_rate_profit_share": 0.85,
+        "profit_base_deviation_pct": 0.0,
+        "t0": 0.25
+      },
+      "output": 469.29083042958575,
+      "unit": "£bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.static.2031-32",
+      "label": "Static revenue change 2031-32",
+      "formula": "ΔR_static = (t1 − t0) × B0 × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 469.29083042958575,
+        "timing": 1.0
+      },
+      "output": 14.078724912887585,
+      "unit": "£bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.base_response.2031-32",
+      "label": "Taxable profit base after behavioural response 2031-32",
+      "formula": "B1 = B0 × ((1 − t1)/(1 − t0))^ε",
+      "inputs": {
+        "B0": 469.29083042958575,
+        "t0": 0.25,
+        "t1": 0.28,
+        "ε": 0.2
+      },
+      "output": 465.47495126414486,
+      "unit": "£bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "rev.behavioural.2031-32",
+      "label": "Behavioural revenue change 2031-32",
+      "formula": "ΔR_behav = (t1 × B1 − t0 × B0) × timing",
+      "inputs": {
+        "t0": 0.25,
+        "t1": 0.28,
+        "B0": 469.29083042958575,
+        "B1": 465.47495126414486,
+        "timing": 1.0
+      },
+      "output": 13.010278746564126,
+      "unit": "£bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "inv.change.2031-32",
+      "label": "Business investment change 2031-32",
+      "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
+      "inputs": {
+        "ΔI_LR": -0.5350956213892503,
+        "λ": 0.5,
+        "y": 5.0
+      },
+      "output": -0.5183738832208362,
+      "unit": "%",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "inv.change_gbp.2031-32",
+      "label": "Business investment change 2031-32 (£bn)",
+      "formula": "ΔI_£ = ΔI_y/100 × I",
+      "inputs": {
+        "ΔI_y": -0.5183738832208362,
+        "I": 325.1694907120251
+      },
+      "output": -1.685593716053341,
+      "unit": "£bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    },
+    {
+      "step_id": "gdp.capital_gap.2031-32",
+      "label": "Capital stock gap vs baseline 2031-32",
+      "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
+      "inputs": {
+        "x_{y−1}": -0.19801882637033938,
+        "d": 0.14540199999999998,
+        "ΔI_y": -0.5183738832208362
+      },
+      "output": -0.24459909234651528,
+      "unit": "%",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "gdp.level.2031-32",
+      "label": "GDP level change 2031-32 (indicative)",
+      "formula": "ΔY_y = capital_share × x_y",
+      "inputs": {
+        "capital_share": 0.35,
+        "x_y": -0.24459909234651528
+      },
+      "output": -0.08560968232128034,
+      "unit": "%",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles",
+        "investment_adjustment_speed",
+        "trend_real_growth",
+        "capital_share"
+      ],
+      "source_ids": []
+    },
+    {
+      "step_id": "rev.dynamic.2031-32",
+      "label": "Dynamic revenue change 2031-32 (indicative)",
+      "formula": "ΔR_dynamic = ΔR_behav + t1 × B1 × timing × ΔY_y/100 × η",
+      "inputs": {
+        "ΔR_behav": 13.010278746564126,
+        "t1": 0.28,
+        "B1": 465.47495126414486,
+        "timing": 1.0,
+        "ΔY_y": -0.08560968232128034,
+        "η": 1.0
+      },
+      "output": 12.898701090986663,
+      "unit": "£bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+        "main_rate_profit_share",
+        "profit_base_deviation_pct",
+        "taxable_profit_elasticity",
+        "profit_gdp_elasticity",
+        "capital_share",
+        "investment_adjustment_speed",
+        "user_cost_elasticity",
+        "real_required_return",
+        "full_expensing_coverage",
+        "allowance_pv_intangibles",
+        "share_plant_machinery",
+        "share_structures",
+        "share_intangibles",
+        "depreciation_plant_machinery",
+        "depreciation_structures",
+        "depreciation_intangibles"
+      ],
+      "source_ids": [
+        "D-obr-efo"
+      ]
+    }
+  ],
+  "parameters_used": {
+    "taxable_profit_elasticity": 0.2,
+    "user_cost_elasticity": 0.6,
+    "profit_gdp_elasticity": 1.0,
+    "behavioural_first_year_share": 0.5,
+    "receipts_first_year_share": 0.6,
+    "investment_adjustment_speed": 0.5,
+    "main_rate_profit_share": 0.85,
+    "real_required_return": 0.05,
+    "full_expensing_coverage": 0.8,
+    "allowance_pv_intangibles": 0.9,
+    "capital_share": 0.35,
+    "share_plant_machinery": 0.4,
+    "share_structures": 0.27,
+    "share_intangibles": 0.33,
+    "depreciation_plant_machinery": 0.175,
+    "depreciation_structures": 0.0361,
+    "depreciation_intangibles": 0.1535,
+    "profit_base_deviation_pct": 0.0,
+    "trend_real_growth": 0.015
+  },
+  "warnings": [
+    "Baseline ct_receipts_gbp_bn has no values for 2031-32; extrapolated at the nearest observed annual growth rate.",
+    "Baseline business_investment_gbp_bn has no values for 2031-32; extrapolated at the nearest observed annual growth rate."
+  ]
+}
