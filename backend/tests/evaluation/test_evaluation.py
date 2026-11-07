@@ -145,3 +145,28 @@ def test_implied_elasticity_on_panel() -> None:
     assert res.std_error is not None
     assert "0.20" in res.summary
     assert isinstance(PanelRow, type)
+
+
+def test_fallback_rates_exclude_reversed_2020_proposal_and_preserve_costing_provenance(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    real_load_series = registry.load_series
+    monkeypatch.setattr(
+        registry,
+        "load_series",
+        lambda sid: None if sid == "ct_main_rate" else real_load_series(sid),
+    )
+    panel = build_annual_panel()
+    by_fy = {r.fiscal_year: r for r in panel}
+    assert not any(r.is_placeholder for r in panel)
+    assert by_fy["2020-21"].main_rate_pct == pytest.approx(19.0)
+    assert by_fy["2021-22"].main_rate_pct == pytest.approx(19.0)
+    assert by_fy["2022-23"].main_rate_pct == pytest.approx(19.0)
+
+    report = run_evaluation(live=False, write_files=False)
+    assert "N445" in report.target_description
+    assert "gross of tax credits" in report.target_description
+    cases_by_id = {c.case_id: c for c in report.cases}
+    assert "D-budget2012" in cases_by_id["CT-MAIN-2012"].notes
+    assert "joint phased package" in cases_by_id["CT-MAIN-2012"].notes.lower()
+    assert "D-budget2016" in cases_by_id["CT-MAIN-2017"].notes

@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-07T19:00:56.403961Z",
+  "generated_at": "2026-11-07T19:11:41.175416Z",
   "dataset_version": "10bb93bda87c",
-  "target_description": "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal) predicted from information at fiscal year y-1, conditioning on realised 2-year profit growth (`pnfc_gos`) from y-1 to y+1. This conditional design isolates tax-policy response modelling from macroeconomic forecast error. Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 (FY2008-09 to FY2024-25). Leave-one-out 90% (5th–95th percentile) empirical residual interval coverage on FY2008-09 to FY2024-25: 15/17 (88.2%).",
+  "target_description": "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal, ONS N445 central-government CT gross of tax credits, `D-ons-ct-receipts` / `D-obr-databank`) predicted from information at fiscal year y-1, conditioning on realised 2-year profit growth (`pnfc_gos`, `D-ons-pnfc-gos`) from y-1 to y+1 (note: the forward engine baseline uses OBR onshore CT receipts, a different receipt perimeter). This conditional design isolates tax-policy response modelling from macroeconomic forecast error. Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 (FY2008-09 to FY2024-25). Leave-one-out 90% (5th–95th percentile) empirical residual interval coverage on FY2008-09 to FY2024-25: 15/17 (88.2%).",
   "methods": [
     {
       "method": "naive_growth",
@@ -139,7 +139,7 @@
         "jane_calibrated": 7.9478,
         "linear_regression": 9.2469
       },
-      "notes": "Info year 1982-83 (R=5.68bn, t=52.0%) → target 1984-85 (t=45.0%, Δt=-7.0pp, 2yr profit growth=+33.0%). Rate-change event CT-MAIN-1983: implied static ΔR=-0.86bn, behavioural ΔR=-0.71bn vs naive."
+      "notes": "Info year 1982-83 (R=5.68bn, t=52.0%) → target 1984-85 (t=45.0%, Δt=-7.0pp, 2yr profit growth=+33.0%). Rate-change event CT-MAIN-1983: implied static ΔR=-0.86bn, behavioural ΔR=-0.71bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. Phased package with capital-allowance reform. Retrospectively effective. "
     },
     {
       "case_id": "CT-MAIN-1984",
@@ -155,7 +155,7 @@
         "jane_calibrated": 8.7679,
         "linear_regression": 11.0217
       },
-      "notes": "Info year 1983-84 (R=6.18bn, t=50.0%) → target 1985-86 (t=40.0%, Δt=-10.0pp, 2yr profit growth=+35.8%). Rate-change event CT-MAIN-1984: implied static ΔR=-1.43bn, behavioural ΔR=-1.22bn vs naive."
+      "notes": "Info year 1983-84 (R=6.18bn, t=50.0%) → target 1985-86 (t=40.0%, Δt=-10.0pp, 2yr profit growth=+35.8%). Rate-change event CT-MAIN-1984: implied static ΔR=-1.43bn, behavioural ΔR=-1.22bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. Phased package with capital-allowance reform. "
     },
     {
       "case_id": "CT-MAIN-1985",
@@ -171,7 +171,7 @@
         "jane_calibrated": 9.7136,
         "linear_regression": 12.1724
       },
-      "notes": "Info year 1984-85 (R=8.34bn, t=45.0%) → target 1986-87 (t=35.0%, Δt=-10.0pp, 2yr profit growth=+16.5%). Rate-change event CT-MAIN-1985: implied static ΔR=-1.84bn, behavioural ΔR=-1.62bn vs naive."
+      "notes": "Info year 1984-85 (R=8.34bn, t=45.0%) → target 1986-87 (t=35.0%, Δt=-10.0pp, 2yr profit growth=+16.5%). Rate-change event CT-MAIN-1985: implied static ΔR=-1.84bn, behavioural ΔR=-1.62bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. Phased package with capital-allowance reform. "
     },
     {
       "case_id": "CT-MAIN-1986",
@@ -187,7 +187,7 @@
         "jane_calibrated": 12.7551,
         "linear_regression": 14.6951
       },
-      "notes": "Info year 1985-86 (R=10.71bn, t=40.0%) → target 1987-88 (t=35.0%, Δt=-5.0pp, 2yr profit growth=+20.5%). Rate-change event CT-MAIN-1986: implied static ΔR=-1.37bn, behavioural ΔR=-1.22bn vs naive."
+      "notes": "Info year 1985-86 (R=10.71bn, t=40.0%) → target 1987-88 (t=35.0%, Δt=-5.0pp, 2yr profit growth=+20.5%). Rate-change event CT-MAIN-1986: implied static ΔR=-1.37bn, behavioural ΔR=-1.22bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. Phased package with capital-allowance reform. "
     },
     {
       "case_id": "FY-1987-88",
@@ -251,7 +251,7 @@
         "jane_calibrated": 22.1005,
         "linear_regression": 22.8558
       },
-      "notes": "Info year 1989-90 (R=21.50bn, t=35.0%) → target 1991-92 (t=33.0%, Δt=-2.0pp, 2yr profit growth=+4.0%). Rate-change event CT-MAIN-1990: implied static ΔR=-1.09bn, behavioural ΔR=-0.98bn vs naive."
+      "notes": "Info year 1989-90 (R=21.50bn, t=35.0%) → target 1991-92 (t=33.0%, Δt=-2.0pp, 2yr profit growth=+4.0%). Rate-change event CT-MAIN-1990: implied static ΔR=-1.09bn, behavioural ΔR=-0.98bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. Retrospectively effective. "
     },
     {
       "case_id": "CT-MAIN-1991",
@@ -267,7 +267,7 @@
         "jane_calibrated": 21.4175,
         "linear_regression": 21.3382
       },
-      "notes": "Info year 1990-91 (R=21.50bn, t=34.0%) → target 1992-93 (t=33.0%, Δt=-1.0pp, 2yr profit growth=+0.3%). Rate-change event CT-MAIN-1991: implied static ΔR=-0.54bn, behavioural ΔR=-0.49bn vs naive."
+      "notes": "Info year 1990-91 (R=21.50bn, t=34.0%) → target 1992-93 (t=33.0%, Δt=-1.0pp, 2yr profit growth=+0.3%). Rate-change event CT-MAIN-1991: implied static ΔR=-0.54bn, behavioural ΔR=-0.49bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "FY-1992-93",
@@ -363,7 +363,7 @@
         "jane_calibrated": 28.2461,
         "linear_regression": 29.2723
       },
-      "notes": "Info year 1996-97 (R=27.79bn, t=33.0%) → target 1998-99 (t=31.0%, Δt=-2.0pp, 2yr profit growth=+3.3%). Rate-change event CT-MAIN-1997: implied static ΔR=-1.48bn, behavioural ΔR=-1.34bn vs naive."
+      "notes": "Info year 1996-97 (R=27.79bn, t=33.0%) → target 1998-99 (t=31.0%, Δt=-2.0pp, 2yr profit growth=+3.3%). Rate-change event CT-MAIN-1997: implied static ΔR=-1.48bn, behavioural ΔR=-1.34bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. Retrospectively effective. "
     },
     {
       "case_id": "FY-1998-99",
@@ -395,7 +395,7 @@
         "jane_calibrated": 29.1578,
         "linear_regression": 28.9463
       },
-      "notes": "Info year 1998-99 (R=30.03bn, t=31.0%) → target 2000-01 (t=30.0%, Δt=-1.0pp, 2yr profit growth=-2.0%). Rate-change event CT-MAIN-1999: implied static ΔR=-0.81bn, behavioural ΔR=-0.74bn vs naive."
+      "notes": "Info year 1998-99 (R=30.03bn, t=31.0%) → target 2000-01 (t=30.0%, Δt=-1.0pp, 2yr profit growth=-2.0%). Rate-change event CT-MAIN-1999: implied static ΔR=-0.81bn, behavioural ΔR=-0.74bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "FY-2000-01",
@@ -539,7 +539,7 @@
         "jane_calibrated": 44.4311,
         "linear_regression": 45.4457
       },
-      "notes": "Info year 2007-08 (R=47.03bn, t=30.0%) → target 2009-10 (t=28.0%, Δt=-2.0pp, 2yr profit growth=-3.4%). Rate-change event CT-MAIN-2008: implied static ΔR=-2.58bn, behavioural ΔR=-2.37bn vs naive."
+      "notes": "Info year 2007-08 (R=47.03bn, t=30.0%) → target 2009-10 (t=28.0%, Δt=-2.0pp, 2yr profit growth=-3.4%). Rate-change event CT-MAIN-2008: implied static ΔR=-2.58bn, behavioural ΔR=-2.37bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "FY-2009-10",
@@ -587,7 +587,7 @@
         "jane_calibrated": 44.7428,
         "linear_regression": 51.7084
       },
-      "notes": "Info year 2010-11 (R=43.05bn, t=28.0%) → target 2012-13 (t=24.0%, Δt=-4.0pp, 2yr profit growth=+10.6%). Rate-change event CT-MAIN-2011: implied static ΔR=-5.78bn, behavioural ΔR=-5.40bn vs naive."
+      "notes": "Info year 2010-11 (R=43.05bn, t=28.0%) → target 2012-13 (t=24.0%, Δt=-4.0pp, 2yr profit growth=+10.6%). Rate-change event CT-MAIN-2011: implied static ΔR=-5.78bn, behavioural ΔR=-5.40bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "CT-MAIN-2012",
@@ -603,7 +603,7 @@
         "jane_calibrated": 43.6979,
         "linear_regression": 48.7547
       },
-      "notes": "Info year 2011-12 (R=42.48bn, t=26.0%) → target 2013-14 (t=23.0%, Δt=-3.0pp, 2yr profit growth=+8.5%). Rate-change event CT-MAIN-2012: implied static ΔR=-4.52bn, behavioural ΔR=-4.24bn vs naive. Ex-ante official costing (-0.73bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+      "notes": "Info year 2011-12 (R=42.48bn, t=26.0%) → target 2013-14 (t=23.0%, Δt=-3.0pp, 2yr profit growth=+8.5%). Rate-change event CT-MAIN-2012: implied static ΔR=-4.52bn, behavioural ΔR=-4.24bn vs naive. Ex-ante official costing (-0.73bn [for FY2013-14, Budget 2012 (joint phased package), D-budget2012]) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section.  Official costing covers a joint phased package; it is not an isolated estimate for this rate step."
     },
     {
       "case_id": "CT-MAIN-2013",
@@ -619,7 +619,7 @@
         "jane_calibrated": 42.7349,
         "linear_regression": 48.9552
       },
-      "notes": "Info year 2012-13 (R=39.84bn, t=24.0%) → target 2014-15 (t=21.0%, Δt=-3.0pp, 2yr profit growth=+14.3%). Rate-change event CT-MAIN-2013: implied static ΔR=-4.84bn, behavioural ΔR=-4.58bn vs naive. Ex-ante official costing (-0.82bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+      "notes": "Info year 2012-13 (R=39.84bn, t=24.0%) → target 2014-15 (t=21.0%, Δt=-3.0pp, 2yr profit growth=+14.3%). Rate-change event CT-MAIN-2013: implied static ΔR=-4.84bn, behavioural ΔR=-4.58bn vs naive. Ex-ante official costing (-0.82bn [for FY2014-15, Budget 2012 (joint phased package), D-budget2012]) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section.  Official costing covers a joint phased package; it is not an isolated estimate for this rate step."
     },
     {
       "case_id": "CT-MAIN-2014",
@@ -635,7 +635,7 @@
         "jane_calibrated": 39.9925,
         "linear_regression": 45.5608
       },
-      "notes": "Info year 2013-14 (R=38.93bn, t=23.0%) → target 2015-16 (t=20.0%, Δt=-3.0pp, 2yr profit growth=+10.1%). Rate-change event CT-MAIN-2014: implied static ΔR=-4.75bn, behavioural ΔR=-4.51bn vs naive."
+      "notes": "Info year 2013-14 (R=38.93bn, t=23.0%) → target 2015-16 (t=20.0%, Δt=-3.0pp, 2yr profit growth=+10.1%). Rate-change event CT-MAIN-2014: implied static ΔR=-4.75bn, behavioural ΔR=-4.51bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "CT-MAIN-2015",
@@ -651,7 +651,7 @@
         "jane_calibrated": 40.6191,
         "linear_regression": 41.3935
       },
-      "notes": "Info year 2014-15 (R=41.09bn, t=21.0%) → target 2016-17 (t=20.0%, Δt=-1.0pp, 2yr profit growth=+1.4%). Rate-change event CT-MAIN-2015: implied static ΔR=-1.69bn, behavioural ΔR=-1.60bn vs naive."
+      "notes": "Info year 2014-15 (R=41.09bn, t=21.0%) → target 2016-17 (t=20.0%, Δt=-1.0pp, 2yr profit growth=+1.4%). Rate-change event CT-MAIN-2015: implied static ΔR=-1.69bn, behavioural ΔR=-1.60bn vs naive. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "FY-2016-17",
@@ -683,7 +683,7 @@
         "jane_calibrated": 52.4361,
         "linear_regression": 54.8075
       },
-      "notes": "Info year 2016-17 (R=49.30bn, t=20.0%) → target 2018-19 (t=19.0%, Δt=-1.0pp, 2yr profit growth=+9.3%). Rate-change event CT-MAIN-2017: implied static ΔR=-2.29bn, behavioural ΔR=-2.18bn vs naive. Ex-ante official costing (-1.60bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+      "notes": "Info year 2016-17 (R=49.30bn, t=20.0%) → target 2018-19 (t=19.0%, Δt=-1.0pp, 2yr profit growth=+9.3%). Rate-change event CT-MAIN-2017: implied static ΔR=-2.29bn, behavioural ΔR=-2.18bn vs naive. Ex-ante official costing (-1.60bn [for FY2018-19, Summer Budget 2015, D-budget2015]) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section.  Official costing covers a joint phased package; it is not an isolated estimate for this rate step."
     },
     {
       "case_id": "FY-2018-19",
@@ -779,7 +779,7 @@
         "jane_calibrated": 97.2583,
         "linear_regression": 72.8553
       },
-      "notes": "Info year 2022-23 (R=83.29bn, t=19.0%) → target 2024-25 (t=25.0%, Δt=+6.0pp, 2yr profit growth=+1.8%). Rate-change event CT-MAIN-2023: implied static ΔR=+22.77bn, behavioural ΔR=+21.32bn vs naive. Ex-ante official costing (+16.25bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+      "notes": "Info year 2022-23 (R=83.29bn, t=19.0%) → target 2024-25 (t=25.0%, Δt=+6.0pp, 2yr profit growth=+1.8%). Rate-change event CT-MAIN-2023: implied static ΔR=+22.77bn, behavioural ΔR=+21.32bn vs naive. Ex-ante official costing (+16.25bn [for FY2024-25, Spring Budget 2021, D-budget2021]) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth. Policy provenance note: Rate/effective year: HMRC Table A.6 or current table; announcement: named Budget speech/statement, corporation tax section. "
     },
     {
       "case_id": "FY-2024-25",
@@ -806,8 +806,8 @@
     "Small sample of policy regime shifts: UK corporation tax main-rate history since FY1982 contains only 16 implemented statutory rate changes (8 in the FY <= 2007 training split and 8 in the FY >= 2008 test split).",
     "Simultaneous base-broadening and relief confounders: major rate changes coincided with structural base changes—most notably the 1983–1986 phased rate cuts paired with first-year capital-allowance abolition, and the April 2023 rise (19% -> 25%) paired with full expensing for plant & machinery and the 19% small profits rate / marginal relief.",
     "Train-calibrated elasticity corner solution: fitting ε by nonlinear least squares on FY <= 2007 reached the search bound of 1.500 on [0.0, 1.5] (not identified on FY <= 2007 data because the 1984–86 cuts came with capital-allowance base-broadening, so a large ε mostly absorbs the base changes). Its out-of-sample MAE on n = 17 test years is statistically indistinguishable from the central prior (ε = 0.20), so it is not exposed as an alternative engine parameter.",
-    "Official costings are not ground truth: `official_costing_gbp_bn` reports ex-ante HMT/OBR policy costings (revenue delta relative to a contemporary Budget baseline under ex-ante macro assumptions), whereas `observed` and model `predictions` are total fiscal-year CT receipts R_{y+1} (£bn).",
-    "Receipts collection lags and composition: CT receipts combine onshore and offshore (North Sea ring-fence) regimes, Quarterly Instalment Payments (QIPs) timing transitions, bank surcharge, and financial-sector loss carry-forwards.",
+    "Official costings are not ground truth and may reflect multi-year joint packages: `official_costing_gbp_bn` reports ex-ante HMT/OBR policy costings (revenue delta relative to a contemporary Budget baseline under ex-ante macro assumptions), whereas `observed` and model `predictions` are total fiscal-year CT receipts R_{y+1} (£bn). In particular, `CT-MAIN-2012` (-£0.73bn for FY2013-14, `D-budget2012`) and `CT-MAIN-2013` (-£0.82bn for FY2014-15, `D-budget2012`) are from the same Budget 2012 joint phased package, and `CT-MAIN-2017` (-£1.60bn for FY2018-19, `D-budget2016`) is from the Budget 2016 joint 2017/2020 package—not isolated single-step estimates.",
+    "Receipt perimeter and baseline difference (`D-ons-ct-receipts` vs `D-obr-databank`): historical backtest `ct_receipts` is ONS series N445 central-government Corporation Tax receipts gross of tax credits (and `pnfc_gos` is the ONS `D-ons-pnfc-gos` private non-financial corporations gross operating surplus proxy), whereas the forward simulation engine baseline (`D-obr-databank`) uses OBR onshore Corporation Tax receipts. Historical backtest errors on N445 combine onshore/offshore regimes, Quarterly Instalment Payments (QIPs) timing transitions, bank surcharge, and tax-credit grossing, and therefore differ in perimeter from the engine's onshore baseline target.",
     "OLS of log((receipts/t)/pnfc_gos) on log(1-t) over n=44 fiscal years (controlling for real GDP growth) yields an implied base elasticity of 2.642 (SE 0.185), compared with the engine central prior of 0.20. Because UK rate cuts in the 1980s and 2010s coincided with base-broadening capital-allowance reforms and post-2008 financial-sector profit shifts, macro time-series regressions confound rate effects with base definitions; we retain the micro-econometric literature prior (0.20) as central."
   ],
   "is_placeholder": false

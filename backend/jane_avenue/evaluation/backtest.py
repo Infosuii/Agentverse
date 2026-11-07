@@ -44,6 +44,10 @@ class PanelRow:
     real_gdp_growth_pct: float | None = None
     receipts_pct_gdp: float | None = None
     official_costing_gbp_bn: float | None = None
+    official_costing_fy: str | None = None
+    official_costing_event: str | None = None
+    official_costing_source_id: str | None = None
+    policy_notes: str | None = None
     change_id: str | None = None
     is_placeholder: bool = False
 
@@ -110,9 +114,22 @@ def _recover_gdp_from_curated_receipts() -> dict[str, float]:
     return out
 
 
+def _is_reversed_or_noop_change(ch: registry.PolicyChange) -> bool:
+    """Return True if a policy change row is a reversed announcement or zero-rate change."""
+    return (
+        abs(ch.new_rate_pct - ch.old_rate_pct) <= 1e-9
+        or "reversed" in ch.change_id.lower()
+        or "reversed" in ch.notes.lower()
+    )
+
+
 def _rates_from_policy_changes(start_yr: int = 1982, end_yr: int = 2026) -> dict[str, float]:
     """Reconstruct annual main rate schedule from registry.load_policy_changes() if ct_main_rate series is absent."""
-    changes = sorted(registry.load_policy_changes("corporation_tax"), key=lambda c: c.effective_date)
+    changes = [
+        c
+        for c in sorted(registry.load_policy_changes("corporation_tax"), key=lambda c: c.effective_date)
+        if not _is_reversed_or_noop_change(c)
+    ]
     if not changes:
         return {}
     current_rate = float(changes[0].old_rate_pct)
@@ -140,24 +157,21 @@ def build_annual_panel() -> list[PanelRow]:
 
     changes = registry.load_policy_changes("corporation_tax")
     change_by_fy: dict[str, registry.PolicyChange] = {}
-    costing_by_fy: dict[str, float] = {}
+    costing_obj_by_fy: dict[str, registry.Costing] = {}
     for ch in changes:
-        if (
-            abs(ch.new_rate_pct - ch.old_rate_pct) <= 1e-9
-            or "reversed" in ch.change_id.lower()
-            or "reversed" in ch.notes.lower()
-        ):
+        if _is_reversed_or_noop_change(ch):
             continue
         fy = format_fy(ch.effective_date.year)
         change_by_fy[fy] = ch
         if ch.official_costings:
-            # Prefer costing for the first full year (y+1) or effective year (y)
+            # Prefer costing for the first full year (y+1), else effective year (y); never pick an arbitrary year
             target_fy = format_fy(ch.effective_date.year + 1)
-            matching = [c.value_gbp_bn for c in ch.official_costings if c.fiscal_year == target_fy]
+            eff_fy = format_fy(ch.effective_date.year)
+            matching = [c for c in ch.official_costings if c.fiscal_year == target_fy]
             if not matching:
-                matching = [c.value_gbp_bn for c in ch.official_costings]
+                matching = [c for c in ch.official_costings if c.fiscal_year == eff_fy]
             if matching:
-                costing_by_fy[fy] = float(matching[0])
+                costing_obj_by_fy[fy] = matching[0]
 
     datasets_meta = {d.dataset_id: d for d in registry.list_datasets()}
     any_meta_placeholder = any(
@@ -195,6 +209,7 @@ def build_annual_panel() -> list[PanelRow]:
             gdp_val = gdp_map.get(fy)
             rec_pct_gdp = (100.0 * receipts_map[fy] / gdp_val) if (gdp_val and gdp_val > 0) else None
             ch = change_by_fy.get(fy)
+            c_obj = costing_obj_by_fy.get(fy)
             rows.append(
                 PanelRow(
                     fiscal_year=fy,
@@ -208,7 +223,11 @@ def build_annual_panel() -> list[PanelRow]:
                     bank_rate_pct=bank_rate_map.get(fy),
                     real_gdp_growth_pct=real_gdp_map.get(fy),
                     receipts_pct_gdp=rec_pct_gdp,
-                    official_costing_gbp_bn=costing_by_fy.get(fy),
+                    official_costing_gbp_bn=float(c_obj.value_gbp_bn) if c_obj is not None else None,
+                    official_costing_fy=c_obj.fiscal_year if c_obj is not None else None,
+                    official_costing_event=c_obj.fiscal_event if c_obj is not None else None,
+                    official_costing_source_id=c_obj.source_id if c_obj is not None else None,
+                    policy_notes=ch.notes if ch is not None else None,
                     change_id=ch.change_id if ch else None,
                     is_placeholder=is_placeholder,
                 )
@@ -240,6 +259,7 @@ def build_annual_panel() -> list[PanelRow]:
         rate_factor = s_share * (rate / anchor_rate) + (1.0 - s_share)
         rec_val = anchor_rec * ((1.0 + g_gdp) ** steps_from_2025) * rate_factor
         ch = change_by_fy.get(fy)
+        c_obj = costing_obj_by_fy.get(fy)
         rows.append(
             PanelRow(
                 fiscal_year=fy,
@@ -253,7 +273,11 @@ def build_annual_panel() -> list[PanelRow]:
                 bank_rate_pct=None,
                 real_gdp_growth_pct=None,
                 receipts_pct_gdp=100.0 * rec_val / gdp_val,
-                official_costing_gbp_bn=costing_by_fy.get(fy),
+                official_costing_gbp_bn=float(c_obj.value_gbp_bn) if c_obj is not None else None,
+                official_costing_fy=c_obj.fiscal_year if c_obj is not None else None,
+                official_costing_event=c_obj.fiscal_event if c_obj is not None else None,
+                official_costing_source_id=c_obj.source_id if c_obj is not None else None,
+                policy_notes=ch.notes if ch is not None else None,
                 change_id=ch.change_id if ch else None,
                 is_placeholder=True,
             )
@@ -557,9 +581,21 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
                 f"Rate-change event {row.change_id}: implied static ΔR={d_static:+.2f}bn, behavioural ΔR={d_behav:+.2f}bn vs naive."
             )
         if row.official_costing_gbp_bn is not None:
-            note_parts.append(
-                f"Ex-ante official costing ({row.official_costing_gbp_bn:+.2f}bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+            c_meta = ", ".join(
+                part
+                for part in (
+                    f"for FY{row.official_costing_fy}" if row.official_costing_fy else None,
+                    row.official_costing_event,
+                    row.official_costing_source_id,
+                )
+                if part
             )
+            note_parts.append(
+                f"Ex-ante official costing ({row.official_costing_gbp_bn:+.2f}bn{f' [{c_meta}]' if c_meta else ''}) "
+                "is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+            )
+        if row.policy_notes:
+            note_parts.append(f"Policy provenance note: {row.policy_notes}")
 
         cases.append(
             BacktestCase(
