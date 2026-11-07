@@ -43,7 +43,7 @@ def _build_limitations(bt: BacktestOutput) -> list[str]:
         "macro assumptions), whereas `observed` and model `predictions` are total fiscal-year CT receipts R_{y+1} (£bn). "
         "In particular, `CT-MAIN-2012` (-£0.73bn for FY2013-14, `D-budget2012`) and `CT-MAIN-2013` (-£0.82bn for "
         "FY2014-15, `D-budget2012`) are from the same Budget 2012 joint phased package, and `CT-MAIN-2017` (-£1.60bn "
-        "for FY2018-19, `D-budget2016`) is from the Budget 2016 joint 2017/2020 package—not isolated single-step estimates.",
+        "for FY2018-19, `D-budget2015`) is from the Summer Budget 2015 joint 2017/2020 package—not isolated single-step estimates.",
         "Receipt perimeter and baseline difference (`D-ons-ct-receipts` vs `D-obr-databank`): historical backtest `ct_receipts` "
         "is ONS series N445 central-government Corporation Tax receipts gross of tax credits (and `pnfc_gos` is the ONS "
         "`D-ons-pnfc-gos` private non-financial corporations gross operating surplus proxy), whereas the forward simulation "
@@ -145,7 +145,7 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
             "",
             "> **Evidence-class & package-scope note:** `observed` ($R_{y+1}$) is an **observed outcome** (ONS N445 central-government CT receipts gross of tax credits in £bn, `D-ons-ct-receipts`). "
             "`official_costing_gbp_bn` is an **official costing** (ex-ante HMT/OBR policy-measure delta $\\Delta R$ in £bn relative to a contemporary Budget baseline, **not** total receipts ground truth; "
-            "`CT-MAIN-2012` and `CT-MAIN-2013` come from the same Budget 2012 joint phased package [`D-budget2012`], and `CT-MAIN-2017` comes from the Budget 2016 joint 2017/2020 package [`D-budget2016`], not isolated single-step estimates). "
+            "`CT-MAIN-2012` and `CT-MAIN-2013` come from the same Budget 2012 joint phased package [`D-budget2012`], and `CT-MAIN-2017` comes from the Summer Budget 2015 joint 2017/2020 package [`D-budget2015`], not isolated single-step estimates). "
             "Method columns are **model scenario** conditional predictions of $R_{y+1}$ (£bn).",
             "",
             "| Case ID | Policy Year ($y$) | Split | Target ($y+1$) | Observed $R_{y+1}$ (£bn) | Ex-Ante Official Costing $\\Delta R$ (£bn, ref only) | `naive_growth` (£bn) | `static` (£bn) | `jane_behavioural` (£bn) | `jane_calibrated` (£bn) | `linear_regression` (£bn) |",

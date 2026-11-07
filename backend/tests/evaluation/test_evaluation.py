@@ -169,4 +169,5 @@ def test_fallback_rates_exclude_reversed_2020_proposal_and_preserve_costing_prov
     cases_by_id = {c.case_id: c for c in report.cases}
     assert "D-budget2012" in cases_by_id["CT-MAIN-2012"].notes
     assert "joint phased package" in cases_by_id["CT-MAIN-2012"].notes.lower()
-    assert "D-budget2016" in cases_by_id["CT-MAIN-2017"].notes
+    assert "D-budget2015" in cases_by_id["CT-MAIN-2017"].notes
+    assert "Summer Budget 2015" in cases_by_id["CT-MAIN-2017"].notes
