@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from datetime import UTC, date, datetime
 
+import pytest
+
 from jane_avenue.contracts import (
     Confounder,
     Evidence,
@@ -128,3 +130,41 @@ def test_interpretations_need_verified_support() -> None:
     assert [(i.interpretation_id, i.supporting_evidence_ids) for i in clean.interpretations] == [("I1", ["E1"])]
     assert clean.interpretations[0].statement == "Interpretation: mixed support."
     assert any("I1" in n and "verified" in n for n in notes)
+
+
+def test_small_counts_need_a_count_noun_like_report_001() -> None:
+    allowed = {82.3}
+    text, removed = strip_new_numbers("Across 3 studies [E1] receipts rose. The rate rose 7%. Over 5 years it fades. "
+                                      "The gap is 4 points. Two papers agree. In 12 studies it differs.", allowed)
+    assert text == "Across 3 studies [E1] receipts rose. Over 5 years it fades. Two papers agree."
+    assert removed == ["The rate rose 7%.", "The gap is 4 points.", "In 12 studies it differs."]
+
+
+def test_spelled_out_numbers_in_verified_quotes_support_digits_in_prose() -> None:
+    ev = _ev("E1", "S1", quote="Around ten per cent of the overall cost of the rate reductions is recovered.")
+    f = _findings(sources=[_src("S1", GROUNDED)], evidence=[ev],
+                  summary="Around 10 per cent of the cost is recovered [E1]. About 12 per cent is lost.")
+    clean, _ = postprocess(f, allowed_urls={GROUNDED}, parameter_names=PARAMETER_NAMES)
+    assert clean.summary == "Around 10 per cent of the cost is recovered [E1]."
+
+
+@pytest.mark.parametrize("sentence", ["Receipts see 8 percent cuts.", "There were 2 point changes.",
+                                      "A 7 pp rises scenario.", "Expect 9 bn changes."])
+def test_unit_words_do_not_turn_quantities_into_counts(sentence: str) -> None:
+    assert strip_new_numbers(sentence, {82.3}) == ("", [sentence])
+
+
+def test_prose_numbers_need_the_evidence_cited_in_the_same_sentence() -> None:
+    """As REPORT-001 does: a quote's numbers support only sentences that cite it ([E..], or [S..] for its source)."""
+    f = _findings(sources=[_src("S1", GROUNDED), _src("S2", FETCHED, "url_fetch")],
+                  evidence=[_ev("E1", "S1"), _ev("E2", "S2", quote="Investment fell by 4.5 per cent after the rise.")],
+                  summary=("Receipts were GBP 82.3 billion [E1]. Receipts were GBP 82.3 billion. "
+                           "Receipts were GBP 82.3 billion [S1]. Investment fell 4.5 per cent [E1]. "
+                           "Investment fell 4.5 per cent [E2]."),
+                  interpretations=[Interpretation(interpretation_id="I1", supporting_evidence_ids=["E2"],
+                                                  statement="Interpretation: a 4.5 per cent fall matters.")])
+    clean, notes = postprocess(f, allowed_urls={GROUNDED, FETCHED}, parameter_names=PARAMETER_NAMES)
+    assert clean.summary == ("Receipts were GBP 82.3 billion [E1]. Receipts were GBP 82.3 billion [S1]. "
+                             "Investment fell 4.5 per cent [E2].")  # source citations survive renumbering
+    assert clean.interpretations[0].statement == "Interpretation: a 4.5 per cent fall matters."  # its own evidence
+    assert any("2 summary sentence(s)" in n for n in notes)

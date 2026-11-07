@@ -15,8 +15,11 @@ from jane_avenue.evaluation.backtest import (
     fy_start_year,
     run_backtest,
 )
+from jane_avenue.evaluation.ml import ML_FEATURES, run_ml_experiment
+from jane_avenue.evaluation.research_eval import RUNS_PATH, evaluate_research_agent, load_gold_questions
 from jane_avenue.evaluation.results import RESULTS_PATH
 from jane_avenue.evaluation.run import DOCS_EVAL_PATH, run_evaluation
+from jane_avenue.evaluation.verifier_eval import evaluate_verifier
 
 
 def test_chronological_split_has_no_test_years_in_training() -> None:
@@ -166,8 +169,50 @@ def test_fallback_rates_exclude_reversed_2020_proposal_and_preserve_costing_prov
     report = run_evaluation(live=False, write_files=False)
     assert "N445" in report.target_description
     assert "gross of tax credits" in report.target_description
+    assert "D-ons-pnfc" in report.target_description
+    for sid in ("D-ons-ct-receipts", "D-obr-databank", "D-ons-pnfc", "D-budget2012", "D-budget2015"):
+        assert registry.get_source(sid) is not None, f"Expected source {sid} to resolve in registry"
     cases_by_id = {c.case_id: c for c in report.cases}
     assert "D-budget2012" in cases_by_id["CT-MAIN-2012"].notes
     assert "joint phased package" in cases_by_id["CT-MAIN-2012"].notes.lower()
     assert "D-budget2015" in cases_by_id["CT-MAIN-2017"].notes
     assert "Summer Budget 2015" in cases_by_id["CT-MAIN-2017"].notes
+
+
+def test_ml_experiment_out_of_sample_and_not_adopted() -> None:
+    bt = run_backtest()
+    ml_res, ml_summaries, updated_cases = run_ml_experiment(bt)
+    assert ml_res.features == list(ML_FEATURES)
+    assert len(ml_res.features) == 6
+    assert ml_res.test_mae is not None
+    assert ml_res.best_baseline_mae is not None
+    assert ml_res.test_mae > ml_res.best_baseline_mae
+    assert ml_res.adopted is False
+    assert "NOT ADOPTED" in ml_res.conclusion
+    assert len(ml_summaries) == 2
+    assert all("lightgbm" in c.predictions for c in updated_cases)
+
+
+def test_research_eval_offline_rescores_gold_runs() -> None:
+    questions = load_gold_questions()
+    assert len(questions) == 15
+    assert RUNS_PATH.exists()
+
+    reval = evaluate_research_agent(live=False)
+    assert reval.n_questions == 15
+    assert reval.mode == "cached"
+    assert reval.fact_accuracy is not None and reval.fact_accuracy >= 0.90
+    assert reval.citation_url_valid_rate is not None and reval.citation_url_valid_rate >= 0.90
+    assert reval.quote_match_rate is not None and reval.quote_match_rate >= 0.90
+    assert reval.hallucinated_sources == 0
+    assert reval.official_source_share is not None and reval.official_source_share >= 0.80
+
+
+def test_verifier_eval_detects_injected_faults_with_zero_false_positives() -> None:
+    veval = evaluate_verifier()
+    assert veval.n_fault_cases == 18
+    assert veval.detected == 18
+    assert veval.n_clean_cases >= 1
+    assert veval.false_positives == 0
+    assert len(veval.by_fault) == 18
+    assert all(veval.by_fault.values())
