@@ -11,6 +11,7 @@ from jane_avenue.simulation import monte_carlo, simulate, validate_parameters
 from jane_avenue.simulation.montecarlo import median_standard_error
 
 RESIDUALS = [0.12, -0.08, 0.05, -0.02, 0.03, -0.10, 0.07, 0.01, -0.04, 0.09]  # n = 10, (pred − obs)/obs
+OUTCOME_ERRORS = [1 / (1 + r) - 1 for r in RESIDUALS]  # (obs − pred)/pred, what the interval is built from
 
 
 def _info(**overrides):
@@ -99,12 +100,12 @@ def test_empirical_interval_when_justified(full_engine, calibrated, request, pol
     assert mc.interval_kind == "assumption_range"  # the main bands keep their label
     central = _behavioural(bundle.scenarios[0].result)
     assert len(mc.empirical_interval) == len(central)
-    q50 = float(np.percentile(RESIDUALS, 50))
+    q50 = float(np.percentile(OUTCOME_ERRORS, 50))
     for band, c in zip(mc.empirical_interval, central, strict=True):
         assert band.p5 <= band.p10 <= band.p25 <= band.p50 <= band.p75 <= band.p90 <= band.p95
         assert band.p50 == pytest.approx(c * (1 + q50))
-        assert band.mean == pytest.approx(c * (1 + np.mean(RESIDUALS)))
-    lo, hi = np.percentile(RESIDUALS, [5, 95])
+        assert band.mean == pytest.approx(c * (1 + np.mean(OUTCOME_ERRORS)))
+    lo, hi = np.percentile(OUTCOME_ERRORS, [5, 95])
     last = mc.empirical_interval[-1]
     assert [last.p5, last.p95] == pytest.approx(sorted([central[-1] * (1 + lo), central[-1] * (1 + hi)]))
     note = mc.empirical_calibration_note
@@ -116,7 +117,7 @@ def test_empirical_interval_follows_the_custom_scenario(full_engine, calibrated,
     overridden = apply_overrides(params, {"taxable_profit_elasticity": 0.45})
     bundle = simulate(demo_policy, overridden, baseline, draws=500, empirical_residuals=lambda: RESIDUALS)
     custom = _behavioural(bundle.scenarios[-1].result)
-    q50 = float(np.percentile(RESIDUALS, 50))
+    q50 = float(np.percentile(OUTCOME_ERRORS, 50))
     assert [b.p50 for b in bundle.monte_carlo.empirical_interval] == pytest.approx([c * (1 + q50) for c in custom])
 
 
@@ -147,3 +148,29 @@ def test_under_coverage_is_flagged(full_engine, calibrated, demo_policy, params,
     assert bundle.monte_carlo.empirical_interval is not None
     assert "62%" in bundle.monte_carlo.empirical_calibration_note or "63%" in bundle.monte_carlo.empirical_calibration_note
     assert any("likely too narrow" in w for w in bundle.warnings)
+
+
+@pytest.mark.parametrize("policy_fixture", ["demo_policy", "cut_policy"])
+def test_biased_backtest_shifts_the_band_the_right_way(full_engine, calibrated, request, policy_fixture, params,
+                                                        baseline):
+    """A model that over-predicted by about 10% in the backtest ((pred − obs)/obs ≈ +0.10) should get a band centred
+    on central / 1.1, closer to zero than central. It must not be pushed further out to central × 1.1."""
+    spec = request.getfixturevalue(policy_fixture)
+    over = [0.08, 0.09, 0.10, 0.10, 0.10, 0.11, 0.12, 0.10, 0.09, 0.11]
+    calibrated(_info(n=len(over), residuals=over))
+    bundle = simulate(spec, params, baseline, draws=200, empirical_residuals=lambda: over)
+    central = _behavioural(bundle.scenarios[0].result)
+    for band, c in zip(bundle.monte_carlo.empirical_interval, central, strict=True):
+        assert band.p50 == pytest.approx(c / 1.10, rel=1e-9)
+        assert abs(band.p95) < abs(c) and abs(band.p5) < abs(c)  # the whole band sits on the observed (smaller) side
+    under = [-r / (1 + r) for r in over]  # mirror image: the model under-predicted, so outcomes ran above it
+    bundle = simulate(spec, params, baseline, draws=200, empirical_residuals=lambda: under)
+    for band, c in zip(bundle.monte_carlo.empirical_interval, central, strict=True):
+        assert abs(band.p5) > abs(c) and band.p50 == pytest.approx(c * 1.10, rel=1e-9)
+
+
+def test_unconvertible_residuals_are_dropped(full_engine, calibrated, demo_policy, params, baseline):
+    bundle = simulate(demo_policy, params, baseline, draws=200,
+                      empirical_residuals=lambda: [-1.0, -1.5, float("nan")] + RESIDUALS[:6])
+    assert bundle.monte_carlo.empirical_interval is None
+    assert any("supplied 6 out-of-sample residuals" in w for w in bundle.warnings)
