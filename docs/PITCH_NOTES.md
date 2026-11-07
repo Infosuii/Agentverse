@@ -86,7 +86,7 @@ Plain-English Policy Query
 | `naive_growth` (constant tax-to-profit ratio) | £6.56bn | £8.25bn | 11.09% | 45.5% | Ignores statutory rate changes |
 | `linear_regression` (OLS on $\Delta \tau_t, g_t$) | £8.35bn | £10.90bn | 13.89% | 54.5% | Unstable across structural regime shifts |
 
-- **Empirical Interval Calibration:** Leave-one-out 90% empirical residual interval coverage on `FY2008-09..FY2024-25` is **14 / 17 (82.4%)** for `jane_behavioural` (and **15 / 17 (88.2%)** prior to the 2023 full-expensing regime shift).
+- **Empirical Interval Calibration:** Leave-one-out 90% empirical residual interval coverage on `FY2008-09..FY2024-25` is **14 / 17 (82.3%)** for `jane_behavioural` (and **15 / 17 (88.2%)** prior to the 2023 full-expensing regime shift).
 - **ML Honesty Rule (`adopted = False`):** Strongly regularised `LGBMRegressor` achieves £3.27bn train MAE (`FY1983-84..FY2007-08`) but **£6.33bn** out-of-sample test MAE—failing to beat either `static` (£5.71bn) or `jane_behavioural` (£5.54bn) because $n = 24$ annual observations cannot support non-linear tree splits across shifting fiscal regimes. Following our honesty rule, LightGBM is **rejected (`adopted = False`)** and not wired into the live simulator.
 
 ### 5.2 Research Agent Citation & Quote Audit (15-Question UK CT Gold Set)

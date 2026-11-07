@@ -89,7 +89,7 @@
 
 1. **Click:** Click **Evaluation** in the top navigation bar (`/evaluation`).
 2. **Observe:**
-   - **Conditional Backtest Table (`FY2008-09..FY2024-25`, $n = 17$ unseen years):** Compares `jane_behavioural` (**Test MAE £5.54bn, MAPE 9.36%**) against `static` (**£5.71bn, MAPE 9.53%**), `naive_growth` (**£6.56bn**), and `linear_regression` (**£8.35bn**), plus **14/17 (82.4%)** leave-one-out 90% empirical interval coverage.
+   - **Conditional Backtest Table (`FY2008-09..FY2024-25`, $n = 17$ unseen years):** Compares `jane_behavioural` (**Test MAE £5.54bn, MAPE 9.36%**) against `static` (**£5.71bn, MAPE 9.53%**), `naive_growth` (**£6.56bn**), and `linear_regression` (**£8.35bn**), plus **14/17 (82.3%)** leave-one-out 90% empirical interval coverage.
    - **ML Honesty Card (`LightGBMRegressor`, `adopted = False`):** Shows that LightGBM achieved £3.27bn train MAE (`FY1983-84..FY2007-08`) but **£6.33bn** out-of-sample test MAE—worse than both `static` (£5.71bn) and `jane_behavioural` (£5.54bn)—and is therefore transparently rejected (`adopted = False`) and not wired into the live simulator.
    - **Research & Verifier Evaluation Cards:** **15/15 (100%)** fact accuracy, **15/15 (100%)** HTTP-200 URL validity, **15/15 (100%)** verbatim quote verification, **0** hallucinated sources, and **18/18 (100%)** fault-injection detection across the verifier suite.
 3. **Talking Point (Judging Criterion — Testing on Unseen Data):**
