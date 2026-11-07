@@ -1,2 +1,16 @@
 # Device-specific polling state, never commit
 .agents/local/
+
+# Python and secrets
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.cache/
+data/raw/
+*.parquet
+.DS_Store
+.vscode/
+.idea/
