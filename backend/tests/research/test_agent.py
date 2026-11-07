@@ -34,9 +34,10 @@ def _fast(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def live(monkeypatch: pytest.MonkeyPatch) -> tuple[MockLLM, list[str]]:
-    """Live mode with a MockLLM, deterministic ordering (one worker) and a fake fetch."""
-    settings = dataclasses.replace(get_settings(), mode="live", gemini_api_key="test")
+def live(monkeypatch: pytest.MonkeyPatch, tmp_path) -> tuple[MockLLM, list[str]]:
+    """Live mode with a MockLLM, deterministic ordering (one worker), a fake fetch and a temporary cache.
+    No tool loop is scripted, so the loop is unavailable and the fixed M1 sequence runs as its fallback."""
+    settings = dataclasses.replace(get_settings(), mode="live", gemini_api_key="test", research_cache_dir=tmp_path)
     monkeypatch.setattr(agent, "get_settings", lambda: settings)
     llm = MockLLM()
     monkeypatch.setattr(agent, "get_llm", lambda: llm)
@@ -161,6 +162,7 @@ def test_failed_plan_uses_standard_questions(live: tuple[MockLLM, list[str]]) ->
     f = run_research(SPEC)
     assert f.mode == "live" and f.research_questions == list(agent.DEFAULT_QUESTIONS)
     assert f.trace[0].kind == "warning" and "Planning failed" in f.trace[0].title
+    assert any("autonomous research loop failed" in s.title for s in f.trace)
     assert any("No verified evidence" in s.title for s in f.trace)
 
 
@@ -169,15 +171,15 @@ def test_live_failure_falls_back_to_mock_with_a_warning(live: tuple[MockLLM, lis
     llm.register_structured("Write between 4 and 7", lambda: {"questions": QUESTIONS})  # every search fails
     f = run_research(SPEC)
     assert f.mode == "mock" and all(s.is_placeholder for s in f.sources)
-    warning = next(s for s in f.trace if s.kind == "warning" and "Live research failed" in s.title)
-    assert "no grounded sources" in warning.detail
+    warning = next(s for s in f.trace if s.kind == "warning" and "using the mock fixture" in s.title)
+    assert "no grounded or fetched sources" in warning.detail and "No cached research" in warning.detail
     assert [s.step_id for s in f.trace] == list(range(1, len(f.trace) + 1))
 
 
-@pytest.mark.parametrize("mode,key,expected", [("live", None, "GEMINI_API_KEY"), ("cached", "k", "M2")])
-def test_unavailable_live_paths_fall_back_to_mock(monkeypatch: pytest.MonkeyPatch, mode: str, key: str | None,
-                                                  expected: str) -> None:
-    settings = dataclasses.replace(get_settings(), mode=mode, gemini_api_key=key)
+@pytest.mark.parametrize("mode,key,expected", [("live", None, "GEMINI_API_KEY"), ("cached", "k", "JANE_MODE=cached")])
+def test_unavailable_live_paths_fall_back_to_mock(monkeypatch: pytest.MonkeyPatch, tmp_path, mode: str,
+                                                  key: str | None, expected: str) -> None:
+    settings = dataclasses.replace(get_settings(), mode=mode, gemini_api_key=key, research_cache_dir=tmp_path)
     monkeypatch.setattr(agent, "get_settings", lambda: settings)
     f = run_research(SPEC)
     assert f.mode == "mock" and f.trace[0].kind == "warning" and expected in f.trace[0].detail

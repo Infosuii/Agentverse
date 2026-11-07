@@ -9,6 +9,7 @@ contracts use `extra="forbid"` and reject any extra keys the model invents.
 """
 from __future__ import annotations
 
+import json
 import logging
 import threading
 import time
@@ -50,6 +51,50 @@ class GroundedAnswer:
     model: str | None = None
 
 
+@dataclass(frozen=True)
+class FunctionCall:
+    id: str
+    name: str
+    arguments: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class ToolTurn:
+    """One model turn of a stateless tool loop.
+
+    `steps` are the response steps exactly as received (JSON dicts, None fields dropped). Append them to the
+    history unchanged: in stateless mode thought steps and built-in tool steps carry signatures that the API needs
+    back verbatim (docs: thinking.md "Stateless mode", tool-combination.md "Critical fields").
+    """
+    steps: list[dict[str, Any]]
+    function_calls: list[FunctionCall] = field(default_factory=list)
+    search_queries: list[str] = field(default_factory=list)
+    text: str = ""
+    citations: list[Citation] = field(default_factory=list)
+    status: str | None = None
+
+
+def user_input(text: str) -> dict[str, Any]:
+    """A `user_input` history step."""
+    return {"type": "user_input", "content": [{"type": "text", "text": text}]}
+
+
+def function_result(call: FunctionCall, result: Any) -> dict[str, Any]:
+    """A `function_result` history step answering `call` (result is JSON-encoded unless already a string)."""
+    text = result if isinstance(result, str) else json.dumps(result, default=str)
+    return {"type": "function_result", "name": call.name, "call_id": call.id, "result": [{"type": "text", "text": text}]}
+
+
+def parse_turn(interaction: Any) -> ToolTurn:
+    raw_steps = _get(interaction, "steps") or []
+    steps = [s if isinstance(s, dict) else s.model_dump(mode="json", exclude_none=True) for s in raw_steps]
+    calls = [FunctionCall(id=str(s.get("id")), name=str(s.get("name")), arguments=dict(s.get("arguments") or {}))
+             for s in steps if s.get("type") == "function_call"]
+    text, citations, queries = parse_grounding({"steps": steps})
+    return ToolTurn(steps=steps, function_calls=calls, search_queries=queries, text=text, citations=citations,
+                    status=_get(interaction, "status"))
+
+
 class LLMClient(Protocol):
     """Appendix B gateway interface. `thinking_level` and `search_grounded` are additive (both implementations have
     them); the Appendix B call shapes are unchanged."""
@@ -66,8 +111,13 @@ class LLMClient(Protocol):
     def search_grounded(self, prompt: str, *, system: str | None = None, model: str | None = None,
                         thinking_level: str | None = None) -> GroundedAnswer: ...
 
+    def tool_turn(self, history: list[dict[str, Any]], *, tools: list[dict[str, Any]], system: str | None = None,
+                  model: str | None = None, thinking_level: str | None = "low",
+                  timeout_s: float | None = None) -> ToolTurn: ...
+
 
 Factory = Callable[[], Any]
+TurnScript = Callable[[list[dict[str, Any]]], ToolTurn]
 
 
 Factory = Callable[[], Any]
@@ -86,6 +136,7 @@ class MockLLM:
         self._text: dict[str, str] = {}
         self._structured: dict[str, Factory] = {}
         self._search: dict[str, GroundedAnswer | Factory] = {}
+        self._loops: dict[str, TurnScript] = {}
         self.calls: list[tuple[str, str]] = []
 
     def register_text(self, key: str, text: str) -> None:
@@ -96,6 +147,10 @@ class MockLLM:
 
     def register_search(self, key: str, answer: GroundedAnswer | Factory) -> None:
         self._search[key] = answer
+
+    def register_tool_loop(self, key: str, script: TurnScript) -> None:
+        """`script(history)` returns the next ToolTurn. `key` is matched against the first user_input's text."""
+        self._loops[key] = script
 
     def generate_text(self, prompt: str, *, system: str | None = None, model: str | None = None,
                       thinking_level: str | None = None) -> str:
@@ -126,6 +181,20 @@ class MockLLM:
                     raise value
                 return value
         raise LLMUnavailable("MockLLM: no canned search response for this prompt")
+
+    def tool_turn(self, history: list[dict[str, Any]], *, tools: list[dict[str, Any]], system: str | None = None,
+                  model: str | None = None, thinking_level: str | None = "low",
+                  timeout_s: float | None = None) -> ToolTurn:
+        first = next((h for h in history if h.get("type") == "user_input"), {})
+        prompt = " ".join(c.get("text", "") for c in first.get("content", []))
+        self.calls.append(("tool_turn", prompt))
+        for key, script in self._loops.items():
+            if key in prompt:
+                turn = script(history)
+                if isinstance(turn, Exception):
+                    raise turn
+                return turn
+        raise LLMUnavailable("MockLLM: no scripted tool loop for this prompt")
 
 
 # ---------------------------------------------------------------------------------------------------- live Gemini
@@ -240,8 +309,10 @@ class GeminiLLM:
     def interact(self, input: Any, *, model: str | None = None, system: str | None = None,
                  tools: list[dict[str, Any]] | None = None, response_format: dict[str, Any] | None = None,
                  generation_config: dict[str, Any] | None = None, timeout_s: float | None = None,
-                 purpose: str = "call") -> Any:
-        """One `interactions.create` call with retries and usage logging. Returns the SDK Interaction."""
+                 purpose: str = "call", max_attempts: int = MAX_ATTEMPTS) -> Any:
+        """One `interactions.create` call with retries and usage logging. Returns the SDK Interaction.
+        `max_attempts` (at most MAX_ATTEMPTS) lets time-budgeted callers retry less."""
+        max_attempts = max(1, min(MAX_ATTEMPTS, max_attempts))
         client = self._get_client()
         model = model or self.model_fast
         body: dict[str, Any] = {"model": model, "input": input, "store": False}
@@ -254,14 +325,14 @@ class GeminiLLM:
         if generation_config:
             body["generation_config"] = generation_config
         last: BaseException | None = None
-        for attempt in range(1, MAX_ATTEMPTS + 1):
+        for attempt in range(1, max_attempts + 1):
             t0 = time.monotonic()
             try:
                 interaction = client.interactions.create(**body, timeout=timeout_s or self.timeout_s)
             except Exception as exc:
                 last = exc
                 ms = int((time.monotonic() - t0) * 1000)
-                retry = _is_retryable(exc) and attempt < MAX_ATTEMPTS
+                retry = _is_retryable(exc) and attempt < max_attempts
                 log.warning("gemini call failed model=%s purpose=%s attempt=%d ms=%d retry=%s error=%s",
                             model, purpose, attempt, ms, retry, f"{type(exc).__name__}: {exc}"[:300])
                 if not retry:
@@ -322,6 +393,17 @@ class GeminiLLM:
                                     purpose="google_search")
         text, citations, queries = parse_grounding(interaction)
         return GroundedAnswer(text=text, citations=citations, queries=queries, model=model)
+
+    def tool_turn(self, history: list[dict[str, Any]], *, tools: list[dict[str, Any]], system: str | None = None,
+                  model: str | None = None, thinking_level: str | None = "low",
+                  timeout_s: float | None = None) -> ToolTurn:
+        """One stateless turn of a tool loop (`store=False`, so the caller passes the whole history every time).
+        Built-in tools (e.g. `{"type": "google_search"}`) and function declarations can be combined. The loop runs
+        against a wall-clock budget, so a turn is tried at most twice."""
+        interaction = self.interact(history, model=model, system=system, tools=tools,
+                                    generation_config=self._config(thinking_level), timeout_s=timeout_s,
+                                    purpose="tool_turn", max_attempts=2)
+        return parse_turn(interaction)
 
 
 _llm: LLMClient | None = None
