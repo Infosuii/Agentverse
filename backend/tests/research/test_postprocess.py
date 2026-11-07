@@ -128,3 +128,19 @@ def test_interpretations_need_verified_support() -> None:
     assert [(i.interpretation_id, i.supporting_evidence_ids) for i in clean.interpretations] == [("I1", ["E1"])]
     assert clean.interpretations[0].statement == "Interpretation: mixed support."
     assert any("I1" in n and "verified" in n for n in notes)
+
+
+def test_small_counts_need_a_count_noun_like_report_001() -> None:
+    allowed = {82.3}
+    text, removed = strip_new_numbers("Across 3 studies [E1] receipts rose. The rate rose 7%. Over 5 years it fades. "
+                                      "The gap is 4 points. Two papers agree. In 12 studies it differs.", allowed)
+    assert text == "Across 3 studies [E1] receipts rose. Over 5 years it fades. Two papers agree."
+    assert removed == ["The rate rose 7%.", "The gap is 4 points.", "In 12 studies it differs."]
+
+
+def test_spelled_out_numbers_in_verified_quotes_support_digits_in_prose() -> None:
+    ev = _ev("E1", "S1", quote="Around ten per cent of the overall cost of the rate reductions is recovered.")
+    f = _findings(sources=[_src("S1", GROUNDED)], evidence=[ev],
+                  summary="Around 10 per cent of the cost is recovered [E1]. About 12 per cent is lost.")
+    clean, _ = postprocess(f, allowed_urls={GROUNDED}, parameter_names=PARAMETER_NAMES)
+    assert clean.summary == "Around 10 per cent of the cost is recovered [E1]."

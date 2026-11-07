@@ -16,6 +16,7 @@ import re
 from collections.abc import Iterable
 
 from ..contracts import Evidence, ResearchFindings
+from ..policy.rules import normalise as _words_to_digits  # the parser's number-word reader, as REPORT-001 uses
 
 ALLOWED_ACCESS = ("google_search", "url_fetch", "url_context", "curated_dataset")
 MAX_DETAIL = 500
@@ -23,6 +24,13 @@ MAX_DETAIL = 500
 _REF = re.compile(r"\[\s*([ESI]\d+(?:\s*[,;]\s*[ESI]?\d+)*)\s*\]")
 _NUMBER = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?")
 _SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z\[(\"'])")
+# Small counts are not quantities: "3 studies", "5 years". Same rule (and noun list) as REPORT-001 (agent-5), so
+# research prose never carries a bare small number into a report that the report check would reject.
+SMALL_COUNT_MAX = 10
+_COUNT = re.compile(
+    r"(?<![\d.,])(\d{1,2})\s+(?:[a-z-]+\s+)?(?:studies|study|sources?|papers?|reports?|documents?|estimates?|"
+    r"events?|budgets?|years?|months?|quarters?|countries|firms|companies|precedents?|changes|rises|cuts|"
+    r"scenarios?|parameters?|checks?|questions?|items?|steps?|channels?|reasons?|factors?)\b", re.I)
 
 
 def clip(text: str, limit: int = MAX_DETAIL) -> str:
@@ -47,11 +55,12 @@ def value_in_quote(value: float, quote: str | None) -> bool:
 
 
 def allowed_numbers(findings: ResearchFindings, evidence: Iterable[Evidence]) -> set[float]:
-    """Numbers prose may use: those in verified quotes (never model-written claims), quote-checked values, the policy
-    itself, and small counts ("two studies", "3 fiscal events")."""
-    allowed: set[float] = {float(i) for i in range(11)}
+    """Numbers prose may use: those in verified quotes (never model-written claims), quote-checked values and the
+    policy itself. Small counts ("3 studies") are exempted by `strip_new_numbers`, not listed here."""
+    allowed: set[float] = set()
     for e in evidence:
         allowed.update(numbers_in(e.quote or ""))
+        allowed.update(numbers_in(_words_to_digits(e.quote or "")))  # "around ten per cent" supports "10 per cent"
         if e.value is not None:
             allowed.add(abs(e.value))
     p = findings.policy
@@ -71,12 +80,18 @@ def unquoted_numbers(claim: str, quote: str | None) -> list[float]:
     return [n for n in numbers_in(claim) if not any(_close(n, q) for q in quoted)]
 
 
+def without_small_counts(text: str) -> str:
+    """Remove small counts followed by a count noun ("3 studies", "5 years"); bare numbers ("3%") stay."""
+    return _COUNT.sub(lambda m: " " if int(m.group(1)) <= SMALL_COUNT_MAX else m.group(0), text)
+
+
 def strip_new_numbers(text: str, allowed: set[float]) -> tuple[str, list[str]]:
-    """Drop sentences containing a number that is not in `allowed`. Returns (text, removed sentences)."""
+    """Drop sentences containing a number that is not in `allowed` (small counts excepted). Returns (text, removed
+    sentences)."""
     kept: list[str] = []
     removed: list[str] = []
     for sentence in _SENTENCE.split(text.strip()):
-        if any(not any(_close(n, a) for a in allowed) for n in numbers_in(sentence)):
+        if any(not any(_close(n, a) for a in allowed) for n in numbers_in(without_small_counts(sentence))):
             removed.append(sentence)
         else:
             kept.append(sentence)
