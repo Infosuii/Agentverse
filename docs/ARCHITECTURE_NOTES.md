@@ -38,3 +38,27 @@ Owner: agent-1. One line per cross-cutting decision. Other agents propose entrie
 - **Monte Carlo bands.** 2,000 draws vary all uncertain assumptions together (independently, from their stated distributions) and rerun the model. The shaded bands show the 5th–95th and 25th–75th percentiles of the results, and the line shows the median. They are assumption-driven ranges, not statistical prediction intervals, and the note reports the Monte Carlo standard error of the median.
 - **Tornado.** Each uncertain assumption moves from its low to its high value with the others at central, for the final year. Bars are sorted by the size of the swing, so the top bars are the assumptions the result depends on most. Interactions between assumptions are not shown.
 - **Why these are not forecasts.** Every range shows what the model implies under its assumptions. None includes model-specification error, data revisions, macroeconomic shocks or other policy changes. Only the separately labelled *empirical prediction interval* is checked against history, and it is shown only when the backtest has enough out-of-sample cases and reports its coverage.
+
+## Model card: econometric engine (`engine/`, agent-3, model `engine-1.0.0`)
+
+**Purpose.** Projects the effect of a change in the UK corporation tax (CT) main rate on CT receipts, business investment, GDP and the cost of capital, over 1–10 fiscal years from the effective date, as changes against an OBR baseline. Deterministic and pure numpy: no I/O, no randomness, and no Gemini involvement.
+
+**Equations** (MASTER_PROMPT 9.5; t0 and t1 are the old and new rates as fractions; y = 1…H):
+- Revenue: B0 = s·R·(1 + dev/100)/t0, the implied main-rate profit base, with s the main-rate share of receipts. ΔR_static = (t1 − t0)·B0·timing. The base responds to the net-of-tax rate: B1 = B0·((1 − t1)/(1 − t0))^ε. ΔR_behav = (t1·B1 − t0·B0)·timing. In year 1, timing and ε are scaled by their first-year shares.
+- Investment: per asset (plant & machinery, structures, intangibles), the allowance PV is z_pm = f + (1 − f)·φ(1 + r)/(φ + r), with φ = 18% WDA and f the full-expensing coverage; z_st is the 3% SBA over 33⅓ years; z_in is a parameter. The user cost is c(t) = (r + δ)(1 − t·z)/(1 − t). Δc is the share-weighted percentage change, ΔI_LR = −σ·Δc, and ΔI_y = ΔI_LR·(1 − (1 − λ)^y).
+- GDP: the capital gap follows x_y = (1 − d)·x_{y−1} + d·ΔI_y, with d = Σ w·δ + g. ΔY = capital_share·x. ΔR_dynamic = ΔR_behav + t1·B1·timing·ΔY·η.
+- Explainability extras (calc steps only, not metrics): Devereux-Griffith EMTR and EATR for the share-weighted representative investment at t0 and t1, with p = 20% (Hanappi 2018).
+
+**Key result to communicate.** With full expensing (z = 1), the plant & machinery user cost does not depend on the CT rate. A rate rise therefore reaches investment through structures, intangibles and uncovered P&M.
+
+**Assumptions.** 19 parameters in `engine/parameters.py`. Each carries a basis (`literature`, `official` or `team_judgement`), source ids from `data/curated/literature_sources.csv` or agent-6's datasets, and a rationale quoting the figure and where it appears. Where nothing could be sourced (profit-GDP elasticity, phasing, adjustment speed, intangibles allowance PV, full-expensing coverage, depreciation rates, trend growth), the parameter is declared team judgement and its range widened. The investment shares are ONS 2025 business investment by asset. Statutory constants were checked on gov.uk on 2026-11-07 (HS252 for the WDA, the SBA rate policy paper, and the full expensing guidance).
+
+**Confidence.** Static revenue is high. Behavioural revenue, investment and cost of capital are medium. GDP and dynamic revenue are low and labelled "indicative".
+
+**Known limitations.**
+- Partial equilibrium; labour supply and wages held fixed.
+- No profit-shifting dynamics beyond the single taxable-profit elasticity ε.
+- No location or discrete-choice (EATR-driven) investment effects; the EATR is shown for explanation only.
+- One representative firm with three asset types. Financing is not modelled (equity only, no debt or interest deductibility) and there is no inflation.
+- Marginal relief is approximated through the main-rate profit share. The small profits rate has partial support only: revenue only, with no investment channel.
+- Parameters are independent in the Monte Carlo.
