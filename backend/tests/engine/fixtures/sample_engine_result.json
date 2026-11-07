@@ -89,23 +89,23 @@
       "values": [
         {
           "fiscal_year": "2027-28",
-          "value": 6.991521012841288
+          "value": 6.9909857521734
         },
         {
           "fiscal_year": "2028-29",
-          "value": 11.764387634943349
+          "value": 11.762087326839053
         },
         {
           "fiscal_year": "2029-30",
-          "value": 12.217020098568867
+          "value": 12.213031732003222
         },
         {
           "fiscal_year": "2030-31",
-          "value": 12.690934111097341
+          "value": 12.685088418209403
         },
         {
           "fiscal_year": "2031-32",
-          "value": 13.185885224160737
+          "value": 13.17808022543841
         }
       ],
       "confidence": "low",
@@ -118,23 +118,23 @@
       "values": [
         {
           "fiscal_year": "2027-28",
-          "value": -0.26754781069462513
+          "value": -0.2911844134692508
         },
         {
           "fiscal_year": "2028-29",
-          "value": -0.40132171604193767
+          "value": -0.4367766202038762
         },
         {
           "fiscal_year": "2029-30",
-          "value": -0.468208668715594
+          "value": -0.5095727235711889
         },
         {
           "fiscal_year": "2030-31",
-          "value": -0.5016521450524222
+          "value": -0.5459707752548452
         },
         {
           "fiscal_year": "2031-32",
-          "value": -0.5183738832208362
+          "value": -0.5641698010966734
         }
       ],
       "confidence": "medium",
@@ -147,23 +147,23 @@
       "values": [
         {
           "fiscal_year": "2027-28",
-          "value": -0.8285555836307547
+          "value": -0.9017546098389392
         },
         {
           "fiscal_year": "2028-29",
-          "value": -1.2582097609530238
+          "value": -1.3693667322980367
         },
         {
           "fiscal_year": "2029-30",
-          "value": -1.4851708089563216
+          "value": -1.6163787316548093
         },
         {
           "fiscal_year": "2030-31",
-          "value": -1.6111131640488179
+          "value": -1.7534475071507971
         },
         {
           "fiscal_year": "2031-32",
-          "value": -1.685593716053341
+          "value": -1.8345080689770978
         }
       ],
       "confidence": "medium",
@@ -176,23 +176,23 @@
       "values": [
         {
           "fiscal_year": "2027-28",
-          "value": -0.015560794708247954
+          "value": -0.01635191225767422
         },
         {
           "fiscal_year": "2028-29",
-          "value": -0.036639416098451213
+          "value": -0.03858411317269404
         },
         {
           "fiscal_year": "2029-30",
-          "value": -0.05854336245833812
+          "value": -0.06178308286137673
         },
         {
           "fiscal_year": "2030-31",
-          "value": -0.07920753054813574
+          "value": -0.08376910629254858
         },
         {
           "fiscal_year": "2031-32",
-          "value": -0.09783963693860612
+          "value": -0.1036904761449086
         }
       ],
       "confidence": "low",
@@ -205,23 +205,23 @@
       "values": [
         {
           "fiscal_year": "2027-28",
-          "value": 0.8918260356487505
+          "value": 0.9706147115641692
         },
         {
           "fiscal_year": "2028-29",
-          "value": 0.8918260356487505
+          "value": 0.9706147115641692
         },
         {
           "fiscal_year": "2029-30",
-          "value": 0.8918260356487505
+          "value": 0.9706147115641692
         },
         {
           "fiscal_year": "2030-31",
-          "value": 0.8918260356487505
+          "value": 0.9706147115641692
         },
         {
           "fiscal_year": "2031-32",
-          "value": 0.8918260356487505
+          "value": 0.9706147115641692
         }
       ],
       "confidence": "medium",
@@ -500,14 +500,14 @@
       "label": "Change in the cost of capital (investment-weighted)",
       "formula": "Δc = Σ_a w_a·Δc_a / Σ_a w_a",
       "inputs": {
-        "w_plant_machinery": 0.4,
-        "w_structures": 0.27,
-        "w_intangibles": 0.33,
+        "w_plant_machinery": 0.2670429068419018,
+        "w_structures": 0.2883308851952068,
+        "w_intangibles": 0.4446262079628914,
         "Δc_plant_machinery": 0.19574143034470914,
         "Δc_structures": 2.355963365452407,
         "Δc_intangibles": 0.5376344086021723
       },
-      "output": 0.8918260356487505,
+      "output": 0.9706147115641692,
       "unit": "%",
       "fiscal_year": null,
       "parameter_names": [
@@ -525,6 +525,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -534,9 +535,9 @@
       "formula": "ΔI_LR = −σ × Δc",
       "inputs": {
         "σ": 0.6,
-        "Δc": 0.8918260356487505
+        "Δc": 0.9706147115641692
       },
-      "output": -0.5350956213892503,
+      "output": -0.5823688269385016,
       "unit": "%",
       "fiscal_year": null,
       "parameter_names": [
@@ -556,6 +557,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -564,15 +566,15 @@
       "label": "Capital-stock adjustment rate",
       "formula": "d = Σ_a w_a·δ_a + g",
       "inputs": {
-        "w_plant_machinery": 0.4,
-        "w_structures": 0.27,
-        "w_intangibles": 0.33,
+        "w_plant_machinery": 0.2670429068419018,
+        "w_structures": 0.2883308851952068,
+        "w_intangibles": 0.4446262079628914,
         "δ_plant_machinery": 0.175,
         "δ_structures": 0.0361,
         "δ_intangibles": 0.1535,
         "g": 0.015
       },
-      "output": 0.14540199999999998,
+      "output": 0.14039137657518358,
       "unit": "fraction per year",
       "fiscal_year": null,
       "parameter_names": [
@@ -585,6 +587,7 @@
         "trend_real_growth"
       ],
       "source_ids": [
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018"
       ]
@@ -596,15 +599,15 @@
       "inputs": {
         "r": 0.05,
         "t0": 0.25,
-        "w_plant_machinery": 0.4,
-        "w_structures": 0.27,
-        "w_intangibles": 0.33,
+        "w_plant_machinery": 0.2670429068419018,
+        "w_structures": 0.2883308851952068,
+        "w_intangibles": 0.4446262079628914,
         "p̃_plant_machinery": 0.05267391304347821,
         "p̃_structures": 0.06417459655866409,
         "p̃_intangibles": 0.05678333333333335,
-        "p̃": 0.0571352062882306
+        "p̃": 0.05781707126216573
       },
-      "output": 12.488283060072531,
+      "output": 13.520351500891492,
       "unit": "%",
       "fiscal_year": null,
       "parameter_names": [
@@ -622,6 +625,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-hmrc2026hs252",
         "D-lit-hmrc2020"
@@ -635,14 +639,14 @@
         "p": 0.2,
         "r": 0.05,
         "t0": 0.25,
-        "w_plant_machinery": 0.4,
-        "w_structures": 0.27,
-        "w_intangibles": 0.33,
+        "w_plant_machinery": 0.2670429068419018,
+        "w_structures": 0.2883308851952068,
+        "w_intangibles": 0.4446262079628914,
         "EATR_plant_machinery": 19.75271739130434,
         "EATR_structures": 24.065473709499038,
         "EATR_intangibles": 21.293749999999985
       },
-      "output": 21.425702358086475,
+      "output": 21.681401723312142,
       "unit": "%",
       "fiscal_year": null,
       "parameter_names": [
@@ -660,6 +664,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-hmrc2026hs252",
         "D-lit-hmrc2020"
@@ -672,15 +677,15 @@
       "inputs": {
         "r": 0.05,
         "t1": 0.28,
-        "w_plant_machinery": 0.4,
-        "w_structures": 0.27,
-        "w_intangibles": 0.33,
+        "w_plant_machinery": 0.2670429068419018,
+        "w_structures": 0.2883308851952068,
+        "w_intangibles": 0.4446262079628914,
         "p̃_plant_machinery": 0.05311956521739128,
         "p̃_structures": 0.06653702931844144,
         "p̃_intangibles": 0.05791388888888893,
-        "p̃": 0.05832440733626905
+        "p̃": 0.05911991647252671
       },
-      "output": 14.27259652768475,
+      "output": 15.426132201598714,
       "unit": "%",
       "fiscal_year": null,
       "parameter_names": [
@@ -698,6 +703,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-hmrc2026hs252",
         "D-lit-hmrc2020"
@@ -711,14 +717,14 @@
         "p": 0.2,
         "r": 0.05,
         "t1": 0.28,
-        "w_plant_machinery": 0.4,
-        "w_structures": 0.27,
-        "w_intangibles": 0.33,
+        "w_plant_machinery": 0.2670429068419018,
+        "w_structures": 0.2883308851952068,
+        "w_intangibles": 0.4446262079628914,
         "EATR_plant_machinery": 22.123043478260858,
         "EATR_structures": 26.95333055463892,
         "EATR_intangibles": 23.84900000000001
       },
-      "output": 23.996786641056854,
+      "output": 24.28316993010961,
       "unit": "%",
       "fiscal_year": null,
       "parameter_names": [
@@ -736,6 +742,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-hmrc2026hs252",
         "D-lit-hmrc2020"
@@ -853,11 +860,11 @@
       "label": "Business investment change 2027-28",
       "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
       "inputs": {
-        "ΔI_LR": -0.5350956213892503,
+        "ΔI_LR": -0.5823688269385016,
         "λ": 0.5,
         "y": 1.0
       },
-      "output": -0.26754781069462513,
+      "output": -0.2911844134692508,
       "unit": "%",
       "fiscal_year": "2027-28",
       "parameter_names": [
@@ -878,6 +885,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -886,10 +894,10 @@
       "label": "Business investment change 2027-28 (£bn)",
       "formula": "ΔI_£ = ΔI_y/100 × I",
       "inputs": {
-        "ΔI_y": -0.26754781069462513,
+        "ΔI_y": -0.2911844134692508,
         "I": 309.68505460000006
       },
-      "output": -0.8285555836307547,
+      "output": -0.9017546098389392,
       "unit": "£bn",
       "fiscal_year": "2027-28",
       "parameter_names": [
@@ -911,6 +919,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -920,10 +929,10 @@
       "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
       "inputs": {
         "x_{y−1}": 0.0,
-        "d": 0.14540199999999998,
-        "ΔI_y": -0.26754781069462513
+        "d": 0.14039137657518358,
+        "ΔI_y": -0.2911844134692508
       },
-      "output": -0.03890198677061988,
+      "output": -0.04087978064418554,
       "unit": "%",
       "fiscal_year": "2027-28",
       "parameter_names": [
@@ -945,6 +954,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018"
       ]
@@ -955,9 +965,9 @@
       "formula": "ΔY_y = capital_share × x_y",
       "inputs": {
         "capital_share": 0.4,
-        "x_y": -0.03890198677061988
+        "x_y": -0.04087978064418554
       },
-      "output": -0.015560794708247954,
+      "output": -0.01635191225767422,
       "unit": "%",
       "fiscal_year": "2027-28",
       "parameter_names": [
@@ -980,6 +990,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018",
         "D-lit-ons2024"
@@ -994,10 +1005,10 @@
         "t1": 0.28,
         "B1": 402.73097296393524,
         "timing": 0.6,
-        "ΔY_y": -0.015560794708247954,
+        "ΔY_y": -0.01635191225767422,
         "η": 1.0
       },
-      "output": 6.991521012841288,
+      "output": 6.9909857521734,
       "unit": "£bn",
       "fiscal_year": "2027-28",
       "parameter_names": [
@@ -1033,6 +1044,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1142,11 +1154,11 @@
       "label": "Business investment change 2028-29",
       "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
       "inputs": {
-        "ΔI_LR": -0.5350956213892503,
+        "ΔI_LR": -0.5823688269385016,
         "λ": 0.5,
         "y": 2.0
       },
-      "output": -0.40132171604193767,
+      "output": -0.4367766202038762,
       "unit": "%",
       "fiscal_year": "2028-29",
       "parameter_names": [
@@ -1167,6 +1179,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1175,10 +1188,10 @@
       "label": "Business investment change 2028-29 (£bn)",
       "formula": "ΔI_£ = ΔI_y/100 × I",
       "inputs": {
-        "ΔI_y": -0.40132171604193767,
+        "ΔI_y": -0.4367766202038762,
         "I": 313.51649080000004
       },
-      "output": -1.2582097609530238,
+      "output": -1.3693667322980367,
       "unit": "£bn",
       "fiscal_year": "2028-29",
       "parameter_names": [
@@ -1200,6 +1213,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1208,11 +1222,11 @@
       "label": "Capital stock gap vs baseline 2028-29",
       "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
       "inputs": {
-        "x_{y−1}": -0.03890198677061988,
-        "d": 0.14540199999999998,
-        "ΔI_y": -0.40132171604193767
+        "x_{y−1}": -0.04087978064418554,
+        "d": 0.14039137657518358,
+        "ΔI_y": -0.4367766202038762
       },
-      "output": -0.09159854024612803,
+      "output": -0.09646028293173511,
       "unit": "%",
       "fiscal_year": "2028-29",
       "parameter_names": [
@@ -1234,6 +1248,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018"
       ]
@@ -1244,9 +1259,9 @@
       "formula": "ΔY_y = capital_share × x_y",
       "inputs": {
         "capital_share": 0.4,
-        "x_y": -0.09159854024612803
+        "x_y": -0.09646028293173511
       },
-      "output": -0.036639416098451213,
+      "output": -0.03858411317269404,
       "unit": "%",
       "fiscal_year": "2028-29",
       "parameter_names": [
@@ -1269,6 +1284,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018",
         "D-lit-ons2024"
@@ -1283,10 +1299,10 @@
         "t1": 0.28,
         "B1": 422.4506837378739,
         "timing": 1.0,
-        "ΔY_y": -0.036639416098451213,
+        "ΔY_y": -0.03858411317269404,
         "η": 1.0
       },
-      "output": 11.764387634943349,
+      "output": 11.762087326839053,
       "unit": "£bn",
       "fiscal_year": "2028-29",
       "parameter_names": [
@@ -1319,6 +1335,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1428,11 +1445,11 @@
       "label": "Business investment change 2029-30",
       "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
       "inputs": {
-        "ΔI_LR": -0.5350956213892503,
+        "ΔI_LR": -0.5823688269385016,
         "λ": 0.5,
         "y": 3.0
       },
-      "output": -0.468208668715594,
+      "output": -0.5095727235711889,
       "unit": "%",
       "fiscal_year": "2029-30",
       "parameter_names": [
@@ -1453,6 +1470,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1461,10 +1479,10 @@
       "label": "Business investment change 2029-30 (£bn)",
       "formula": "ΔI_£ = ΔI_y/100 × I",
       "inputs": {
-        "ΔI_y": -0.468208668715594,
+        "ΔI_y": -0.5095727235711889,
         "I": 317.20275770000006
       },
-      "output": -1.4851708089563216,
+      "output": -1.6163787316548093,
       "unit": "£bn",
       "fiscal_year": "2029-30",
       "parameter_names": [
@@ -1486,6 +1504,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1494,11 +1513,11 @@
       "label": "Capital stock gap vs baseline 2029-30",
       "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
       "inputs": {
-        "x_{y−1}": -0.09159854024612803,
-        "d": 0.14540199999999998,
-        "ΔI_y": -0.468208668715594
+        "x_{y−1}": -0.09646028293173511,
+        "d": 0.14039137657518358,
+        "ΔI_y": -0.5095727235711889
       },
-      "output": -0.1463584061458453,
+      "output": -0.15445770715344181,
       "unit": "%",
       "fiscal_year": "2029-30",
       "parameter_names": [
@@ -1520,6 +1539,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018"
       ]
@@ -1530,9 +1550,9 @@
       "formula": "ΔY_y = capital_share × x_y",
       "inputs": {
         "capital_share": 0.4,
-        "x_y": -0.1463584061458453
+        "x_y": -0.15445770715344181
       },
-      "output": -0.05854336245833812,
+      "output": -0.06178308286137673,
       "unit": "%",
       "fiscal_year": "2029-30",
       "parameter_names": [
@@ -1555,6 +1575,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018",
         "D-lit-ons2024"
@@ -1569,10 +1590,10 @@
         "t1": 0.28,
         "B1": 439.6727042404653,
         "timing": 1.0,
-        "ΔY_y": -0.05854336245833812,
+        "ΔY_y": -0.06178308286137673,
         "η": 1.0
       },
-      "output": 12.217020098568867,
+      "output": 12.213031732003222,
       "unit": "£bn",
       "fiscal_year": "2029-30",
       "parameter_names": [
@@ -1605,6 +1626,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1714,11 +1736,11 @@
       "label": "Business investment change 2030-31",
       "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
       "inputs": {
-        "ΔI_LR": -0.5350956213892503,
+        "ΔI_LR": -0.5823688269385016,
         "λ": 0.5,
         "y": 4.0
       },
-      "output": -0.5016521450524222,
+      "output": -0.5459707752548452,
       "unit": "%",
       "fiscal_year": "2030-31",
       "parameter_names": [
@@ -1739,6 +1761,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1747,10 +1770,10 @@
       "label": "Business investment change 2030-31 (£bn)",
       "formula": "ΔI_£ = ΔI_y/100 × I",
       "inputs": {
-        "ΔI_y": -0.5016521450524222,
+        "ΔI_y": -0.5459707752548452,
         "I": 321.16142229999997
       },
-      "output": -1.6111131640488179,
+      "output": -1.7534475071507971,
       "unit": "£bn",
       "fiscal_year": "2030-31",
       "parameter_names": [
@@ -1772,6 +1795,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -1780,11 +1804,11 @@
       "label": "Capital stock gap vs baseline 2030-31",
       "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
       "inputs": {
-        "x_{y−1}": -0.1463584061458453,
-        "d": 0.14540199999999998,
-        "ΔI_y": -0.5016521450524222
+        "x_{y−1}": -0.15445770715344181,
+        "d": 0.14039137657518358,
+        "ΔI_y": -0.5459707752548452
       },
-      "output": -0.19801882637033938,
+      "output": -0.20942276573137145,
       "unit": "%",
       "fiscal_year": "2030-31",
       "parameter_names": [
@@ -1806,6 +1830,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018"
       ]
@@ -1816,9 +1841,9 @@
       "formula": "ΔY_y = capital_share × x_y",
       "inputs": {
         "capital_share": 0.4,
-        "x_y": -0.19801882637033938
+        "x_y": -0.20942276573137145
       },
-      "output": -0.07920753054813574,
+      "output": -0.08376910629254858,
       "unit": "%",
       "fiscal_year": "2030-31",
       "parameter_names": [
@@ -1841,6 +1866,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018",
         "D-lit-ons2024"
@@ -1855,10 +1881,10 @@
         "t1": 0.28,
         "B1": 457.6811998648888,
         "timing": 1.0,
-        "ΔY_y": -0.07920753054813574,
+        "ΔY_y": -0.08376910629254858,
         "η": 1.0
       },
-      "output": 12.690934111097341,
+      "output": 12.685088418209403,
       "unit": "£bn",
       "fiscal_year": "2030-31",
       "parameter_names": [
@@ -1891,6 +1917,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -2000,11 +2027,11 @@
       "label": "Business investment change 2031-32",
       "formula": "ΔI_y = ΔI_LR × (1 − (1 − λ)^y)",
       "inputs": {
-        "ΔI_LR": -0.5350956213892503,
+        "ΔI_LR": -0.5823688269385016,
         "λ": 0.5,
         "y": 5.0
       },
-      "output": -0.5183738832208362,
+      "output": -0.5641698010966734,
       "unit": "%",
       "fiscal_year": "2031-32",
       "parameter_names": [
@@ -2025,6 +2052,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -2033,10 +2061,10 @@
       "label": "Business investment change 2031-32 (£bn)",
       "formula": "ΔI_£ = ΔI_y/100 × I",
       "inputs": {
-        "ΔI_y": -0.5183738832208362,
+        "ΔI_y": -0.5641698010966734,
         "I": 325.1694907120251
       },
-      "output": -1.685593716053341,
+      "output": -1.8345080689770978,
       "unit": "£bn",
       "fiscal_year": "2031-32",
       "parameter_names": [
@@ -2058,6 +2086,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     },
@@ -2066,11 +2095,11 @@
       "label": "Capital stock gap vs baseline 2031-32",
       "formula": "x_y = (1 − d) × x_{y−1} + d × ΔI_y",
       "inputs": {
-        "x_{y−1}": -0.19801882637033938,
-        "d": 0.14540199999999998,
-        "ΔI_y": -0.5183738832208362
+        "x_{y−1}": -0.20942276573137145,
+        "d": 0.14039137657518358,
+        "ΔI_y": -0.5641698010966734
       },
-      "output": -0.24459909234651528,
+      "output": -0.2592261903622715,
       "unit": "%",
       "fiscal_year": "2031-32",
       "parameter_names": [
@@ -2092,6 +2121,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018"
       ]
@@ -2102,9 +2132,9 @@
       "formula": "ΔY_y = capital_share × x_y",
       "inputs": {
         "capital_share": 0.4,
-        "x_y": -0.24459909234651528
+        "x_y": -0.2592261903622715
       },
-      "output": -0.09783963693860612,
+      "output": -0.1036904761449086,
       "unit": "%",
       "fiscal_year": "2031-32",
       "parameter_names": [
@@ -2127,6 +2157,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023",
         "D-lit-obr2018",
         "D-lit-ons2024"
@@ -2141,10 +2172,10 @@
         "t1": 0.28,
         "B1": 476.4273030585953,
         "timing": 1.0,
-        "ΔY_y": -0.09783963693860612,
+        "ΔY_y": -0.1036904761449086,
         "η": 1.0
       },
-      "output": 13.185885224160737,
+      "output": 13.17808022543841,
       "unit": "£bn",
       "fiscal_year": "2031-32",
       "parameter_names": [
@@ -2177,6 +2208,7 @@
         "D-lit-hanappi2018",
         "D-lit-hmrc2023",
         "D-lit-hmt2023",
+        "D-ons-investment",
         "D-lit-oecd2023"
       ]
     }
@@ -2193,9 +2225,9 @@
     "full_expensing_coverage": 0.8,
     "allowance_pv_intangibles": 0.9,
     "capital_share": 0.4,
-    "share_plant_machinery": 0.4,
-    "share_structures": 0.27,
-    "share_intangibles": 0.33,
+    "share_plant_machinery": 0.2670429068419018,
+    "share_structures": 0.2883308851952068,
+    "share_intangibles": 0.4446262079628914,
     "depreciation_plant_machinery": 0.175,
     "depreciation_structures": 0.0361,
     "depreciation_intangibles": 0.1535,

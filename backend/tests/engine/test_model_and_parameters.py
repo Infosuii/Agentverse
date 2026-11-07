@@ -221,6 +221,6 @@ def test_sample_fixture_is_current(demo_spec, baseline):
 
     sample = EngineResult.model_validate(json.loads((Path(__file__).parent / "fixtures" /
                                                      "sample_engine_result.json").read_text(encoding="utf-8")))
-    fresh = run_engine(sample.policy, default_parameters(), baseline)
+    fresh = run_engine(sample.policy, sample.parameters_used, baseline)  # independent of registry data updates
     assert [s.step_id for s in fresh.calc_trace] == [s.step_id for s in sample.calc_trace]
     assert [s.output for s in fresh.calc_trace] == pytest.approx([s.output for s in sample.calc_trace])

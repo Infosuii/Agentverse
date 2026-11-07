@@ -332,23 +332,25 @@
     "description": "Share of business investment in plant & machinery (incl. transport and ICT equipment).",
     "category": "structural",
     "unit": "fraction",
-    "value": 0.4,
-    "low": 0.4,
-    "high": 0.4,
+    "value": 0.2670429068419018,
+    "low": 0.2670429068419018,
+    "high": 0.2670429068419018,
     "distribution": {
       "kind": "fixed",
       "params": {}
     },
-    "basis": "team_judgement",
-    "source_ids": [],
+    "basis": "official",
+    "source_ids": [
+      "D-ons-investment"
+    ],
     "evidence_ids": [],
-    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "rationale": "ONS business investment by asset (Investment shares 2025, agent-6 dataset business_investment_by_asset): 26.7% of the three-asset total.",
     "adjustable": false,
     "slider_min": null,
     "slider_max": null,
     "slider_step": null,
     "is_user_override": false,
-    "is_placeholder": true
+    "is_placeholder": false
   },
   {
     "name": "share_structures",
@@ -356,23 +358,25 @@
     "description": "Share of business investment in non-residential buildings and structures.",
     "category": "structural",
     "unit": "fraction",
-    "value": 0.27,
-    "low": 0.27,
-    "high": 0.27,
+    "value": 0.2883308851952068,
+    "low": 0.2883308851952068,
+    "high": 0.2883308851952068,
     "distribution": {
       "kind": "fixed",
       "params": {}
     },
-    "basis": "team_judgement",
-    "source_ids": [],
+    "basis": "official",
+    "source_ids": [
+      "D-ons-investment"
+    ],
     "evidence_ids": [],
-    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "rationale": "ONS business investment by asset (Investment shares 2025, agent-6 dataset business_investment_by_asset): 28.8% of the three-asset total.",
     "adjustable": false,
     "slider_min": null,
     "slider_max": null,
     "slider_step": null,
     "is_user_override": false,
-    "is_placeholder": true
+    "is_placeholder": false
   },
   {
     "name": "share_intangibles",
@@ -380,23 +384,25 @@
     "description": "Share of business investment in intellectual property products.",
     "category": "structural",
     "unit": "fraction",
-    "value": 0.33,
-    "low": 0.33,
-    "high": 0.33,
+    "value": 0.4446262079628914,
+    "low": 0.4446262079628914,
+    "high": 0.4446262079628914,
     "distribution": {
       "kind": "fixed",
       "params": {}
     },
-    "basis": "team_judgement",
-    "source_ids": [],
+    "basis": "official",
+    "source_ids": [
+      "D-ons-investment"
+    ],
     "evidence_ids": [],
-    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "rationale": "ONS business investment by asset (Investment shares 2025, agent-6 dataset business_investment_by_asset): 44.5% of the three-asset total.",
     "adjustable": false,
     "slider_min": null,
     "slider_max": null,
     "slider_step": null,
     "is_user_override": false,
-    "is_placeholder": true
+    "is_placeholder": false
   },
   {
     "name": "depreciation_plant_machinery",
