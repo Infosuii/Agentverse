@@ -9,7 +9,16 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 from ..contracts import Assumption, BaselineProjection, CalcStep, EngineResult, MetricProjection, PolicySpec, YearValue
-from .core import ASSETS, MAIN_POOL_WDA, SBA_RATE, compute
+from .core import (
+    ASSETS,
+    DG_PRE_TAX_RETURN,
+    DG_SOURCE_ID,
+    MAIN_POOL_WDA,
+    SBA_RATE,
+    STATUTORY_SOURCE_IDS,
+    compute,
+    devereux_griffith,
+)
 
 MODEL_VERSION = "engine-1.0.0"
 
@@ -84,28 +93,32 @@ def run_engine(spec: PolicySpec, params: Mapping[str, Assumption | float], basel
     trace: list[CalcStep] = []
 
     def step(step_id: str, label: str, formula: str, inputs: dict[str, float], output: float, unit: str,
-             names: list[str], *, fy: str | None = None, with_baseline: bool = False) -> None:
+             names: list[str], *, fy: str | None = None, with_baseline: bool = False,
+             extra_sources: tuple[str, ...] = ()) -> None:
         names = list(dict.fromkeys(names))
+        ids = sources(names, with_baseline=with_baseline)
+        ids += [s for s in extra_sources if s not in ids]
         trace.append(CalcStep(step_id=step_id, label=label, formula=formula,
                               inputs={k: float(v) for k, v in inputs.items()}, output=float(output), unit=unit,
-                              fiscal_year=fy, parameter_names=names,
-                              source_ids=sources(names, with_baseline=with_baseline)))
+                              fiscal_year=fy, parameter_names=names, source_ids=ids))
 
     im = out.intermediates
     t0, t1 = spec.baseline_rate_pct / 100, spec.proposed_rate_pct / 100  # type: ignore[operator]
     r = values["real_required_return"]
 
     # ---- Year-independent investment steps ---------------------------------------------------------------------------
+    statutory = {"plant_machinery": (STATUTORY_SOURCE_IDS["full_expensing"], STATUTORY_SOURCE_IDS["main_pool_wda"]),
+                 "structures": (STATUTORY_SOURCE_IDS["sba_rate"],), "intangibles": ()}
     if not small_profits:
         cov = values["full_expensing_coverage"]
         step("inv.allowance_pv.plant_machinery", "PV of capital allowances: plant & machinery",
              f"z_pm = f × 1 + (1 − f) × φ(1 + r)/(φ + r),  φ = {MAIN_POOL_WDA:g} main-pool WDA",
              {"f": cov, "φ": MAIN_POOL_WDA, "r": r}, im["z_plant_machinery"][0, 0], "fraction",
-             ["full_expensing_coverage", "real_required_return"])
+             ["full_expensing_coverage", "real_required_return"], extra_sources=statutory["plant_machinery"])
         step("inv.allowance_pv.structures", "PV of capital allowances: structures (SBA)",
              f"z_st = s × (1 − v^(1/s))/(1 − v),  v = 1/(1 + r),  s = {SBA_RATE:g} SBA straight line",
              {"s": SBA_RATE, "r": r, "v": 1 / (1 + r)}, im["z_structures"][0, 0], "fraction",
-             ["real_required_return"])
+             ["real_required_return"], extra_sources=statutory["structures"])
         step("inv.allowance_pv.intangibles", "PV of capital allowances: intangibles",
              "z_in = allowance_pv_intangibles", {"z_in": values["allowance_pv_intangibles"]},
              im["z_intangibles"][0, 0], "fraction", ["allowance_pv_intangibles"])
@@ -117,10 +130,10 @@ def run_engine(spec: PolicySpec, params: Mapping[str, Assumption | float], basel
             base_inputs = {"r": r, "δ": values[dep], "z": im[f"z_{a}"][0, 0]}
             step(f"inv.user_cost.baseline.{a}", f"User cost of capital at {t0:.0%}: {_ASSET_LABEL[a]}",
                  "c(t0) = (r + δ)(1 − t0·z)/(1 − t0)", {**base_inputs, "t0": t0}, im[f"c0_{a}"][0, 0],
-                 "fraction per year", names)
+                 "fraction per year", names, extra_sources=statutory[a])
             step(f"inv.user_cost.proposed.{a}", f"User cost of capital at {t1:.0%}: {_ASSET_LABEL[a]}",
                  "c(t1) = (r + δ)(1 − t1·z)/(1 − t1)", {**base_inputs, "t1": t1}, im[f"c1_{a}"][0, 0],
-                 "fraction per year", names)
+                 "fraction per year", names, extra_sources=statutory[a])
             step(f"inv.user_cost.{a}", f"Change in user cost: {_ASSET_LABEL[a]}",
                  "Δc_a = (c(t1)/c(t0) − 1) × 100",
                  {"c(t0)": im[f"c0_{a}"][0, 0], "c(t1)": im[f"c1_{a}"][0, 0]},
@@ -140,6 +153,28 @@ def run_engine(spec: PolicySpec, params: Mapping[str, Assumption | float], basel
              im["d"][0, 0], "fraction per year",
              ["share_plant_machinery", "share_structures", "share_intangibles", "depreciation_plant_machinery",
               "depreciation_structures", "depreciation_intangibles", "trend_real_growth"])
+
+        # Explainability extras (not metrics): Devereux-Griffith effective tax rates for the representative
+        # investment, i.e. the three assets weighted by their investment shares.
+        dg_params = ["real_required_return", "full_expensing_coverage", "allowance_pv_intangibles",
+                     "share_plant_machinery", "share_structures", "share_intangibles", "depreciation_plant_machinery",
+                     "depreciation_structures", "depreciation_intangibles"]
+        dg_sources = (DG_SOURCE_ID, *statutory["plant_machinery"], *statutory["structures"])
+        weights = {a: float(im[f"w_{a}"][0, 0]) for a in ASSETS}
+        for tag, t, word in (("baseline", t0, "t0"), ("proposed", t1, "t1")):
+            per = {a: devereux_griffith(t, float(im[f"z_{a}"][0, 0]), r, values[f"depreciation_{a}"]) for a in ASSETS}
+            p_bar = sum(weights[a] * per[a][0] for a in ASSETS)
+            step(f"etr.emtr.{tag}", f"Effective marginal tax rate at {t:.0%} (representative investment)",
+                 f"EMTR = (p̃ − r)/p̃,  p̃ = Σ_a w_a·[(1 − {word}·z_a)(r + δ_a)/(1 − {word}) − δ_a]",
+                 {"r": r, word: t, **{f"w_{a}": weights[a] for a in ASSETS},
+                  **{f"p̃_{a}": per[a][0] for a in ASSETS}, "p̃": p_bar},
+                 (p_bar - r) / p_bar * 100, "%", dg_params, extra_sources=dg_sources)
+            step(f"etr.eatr.{tag}", f"Effective average tax rate at {t:.0%} (representative investment)",
+                 f"EATR = Σ_a w_a·[(p − r) − (p + δ_a)(1 − {word}) + (1 − {word}·z_a)(r + δ_a)]/p,  p = "
+                 f"{DG_PRE_TAX_RETURN:g} pre-tax real return",
+                 {"p": DG_PRE_TAX_RETURN, "r": r, word: t, **{f"w_{a}": weights[a] for a in ASSETS},
+                  **{f"EATR_{a}": per[a][2] * 100 for a in ASSETS}},
+                 sum(weights[a] * per[a][2] for a in ASSETS) * 100, "%", dg_params, extra_sources=dg_sources)
 
     # ---- Per-year steps ----------------------------------------------------------------------------------------------
     share_label = "(1 − main_rate_profit_share)" if small_profits else "main_rate_profit_share"

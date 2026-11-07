@@ -78,9 +78,11 @@ def test_trace_carries_baseline_and_parameter_sources(demo_spec, baseline):
         update={"source_ids": ["D-lit-test2014"]})
     res = run_engine(demo_spec, params, baseline)
     steps = {s.step_id: s for s in res.calc_trace}
-    assert steps["rev.static.2027-28"].source_ids == ["D-obr-efo"]
+    assert steps["rev.static.2027-28"].source_ids[0] == "D-obr-efo"  # baseline first, then parameter sources
+    assert "D-lit-test2014" not in steps["rev.static.2027-28"].source_ids
     assert "D-lit-test2014" in steps["rev.behavioural.2027-28"].source_ids
     assert "D-obr-efo" in steps["rev.behavioural.2027-28"].source_ids
+    assert "D-lit-hmrc2026" in steps["rev.base.2027-28"].source_ids  # main_rate_profit_share
 
 
 def test_run_engine_accepts_plain_floats(demo_spec, baseline):
@@ -106,12 +108,71 @@ def test_registry_matches_spec_table():
     assert p.distribution.kind == "triangular"
     assert p.distribution.params == {"low": 0.05, "mode": 0.20, "high": 0.50}
     d = params["profit_base_deviation_pct"].distribution
-    assert d.kind == "normal" and d.params == {"mean": 0.0, "sd": 5.0}
+    assert d.kind == "normal" and d.params == {"mean": 0.0, "sd": 10.0}
     for name in ("share_plant_machinery", "depreciation_structures", "trend_real_growth"):
         assert params[name].distribution.kind == "fixed" and not params[name].adjustable
     for p in params.values():
-        assert p.basis == "team_judgement" and p.is_placeholder
         assert p.low <= p.value <= p.high
+        if p.distribution.kind == "triangular":
+            assert p.distribution.params == {"low": p.low, "mode": p.value, "high": p.high}
+
+
+def _registered_source_ids() -> set[str]:
+    import csv
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[3] / "data" / "curated" / "literature_sources.csv"
+    with path.open(encoding="utf-8") as f:
+        return {row["source_id"] for row in csv.DictReader(f)}
+
+
+def test_every_parameter_is_sourced_or_declared_judgement(monkeypatch):
+    from jane_avenue.engine import parameters as reg
+
+    monkeypatch.setattr(reg, "_investment_shares", lambda: None)  # shares are tested separately
+    registered = _registered_source_ids() | {"D-ons-investment"}
+    for p in default_parameters().values():
+        assert set(p.source_ids) <= registered, p.name
+        if p.name.startswith("share_"):
+            assert p.is_placeholder and p.basis == "team_judgement"  # 9.5 prior until the ONS dataset is present
+            continue
+        assert not p.is_placeholder, p.name
+        assert p.rationale and "awaiting" not in p.rationale, p.name
+        if p.basis != "team_judgement":
+            assert p.source_ids, p.name
+        else:
+            assert "judgement" in p.rationale.lower(), p.name
+
+
+def test_investment_shares_come_from_ons_dataset(monkeypatch):
+    from jane_avenue.contracts import TimeSeries, TimeSeriesPoint
+    from jane_avenue.data import registry
+
+    points = [TimeSeriesPoint(period="plant_machinery", value=0.267), TimeSeriesPoint(period="structures", value=0.288),
+              TimeSeriesPoint(period="intangibles", value=0.445)]
+    series = TimeSeries(series_id="business_investment_by_asset", title="Investment shares 2025", unit="fraction",
+                        frequency="annual", dataset_id="business_investment_by_asset", points=points)
+    monkeypatch.setattr(registry, "load_series", lambda sid: series if sid == "business_investment_by_asset" else None)
+    params = default_parameters()
+    for name, v in (("share_plant_machinery", 0.267), ("share_structures", 0.288), ("share_intangibles", 0.445)):
+        p = params[name]
+        assert (p.value, p.low, p.high) == (v, v, v)
+        assert p.basis == "official" and p.source_ids == ["D-ons-investment"] and not p.is_placeholder
+        assert "2025" in p.rationale
+
+
+def test_statutory_and_effective_tax_rate_steps(demo_spec, baseline):
+    res = run_engine(demo_spec, default_parameters(), baseline)
+    steps = {s.step_id: s for s in res.calc_trace}
+    assert {"D-lit-hmrc2023", "D-lit-hmrc2026hs252"} <= set(steps["inv.allowance_pv.plant_machinery"].source_ids)
+    assert "D-lit-hmrc2020" in steps["inv.allowance_pv.structures"].source_ids
+    for tag in ("baseline", "proposed"):
+        for kind in ("emtr", "eatr"):
+            s = steps[f"etr.{kind}.{tag}"]
+            assert s.unit == "%" and "D-lit-hanappi2018" in s.source_ids
+    assert steps["etr.eatr.proposed"].output > steps["etr.eatr.baseline"].output > 0
+    assert steps["etr.emtr.proposed"].output > steps["etr.emtr.baseline"].output
+    assert not any(m.metric.startswith("etr") for m in res.metrics)  # explainability only; metrics are frozen
 
 
 def test_apply_overrides_shifts_whole_distribution():
@@ -137,8 +198,8 @@ def test_apply_overrides_clips_to_slider_bounds():
 
 def test_apply_overrides_normal_distribution():
     p = apply_overrides(default_parameters(), {"profit_base_deviation_pct": 3.0})["profit_base_deviation_pct"]
-    assert p.distribution.params == {"mean": 3.0, "sd": 5.0}
-    assert (p.low, p.high) == (-2.0, 8.0)
+    assert p.distribution.params == {"mean": 3.0, "sd": 10.0}
+    assert (p.low, p.high) == (-7.0, 13.0)
 
 
 def test_apply_overrides_rejects_unknown_and_non_finite():
@@ -146,6 +207,11 @@ def test_apply_overrides_rejects_unknown_and_non_finite():
         apply_overrides(default_parameters(), {"not_a_parameter": 1.0})
     with pytest.raises(ValueError):
         apply_overrides(default_parameters(), {"capital_share": float("nan")})
+
+
+def test_apply_overrides_rejects_fixed_parameters():
+    with pytest.raises(ValueError, match="fixed"):
+        apply_overrides(default_parameters(), {"share_structures": 0.5})
 
 
 def test_sample_fixture_is_current(demo_spec, baseline):
