@@ -47,7 +47,7 @@ def test_changed_number_fails_even_when_the_words_match() -> None:
     status, note = verify_quote("Onshore corporation tax receipts totalled £92.3 billion in 2023-24, an "
                                 "increase of £11.1 billion on the previous year.", DOC)
     assert status == "failed" and note and "92.3" in note
-    assert verify_quote("totalled £82.3 billion", DOC) == ("verified", None)
+    assert verify_quote("Onshore corporation tax receipts totalled £82.3 billion", DOC) == ("verified", None)
 
 
 def test_number_at_the_edge_of_a_fuzzy_match_is_still_found() -> None:
@@ -84,3 +84,14 @@ def test_long_documents_with_repeated_phrases_still_verify() -> None:
              "increase in the size of the tax bass.")  # one typo -> fuzzy
     status, note = verify_quote(quote, text)
     assert status == "verified" and note and "fuzzy" in note
+
+
+@pytest.mark.parametrize("quote", ["25%", "higher than", "the main rate to 25%", "receipts totalled"])
+def test_very_short_quotes_fail_even_when_they_occur(quote: str) -> None:
+    status, note = verify_quote(quote, DOC)
+    assert status == "failed" and note and "too short" in note
+
+
+def test_six_words_or_thirty_characters_is_enough() -> None:
+    assert verify_quote("the rise in the main rate", DOC)[0] == "verified"                # 6 words
+    assert verify_quote("multinational companies to shift profits", DOC)[0] == "verified"  # 5 words, 41 chars
