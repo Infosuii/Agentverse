@@ -45,6 +45,11 @@ def scenario_values(params: Mapping[str, Assumption], endpoints: Endpoints) -> d
     return {"central": central, "optimistic": optimistic, "pessimistic": pessimistic}
 
 
+def with_values(params: Mapping[str, Assumption], values: Mapping[str, float]) -> dict[str, Assumption]:
+    """`params` with each `value` replaced, keeping the Assumption (and its source_ids for the calc trace)."""
+    return {name: (p.model_copy(update={"value": values[name]}) if name in values else p) for name, p in params.items()}
+
+
 def build_scenarios(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *,
                     endpoints: Endpoints | None = None) -> list[ScenarioResult]:
     """Return the central, optimistic and pessimistic scenarios, in that order."""
@@ -53,5 +58,6 @@ def build_scenarios(spec: PolicySpec, params: Mapping[str, Assumption], baseline
     for name, values in scenario_values(params, ep).items():
         definition = ScenarioDefinition(name=name, label=LABELS[name], description=DESCRIPTIONS[name],  # type: ignore[arg-type]
                                         parameter_values=values)
-        out.append(ScenarioResult(scenario=definition, result=run_engine(spec, values, baseline, name)))
+        out.append(ScenarioResult(scenario=definition, result=run_engine(spec, with_values(params, values),
+                                                                             baseline, name)))
     return out
