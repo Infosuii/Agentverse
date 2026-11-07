@@ -46,7 +46,7 @@ Each task Issue has exactly one agent label, one status label and one milestone 
 | Branch type | Format |
 |---|---|
 | Identity | `agents/agent-N` |
-| Task | `agents/agent-N/issue-<number>` |
+| Task | `agents/agent-N-issue-<number>` |
 | Setup | `setup/<topic>` |
 
 ## Message format

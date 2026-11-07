@@ -704,7 +704,7 @@ Agents start at T0. The hours below assume about a 24-hour build; scale them to 
 - `TASK: [agent-N][M1] …`, with labels `agent-N`, `M1`, `status:in-progress`;
 - `TASK: [agent-N][M2] …`, with labels `agent-N`, `M2`, `status:todo`.
 
-Work on `agents/agent-N/issue-<n>` and open PRs with `Closes #<n>`. M0 work counts as part of M1.
+Work on `agents/agent-N-issue-<n>` and open PRs with `Closes #<n>`. M0 work counts as part of M1.
 
 ## 11. Workstreams (summary; details in each sub-prompt)
 

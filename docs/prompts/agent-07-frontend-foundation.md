@@ -23,7 +23,7 @@ You are **agent-7** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-7][M2] UX polish, evidence browser, states, accessibility" --label agent-7 --label M2 --label status:todo --body "Brief: docs/prompts/agent-07-frontend-foundation.md (M2)."
    ```
    Then comment `CLAIM: agent-7` on the M1 Issue.
-5. **Branch.** Work on `agents/agent-7/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch.** Work on `agents/agent-7-issue-<n>`. Check GitHub every 3–5 minutes.
 
 ## 1. Mission
 
