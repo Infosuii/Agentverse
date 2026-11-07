@@ -5,8 +5,9 @@ Nothing the model returns is trusted:
 - evidence must point at a surviving source;
 - parameter evidence must name a known engine parameter and cite at least one verified evidence item;
 - interpretations must cite at least one verified evidence item (failed citations are removed);
-- summary and interpretation sentences that contain a number absent from the evidence (and from the policy itself)
-  are removed, since Gemini must not introduce numbers;
+- prose sentences with a number that the evidence they cite (inline, or the item's own evidence list) does not
+  contain, and that is not a policy number or a small count ("3 studies"), are removed: Gemini must not introduce
+  numbers, and REPORT-001 applies the same per-sentence rule to the report;
 - IDs are renumbered densely (S1.., E1.., I1..) and every reference, including `[E3]` in prose, is rewritten;
 - trace details are clipped.
 """
@@ -55,15 +56,18 @@ def value_in_quote(value: float, quote: str | None) -> bool:
     return False
 
 
-def allowed_numbers(findings: ResearchFindings, evidence: Iterable[Evidence]) -> set[float]:
-    """Numbers prose may use: those in verified quotes (never model-written claims), quote-checked values and the
-    policy itself. Small counts ("3 studies") are exempted by `strip_new_numbers`, not listed here."""
+def evidence_numbers(e: Evidence) -> set[float]:
+    """Numbers one evidence item can support: those in its verified quote (digits, and spelled out as the parser reads
+    them: "around ten per cent" supports 10) and its quote-checked value."""
+    nums = set(numbers_in(e.quote or "")) | set(numbers_in(_words_to_digits(e.quote or "")))
+    if e.value is not None:
+        nums.add(abs(e.value))
+    return nums
+
+
+def policy_numbers(findings: ResearchFindings) -> set[float]:
+    """Numbers any prose may use: the policy's own rates, change, horizon and effective date."""
     allowed: set[float] = set()
-    for e in evidence:
-        allowed.update(numbers_in(e.quote or ""))
-        allowed.update(numbers_in(_words_to_digits(e.quote or "")))  # "around ten per cent" supports "10 per cent"
-        if e.value is not None:
-            allowed.add(abs(e.value))
     p = findings.policy
     for v in (p.baseline_rate_pct, p.proposed_rate_pct, p.change_pp(), p.horizon_years):
         if v is not None:
@@ -73,6 +77,24 @@ def allowed_numbers(findings: ResearchFindings, evidence: Iterable[Evidence]) ->
                         float(p.effective_date.year % 100), float((p.effective_date.year + 1) % 100)})
     allowed.update(numbers_in(p.description))
     return allowed
+
+
+def allowed_numbers(findings: ResearchFindings, evidence: Iterable[Evidence]) -> set[float]:
+    """Every number any of `evidence` could support, plus the policy numbers (a global upper bound; prose is checked
+    per sentence against the evidence it cites, see `strip_new_numbers`)."""
+    allowed = policy_numbers(findings)
+    for e in evidence:
+        allowed |= evidence_numbers(e)
+    return allowed
+
+
+def cited_refs(text: str) -> list[str]:
+    """Evidence and source IDs cited in `text`: "[E2, E5]" -> ["E2", "E5"]; "[S3]" -> ["S3"]."""
+    refs: list[str] = []
+    for m in _REF.finditer(text):
+        for raw in re.split(r"\s*[,;]\s*", m.group(1)):
+            refs.append(raw if raw[0] in "ESI" else "E" + raw)
+    return refs
 
 
 def unquoted_numbers(claim: str, quote: str | None) -> list[float]:
@@ -86,25 +108,34 @@ def without_small_counts(text: str) -> str:
     return _COUNT.sub(lambda m: " " if int(m.group(1)) <= SMALL_COUNT_MAX else m.group(0), text)
 
 
-def strip_new_numbers(text: str, allowed: set[float]) -> tuple[str, list[str]]:
-    """Drop sentences containing a number that is not in `allowed` (small counts excepted). Returns (text, removed
-    sentences)."""
+def strip_new_numbers(text: str, allowed: set[float], *, by_ref: dict[str, set[float]] | None = None,
+                      context_refs: Iterable[str] = ()) -> tuple[str, list[str]]:
+    """Drop sentences containing a number that is not supported (small counts excepted). Returns (text, removed).
+
+    Without `by_ref`, every number must be in `allowed`. With it (as REPORT-001 does), a sentence may also use the
+    numbers of the evidence it cites inline ("[E3]", or "[S2]" for every verified item from that source) and of
+    `context_refs` (an interpretation's or confounder's own evidence list)."""
     kept: list[str] = []
     removed: list[str] = []
+    context = list(context_refs)
     for sentence in _SENTENCE.split(text.strip()):
-        if any(not any(_close(n, a) for a in allowed) for n in numbers_in(without_small_counts(sentence))):
+        ok = set(allowed)
+        if by_ref is not None:
+            for ref in [*cited_refs(sentence), *context]:
+                ok |= by_ref.get(ref, set())
+        if any(not any(_close(n, a) for a in ok) for n in numbers_in(without_small_counts(sentence))):
             removed.append(sentence)
         else:
             kept.append(sentence)
     return " ".join(kept), removed
 
 
-def _rewrite_refs(text: str, emap: dict[str, str], imap: dict[str, str]) -> str:
+def _rewrite_refs(text: str, emap: dict[str, str], imap: dict[str, str], smap: dict[str, str] | None = None) -> str:
     def repl(m: re.Match[str]) -> str:
         new: list[str] = []
         for raw in re.split(r"\s*[,;]\s*", m.group(1)):
             ref = raw if raw[0] in "ESI" else "E" + raw
-            mapped = emap.get(ref) if ref[0] == "E" else imap.get(ref) if ref[0] == "I" else None
+            mapped = {"E": emap, "I": imap, "S": smap or {}}[ref[0]].get(ref)
             if mapped and mapped not in new:
                 new.append(mapped)
         return f"[{', '.join(new)}]" if new else ""
@@ -135,12 +166,19 @@ def postprocess(findings: ResearchFindings, *, allowed_urls: set[str],
     emap = {e.evidence_id: f"E{i}" for i, e in enumerate(evidence, start=1)}
     usable = {e.evidence_id for e in evidence if e.verification_status == "verified"}
 
-    allowed = allowed_numbers(findings, [e for e in evidence if e.evidence_id in usable])
+    base = policy_numbers(findings)
+    by_ref: dict[str, set[float]] = {}  # old evidence and source IDs -> numbers their verified evidence supports
+    for e in evidence:
+        if e.evidence_id in usable:
+            nums = evidence_numbers(e)
+            by_ref[e.evidence_id] = nums
+            by_ref.setdefault(e.source_id, set()).update(nums)
 
     interpretations = []
     for it in findings.interpretations:
         ids = [emap[x] for x in it.supporting_evidence_ids if x in usable]
-        statement, removed = strip_new_numbers(it.statement, allowed)
+        statement, removed = strip_new_numbers(it.statement, base, by_ref=by_ref,
+                                               context_refs=it.supporting_evidence_ids)
         if removed:
             notes.append(f"Removed {len(removed)} sentence(s) with unsupported numbers from {it.interpretation_id}.")
         if not ids or not statement:
@@ -149,7 +187,7 @@ def postprocess(findings: ResearchFindings, *, allowed_urls: set[str],
         interpretations.append(it.model_copy(update={"supporting_evidence_ids": ids, "statement": statement}))
     imap = {it.interpretation_id: f"I{i}" for i, it in enumerate(interpretations, start=1)}
     interpretations = [it.model_copy(update={"interpretation_id": imap[it.interpretation_id],
-                                             "statement": _rewrite_refs(it.statement, emap, imap)})
+                                             "statement": _rewrite_refs(it.statement, emap, imap, smap)})
                        for it in interpretations]
 
     params = []
@@ -160,22 +198,23 @@ def postprocess(findings: ResearchFindings, *, allowed_urls: set[str],
         elif not ids:
             notes.append(f"Dropped parameter evidence for {pe.parameter}: it cites no verified evidence.")
         else:
-            note, removed = strip_new_numbers(pe.note, allowed)
+            note, removed = strip_new_numbers(pe.note, base, by_ref=by_ref, context_refs=pe.evidence_ids)
             if removed:
                 notes.append(f"Removed unsupported numbers from the note on {pe.parameter}.")
-            params.append(pe.model_copy(update={"evidence_ids": ids, "note": _rewrite_refs(note, emap, imap)}))
+            params.append(pe.model_copy(update={"evidence_ids": ids, "note": _rewrite_refs(note, emap, imap, smap)}))
 
     confounders = []
     for c in findings.confounders:
-        description, removed = strip_new_numbers(c.description, allowed)
+        description, removed = strip_new_numbers(c.description, base, by_ref=by_ref, context_refs=c.evidence_ids)
         if removed:
             notes.append(f"Removed unsupported numbers from confounder {c.name!r}.")
         confounders.append(c.model_copy(update={"evidence_ids": [emap[x] for x in c.evidence_ids if x in emap],
-                                                "description": _rewrite_refs(description, emap, imap)}))
+                                                "description": _rewrite_refs(description, emap, imap, smap)}))
 
-    summary, removed = strip_new_numbers(_rewrite_refs(findings.summary, emap, imap), allowed)
+    summary, removed = strip_new_numbers(findings.summary, base, by_ref=by_ref)  # old IDs, before renumbering
+    summary = _rewrite_refs(summary, emap, imap, smap)
     if removed:
-        notes.append(f"Removed {len(removed)} summary sentence(s) containing numbers not found in the evidence.")
+        notes.append(f"Removed {len(removed)} summary sentence(s) with numbers not found in the evidence they cite.")
     if not summary:
         summary = "No summary could be produced from the verified evidence."
 

@@ -152,3 +152,19 @@ def test_spelled_out_numbers_in_verified_quotes_support_digits_in_prose() -> Non
                                       "A 7 pp rises scenario.", "Expect 9 bn changes."])
 def test_unit_words_do_not_turn_quantities_into_counts(sentence: str) -> None:
     assert strip_new_numbers(sentence, {82.3}) == ("", [sentence])
+
+
+def test_prose_numbers_need_the_evidence_cited_in_the_same_sentence() -> None:
+    """As REPORT-001 does: a quote's numbers support only sentences that cite it ([E..], or [S..] for its source)."""
+    f = _findings(sources=[_src("S1", GROUNDED), _src("S2", FETCHED, "url_fetch")],
+                  evidence=[_ev("E1", "S1"), _ev("E2", "S2", quote="Investment fell by 4.5 per cent after the rise.")],
+                  summary=("Receipts were GBP 82.3 billion [E1]. Receipts were GBP 82.3 billion. "
+                           "Receipts were GBP 82.3 billion [S1]. Investment fell 4.5 per cent [E1]. "
+                           "Investment fell 4.5 per cent [E2]."),
+                  interpretations=[Interpretation(interpretation_id="I1", supporting_evidence_ids=["E2"],
+                                                  statement="Interpretation: a 4.5 per cent fall matters.")])
+    clean, notes = postprocess(f, allowed_urls={GROUNDED, FETCHED}, parameter_names=PARAMETER_NAMES)
+    assert clean.summary == ("Receipts were GBP 82.3 billion [E1]. Receipts were GBP 82.3 billion [S1]. "
+                             "Investment fell 4.5 per cent [E2].")  # source citations survive renumbering
+    assert clean.interpretations[0].statement == "Interpretation: a 4.5 per cent fall matters."  # its own evidence
+    assert any("2 summary sentence(s)" in n for n in notes)
