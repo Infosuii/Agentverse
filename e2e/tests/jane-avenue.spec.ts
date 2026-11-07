@@ -38,32 +38,35 @@ test.describe('Jane Avenue End-to-End Flows (mock mode)', () => {
       timeout: 20_000,
     });
 
-    // 4. Check that every tab renders with data
+    // 4. Check that every tab renders with real M1+M2 data
     // Overview tab
     await tabNav.getByRole('tab', { name: 'Overview' }).click();
     await expect(page).toHaveURL(new RegExp(`/analyses/${analysisId}/overview`));
-    await expect(page.locator('main')).toContainText(/25%.*28%|Headline|Revenue/i);
+    await expect(page.locator('main')).toContainText(/Headline Projections/i);
+    await expect(page.locator('main')).toContainText(/£7\.0bn/);
+    await expect(page.locator('main')).toContainText(/£13\.3bn/);
 
     // Precedents tab
     await tabNav.getByRole('tab', { name: 'Precedents' }).click();
     await expect(page).toHaveURL(new RegExp(`/analyses/${analysisId}/precedents`));
-    await expect(page.locator('main')).toContainText(/Precedents|CT-MAIN|198|2023/i);
+    await expect(page.locator('main')).toContainText(/Precedents|CT-MAIN-2023|2023/i);
+    await expect(page.locator('main')).toContainText(/Official costing|Observed outcome/i);
 
-    // Scenarios tab (+ step 5: moving a slider updates custom series if slider is mounted)
+    // Scenarios tab (+ step 5: moving a slider updates custom series via POST /api/simulate)
     await tabNav.getByRole('tab', { name: 'Scenarios' }).click();
     await expect(page).toHaveURL(new RegExp(`/analyses/${analysisId}/scenarios`));
     await expect(page.locator('main')).toContainText(/Scenarios|central|revenue/i);
+    await expect(page.locator('main')).toContainText(/assumption-driven ranges/i);
 
     const sliders = page.locator('input[type="range"]');
-    if ((await sliders.count()) > 0) {
-      const firstSlider = sliders.first();
-      const maxVal = (await firstSlider.getAttribute('max')) ?? '0.5';
-      await firstSlider.fill(maxVal);
-      await firstSlider.dispatchEvent('change');
-      await expect(page.locator('main')).toContainText(/custom|recomputed/i, {
-        timeout: 10_000,
-      });
-    }
+    expect(await sliders.count()).toBeGreaterThan(0);
+    const firstSlider = sliders.first();
+    const maxVal = (await firstSlider.getAttribute('max')) ?? '0.5';
+    await firstSlider.fill(maxVal);
+    await firstSlider.dispatchEvent('change');
+    await expect(page.locator('main')).toContainText(/custom|recomputed/i, {
+      timeout: 10_000,
+    });
 
     // Assumptions tab
     await tabNav.getByRole('tab', { name: 'Assumptions' }).click();
@@ -75,12 +78,15 @@ test.describe('Jane Avenue End-to-End Flows (mock mode)', () => {
     // Verification tab
     await tabNav.getByRole('tab', { name: 'Verification' }).click();
     await expect(page).toHaveURL(new RegExp(`/analyses/${analysisId}/verification`));
-    await expect(page.locator('main')).toContainText(/Verification|SCOPE-001|CALC-001/i);
+    await expect(page.locator('main')).toContainText(/SCOPE-001/);
+    await expect(page.locator('main')).toContainText(/CALC-001/);
+    await expect(page.locator('main')).toContainText(/REPORT-001/);
 
     // Report tab (+ step 6: download the report)
     await tabNav.getByRole('tab', { name: 'Report' }).click();
     await expect(page).toHaveURL(new RegExp(`/analyses/${analysisId}/report`));
-    await expect(page.locator('main')).toContainText(/Report|Assessment|Executive/i);
+    await expect(page.locator('main')).toContainText(/Executive summary/i);
+    await expect(page.locator('main')).toContainText(/Modelled impacts/i);
 
     // Verify markdown report download endpoint works and returns attachment
     const reportResp = await request.get(
@@ -89,7 +95,8 @@ test.describe('Jane Avenue End-to-End Flows (mock mode)', () => {
     expect(reportResp.ok()).toBeTruthy();
     expect(reportResp.headers()['content-type']).toContain('text/markdown');
     const reportMd = await reportResp.text();
-    expect(reportMd.length).toBeGreaterThan(50);
+    expect(reportMd).toContain('Executive summary');
+    expect(reportMd.length).toBeGreaterThan(200);
 
     // Footer disclaimer must always be visible (Rule 14)
     await expect(page.locator('footer')).toContainText(
@@ -132,7 +139,7 @@ test.describe('Jane Avenue End-to-End Flows (mock mode)', () => {
     // Report shows withheld state
     await tabNav.getByRole('tab', { name: 'Report' }).click();
     await expect(page.locator('main')).toContainText(
-      /withheld|out of scope|forecast_withheld/i,
+      /Quantitative model projections are withheld|Quantitative forecast withheld|forecast_withheld/i,
     );
   });
 
@@ -148,9 +155,14 @@ test.describe('Jane Avenue End-to-End Flows (mock mode)', () => {
     await expect(page.locator('main')).toContainText('Quantitative forecast withheld');
   });
 
-  test('4. Evaluation page renders', async ({ page }) => {
+  test('4. Evaluation page renders backtest table, ML honesty verdict, research gold set, and verifier fault suite', async ({
+    page,
+  }) => {
     await page.goto('/evaluation');
-    await expect(page.locator('main')).toContainText(/Evaluation|backtest|methods/i);
+    await expect(page.locator('main')).toContainText(/Evaluation|Backtest/i);
+    await expect(page.locator('main')).toContainText(/jane_behavioural|Behavioural/i);
+    await expect(page.locator('main')).toContainText(/lightgbm|LightGBM/i);
+    await expect(page.locator('main')).toContainText(/100\.0%|15\/15|18\/18/);
     await expect(page.locator('footer')).toContainText(
       'Prototype. Not official government analysis.',
     );
