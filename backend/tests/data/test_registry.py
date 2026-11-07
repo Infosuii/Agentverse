@@ -46,6 +46,7 @@ def test_baseline_extrapolation_and_documented_nominal_transformation():
     official = pd.read_csv(CURATED / 'obr_baseline.csv')
     assert len(official) >= 6
     assert baseline.extrapolated_from == official.fiscal_year.iloc[-1]
+    assert baseline.extrapolated_from == '2031-32'  # last published October 2026 EFO year
     assert baseline.current_main_rate_pct == 25
     assert baseline.current_small_profits_rate_pct == 19
     assert not baseline.is_placeholder

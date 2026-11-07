@@ -54,7 +54,7 @@ def write(name, rows, source, notes, *, placeholder=False, vintage=VINTAGE):
 
 def annual(sheet, column):
     return {r[1]: float(r[column]) for r in sheet.values
-            if isinstance(r[1], str) and re.fullmatch(r'1?2?\d{3}-\d{2}', r[1])
+            if isinstance(r[1], str) and re.fullmatch(r'\d{4}-\d{2}', r[1])
             and isinstance(r[column], (float, int))}
 
 
@@ -146,7 +146,8 @@ def build_fiscal():
                   for y in real_bi if y in deflator}
     baseline = [dict(vintage=VINTAGE, fiscal_year=r['fiscal_year'], ct_receipts_gbp_bn=r['onshore_ct_receipts_gbp_bn'],
                      nominal_gdp_gbp_bn=gdp[r['fiscal_year']], business_investment_gbp_bn=nominal_bi[r['fiscal_year']],
-                     source_id='D-obr-efo') for r in rows if '2025-26' <= r['fiscal_year'] <= '2030-31']
+                     source_id='D-obr-efo') for r in rows if r['fiscal_year'] >= anchor
+                and r['fiscal_year'] in nominal_bi and r['fiscal_year'] in gdp]
     write('obr_baseline', baseline, 'D-obr-efo',
           f'CT: databank Receipts U (onshore); GDP: Aggregates AE. BI is a derived nominal projection, NOT an official nominal OBR forecast: ONS NPEK CP SA fiscal sum /1000 anchored at {anchor}, multiplied by OBR Table 1.1 F real BI ratio and Table 1.7 V GDP-deflator ratio relative to anchor. GDP deflator proxies the BI deflator; assumption agreed in #8 comment 6710911267. Formula: NPEK_base*(NPEL_t/NPEL_base)*(GDPdeflator_t/GDPdeflator_base). Current rates from rate history. Sources D-ons-investment, D-obr-efo and D-obr-databank.')
 

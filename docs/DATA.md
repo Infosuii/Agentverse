@@ -70,7 +70,8 @@ D-obr-databank. Baseline revenue uses OBR onshore, never gross N445.
 
 ## obr_baseline
 
-OBR EFO October 2026: six rows 2025–26 through 2030–31. Onshore receipts:
+OBR EFO October 2026: seven rows 2025–26 through 2031–32. The complete published
+horizon is retained; extrapolation starts in 2032–33. Onshore receipts:
 databank `Receipts (£bn)` U; nominal GDP: `Aggregates (£bn)` AE. Current main
 and small-profits rates come from the latest verified history row.
 
