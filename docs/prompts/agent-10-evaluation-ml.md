@@ -23,7 +23,7 @@ You are **agent-10** in an eleven-agent build of **Jane Avenue**, an AI-powered 
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-10][M2] ML experiment, research and verifier evals, evaluation page" --label agent-10 --label M2 --label status:todo --body "Brief: docs/prompts/agent-10-evaluation-ml.md (M2)."
    ```
    Then comment `CLAIM: agent-10` on the M1 Issue.
-5. **Branch.** Work on `agents/agent-10/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch.** Work on `agents/agent-10-issue-<n>`. Check GitHub every 3–5 minutes.
 
 ## 1. Mission
 

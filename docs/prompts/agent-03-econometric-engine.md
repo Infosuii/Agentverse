@@ -23,7 +23,7 @@ You are **agent-3** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-3][M2] Sourced parameters, extensions, golden tests" --label agent-3 --label M2 --label status:todo --body "Brief: docs/prompts/agent-03-econometric-engine.md (M2)."
    ```
    Comment `CLAIM: agent-3` on the M1 Issue.
-5. **Branch.** Work on `agents/agent-3/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch.** Work on `agents/agent-3-issue-<n>`. Check GitHub every 3–5 minutes.
 
 Until agent-1's M0 skeleton merges, build on a branch against Appendix A and Appendix B.
 

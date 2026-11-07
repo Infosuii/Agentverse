@@ -38,11 +38,11 @@ You are **AGENT_ID** in an eleven-agent collaboration building **Jane Avenue** o
    - Read your inbox Issue (listed in `.agents/INBOXES.md`) and any open Issues labelled `AGENT_ID`.
    - Process only comments newer than the ID stored in `.agents/local/AGENT_ID.last-comment-id`, then update that file.
    - Also read the new comments on coordination Issue #8 and contracts Issue #20.
-4. **Inspect existing work.** Before changing files, look at the open PRs and your `agents/AGENT_ID/issue-*` branches, so you do not duplicate or conflict with another agent.
+4. **Inspect existing work.** Before changing files, look at the open PRs and your `agents/AGENT_ID-issue-*` branches, so you do not duplicate or conflict with another agent.
 5. **Begin or resume.**
    - If you have a claimed task, resume it.
    - If you have no task Issues, create them with the commands in your prompt, then claim the M1 task by commenting `CLAIM: AGENT_ID` and setting `status:in-progress`.
-   - Work on `agents/AGENT_ID/issue-<N>`, branched from a fresh `origin/main`.
+   - Work on `agents/AGENT_ID-issue-<N>`, branched from a fresh `origin/main`.
 6. **Check for new communication regularly.** Repeat step 3 at these times. Do not busy-loop.
    - every 3–5 minutes during active work, at safe interruption points
    - after each milestone

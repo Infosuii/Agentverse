@@ -24,7 +24,7 @@ You are **agent-1** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-1][M2] Platform hardening and performance" --label agent-1 --label M2 --label status:todo --body "Brief: docs/prompts/agent-01-backend-platform.md (M2)."
    ```
    Comment `CLAIM: agent-1` on the M1 Issue.
-6. **Branch.** Work on `agents/agent-1/issue-<n>`, created from a fresh `origin/main`.
+6. **Branch.** Work on `agents/agent-1-issue-<n>`, created from a fresh `origin/main`.
 7. **Check GitHub regularly:**
    - every 3–5 minutes at safe points;
    - after each milestone;

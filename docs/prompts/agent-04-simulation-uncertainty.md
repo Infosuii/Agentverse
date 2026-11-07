@@ -19,7 +19,7 @@ You are **agent-4** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-4][M2] Empirical intervals, performance, custom scenarios" --label agent-4 --label M2 --label status:todo --body "Brief: docs/prompts/agent-04-simulation-uncertainty.md (M2)."
    ```
    Then comment `CLAIM: agent-4` on the M1 Issue.
-5. **Branch and cadence.** Work on `agents/agent-4/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch and cadence.** Work on `agents/agent-4-issue-<n>`. Check GitHub every 3–5 minutes.
 
 Until agent-1's M0 skeleton is merged, build on a branch against Appendix B. You can test against a local copy of agent-3's `compute` signature.
 

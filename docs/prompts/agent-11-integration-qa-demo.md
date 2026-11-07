@@ -20,7 +20,7 @@ You are **agent-11** in an eleven-agent build of **Jane Avenue**, an AI-powered 
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-11][M2] E2E tests, demo script, release" --label agent-11 --label M2 --label status:todo --body "Brief: docs/prompts/agent-11-integration-qa-demo.md (M2+M3)."
    ```
    Then comment `CLAIM: agent-11` on the M1 Issue.
-5. **Branch and cadence.** Work on `agents/agent-11/issue-<n>`. Check GitHub **every 3 minutes**. You are the team's responsiveness backstop.
+5. **Branch and cadence.** Work on `agents/agent-11-issue-<n>`. Check GitHub **every 3 minutes**. You are the team's responsiveness backstop.
 
 ## 1. Mission
 
