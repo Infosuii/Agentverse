@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import clsx from 'clsx';
 import {
+  ApiClientError,
   useCheckScope,
   useCreateAnalysis,
   useParsePolicy,
@@ -215,20 +217,29 @@ export function NewAnalysisPage() {
           </div>
 
           <div className="space-y-1.5">
-            <span className="block text-xs font-medium text-slate-500">
+            <span className="block text-xs font-medium text-slate-600">
               Example queries:
             </span>
-            <div className="flex flex-wrap gap-2">
-              {EXAMPLE_QUERIES.map((ex) => (
-                <button
-                  key={ex.query}
-                  type="button"
-                  onClick={() => handleChipClick(ex.query)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700 transition-colors hover:border-blue-400 hover:bg-blue-50 hover:text-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                >
-                  <span>{ex.query}</span>
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Example policy queries">
+              {EXAMPLE_QUERIES.map((ex) => {
+                const isSelected = query.trim() === ex.query;
+                return (
+                  <button
+                    key={ex.query}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => handleChipClick(ex.query)}
+                    className={clsx(
+                      'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none',
+                      isSelected
+                        ? 'border-blue-600 bg-blue-50 text-blue-900'
+                        : 'border-slate-300 bg-slate-50 text-slate-700 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-800',
+                    )}
+                  >
+                    <span>{ex.query}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -247,6 +258,11 @@ export function NewAnalysisPage() {
             parseMutation.error instanceof Error
               ? parseMutation.error.message
               : 'Failed to parse policy'
+          }
+          reasons={
+            parseMutation.error instanceof ApiClientError
+              ? parseMutation.error.reasons
+              : []
           }
           onRetry={() => {
             lastParsedQueryRef.current = '';
@@ -350,6 +366,7 @@ export function NewAnalysisPage() {
                 </label>
                 <div
                   id="spec-change-pp"
+                  aria-live="polite"
                   className="mt-1 flex h-[30px] items-center rounded-md border border-slate-200 bg-slate-50 px-2.5 text-xs font-semibold text-slate-800 tabular-nums"
                 >
                   {fmtPp(changePp)}
@@ -404,7 +421,11 @@ export function NewAnalysisPage() {
             </div>
 
             {policySpec.ambiguities && policySpec.ambiguities.length > 0 && (
-              <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+              <div
+                role="note"
+                aria-label="Parser assumptions and ambiguities"
+                className="rounded-md border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900"
+              >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-semibold">
                     Parser assumptions & ambiguities:
@@ -419,39 +440,52 @@ export function NewAnalysisPage() {
               </div>
             )}
 
-            {scopeDecision &&
-              ((scopeDecision.reasons && scopeDecision.reasons.length > 0) ||
-                (scopeDecision.warnings && scopeDecision.warnings.length > 0)) && (
-                <div
-                  className={
-                    scopeDecision.status === 'unsupported'
-                      ? 'rounded-md border border-red-300 bg-red-50 p-3 text-xs text-red-900'
-                      : 'rounded-md border border-amber-300 bg-amber-50/70 p-3 text-xs text-amber-900'
-                  }
-                >
-                  <div className="font-semibold">
-                    Scope gate assessment (
+            {scopeDecision && (
+              <div
+                role="region"
+                aria-label="Scope gate assessment"
+                className={
+                  scopeDecision.status === 'unsupported'
+                    ? 'rounded-md border border-red-300 bg-red-50 p-3 text-xs text-red-900'
+                    : scopeDecision.status === 'partially_supported'
+                      ? 'rounded-md border border-amber-300 bg-amber-50/70 p-3 text-xs text-amber-900'
+                      : 'rounded-md border border-emerald-200 bg-emerald-50/60 p-3 text-xs text-emerald-900'
+                }
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 font-semibold">
+                  <span>
+                    Scope gate:{' '}
                     {scopeDecision.forecast_allowed
-                      ? 'Forecast allowed'
+                      ? 'Quantitative forecast allowed'
                       : 'Quantitative forecast withheld'}
-                    ):
-                  </div>
-                  {scopeDecision.reasons && scopeDecision.reasons.length > 0 && (
-                    <ul className="mt-1 list-disc space-y-0.5 pl-5">
-                      {scopeDecision.reasons.map((r, i) => (
-                        <li key={i}>{r}</li>
-                      ))}
-                    </ul>
-                  )}
-                  {scopeDecision.warnings && scopeDecision.warnings.length > 0 && (
-                    <ul className="mt-1 list-disc space-y-0.5 pl-5 text-amber-900">
-                      {scopeDecision.warnings.map((w, i) => (
-                        <li key={i}>{w}</li>
-                      ))}
-                    </ul>
-                  )}
+                  </span>
+                  {scopeDecision.validated_min_rate_pct != null &&
+                    scopeDecision.validated_max_rate_pct != null && (
+                      <span className="font-normal text-slate-600">
+                        Historical UK CT range: {scopeDecision.validated_min_rate_pct}%–
+                        {scopeDecision.validated_max_rate_pct}%
+                        {scopeDecision.validated_max_change_pp != null
+                          ? ` (max Δ ${scopeDecision.validated_max_change_pp}pp)`
+                          : ''}
+                      </span>
+                    )}
                 </div>
-              )}
+                {scopeDecision.reasons && scopeDecision.reasons.length > 0 && (
+                  <ul className="mt-1 list-disc space-y-0.5 pl-5">
+                    {scopeDecision.reasons.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                )}
+                {scopeDecision.warnings && scopeDecision.warnings.length > 0 && (
+                  <ul className="mt-1 list-disc space-y-0.5 pl-5 text-amber-900">
+                    {scopeDecision.warnings.map((w, i) => (
+                      <li key={i}>{w}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
           </div>
         </Card>
       )}
@@ -507,7 +541,7 @@ export function NewAnalysisPage() {
               type="button"
               disabled={query.trim().length < 3 || createMutation.isPending}
               onClick={handleRunAnalysis}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-300"
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               {createMutation.isPending && <Spinner size="xs" className="border-white" />}
               <span>Run analysis</span>
@@ -521,6 +555,11 @@ export function NewAnalysisPage() {
                 createMutation.error instanceof Error
                   ? createMutation.error.message
                   : 'Unexpected error creating analysis'
+              }
+              reasons={
+                createMutation.error instanceof ApiClientError
+                  ? createMutation.error.reasons
+                  : []
               }
               onRetry={handleRunAnalysis}
             />

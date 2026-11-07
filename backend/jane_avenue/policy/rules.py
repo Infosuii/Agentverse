@@ -18,6 +18,8 @@ MIN_HORIZON_YEARS, MAX_HORIZON_YEARS = 1, 10
 
 _MONTHS = ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
            "november", "december")
+_UNITS = ("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50}
 _NUMBER_WORDS = {
     "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
     "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
@@ -87,7 +89,11 @@ def normalise(query: str) -> str:
     t = re.sub(r"\bper[\s-]*cent\b|\bpercent\b|\bpc\b", "%", t)
     t = re.sub(r"\bhalf\s+an?\s+pp\b|\bhalf\s+a\s+%", "0.5 pp", t)
     t = re.sub(r"\ban?\s+(?=pp\b)", "1 ", t)  # "a point" -> "1 pp"
+    # "twenty-eight" -> 28 before single words, so it never becomes "20-8".
+    t = re.sub(rf"\b({'|'.join(_TENS)})[\s-]+({'|'.join(_UNITS)})\b",
+               lambda m: str(_TENS[m.group(1)] + _UNITS.index(m.group(2)) + 1), t)
     t = re.sub(r"\b(" + "|".join(_NUMBER_WORDS) + r")\b", lambda m: str(_NUMBER_WORDS[m.group(1)]), t)
+    t = re.sub(r"\b(\d+)\s+and\s+an?\s+half\b", lambda m: f"{m.group(1)}.5", t)  # "two and a half" -> 2.5
     return re.sub(r"\s+", " ", t).strip()
 
 

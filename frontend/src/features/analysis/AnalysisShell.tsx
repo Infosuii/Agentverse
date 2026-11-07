@@ -8,6 +8,7 @@ import {
 import clsx from 'clsx';
 import {
   ALL_STAGES,
+  ApiClientError,
   useAnalysis,
   useAnalysisEvents,
   type Analysis,
@@ -93,6 +94,7 @@ export function AnalysisShell() {
       <InlineError
         title="Could not load analysis"
         message={error instanceof Error ? error.message : 'Analysis not found'}
+        reasons={error instanceof ApiClientError ? error.reasons : undefined}
         onRetry={() => void refetch()}
       />
     );
@@ -195,6 +197,15 @@ export function AnalysisShell() {
                 <VerificationBadge overall={analysis.verification.overall} />
               )}
               {hasPlaceholder && <PlaceholderBadge />}
+              <button
+                type="button"
+                onClick={() => window.print()}
+                data-print-hide="true"
+                className="no-print inline-flex items-center gap-1 rounded border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                title="Print analysis view"
+              >
+                Print view
+              </button>
             </div>
           </div>
 
