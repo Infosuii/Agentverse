@@ -117,6 +117,10 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
                 allowed |= {float(x), abs(float(x))}
         if policy.effective_date:
             allowed |= {float(policy.effective_date.day), float(policy.effective_date.year)}
+        # The user's own words, which the report repeats in its title, the policy description and the parser notes
+        # (e.g. "Read 'by 10%' as 10 percentage points" when no rate could be parsed).
+        allowed |= _numbers(policy.raw_query)
+    allowed |= _numbers(analysis.request.query)
     if analysis.precedents:
         for m in analysis.precedents.matches:
             c = m.change
