@@ -1,9 +1,11 @@
 """Citation checks CITE-001..003 (MASTER_PROMPT 9.7). Owner: agent-5."""
 from __future__ import annotations
 
+import ipaddress
+import socket
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 import httpx
 
@@ -12,6 +14,7 @@ from ._base import Outcome, check, listing, plural
 
 FETCH_LIMIT = 10
 FETCH_TIMEOUT_S = 5.0
+MAX_REDIRECTS = 5
 RESEARCH_ACCESS = ("google_search", "url_fetch", "url_context")  # sources that must carry a verified URL
 _RESERVED_SUFFIXES = (".invalid", ".test", ".example", ".localhost", ".local")  # RFC 2606 / 6761: never real sites
 _RESERVED_HOSTS = ("example.com", "example.org", "example.net", "localhost")
@@ -32,18 +35,62 @@ def url_problem(url: str) -> str | None:
     return None
 
 
-def fetch_ok(url: str) -> bool:
-    """HEAD the URL (falling back to a streamed GET when HEAD is refused) and report whether it resolves."""
-    headers = {"User-Agent": "JaneAvenue-verifier/1.0"}
+def _resolve(host: str) -> list[str]:
+    return list({info[4][0] for info in socket.getaddrinfo(host, None)})
+
+
+RESOLVE: Callable[[str], list[str]] = _resolve  # stubbed in tests (no DNS)
+
+
+def non_public_reason(url: str) -> str | None:
+    """Why the verifier must not request `url` (SSRF guard), or None if it is a public http(s) address.
+    Every hop of a redirect chain is checked, including the addresses the host name resolves to."""
+    parts = urlsplit(url)
+    host = (parts.hostname or "").lower().rstrip(".")
+    if parts.scheme not in ("http", "https") or not host:
+        return "not a public http(s) URL"
+    if host == "localhost" or host.endswith((".localhost", ".local", ".internal")):
+        return f"non-public host {host}"
     try:
-        with httpx.Client(timeout=FETCH_TIMEOUT_S, follow_redirects=True, headers=headers) as client:
-            response = client.head(url)
-            if response.status_code in (403, 405) or response.status_code >= 500:
-                with client.stream("GET", url) as streamed:
-                    return streamed.status_code < 400
-            return response.status_code < 400
+        addresses = [host] if ipaddress.ip_address(host) else []
+    except ValueError:
+        try:
+            addresses = RESOLVE(host)
+        except OSError:
+            return f"could not resolve {host}"
+    if not addresses or not all(ipaddress.ip_address(a).is_global for a in addresses):
+        return f"non-public address for {host}"
+    return None
+
+
+def _status(client: httpx.Client, method: str, url: str) -> int | None:
+    """Final HTTP status after following at most MAX_REDIRECTS redirects, each hop checked; None if refused."""
+    for _ in range(MAX_REDIRECTS + 1):
+        if non_public_reason(url) is not None:
+            return None
+        with client.stream(method, url) as response:  # streamed: a GET never downloads the body
+            if response.is_redirect and "location" in response.headers:
+                url = urljoin(url, response.headers["location"])
+                continue
+            return response.status_code
+    return None
+
+
+def fetch_ok(url: str, *, client: httpx.Client | None = None) -> bool:
+    """HEAD the URL (falling back to GET when HEAD is refused) and report whether it resolves. Never raises."""
+    own = client is None
+    http = client or httpx.Client(timeout=FETCH_TIMEOUT_S, follow_redirects=False,
+                                  headers={"User-Agent": "JaneAvenue-verifier/1.0"})
+    try:
+        status = _status(http, "HEAD", url)
+        if status is not None and (status in (403, 405) or status >= 500):
+            status = _status(http, "GET", url)
+        return status is not None and status < 400
     except httpx.HTTPError:
         return False
+    finally:
+        if own:
+            http.close()
 
 
 FETCH: Callable[[str], bool] = fetch_ok  # replaced in tests; never reached in mock mode

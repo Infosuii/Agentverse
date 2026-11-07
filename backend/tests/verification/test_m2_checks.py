@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import httpx
 import pytest
 
 from jane_avenue.contracts import Analysis, KeyFigure, ParameterEvidence, ReportSection
@@ -43,6 +44,49 @@ def test_cite_001_fetches_unverified_urls_in_live_mode(clean_analysis: Analysis,
     monkeypatch.setattr(citation, "FETCH", lambda url: False)
     result = cite_001(clean_analysis)
     assert result.status == "fail" and result.affected_ids == [clean_analysis.sources[0].source_id]
+
+
+def _client(routes: dict[str, httpx.Response]) -> httpx.Client:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return routes.get(f"{request.method} {request.url}", httpx.Response(404))
+    return httpx.Client(transport=httpx.MockTransport(handler), follow_redirects=False)
+
+
+@pytest.fixture
+def public_dns(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(citation, "RESOLVE", lambda host: ["10.0.0.5"] if host == "intranet.corp.uk" else ["93.184.216.34"])
+
+
+def test_fetch_ok_follows_safe_redirects_and_falls_back_to_get(public_dns: None) -> None:
+    client = _client({
+        "HEAD https://obr.uk/a": httpx.Response(301, headers={"location": "/b"}),
+        "HEAD https://obr.uk/b": httpx.Response(405),
+        "GET https://obr.uk/a": httpx.Response(301, headers={"location": "/b"}),
+        "GET https://obr.uk/b": httpx.Response(200),
+    })
+    assert citation.fetch_ok("https://obr.uk/a", client=client)
+
+
+@pytest.mark.parametrize("target", ["http://169.254.169.254/latest/meta-data/", "http://127.0.0.1:8000/",
+                                    "https://intranet.corp.uk/secret", "http://printer.local/"])
+def test_fetch_ok_refuses_redirects_to_non_public_addresses(public_dns: None, target: str) -> None:
+    requested: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requested.append(str(request.url))
+        if request.url.host == "obr.uk":
+            return httpx.Response(302, headers={"location": target})
+        return httpx.Response(200)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler), follow_redirects=False)
+    assert not citation.fetch_ok("https://obr.uk/report", client=client)
+    assert all("obr.uk" in url for url in requested)  # the private target is never requested
+
+
+def test_fetch_ok_stops_after_too_many_redirects(public_dns: None) -> None:
+    client = _client({f"HEAD https://obr.uk/{i}": httpx.Response(302, headers={"location": f"/{i + 1}"})
+                      for i in range(10)})
+    assert not citation.fetch_ok("https://obr.uk/0", client=client)
 
 
 def test_cite_001_only_requires_verification_for_cited_sources(clean_analysis: Analysis,
