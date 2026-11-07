@@ -1,0 +1,4092 @@
+{
+  "components": {
+    "schemas": {
+      "Analysis": {
+        "additionalProperties": false,
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "cached"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "policy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PolicySpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "precedents": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrecedentAnalysis"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "report": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PolicyAssessment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request": {
+            "$ref": "#/components/schemas/AnalysisRequest"
+          },
+          "research": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResearchFindings"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScopeDecision"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "simulation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SimulationBundle"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "stage_timings_ms": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Stage Timings Ms",
+            "type": "object"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "parsing",
+              "researching",
+              "precedents",
+              "modelling",
+              "verifying",
+              "reporting",
+              "completed",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "verification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VerificationReport"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "analysis_id",
+          "created_at",
+          "updated_at",
+          "status",
+          "mode",
+          "request"
+        ],
+        "title": "Analysis",
+        "type": "object"
+      },
+      "AnalysisCreated": {
+        "additionalProperties": false,
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "parsing",
+              "researching",
+              "precedents",
+              "modelling",
+              "verifying",
+              "reporting",
+              "completed",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "analysis_id",
+          "status"
+        ],
+        "title": "AnalysisCreated",
+        "type": "object"
+      },
+      "AnalysisOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "generate_report": {
+            "default": true,
+            "title": "Generate Report",
+            "type": "boolean"
+          },
+          "monte_carlo_draws": {
+            "default": 2000,
+            "maximum": 20000.0,
+            "minimum": 0.0,
+            "title": "Monte Carlo Draws",
+            "type": "integer"
+          },
+          "run_research": {
+            "default": true,
+            "title": "Run Research",
+            "type": "boolean"
+          },
+          "seed": {
+            "default": 42,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "use_research_cache": {
+            "default": true,
+            "title": "Use Research Cache",
+            "type": "boolean"
+          }
+        },
+        "title": "AnalysisOptions",
+        "type": "object"
+      },
+      "AnalysisRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "options": {
+            "$ref": "#/components/schemas/AnalysisOptions"
+          },
+          "parameter_overrides": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Parameter Overrides",
+            "type": "object"
+          },
+          "policy_override": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PolicySpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "query": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Query",
+            "type": "string"
+          },
+          "reuse_research_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reuse Research From"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "AnalysisRequest",
+        "type": "object"
+      },
+      "AnalysisSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "policy_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Description"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "parsing",
+              "researching",
+              "precedents",
+              "modelling",
+              "verifying",
+              "reporting",
+              "completed",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "verification_overall": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verification Overall"
+          }
+        },
+        "required": [
+          "analysis_id",
+          "created_at",
+          "status",
+          "query"
+        ],
+        "title": "AnalysisSummary",
+        "type": "object"
+      },
+      "Assumption": {
+        "additionalProperties": false,
+        "properties": {
+          "adjustable": {
+            "default": true,
+            "title": "Adjustable",
+            "type": "boolean"
+          },
+          "basis": {
+            "enum": [
+              "literature",
+              "official",
+              "calibrated",
+              "team_judgement"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "behavioural",
+              "structural",
+              "macro",
+              "timing"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "distribution": {
+            "$ref": "#/components/schemas/Distribution"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "high": {
+            "title": "High",
+            "type": "number"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "is_user_override": {
+            "default": false,
+            "title": "Is User Override",
+            "type": "boolean"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "low": {
+            "title": "Low",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "rationale": {
+            "default": "",
+            "title": "Rationale",
+            "type": "string"
+          },
+          "slider_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slider Max"
+          },
+          "slider_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slider Min"
+          },
+          "slider_step": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slider Step"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "label",
+          "description",
+          "category",
+          "unit",
+          "value",
+          "low",
+          "high",
+          "distribution",
+          "basis"
+        ],
+        "title": "Assumption",
+        "type": "object"
+      },
+      "BacktestCase": {
+        "additionalProperties": false,
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "observed": {
+            "title": "Observed",
+            "type": "number"
+          },
+          "official_costing_gbp_bn": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Official Costing Gbp Bn"
+          },
+          "predictions": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Predictions",
+            "type": "object"
+          },
+          "split": {
+            "enum": [
+              "train",
+              "test"
+            ],
+            "title": "Split",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "fiscal_year",
+          "split",
+          "target",
+          "observed",
+          "predictions"
+        ],
+        "title": "BacktestCase",
+        "type": "object"
+      },
+      "CalcStep": {
+        "additionalProperties": false,
+        "properties": {
+          "fiscal_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiscal Year"
+          },
+          "formula": {
+            "title": "Formula",
+            "type": "string"
+          },
+          "inputs": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Inputs",
+            "type": "object"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "output": {
+            "title": "Output",
+            "type": "number"
+          },
+          "parameter_names": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Parameter Names",
+            "type": "array"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          },
+          "step_id": {
+            "title": "Step Id",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step_id",
+          "label",
+          "formula",
+          "inputs",
+          "output",
+          "unit"
+        ],
+        "title": "CalcStep",
+        "type": "object"
+      },
+      "Confounder": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "likely_direction": {
+            "default": "ambiguous",
+            "enum": [
+              "raises_revenue",
+              "lowers_revenue",
+              "ambiguous"
+            ],
+            "title": "Likely Direction",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "Confounder",
+        "type": "object"
+      },
+      "Costing": {
+        "additionalProperties": false,
+        "properties": {
+          "costing_body": {
+            "enum": [
+              "OBR",
+              "HMT",
+              "HMRC",
+              "IFS",
+              "other"
+            ],
+            "title": "Costing Body",
+            "type": "string"
+          },
+          "fiscal_event": {
+            "title": "Fiscal Event",
+            "type": "string"
+          },
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "includes_behavioural": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Includes Behavioural"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "value_gbp_bn": {
+            "title": "Value Gbp Bn",
+            "type": "number"
+          }
+        },
+        "required": [
+          "costing_body",
+          "fiscal_event",
+          "fiscal_year",
+          "value_gbp_bn",
+          "source_id"
+        ],
+        "title": "Costing",
+        "type": "object"
+      },
+      "DatasetMeta": {
+        "additionalProperties": false,
+        "properties": {
+          "dataset_id": {
+            "title": "Dataset Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "file": {
+            "title": "File",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "licence": {
+            "title": "Licence",
+            "type": "string"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "vintage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vintage"
+          }
+        },
+        "required": [
+          "dataset_id",
+          "title",
+          "description",
+          "publisher",
+          "source_url",
+          "licence",
+          "file",
+          "source_id"
+        ],
+        "title": "DatasetMeta",
+        "type": "object"
+      },
+      "Distribution": {
+        "additionalProperties": false,
+        "description": "params: fixed {} | normal {mean, sd} | truncated_normal {mean, sd, low, high} |\ntriangular {low, mode, high} | uniform {low, high} | lognormal {mu, sigma}",
+        "properties": {
+          "kind": {
+            "enum": [
+              "fixed",
+              "normal",
+              "truncated_normal",
+              "triangular",
+              "uniform",
+              "lognormal"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "params": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Params",
+            "type": "object"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "Distribution",
+        "type": "object"
+      },
+      "EngineResult": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_vintage": {
+            "title": "Baseline Vintage",
+            "type": "string"
+          },
+          "calc_trace": {
+            "items": {
+              "$ref": "#/components/schemas/CalcStep"
+            },
+            "title": "Calc Trace",
+            "type": "array"
+          },
+          "fiscal_years": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Fiscal Years",
+            "type": "array"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricProjection"
+            },
+            "title": "Metrics",
+            "type": "array"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "parameters_used": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Parameters Used",
+            "type": "object"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/PolicySpec"
+          },
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "model_version",
+          "policy",
+          "scenario",
+          "baseline_vintage",
+          "fiscal_years",
+          "metrics",
+          "calc_trace",
+          "parameters_used"
+        ],
+        "title": "EngineResult",
+        "type": "object"
+      },
+      "ErrorBody": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "EvaluationReport": {
+        "additionalProperties": false,
+        "properties": {
+          "cases": {
+            "items": {
+              "$ref": "#/components/schemas/BacktestCase"
+            },
+            "title": "Cases",
+            "type": "array"
+          },
+          "dataset_version": {
+            "title": "Dataset Version",
+            "type": "string"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "methods": {
+            "items": {
+              "$ref": "#/components/schemas/MethodSummary"
+            },
+            "title": "Methods",
+            "type": "array"
+          },
+          "ml_experiment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MLExperiment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "research_eval": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResearchEval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target_description": {
+            "title": "Target Description",
+            "type": "string"
+          },
+          "verification_eval": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VerificationEval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "generated_at",
+          "dataset_version",
+          "target_description",
+          "methods",
+          "cases"
+        ],
+        "title": "EvaluationReport",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "claim": {
+            "title": "Claim",
+            "type": "string"
+          },
+          "confidence": {
+            "default": "medium",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "evidence_id": {
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "quantitative",
+              "qualitative",
+              "historical_event",
+              "counter_evidence"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period"
+          },
+          "quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quote"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "topic": {
+            "enum": [
+              "revenue",
+              "investment",
+              "gdp",
+              "profit_shifting",
+              "elasticity",
+              "macro_context",
+              "policy_history",
+              "distribution",
+              "other"
+            ],
+            "title": "Topic",
+            "type": "string"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "verification_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verification Note"
+          },
+          "verification_status": {
+            "default": "unverified",
+            "enum": [
+              "verified",
+              "unverified",
+              "failed"
+            ],
+            "title": "Verification Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidence_id",
+          "source_id",
+          "kind",
+          "topic",
+          "claim"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "gemini_configured": {
+            "title": "Gemini Configured",
+            "type": "boolean"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "cached"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "model_deep": {
+            "title": "Model Deep",
+            "type": "string"
+          },
+          "model_fast": {
+            "title": "Model Fast",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version",
+          "contract_version",
+          "mode",
+          "gemini_configured",
+          "model_fast",
+          "model_deep"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "Histogram": {
+        "additionalProperties": false,
+        "properties": {
+          "bin_edges": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Bin Edges",
+            "type": "array"
+          },
+          "counts": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Counts",
+            "type": "array"
+          },
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "metric": {
+            "enum": [
+              "revenue_static_gbp_bn",
+              "revenue_behavioural_gbp_bn",
+              "revenue_dynamic_gbp_bn",
+              "business_investment_pct",
+              "business_investment_gbp_bn",
+              "gdp_level_pct",
+              "cost_of_capital_pct"
+            ],
+            "title": "Metric",
+            "type": "string"
+          }
+        },
+        "required": [
+          "metric",
+          "fiscal_year",
+          "bin_edges",
+          "counts"
+        ],
+        "title": "Histogram",
+        "type": "object"
+      },
+      "Interpretation": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "default": "medium",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "interpretation_id": {
+            "title": "Interpretation Id",
+            "type": "string"
+          },
+          "statement": {
+            "title": "Statement",
+            "type": "string"
+          },
+          "supporting_evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Supporting Evidence Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "interpretation_id",
+          "statement",
+          "supporting_evidence_ids"
+        ],
+        "title": "Interpretation",
+        "type": "object"
+      },
+      "KeyFigure": {
+        "additionalProperties": false,
+        "properties": {
+          "calc_step_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Calc Step Ids",
+            "type": "array"
+          },
+          "display": {
+            "title": "Display",
+            "type": "string"
+          },
+          "evidence_class": {
+            "enum": [
+              "observed_outcome",
+              "official_costing",
+              "model_scenario",
+              "assumption",
+              "ai_interpretation"
+            ],
+            "title": "Evidence Class",
+            "type": "string"
+          },
+          "figure_id": {
+            "title": "Figure Id",
+            "type": "string"
+          },
+          "fiscal_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiscal Year"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "enum": [
+                  "revenue_static_gbp_bn",
+                  "revenue_behavioural_gbp_bn",
+                  "revenue_dynamic_gbp_bn",
+                  "business_investment_pct",
+                  "business_investment_gbp_bn",
+                  "gdp_level_pct",
+                  "cost_of_capital_pct"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metric"
+          },
+          "scenario": {
+            "anyOf": [
+              {
+                "enum": [
+                  "central",
+                  "optimistic",
+                  "pessimistic",
+                  "custom"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "figure_id",
+          "label",
+          "value",
+          "unit",
+          "display",
+          "evidence_class"
+        ],
+        "title": "KeyFigure",
+        "type": "object"
+      },
+      "MLExperiment": {
+        "additionalProperties": false,
+        "properties": {
+          "adopted": {
+            "title": "Adopted",
+            "type": "boolean"
+          },
+          "best_baseline": {
+            "title": "Best Baseline",
+            "type": "string"
+          },
+          "best_baseline_mae": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best Baseline Mae"
+          },
+          "conclusion": {
+            "title": "Conclusion",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "test_mae": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Test Mae"
+          },
+          "test_period": {
+            "title": "Test Period",
+            "type": "string"
+          },
+          "train_period": {
+            "title": "Train Period",
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "features",
+          "train_period",
+          "test_period",
+          "best_baseline",
+          "adopted",
+          "conclusion"
+        ],
+        "title": "MLExperiment",
+        "type": "object"
+      },
+      "MacroContext": {
+        "additionalProperties": false,
+        "properties": {
+          "bank_rate_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Rate Pct"
+          },
+          "cpi_inflation_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpi Inflation Pct"
+          },
+          "period": {
+            "title": "Period",
+            "type": "string"
+          },
+          "real_gdp_growth_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Real Gdp Growth Pct"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          },
+          "unemployment_rate_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unemployment Rate Pct"
+          }
+        },
+        "required": [
+          "period"
+        ],
+        "title": "MacroContext",
+        "type": "object"
+      },
+      "MethodSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "directional_accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Directional Accuracy"
+          },
+          "is_baseline": {
+            "title": "Is Baseline",
+            "type": "boolean"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "mae": {
+            "title": "Mae",
+            "type": "number"
+          },
+          "mape_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mape Pct"
+          },
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "n": {
+            "title": "N",
+            "type": "integer"
+          },
+          "rmse": {
+            "title": "Rmse",
+            "type": "number"
+          },
+          "split": {
+            "enum": [
+              "train",
+              "test"
+            ],
+            "title": "Split",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "label",
+          "description",
+          "split",
+          "n",
+          "mae",
+          "rmse",
+          "is_baseline"
+        ],
+        "title": "MethodSummary",
+        "type": "object"
+      },
+      "MetricDistribution": {
+        "additionalProperties": false,
+        "properties": {
+          "bands": {
+            "items": {
+              "$ref": "#/components/schemas/PercentileBand"
+            },
+            "title": "Bands",
+            "type": "array"
+          },
+          "metric": {
+            "enum": [
+              "revenue_static_gbp_bn",
+              "revenue_behavioural_gbp_bn",
+              "revenue_dynamic_gbp_bn",
+              "business_investment_pct",
+              "business_investment_gbp_bn",
+              "gdp_level_pct",
+              "cost_of_capital_pct"
+            ],
+            "title": "Metric",
+            "type": "string"
+          },
+          "unit": {
+            "enum": [
+              "£bn",
+              "%"
+            ],
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "metric",
+          "unit",
+          "bands"
+        ],
+        "title": "MetricDistribution",
+        "type": "object"
+      },
+      "MetricProjection": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "metric": {
+            "enum": [
+              "revenue_static_gbp_bn",
+              "revenue_behavioural_gbp_bn",
+              "revenue_dynamic_gbp_bn",
+              "business_investment_pct",
+              "business_investment_gbp_bn",
+              "gdp_level_pct",
+              "cost_of_capital_pct"
+            ],
+            "title": "Metric",
+            "type": "string"
+          },
+          "note": {
+            "default": "",
+            "title": "Note",
+            "type": "string"
+          },
+          "unit": {
+            "enum": [
+              "£bn",
+              "%"
+            ],
+            "title": "Unit",
+            "type": "string"
+          },
+          "values": {
+            "items": {
+              "$ref": "#/components/schemas/YearValue"
+            },
+            "title": "Values",
+            "type": "array"
+          }
+        },
+        "required": [
+          "metric",
+          "label",
+          "unit",
+          "values",
+          "confidence"
+        ],
+        "title": "MetricProjection",
+        "type": "object"
+      },
+      "MonteCarloResult": {
+        "additionalProperties": false,
+        "properties": {
+          "distributions": {
+            "items": {
+              "$ref": "#/components/schemas/MetricDistribution"
+            },
+            "title": "Distributions",
+            "type": "array"
+          },
+          "empirical_calibration_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Empirical Calibration Note"
+          },
+          "empirical_interval": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PercentileBand"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Empirical Interval"
+          },
+          "histograms": {
+            "items": {
+              "$ref": "#/components/schemas/Histogram"
+            },
+            "title": "Histograms",
+            "type": "array"
+          },
+          "interval_kind": {
+            "default": "assumption_range",
+            "enum": [
+              "assumption_range",
+              "empirical_prediction_interval"
+            ],
+            "title": "Interval Kind",
+            "type": "string"
+          },
+          "interval_note": {
+            "title": "Interval Note",
+            "type": "string"
+          },
+          "n_draws": {
+            "title": "N Draws",
+            "type": "integer"
+          },
+          "sampled_parameters": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sampled Parameters",
+            "type": "array"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "n_draws",
+          "seed",
+          "sampled_parameters",
+          "distributions",
+          "histograms",
+          "interval_note"
+        ],
+        "title": "MonteCarloResult",
+        "type": "object"
+      },
+      "ObservedOutcome": {
+        "additionalProperties": false,
+        "properties": {
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "metric": {
+            "enum": [
+              "ct_receipts_gbp_bn",
+              "ct_receipts_pct_gdp",
+              "business_investment_gbp_bn",
+              "real_gdp_growth_pct"
+            ],
+            "title": "Metric",
+            "type": "string"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "metric",
+          "fiscal_year",
+          "value",
+          "source_id"
+        ],
+        "title": "ObservedOutcome",
+        "type": "object"
+      },
+      "ParameterEvidence": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "high": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High"
+          },
+          "low": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Low"
+          },
+          "note": {
+            "default": "",
+            "title": "Note",
+            "type": "string"
+          },
+          "parameter": {
+            "title": "Parameter",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "parameter",
+          "evidence_ids"
+        ],
+        "title": "ParameterEvidence",
+        "type": "object"
+      },
+      "ParseRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "ParseRequest",
+        "type": "object"
+      },
+      "ParseResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "policy": {
+            "$ref": "#/components/schemas/PolicySpec"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/ScopeDecision"
+          }
+        },
+        "required": [
+          "policy",
+          "scope"
+        ],
+        "title": "ParseResponse",
+        "type": "object"
+      },
+      "PercentileBand": {
+        "additionalProperties": false,
+        "properties": {
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "mean": {
+            "title": "Mean",
+            "type": "number"
+          },
+          "p10": {
+            "title": "P10",
+            "type": "number"
+          },
+          "p25": {
+            "title": "P25",
+            "type": "number"
+          },
+          "p5": {
+            "title": "P5",
+            "type": "number"
+          },
+          "p50": {
+            "title": "P50",
+            "type": "number"
+          },
+          "p75": {
+            "title": "P75",
+            "type": "number"
+          },
+          "p90": {
+            "title": "P90",
+            "type": "number"
+          },
+          "p95": {
+            "title": "P95",
+            "type": "number"
+          }
+        },
+        "required": [
+          "fiscal_year",
+          "p5",
+          "p10",
+          "p25",
+          "p50",
+          "p75",
+          "p90",
+          "p95",
+          "mean"
+        ],
+        "title": "PercentileBand",
+        "type": "object"
+      },
+      "PolicyAssessment": {
+        "additionalProperties": false,
+        "properties": {
+          "caveats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Caveats",
+            "type": "array"
+          },
+          "executive_summary": {
+            "title": "Executive Summary",
+            "type": "string"
+          },
+          "forecast_withheld": {
+            "title": "Forecast Withheld",
+            "type": "boolean"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "generated_by": {
+            "enum": [
+              "gemini",
+              "template"
+            ],
+            "title": "Generated By",
+            "type": "string"
+          },
+          "key_figures": {
+            "items": {
+              "$ref": "#/components/schemas/KeyFigure"
+            },
+            "title": "Key Figures",
+            "type": "array"
+          },
+          "markdown": {
+            "title": "Markdown",
+            "type": "string"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/ReportSection"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "verification_overall": {
+            "title": "Verification Overall",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "generated_at",
+          "generated_by",
+          "executive_summary",
+          "key_figures",
+          "sections",
+          "caveats",
+          "verification_overall",
+          "forecast_withheld",
+          "markdown"
+        ],
+        "title": "PolicyAssessment",
+        "type": "object"
+      },
+      "PolicyChange": {
+        "additionalProperties": false,
+        "properties": {
+          "announced_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Announced Date"
+          },
+          "change_id": {
+            "title": "Change Id",
+            "type": "string"
+          },
+          "effective_date": {
+            "format": "date",
+            "title": "Effective Date",
+            "type": "string"
+          },
+          "fiscal_event": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiscal Event"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "macro_context": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MacroContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "new_rate_pct": {
+            "title": "New Rate Pct",
+            "type": "number"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "observed_outcomes": {
+            "items": {
+              "$ref": "#/components/schemas/ObservedOutcome"
+            },
+            "title": "Observed Outcomes",
+            "type": "array"
+          },
+          "official_costings": {
+            "items": {
+              "$ref": "#/components/schemas/Costing"
+            },
+            "title": "Official Costings",
+            "type": "array"
+          },
+          "old_rate_pct": {
+            "title": "Old Rate Pct",
+            "type": "number"
+          },
+          "other_measures": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Other Measures",
+            "type": "array"
+          },
+          "policy_type": {
+            "enum": [
+              "corporation_tax_main_rate",
+              "corporation_tax_small_profits_rate",
+              "vat_standard_rate",
+              "unsupported"
+            ],
+            "title": "Policy Type",
+            "type": "string"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          },
+          "tax": {
+            "enum": [
+              "corporation_tax",
+              "vat"
+            ],
+            "title": "Tax",
+            "type": "string"
+          }
+        },
+        "required": [
+          "change_id",
+          "tax",
+          "policy_type",
+          "effective_date",
+          "old_rate_pct",
+          "new_rate_pct",
+          "source_ids"
+        ],
+        "title": "PolicyChange",
+        "type": "object"
+      },
+      "PolicySpec": {
+        "additionalProperties": false,
+        "properties": {
+          "ambiguities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Ambiguities",
+            "type": "array"
+          },
+          "baseline_rate_pct": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Rate Pct"
+          },
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "effective_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Date"
+          },
+          "horizon_years": {
+            "default": 5,
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Horizon Years",
+            "type": "integer"
+          },
+          "jurisdiction": {
+            "const": "UK",
+            "default": "UK",
+            "title": "Jurisdiction",
+            "type": "string"
+          },
+          "parse_confidence": {
+            "default": 1.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Parse Confidence",
+            "type": "number"
+          },
+          "parse_method": {
+            "default": "manual",
+            "enum": [
+              "gemini",
+              "rules",
+              "manual",
+              "fixture"
+            ],
+            "title": "Parse Method",
+            "type": "string"
+          },
+          "policy_type": {
+            "enum": [
+              "corporation_tax_main_rate",
+              "corporation_tax_small_profits_rate",
+              "vat_standard_rate",
+              "unsupported"
+            ],
+            "title": "Policy Type",
+            "type": "string"
+          },
+          "proposed_rate_pct": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proposed Rate Pct"
+          },
+          "raw_query": {
+            "default": "",
+            "title": "Raw Query",
+            "type": "string"
+          },
+          "tax": {
+            "anyOf": [
+              {
+                "enum": [
+                  "corporation_tax",
+                  "vat"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tax"
+          }
+        },
+        "required": [
+          "policy_type"
+        ],
+        "title": "PolicySpec",
+        "type": "object"
+      },
+      "PrecedentAnalysis": {
+        "additionalProperties": false,
+        "properties": {
+          "dataset_version": {
+            "title": "Dataset Version",
+            "type": "string"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/PrecedentMatch"
+            },
+            "title": "Matches",
+            "type": "array"
+          },
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "summary": {
+            "default": "",
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "dataset_version",
+          "matches"
+        ],
+        "title": "PrecedentAnalysis",
+        "type": "object"
+      },
+      "PrecedentMatch": {
+        "additionalProperties": false,
+        "properties": {
+          "change": {
+            "$ref": "#/components/schemas/PolicyChange"
+          },
+          "comparability_notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Comparability Notes",
+            "type": "array"
+          },
+          "similarity": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Similarity",
+            "type": "number"
+          },
+          "similarity_breakdown": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Similarity Breakdown",
+            "type": "object"
+          }
+        },
+        "required": [
+          "change",
+          "similarity",
+          "similarity_breakdown"
+        ],
+        "title": "PrecedentMatch",
+        "type": "object"
+      },
+      "ReportSection": {
+        "additionalProperties": false,
+        "properties": {
+          "body_markdown": {
+            "title": "Body Markdown",
+            "type": "string"
+          },
+          "figure_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Figure Ids",
+            "type": "array"
+          },
+          "heading": {
+            "title": "Heading",
+            "type": "string"
+          },
+          "section_id": {
+            "title": "Section Id",
+            "type": "string"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "section_id",
+          "heading",
+          "body_markdown"
+        ],
+        "title": "ReportSection",
+        "type": "object"
+      },
+      "ResearchEval": {
+        "additionalProperties": false,
+        "properties": {
+          "citation_url_valid_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citation Url Valid Rate"
+          },
+          "fact_accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fact Accuracy"
+          },
+          "hallucinated_sources": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hallucinated Sources"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "cached"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "n_questions": {
+            "title": "N Questions",
+            "type": "integer"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "official_source_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Official Source Share"
+          },
+          "quote_match_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quote Match Rate"
+          }
+        },
+        "required": [
+          "n_questions",
+          "mode"
+        ],
+        "title": "ResearchEval",
+        "type": "object"
+      },
+      "ResearchFindings": {
+        "additionalProperties": false,
+        "properties": {
+          "cache_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cache Key"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "confounders": {
+            "items": {
+              "$ref": "#/components/schemas/Confounder"
+            },
+            "title": "Confounders",
+            "type": "array"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "interpretations": {
+            "items": {
+              "$ref": "#/components/schemas/Interpretation"
+            },
+            "title": "Interpretations",
+            "type": "array"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "cached"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "open_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Open Questions",
+            "type": "array"
+          },
+          "parameter_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/ParameterEvidence"
+            },
+            "title": "Parameter Evidence",
+            "type": "array"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/PolicySpec"
+          },
+          "research_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Research Questions",
+            "type": "array"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "trace": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchStep"
+            },
+            "title": "Trace",
+            "type": "array"
+          }
+        },
+        "required": [
+          "policy",
+          "mode",
+          "summary",
+          "started_at"
+        ],
+        "title": "ResearchFindings",
+        "type": "object"
+      },
+      "ResearchStep": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "default": "",
+            "title": "Detail",
+            "type": "string"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "kind": {
+            "enum": [
+              "plan",
+              "search",
+              "fetch",
+              "extract",
+              "dataset_lookup",
+              "reason",
+              "synthesis",
+              "warning",
+              "error"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Ids",
+            "type": "array"
+          },
+          "step_id": {
+            "title": "Step Id",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tool": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool"
+          },
+          "ts": {
+            "format": "date-time",
+            "title": "Ts",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step_id",
+          "ts",
+          "kind",
+          "title"
+        ],
+        "title": "ResearchStep",
+        "type": "object"
+      },
+      "ScenarioDefinition": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "name": {
+            "enum": [
+              "central",
+              "optimistic",
+              "pessimistic",
+              "custom"
+            ],
+            "title": "Name",
+            "type": "string"
+          },
+          "parameter_values": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Parameter Values",
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "label",
+          "description",
+          "parameter_values"
+        ],
+        "title": "ScenarioDefinition",
+        "type": "object"
+      },
+      "ScenarioResult": {
+        "additionalProperties": false,
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/EngineResult"
+          },
+          "scenario": {
+            "$ref": "#/components/schemas/ScenarioDefinition"
+          }
+        },
+        "required": [
+          "scenario",
+          "result"
+        ],
+        "title": "ScenarioResult",
+        "type": "object"
+      },
+      "ScopeDecision": {
+        "additionalProperties": false,
+        "properties": {
+          "forecast_allowed": {
+            "title": "Forecast Allowed",
+            "type": "boolean"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "supported",
+              "partially_supported",
+              "unsupported"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "validated_max_change_pp": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validated Max Change Pp"
+          },
+          "validated_max_rate_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validated Max Rate Pct"
+          },
+          "validated_min_rate_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validated Min Rate Pct"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "status",
+          "forecast_allowed"
+        ],
+        "title": "ScopeDecision",
+        "type": "object"
+      },
+      "SensitivityResult": {
+        "additionalProperties": false,
+        "properties": {
+          "base_output": {
+            "title": "Base Output",
+            "type": "number"
+          },
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TornadoItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "metric": {
+            "enum": [
+              "revenue_static_gbp_bn",
+              "revenue_behavioural_gbp_bn",
+              "revenue_dynamic_gbp_bn",
+              "business_investment_pct",
+              "business_investment_gbp_bn",
+              "gdp_level_pct",
+              "cost_of_capital_pct"
+            ],
+            "title": "Metric",
+            "type": "string"
+          }
+        },
+        "required": [
+          "metric",
+          "fiscal_year",
+          "base_output",
+          "items"
+        ],
+        "title": "SensitivityResult",
+        "type": "object"
+      },
+      "SimulateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "include_sensitivity": {
+            "default": true,
+            "title": "Include Sensitivity",
+            "type": "boolean"
+          },
+          "monte_carlo_draws": {
+            "default": 2000,
+            "maximum": 20000.0,
+            "minimum": 0.0,
+            "title": "Monte Carlo Draws",
+            "type": "integer"
+          },
+          "parameter_overrides": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Parameter Overrides",
+            "type": "object"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/PolicySpec"
+          },
+          "seed": {
+            "default": 42,
+            "title": "Seed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "policy"
+        ],
+        "title": "SimulateRequest",
+        "type": "object"
+      },
+      "SimulationBundle": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/Assumption"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "baseline_vintage": {
+            "title": "Baseline Vintage",
+            "type": "string"
+          },
+          "monte_carlo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MonteCarloResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policy": {
+            "$ref": "#/components/schemas/PolicySpec"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioResult"
+            },
+            "title": "Scenarios",
+            "type": "array"
+          },
+          "sensitivity": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityResult"
+            },
+            "title": "Sensitivity",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "policy",
+          "baseline_vintage",
+          "scenarios",
+          "assumptions"
+        ],
+        "title": "SimulationBundle",
+        "type": "object"
+      },
+      "Source": {
+        "additionalProperties": false,
+        "description": "Real, retrievable document. URL must come from grounding metadata, a fetch, or a curated dataset.",
+        "properties": {
+          "access_method": {
+            "enum": [
+              "google_search",
+              "url_fetch",
+              "url_context",
+              "curated_dataset",
+              "fixture"
+            ],
+            "title": "Access Method",
+            "type": "string"
+          },
+          "content_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Sha256"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "published_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published Date"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "publisher_type": {
+            "default": "other",
+            "enum": [
+              "obr",
+              "ons",
+              "hmrc",
+              "hmt",
+              "boe",
+              "ifs",
+              "parliament",
+              "academic",
+              "international_org",
+              "news",
+              "other"
+            ],
+            "title": "Publisher Type",
+            "type": "string"
+          },
+          "reliability_tier": {
+            "default": 3,
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "title": "Reliability Tier",
+            "type": "integer"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "url_verified": {
+            "default": false,
+            "title": "Url Verified",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_id",
+          "title",
+          "url",
+          "publisher",
+          "access_method"
+        ],
+        "title": "Source",
+        "type": "object"
+      },
+      "TornadoItem": {
+        "additionalProperties": false,
+        "properties": {
+          "high_input": {
+            "title": "High Input",
+            "type": "number"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "low_input": {
+            "title": "Low Input",
+            "type": "number"
+          },
+          "output_at_high": {
+            "title": "Output At High",
+            "type": "number"
+          },
+          "output_at_low": {
+            "title": "Output At Low",
+            "type": "number"
+          },
+          "parameter": {
+            "title": "Parameter",
+            "type": "string"
+          },
+          "swing": {
+            "title": "Swing",
+            "type": "number"
+          }
+        },
+        "required": [
+          "parameter",
+          "label",
+          "low_input",
+          "high_input",
+          "output_at_low",
+          "output_at_high",
+          "swing"
+        ],
+        "title": "TornadoItem",
+        "type": "object"
+      },
+      "VerificationCheck": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Affected Ids",
+            "type": "array"
+          },
+          "category": {
+            "enum": [
+              "scope",
+              "citation",
+              "evidence",
+              "assumption",
+              "calculation",
+              "data",
+              "causal_claim",
+              "uncertainty",
+              "report"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "check_id": {
+            "title": "Check Id",
+            "type": "string"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "method": {
+            "enum": [
+              "rule",
+              "recompute",
+              "source_fetch",
+              "llm_critic"
+            ],
+            "title": "Method",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "info",
+              "warning",
+              "error",
+              "blocking"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "skipped"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "check_id",
+          "category",
+          "severity",
+          "status",
+          "title",
+          "detail",
+          "method"
+        ],
+        "title": "VerificationCheck",
+        "type": "object"
+      },
+      "VerificationEval": {
+        "additionalProperties": false,
+        "properties": {
+          "by_fault": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "title": "By Fault",
+            "type": "object"
+          },
+          "detected": {
+            "title": "Detected",
+            "type": "integer"
+          },
+          "false_positives": {
+            "title": "False Positives",
+            "type": "integer"
+          },
+          "n_clean_cases": {
+            "title": "N Clean Cases",
+            "type": "integer"
+          },
+          "n_fault_cases": {
+            "title": "N Fault Cases",
+            "type": "integer"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "n_fault_cases",
+          "detected",
+          "n_clean_cases",
+          "false_positives",
+          "by_fault"
+        ],
+        "title": "VerificationEval",
+        "type": "object"
+      },
+      "VerificationReport": {
+        "additionalProperties": false,
+        "properties": {
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/VerificationCheck"
+            },
+            "title": "Checks",
+            "type": "array"
+          },
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "critic_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Critic Model"
+          },
+          "decline_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Decline Reasons",
+            "type": "array"
+          },
+          "forecast_allowed": {
+            "title": "Forecast Allowed",
+            "type": "boolean"
+          },
+          "overall": {
+            "enum": [
+              "approved",
+              "approved_with_warnings",
+              "forecast_withheld"
+            ],
+            "title": "Overall",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "verified_at": {
+            "format": "date-time",
+            "title": "Verified At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "overall",
+          "forecast_allowed",
+          "checks",
+          "summary",
+          "verified_at"
+        ],
+        "title": "VerificationReport",
+        "type": "object"
+      },
+      "YearValue": {
+        "additionalProperties": false,
+        "properties": {
+          "fiscal_year": {
+            "title": "Fiscal Year",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "fiscal_year",
+          "value"
+        ],
+        "title": "YearValue",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "AI-powered UK fiscal policy simulator. Prototype. Not official government analysis.",
+    "title": "Jane Avenue API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/analyses": {
+      "get": {
+        "operationId": "list_analyses",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AnalysisSummary"
+                  },
+                  "title": "Response List Analyses",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "List Analyses"
+      },
+      "post": {
+        "operationId": "create_analysis",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisCreated"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Create Analysis"
+      }
+    },
+    "/api/analyses/{analysis_id}": {
+      "get": {
+        "operationId": "get_analysis",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analysis"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Analysis"
+      }
+    },
+    "/api/analyses/{analysis_id}/events": {
+      "get": {
+        "operationId": "stream_events",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after_seq",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "After Seq",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "last-event-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Last-Event-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/event-stream": {}
+            },
+            "description": "Server-sent events: `id: <seq>`, `event: <type>`, `data: <AnalysisEvent JSON>`."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Stream Events"
+      }
+    },
+    "/api/analyses/{analysis_id}/report": {
+      "get": {
+        "operationId": "get_report",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyAssessment"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Report"
+      }
+    },
+    "/api/analyses/{analysis_id}/report.md": {
+      "get": {
+        "operationId": "get_report_markdown",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/markdown": {}
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Report Markdown"
+      }
+    },
+    "/api/datasets": {
+      "get": {
+        "operationId": "list_datasets",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetMeta"
+                  },
+                  "title": "Response List Datasets",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "List Datasets"
+      }
+    },
+    "/api/evaluation": {
+      "get": {
+        "operationId": "get_evaluation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "Get Evaluation"
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/api/parameters": {
+      "get": {
+        "operationId": "list_parameters",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Assumption"
+                  },
+                  "title": "Response List Parameters",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "List Parameters"
+      }
+    },
+    "/api/policy/parse": {
+      "post": {
+        "operationId": "parse_policy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "Parse Policy"
+      }
+    },
+    "/api/policy/scope": {
+      "post": {
+        "operationId": "check_scope",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicySpec"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "Check Scope"
+      }
+    },
+    "/api/precedents": {
+      "get": {
+        "operationId": "list_precedents",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "tax",
+            "required": false,
+            "schema": {
+              "default": "corporation_tax",
+              "title": "Tax",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PolicyChange"
+                  },
+                  "title": "Response List Precedents",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "List Precedents"
+      }
+    },
+    "/api/precedents/match": {
+      "post": {
+        "operationId": "match_precedents",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "k",
+            "required": false,
+            "schema": {
+              "default": 5,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "K",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicySpec"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrecedentAnalysis"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "Match Precedents"
+      }
+    },
+    "/api/simulate": {
+      "post": {
+        "operationId": "simulate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationBundle"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Simulate"
+      }
+    },
+    "/api/sources": {
+      "get": {
+        "operationId": "list_sources",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Source"
+                  },
+                  "title": "Response List Sources",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Invalid request or out-of-scope policy"
+          }
+        },
+        "summary": "List Sources"
+      }
+    },
+    "/api/sources/{source_id}": {
+      "get": {
+        "operationId": "get_source",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "source_id",
+            "required": true,
+            "schema": {
+              "title": "Source Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Source"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Source"
+      }
+    }
+  }
+}

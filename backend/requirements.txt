@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pydantic>=2.8
+python-dotenv
+numpy>=2
+pandas
+scipy
+statsmodels
+scikit-learn
+lightgbm
+google-genai>=2.30.1
+httpx
+beautifulsoup4
+pypdf
