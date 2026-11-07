@@ -57,6 +57,7 @@ LOOP_DEADLINE_S = 70.0          # the loop (at most LOOP_BUDGET_S) must end by t
 EXTRACT_BUDGET_S = 100.0        # top-up extraction for thinly evidenced documents only before this
 QA_MAX_CALLS = 6
 QA_BUDGET_S = 45.0
+QA_MAX_DOCS = 4                 # documents read per question (loop fetches plus the top-up)
 MAX_ITEMS_PER_DOC = 6
 CHUNK_CHARS = 6000
 CHUNKS_PER_DOC = 3
@@ -617,10 +618,13 @@ def answer_question(question: str, *, max_calls: int = QA_MAX_CALLS,
     tracer = Tracer(None)
     spec = _QA_SPEC.model_copy(update={"description": question[:300], "raw_query": question})
     r = LiveResearch(spec, tracer)
+    r.max_docs = QA_MAX_DOCS
     started = utcnow()
     try:
         ResearchLoop(r, [question], max_calls=max_calls, budget_s=budget_s, include_data=False,
                      task=prompts.QA_PROMPT.format(question=question, max_calls=max_calls)).run()
+        if len(r.docs) < r.max_docs and r.unread_sources():
+            r.fetch()  # read the best grounded sources the model's searches found but did not open
         thin = [d for d in r.docs.values() if r.evidence_count(d.source_id) < 2]
         if thin:
             r.extract(thin)
