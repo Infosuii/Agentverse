@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from datetime import UTC, date, datetime
 
+import pytest
+
 from jane_avenue.contracts import (
     Confounder,
     Evidence,
@@ -144,3 +146,9 @@ def test_spelled_out_numbers_in_verified_quotes_support_digits_in_prose() -> Non
                   summary="Around 10 per cent of the cost is recovered [E1]. About 12 per cent is lost.")
     clean, _ = postprocess(f, allowed_urls={GROUNDED}, parameter_names=PARAMETER_NAMES)
     assert clean.summary == "Around 10 per cent of the cost is recovered [E1]."
+
+
+@pytest.mark.parametrize("sentence", ["Receipts see 8 percent cuts.", "There were 2 point changes.",
+                                      "A 7 pp rises scenario.", "Expect 9 bn changes."])
+def test_unit_words_do_not_turn_quantities_into_counts(sentence: str) -> None:
+    assert strip_new_numbers(sentence, {82.3}) == ("", [sentence])

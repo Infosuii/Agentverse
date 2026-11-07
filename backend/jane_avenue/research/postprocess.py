@@ -25,10 +25,11 @@ _REF = re.compile(r"\[\s*([ESI]\d+(?:\s*[,;]\s*[ESI]?\d+)*)\s*\]")
 _NUMBER = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?")
 _SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z\[(\"'])")
 # Small counts are not quantities: "3 studies", "5 years". Same rule (and noun list) as REPORT-001 (agent-5), so
-# research prose never carries a bare small number into a report that the report check would reject.
+# research prose never carries a bare small number into a report that the report check would reject. The optional
+# middle word may not be a unit ("8 percent cuts" and "2 point changes" are quantities, not counts).
 SMALL_COUNT_MAX = 10
 _COUNT = re.compile(
-    r"(?<![\d.,])(\d{1,2})\s+(?:[a-z-]+\s+)?(?:studies|study|sources?|papers?|reports?|documents?|estimates?|"
+    r"(?<![\d.,])(\d{1,2})\s+(?:(?!(?:per|percent|percentage|pp|points?|bn|billion|m|million|k|thousand)\b)[a-z-]+\s+)?(?:studies|study|sources?|papers?|reports?|documents?|estimates?|"
     r"events?|budgets?|years?|months?|quarters?|countries|firms|companies|precedents?|changes|rises|cuts|"
     r"scenarios?|parameters?|checks?|questions?|items?|steps?|channels?|reasons?|factors?)\b", re.I)
 
