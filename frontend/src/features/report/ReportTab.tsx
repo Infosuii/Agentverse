@@ -1,9 +1,133 @@
-import { useParams } from 'react-router';
-import { useAnalysis, type Analysis } from '../../api/hooks';
-import { Card, Skeleton } from '../../components/ui';
+import { useId, useState } from 'react';
+import { Link, useParams } from 'react-router';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import clsx from 'clsx';
+import {
+  useAnalysis,
+  type Analysis,
+  type KeyFigure,
+  type Source,
+} from '../../api/hooks';
+import {
+  Badge,
+  Card,
+  EmptyState,
+  EvidenceBadge,
+  PlaceholderBadge,
+  Skeleton,
+  SourceChip,
+  Table,
+  VerificationBadge,
+  WithheldBanner,
+} from '../../components/ui';
+import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct } from '../../lib/format';
 
 export interface ReportTabProps {
   analysis?: Analysis;
+}
+
+interface FigureProvenanceProps {
+  figure: KeyFigure;
+  analysisId: string | undefined;
+  sources: Source[];
+}
+
+function FigureProvenance({ figure, analysisId, sources }: FigureProvenanceProps) {
+  const [open, setOpen] = useState(false);
+  const popoverId = useId();
+
+  const inspectorParams = new URLSearchParams();
+  if (figure.metric) inspectorParams.set('metric', figure.metric);
+  if (figure.fiscal_year) inspectorParams.set('year', figure.fiscal_year);
+  const qs = inspectorParams.toString();
+  const inspectorHref = analysisId
+    ? `/analyses/${analysisId}/assumptions${qs ? `?${qs}` : ''}`
+    : null;
+  const calcStepIds = figure.calc_step_ids ?? [];
+  const sourceIds = figure.source_ids ?? [];
+
+  return (
+    <div
+      className="relative inline-block"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setOpen(false);
+        }
+      }}
+    >
+      <button
+        type="button"
+        aria-describedby={open ? popoverId : undefined}
+        onClick={() => setOpen((prev) => !prev)}
+        className="text-left text-xl font-bold tracking-tight text-slate-900 tabular-nums underline decoration-slate-400 decoration-dotted underline-offset-4 hover:text-blue-700 hover:decoration-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      >
+        {figure.display}
+      </button>
+
+      {open && (
+        <div
+          id={popoverId}
+          role="dialog"
+          aria-label={`Provenance for ${figure.label}`}
+          className="absolute bottom-full left-0 z-50 mb-2 w-72 rounded-lg border border-slate-200 bg-white p-3 text-xs text-slate-700 shadow-lg"
+        >
+          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+            <span className="font-semibold text-slate-900 tabular-nums">{figure.display}</span>
+            <EvidenceBadge evidenceClass={figure.evidence_class} short />
+          </div>
+
+          <div className="mt-2 space-y-2">
+            {calcStepIds.length > 0 && (
+              <div>
+                <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                  Calculation steps
+                </div>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {calcStepIds.map((stepId) => (
+                    <code
+                      key={stepId}
+                      className="rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 font-mono text-[10px] text-blue-800"
+                    >
+                      {stepId}
+                    </code>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {sourceIds.length > 0 && (
+              <div>
+                <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                  Sources
+                </div>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {sourceIds.map((sid) => (
+                    <SourceChip key={sid} sourceId={sid} sources={sources} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {inspectorHref && figure.evidence_class === 'model_scenario' && (
+              <div className="border-t border-slate-100 pt-2">
+                <Link
+                  to={inspectorHref}
+                  className="inline-flex items-center gap-1 font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                >
+                  <span>Open in Calculation Inspector</span>
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function ReportTab({ analysis: propAnalysis }: ReportTabProps) {
@@ -12,20 +136,278 @@ export function ReportTab({ analysis: propAnalysis }: ReportTabProps) {
   const analysis = propAnalysis ?? fetchedAnalysis;
 
   if (!analysis && isLoading) {
-    return <Skeleton lines={4} />;
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-28" />
+        <Skeleton lines={8} />
+      </div>
+    );
   }
 
+  const report = analysis?.report;
+  if (!analysis || !report) {
+    return (
+      <EmptyState
+        title="Policy assessment report not ready"
+        description="The policy assessment report is generated in the final pipeline stage after verification completes."
+      />
+    );
+  }
+
+  const analysisId = analysis.analysis_id ?? id;
+  const sources = analysis.sources ?? [];
+  const hasPlaceholder = Boolean(
+    sources.some((s) => s.is_placeholder) ||
+      analysis.simulation?.assumptions?.some((a) => a.is_placeholder),
+  );
+
+  const declineReasons = [
+    ...(analysis.verification?.decline_reasons ?? []),
+    ...(analysis.scope?.forecast_allowed === false ? (analysis.scope.reasons ?? []) : []),
+  ];
+  const uniqueReasons = Array.from(new Set(declineReasons));
+
+  const scenarios = analysis.simulation?.scenarios ?? [];
+  const fiscalYears = scenarios[0]?.result.fiscal_years ?? [];
+  const y1 = fiscalYears[0];
+  const finalYear = fiscalYears[fiscalYears.length - 1];
+  const keyFigures = report.key_figures ?? [];
+
   return (
-    <Card title="Report (agent-9)" subtitle="Placeholder component — owned by agent-9">
-      <details className="text-xs">
-        <summary className="cursor-pointer font-medium text-blue-700 hover:underline">
-          Inspect analysis.report JSON slice
-        </summary>
-        <pre className="mt-2 max-h-96 overflow-auto rounded bg-slate-900 p-3 font-mono text-[11px] text-slate-100">
-          {JSON.stringify(analysis?.report ?? null, null, 2)}
-        </pre>
-      </details>
-    </Card>
+    <div className="space-y-6">
+      {/* Header Toolbar */}
+      <Card
+        title={report.title}
+        subtitle={`Generated ${fmtDate(report.generated_at)}`}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge
+              variant={report.generated_by === 'gemini' ? 'green' : 'blue'}
+              aria-label={`Generated by: ${report.generated_by}`}
+            >
+              Generated by: {report.generated_by === 'gemini' ? 'Gemini Narrative' : 'Template'}
+              {report.model ? ` (${report.model})` : ''}
+            </Badge>
+            <VerificationBadge overall={report.verification_overall} />
+            {hasPlaceholder && <PlaceholderBadge />}
+
+            {analysisId && (
+              <a
+                href={`/api/analyses/${encodeURIComponent(analysisId)}/report.md`}
+                download={`jane-avenue-${analysisId}-report.md`}
+                data-print-hide="true"
+                className="no-print inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                <span aria-hidden="true">↓</span>
+                <span>Download .md</span>
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => window.print()}
+              data-print-hide="true"
+              className="no-print inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <span aria-hidden="true">⎙</span>
+              <span>Print / Save as PDF</span>
+            </button>
+          </div>
+        }
+      >
+        {/* Withheld Banner when applicable */}
+        {report.forecast_withheld && (
+          <div className="mb-4">
+            <WithheldBanner reasons={uniqueReasons} />
+          </div>
+        )}
+
+        {/* Executive Summary Box */}
+        <div
+          aria-label="Executive summary"
+          className="rounded-lg border border-blue-200 bg-blue-50/50 p-4"
+        >
+          <div className="mb-1.5 flex items-center justify-between gap-2">
+            <span className="text-xs font-bold tracking-wide text-blue-900 uppercase">
+              Executive Summary
+            </span>
+            <Badge variant="blue">Evidence-backed synthesis</Badge>
+          </div>
+          <p className="text-sm leading-relaxed text-slate-800">{report.executive_summary}</p>
+        </div>
+      </Card>
+
+      {/* Key Figures Strip */}
+      {keyFigures.length > 0 && (
+        <section aria-label="Report key figures">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-slate-800">
+              Key Figures (Hover or click any number for calculation steps &amp; provenance)
+            </h2>
+            <span className="text-xs text-slate-500">
+              {keyFigures.length} traceable figures
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {keyFigures.map((fig) => {
+              const inspectorParams = new URLSearchParams();
+              if (fig.metric) inspectorParams.set('metric', fig.metric);
+              if (fig.fiscal_year) inspectorParams.set('year', fig.fiscal_year);
+              const qs = inspectorParams.toString();
+              const inspectorHref =
+                analysisId && fig.evidence_class === 'model_scenario'
+                  ? `/analyses/${analysisId}/assumptions${qs ? `?${qs}` : ''}`
+                  : null;
+
+              return (
+                <div
+                  key={fig.figure_id}
+                  className="flex flex-col justify-between rounded-lg border border-slate-200 bg-white p-3.5 shadow-2xs"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-xs font-medium text-slate-600">{fig.label}</span>
+                    <EvidenceBadge evidenceClass={fig.evidence_class} short />
+                  </div>
+
+                  <div className="my-2">
+                    <FigureProvenance
+                      figure={fig}
+                      analysisId={analysisId}
+                      sources={sources}
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] text-slate-500">
+                    <span className="font-mono">{fig.figure_id}</span>
+                    {inspectorHref && (
+                      <Link
+                        to={inspectorHref}
+                        data-print-hide="true"
+                        className="no-print font-medium text-blue-700 hover:underline"
+                      >
+                        Inspect formula →
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Scenario Comparison Table (when forecast is allowed and scenarios exist) */}
+      {!report.forecast_withheld && scenarios.length > 0 && y1 && finalYear && (
+        <Card
+          title="Scenario Comparison Summary"
+          subtitle={`Central, Optimistic, and Pessimistic paths (${fmtFiscalYear(y1)} to ${fmtFiscalYear(finalYear)})`}
+        >
+          <Table>
+            <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase">
+              <tr>
+                <th className="px-3 py-2">Scenario</th>
+                <th className="px-3 py-2">Evidence class</th>
+                <th className="px-3 py-2">Behavioural Rev ({fmtFiscalYear(y1)})</th>
+                <th className="px-3 py-2">Behavioural Rev ({fmtFiscalYear(finalYear)})</th>
+                <th className="px-3 py-2">Static Rev ({fmtFiscalYear(finalYear)})</th>
+                <th className="px-3 py-2">Investment ({fmtFiscalYear(finalYear)})</th>
+                <th className="px-3 py-2">GDP Level ({fmtFiscalYear(finalYear)})</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 text-xs">
+              {scenarios.map((scen) => {
+                const mMap = new Map(scen.result.metrics.map((m) => [m.metric, m]));
+                const bValues = mMap.get('revenue_behavioural_gbp_bn')?.values ?? [];
+                const sValues = mMap.get('revenue_static_gbp_bn')?.values ?? [];
+                const iValues = mMap.get('business_investment_pct')?.values ?? [];
+                const gValues = mMap.get('gdp_level_pct')?.values ?? [];
+
+                return (
+                  <tr key={scen.scenario.name} className="hover:bg-slate-50/70">
+                    <td className="px-3 py-2.5 font-semibold text-slate-900">
+                      {scen.scenario.label}
+                    </td>
+                    <td className="px-3 py-2.5">
+                      <EvidenceBadge evidenceClass="model_scenario" short />
+                    </td>
+                    <td className="px-3 py-2.5 font-medium tabular-nums">
+                      {fmtGbpBn(bValues[0]?.value)}
+                    </td>
+                    <td className="px-3 py-2.5 font-medium tabular-nums">
+                      {fmtGbpBn(bValues[bValues.length - 1]?.value)}
+                    </td>
+                    <td className="px-3 py-2.5 tabular-nums">
+                      {fmtGbpBn(sValues[sValues.length - 1]?.value)}
+                    </td>
+                    <td className="px-3 py-2.5 tabular-nums">
+                      {fmtPct(iValues[iValues.length - 1]?.value)}
+                    </td>
+                    <td className="px-3 py-2.5 tabular-nums">
+                      {fmtPct(gValues[gValues.length - 1]?.value)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Card>
+      )}
+
+      {/* Rendered Markdown Assessment Document */}
+      <Card
+        title="Full Policy Assessment Document"
+        subtitle="Numbers are substituted deterministically by code from engine and precedent outputs"
+      >
+        <article
+          aria-label="Rendered policy assessment markdown"
+          className={clsx(
+            'prose prose-slate max-w-none text-sm leading-relaxed text-slate-800',
+            '[&_h1]:mb-4 [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-slate-900',
+            '[&_h2]:mt-6 [&_h2]:mb-2.5 [&_h2]:border-b [&_h2]:border-slate-200 [&_h2]:pb-1.5 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-slate-900',
+            '[&_h3]:mt-4 [&_h3]:mb-1.5 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-slate-900',
+            '[&_p]:my-2.5 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5',
+            '[&_ol]:my-2 [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-5',
+            '[&_table]:my-3 [&_table]:min-w-full [&_table]:divide-y [&_table]:divide-slate-200 [&_table]:border [&_table]:border-slate-200 [&_table]:text-xs',
+            '[&_th]:bg-slate-50 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold [&_th]:text-slate-700',
+            '[&_td]:border-t [&_td]:border-slate-200 [&_td]:px-3 [&_td]:py-2 [&_td]:tabular-nums',
+            '[&_a]:text-blue-700 [&_a]:underline hover:[&_a]:text-blue-800',
+          )}
+        >
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{report.markdown}</ReactMarkdown>
+        </article>
+      </Card>
+
+      {/* Numbered References List with Access Dates */}
+      {sources.length > 0 && (
+        <Card
+          title="Cited Sources &amp; Provenance Directory"
+          subtitle={`${sources.length} sources registered in this analysis`}
+          className="print-page-break"
+        >
+          <ol className="list-decimal space-y-2.5 pl-5 text-xs text-slate-700">
+            {sources.map((src) => (
+              <li key={src.source_id} className="leading-relaxed">
+                <div className="flex flex-wrap items-center gap-2">
+                  <SourceChip sourceId={src.source_id} sources={sources} />
+                  <span className="font-semibold text-slate-900">{src.title}</span>
+                  <span className="text-slate-500">({src.publisher})</span>
+                  {src.retrieved_at && (
+                    <span className="text-slate-500">
+                      · Accessed {fmtDate(src.retrieved_at)}
+                    </span>
+                  )}
+                  {src.is_placeholder && <PlaceholderBadge />}
+                </div>
+                <div className="mt-0.5 truncate font-mono text-[11px] text-blue-700">
+                  <a href={src.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                    {src.url}
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Card>
+      )}
+    </div>
   );
 }
 
