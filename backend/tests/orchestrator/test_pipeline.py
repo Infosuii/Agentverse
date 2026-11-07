@@ -118,6 +118,20 @@ def test_research_failure_does_not_fail_analysis(store, demo_request, monkeypatc
 def test_unknown_override_fails_cleanly(store, demo_request):
     a = _run(store, demo_request.model_copy(update={"parameter_overrides": {"nope": 1.0}}))
     assert a.status == "failed" and "nope" in a.error
+    assert "Invalid simulation parameters" in a.error
+
+
+def test_invalid_simulation_parameters_fail_with_reason(store, demo_request, monkeypatch):
+    def invalid(*_, **__):
+        raise ValueError("investment shares must sum to 1")
+
+    monkeypatch.setattr(pipeline.simulation, "simulate", invalid)
+    a = _run(store, demo_request)
+    assert a.status == "failed"
+    assert a.error == "ValueError: Invalid simulation parameters: investment shares must sum to 1"
+    assert a.simulation is None and a.verification is None  # never "approved" without numbers
+    errors = [e for e in store.events_after(a.analysis_id) if e.type == "error"]
+    assert errors and errors[0].stage == "modelling"
 
 
 def test_store_list_newest_first(store, demo_request):
