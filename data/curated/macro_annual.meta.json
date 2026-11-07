@@ -1,0 +1,14 @@
+{
+  "dataset_id": "macro_annual",
+  "title": "Macro Annual",
+  "description": "Real GDP ABMI, quarterly national accounts",
+  "publisher": "ONS",
+  "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "ONS September/October 2026; BoE November 2026",
+  "file": "curated/macro_annual.csv",
+  "source_id": "D-ons-real-gdp",
+  "is_placeholder": false,
+  "notes": "Fiscal April\u2013March: quarterly flows sum Q2\u2013Q1, divide \u00a3m by 1000; rates average four quarterly values. ABMI real GDP growth is year-on-year fiscal sum growth. CAER PNFC GOS is seasonally adjusted current-price \u00a3m. Bank Rate IUMABEDR monthly averages average April\u2013March. GDP: OBR databank AE. Missing early observations are empty, never interpolated. All source_ids enumerate exact fetched series.\nRaw SHA256: dcaf17307f08611f96e859136a5ebff3381480c8abd4fa0d5ada9f7aeb415690"
+}

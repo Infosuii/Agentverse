@@ -1,0 +1,14 @@
+{
+  "dataset_id": "business_investment_by_asset",
+  "title": "Business Investment By Asset",
+  "description": "Business investment time series",
+  "publisher": "ONS",
+  "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/businessinvestment/current/cxnv.csv",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "ONS September 2026",
+  "file": "curated/business_investment_by_asset.csv",
+  "source_id": "D-ons-investment",
+  "is_placeholder": false,
+  "notes": "Calendar-year sums of four CP SA quarters (\u00a3m/1000). plant_machinery=EDRB transport+EDWH ICT/other machinery; structures=EDYP; intangibles=EDYS. Non-government business investment; transport grouped with machinery explicitly. Shares divide by sum of the three groups; validate against NPEK.\nRaw SHA256: 13a14cce6e39c884721947a2ae595807856a542638f92205ca50a0dd24540622"
+}
