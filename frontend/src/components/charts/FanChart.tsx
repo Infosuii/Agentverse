@@ -75,7 +75,7 @@ export function FanChart({
   bands,
   overlays = [],
   empiricalBands,
-  empiricalLabel = 'Backtest-calibrated band (p5–p95)',
+  empiricalLabel = 'Empirical prediction interval (backtest-calibrated)',
   intervalNote = 'assumption-driven ranges, not statistical prediction intervals; exclude model and data uncertainty',
   unit = '£bn',
   title,
