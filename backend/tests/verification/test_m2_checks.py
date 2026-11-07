@@ -367,6 +367,11 @@ def test_report_001_reads_spelled_out_numbers_in_cited_quotes(clean_analysis: An
     ("Research covered 9 official sources.", True),
     ("Research covered 12 official sources.", False),   # above the small-count limit
     ("Receipts rose by 9 per cent.", False),             # a quantity, not a count
+    ("Four reviews found 4 major studies agree.", True), # an adjective may sit between number and noun
+    ("Receipts see 8 percent cuts.", False),             # ...but never a unit (agent-2's review of #78)
+    ("There were 4 point changes.", False),             # 2 would be a real precedent change
+    ("A 7 pp rises scenario.", False),
+    ("Expect 9 bn changes.", False),
 ])
 def test_report_001_small_counts(clean_analysis: Analysis, body: str, ok: bool) -> None:
     assert report_001(_report_with(clean_analysis, body)).status == ("pass" if ok else "fail")

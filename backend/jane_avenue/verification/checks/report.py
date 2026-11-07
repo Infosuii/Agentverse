@@ -44,7 +44,10 @@ _EVIDENCE_REF = re.compile(r"\b([ES])(\d+)\b")
 # Small counts are not quantities: "3 studies", "two fiscal events" (digits are written after number-word conversion).
 SMALL_COUNT_MAX = 10
 _COUNT = re.compile(
-    r"(?<![\d.,])(\d{1,2})\s+(?:[a-z-]+\s+)?(?:studies|study|sources?|papers?|reports?|documents?|estimates?|"
+    r"(?<![\d.,])(\d{1,2})\s+"
+    # An optional adjective ("4 major studies"), but never a unit: "8 percent cuts" is a quantity, not a count.
+    r"(?:(?!(?:per|percent|percentage|pp|points?|bn|billion|m|million|k|thousand)\b)[a-z-]+\s+)?"
+    r"(?:studies|study|sources?|papers?|reports?|documents?|estimates?|"
     r"events?|budgets?|years?|months?|quarters?|countries|firms|companies|precedents?|changes|rises|cuts|"
     r"scenarios?|parameters?|checks?|questions?|items?|steps?|channels?|reasons?|factors?)\b", re.I)
 _HEADING = re.compile(r"^#{1,6}\s+(.*)$", re.M)
