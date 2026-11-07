@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import math
 
-from lightgbm import LGBMRegressor
 import numpy as np
+from lightgbm import LGBMRegressor
 
 from ..contracts import BacktestCase, MethodSummary, MLExperiment
 from .backtest import TRAIN_CUTOFF_FY, BacktestOutput, PanelRow, compute_metrics, fy_start_year

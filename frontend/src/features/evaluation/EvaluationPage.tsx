@@ -247,21 +247,29 @@ export function EvaluationPage() {
       {/* Headline Strip */}
       <section aria-label="Evaluation headline metrics" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
-          label="Best Out-of-Sample Method (Test MAE)"
-          value={bestTestMethod ? fmtGbpBn(bestTestMethod.mae, 2) : '—'}
+          label="Central Engine Out-of-Sample MAE (jane_behavioural)"
+          value={
+            janeBehavTest
+              ? fmtGbpBn(janeBehavTest.mae, 2)
+              : bestTestMethod
+                ? fmtGbpBn(bestTestMethod.mae, 2)
+                : '—'
+          }
           sublabel={
-            bestTestMethod && bestBaselineTest
-              ? `${bestTestMethod.label} vs best baseline (${bestBaselineTest.method}: ${fmtGbpBn(bestBaselineTest.mae, 2)})`
+            janeBehavTest && bestBaselineTest
+              ? `Jane behavioural vs best baseline (${bestBaselineTest.method}: ${fmtGbpBn(bestBaselineTest.mae, 2)})`
               : 'Out-of-sample FY ≥ 2008'
           }
           evidenceClass="model_scenario"
           isPlaceholder={evaluation.is_placeholder}
           provenance={
             <span>
-              Out-of-sample test split (FY ≥ 2008, n={bestTestMethod?.n ?? 0}). Central engine{' '}
-              <code>jane_behavioural</code> test MAE:{' '}
-              {janeBehavTest ? fmtGbpBn(janeBehavTest.mae, 2) : '—'} (MAPE{' '}
-              {janeBehavTest?.mape_pct != null ? fmtPct(janeBehavTest.mape_pct, 2) : '—'}).
+              Out-of-sample test split (FY ≥ 2008, n={janeBehavTest?.n ?? bestTestMethod?.n ?? 0}).
+              Central engine <code>jane_behavioural</code> MAPE:{' '}
+              {janeBehavTest?.mape_pct != null ? fmtPct(janeBehavTest.mape_pct, 2) : '—'}.{' '}
+              <code>jane_calibrated</code> (MAE{' '}
+              {bestTestMethod ? fmtGbpBn(bestTestMethod.mae, 2) : '—'}) hits the 1.500 search bound
+              on FY ≤ 2007 and is statistically indistinguishable on n=17.
             </span>
           }
         />
@@ -594,7 +602,7 @@ export function EvaluationPage() {
                   </td>
                   <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-700">
                     {m.directional_accuracy != null
-                      ? fmtPct(m.directional_accuracy * 100, 1)
+                      ? `${fmtPct(m.directional_accuracy * 100, 1)}${m.method === 'naive_growth' ? '*' : ''}`
                       : '—'}
                   </td>
                 </tr>
@@ -602,6 +610,15 @@ export function EvaluationPage() {
             })}
           </tbody>
         </Table>
+        <p className="mt-2.5 text-[11px] leading-relaxed text-slate-500">
+          * Policy-effect directional accuracy compares the sign of each method&apos;s predicted
+          rate effect (method minus <code>naive_growth</code>) against the observed excess movement
+          on rate-change years. For <code>naive_growth</code>, directional accuracy is 0.0% by
+          construction because it predicts zero policy rate effect (ΔR<sup>rate</sup> = 0). On{' '}
+          <code>n = 17</code> test years, <code>jane_behavioural</code> (central prior ε = 0.20)
+          and <code>jane_calibrated</code> (which hits the 1.500 upper search bound on FY ≤ 2007)
+          are statistically indistinguishable.
+        </p>
       </Card>
 
       {/* Highlight Cases Table for Statutory Rate-Change Years */}

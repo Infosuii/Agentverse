@@ -1,6 +1,6 @@
 # Jane Avenue — Evaluation, Historical Backtesting & ML Experiment
 
-- **Generated at:** `2026-11-07T19:02:44.564332+00:00`
+- **Generated at:** `2026-11-07T19:05:50.819637+00:00`
 - **Dataset version:** `10bb93bda87c`
 - **Profit growth measure (`g`):** `pnfc_gos`
 - **Placeholder flag (`is_placeholder`):** `False`
@@ -93,9 +93,9 @@ OLS of log((receipts/t)/pnfc_gos) on log(1-t) over n=44 fiscal years (controllin
 
 ## 8. Independent Verifier Fault-Injection Evaluation
 
-- **Injected fault cases detected:** `7/7 (100.0%)`
+- **Injected fault cases detected:** `12/12 (100.0%)`
 - **Clean-case blocking false positives:** `0/1`
-- **Notes:** Clean case: approved; flagged checks: none. Not applicable: unsourced_assumption (this fault needs model assumptions); tampered_metric (this fault needs simulation results); sign_flip (this fault needs simulation results); inflated_static (this fault needs simulation results); stale_baseline (this fault needs simulation results).
+- **Notes:** Clean case: approved; flagged checks: none.
 
 ## 9. Limitations & Honest Caveats
 

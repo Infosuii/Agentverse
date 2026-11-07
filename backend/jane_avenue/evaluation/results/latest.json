@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T19:02:44.564332Z",
+  "generated_at": "2026-11-07T19:05:50.819637Z",
   "dataset_version": "10bb93bda87c",
   "target_description": "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal) predicted from information at fiscal year y-1, conditioning on realised 2-year profit growth (`pnfc_gos`) from y-1 to y+1. This conditional design isolates tax-policy response modelling from macroeconomic forecast error. Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 (FY2008-09 to FY2024-25). Leave-one-out 90% (5th–95th percentile) empirical residual interval coverage on FY2008-09 to FY2024-25: 15/17 (88.2%).",
   "methods": [
@@ -893,8 +893,8 @@
     "notes": "Evaluated 15 gold factual UK CT questions (15/15 facts accurate, 15/15 source URLs HTTP-verified, 15/15 quotes verified verbatim, 0 hallucinated sources, 15/15 Tier-1 official sources)."
   },
   "verification_eval": {
-    "n_fault_cases": 7,
-    "detected": 7,
+    "n_fault_cases": 12,
+    "detected": 12,
     "n_clean_cases": 1,
     "false_positives": 0,
     "by_fault": {
@@ -903,10 +903,15 @@
       "long_horizon": true,
       "unverified_quote": true,
       "orphan_evidence": true,
+      "unsourced_assumption": true,
       "thin_evidence": true,
-      "placeholder_data": true
+      "tampered_metric": true,
+      "sign_flip": true,
+      "inflated_static": true,
+      "placeholder_data": true,
+      "stale_baseline": true
     },
-    "notes": "Clean case: approved; flagged checks: none. Not applicable: unsourced_assumption (this fault needs model assumptions); tampered_metric (this fault needs simulation results); sign_flip (this fault needs simulation results); inflated_static (this fault needs simulation results); stale_baseline (this fault needs simulation results)."
+    "notes": "Clean case: approved; flagged checks: none."
   },
   "limitations": [
     "Conditional backtest design: predictions of R_{y+1} condition on realised 2-year profit growth from y-1 to y+1 (measured via `pnfc_gos`). This isolates tax-rate response modelling from macroeconomic forecast error, so out-of-sample errors in unconditional real-time forecasting would be larger.",

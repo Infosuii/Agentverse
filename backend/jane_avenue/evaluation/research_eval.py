@@ -1,20 +1,21 @@
 """Research-agent gold-set evaluation (fact accuracy, URL validity, quote verification). Owner: agent-10."""
 from __future__ import annotations
 
-from datetime import date
 import hashlib
 import json
-from pathlib import Path
 import re
+from datetime import date
+from pathlib import Path
 from typing import Any
 
 import httpx
 from pydantic import BaseModel
 
+import jane_avenue.research as research_pkg
+
 from ..config import get_settings
 from ..contracts import Evidence, Mode, ResearchEval, Source, utcnow
 from ..llm import LLMUnavailable, get_llm
-import jane_avenue.research as research_pkg
 
 GOLD_DIR = Path(__file__).resolve().parent / "gold"
 QUESTIONS_PATH = GOLD_DIR / "research_questions.json"

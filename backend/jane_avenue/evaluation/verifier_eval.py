@@ -4,6 +4,8 @@ from __future__ import annotations
 from contextlib import contextmanager
 from datetime import date
 
+import jane_avenue.verification as verification_pkg
+
 from ..contracts import (
     Analysis,
     AnalysisRequest,
@@ -17,7 +19,6 @@ from ..contracts import (
 from ..data import registry
 from ..orchestrator.pipeline import create_analysis, run_analysis
 from ..store.repository import AnalysisStore
-import jane_avenue.verification as verification_pkg
 
 
 @contextmanager
@@ -172,7 +173,7 @@ def build_clean_golden_analysis() -> Analysis:
 
 def _fallback_fault_suite(clean: Analysis) -> VerificationEval:
     """Fallback fault-injection runner used before agent-5's `run_fault_suite` lands on main."""
-    verify_fn = getattr(verification_pkg, "verify")
+    verify_fn = verification_pkg.verify
     check_rep_fn = getattr(verification_pkg, "check_report", None)
 
     def _full_verify(a: Analysis):
