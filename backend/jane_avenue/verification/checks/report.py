@@ -8,10 +8,15 @@ summary, the section bodies and the caveats must be one of:
    evidence from that source) in the same sentence;
 3. a policy number: the current and proposed rates, the change in points, the horizon, the effective date, or a
    fiscal-year label of the modelled years;
-4. a precedent fact from the curated dataset (old and new rates, the change, the year it took effect);
+4. a precedent fact from the curated dataset (old and new rates, the change, the year it took effect, official
+   costings);
 5. code-written verification text: the counts, the decline reasons, and the scope gate's reasons, warnings and
    validated bounds;
-6. section numbering, citation markers ([S3], [E1], footnotes) and check IDs (CALC-001), which are not quantities.
+6. a scenario value (exact, or to 1-2 decimals) or the Monte Carlo draw count;
+7. labels that are not quantities: section numbering, citation markers ([S3], [E1], footnotes), check IDs (CALC-001),
+   precedent IDs (CT-MAIN-2023), percentiles (p5-p95), "Year 3", "t+1", "Tier 1", "FTSE 100" and URLs.
+
+The references section is not checked (it holds URLs and access dates). The whitelist was agreed with agent-9 (#17).
 
 Anything else fails, and the failure lists the offending snippets. Unsubstituted `{{fig:...}}` placeholders fail too.
 """
@@ -26,7 +31,11 @@ _FY = re.compile(r"\b((?:19|20)\d\d)\s*[-–/]\s*(\d\d)\b")
 _PLACEHOLDER = re.compile(r"\{\{\s*fig:([^}]*)\}\}")
 _CITATION = re.compile(r"\[\^?\d+\]|\[(?:[ESI]\d+|D-[\w-]+)(?:\s*[,;]\s*(?:[ESI]\d+|D-[\w-]+))*\]")
 _CHECK_ID = re.compile(r"\b[A-Z]{3,8}-\d{3}\b")
+_PRECEDENT_ID = re.compile(r"\b[A-Z]{2,}(?:-[A-Z]+)*-\d{4}\b")
 _PERCENTILE = re.compile(r"\bp\d{1,2}\b", re.I)
+_LABELS = re.compile(r"\b(?:year|yr)\s+\d{1,2}\b|\bt\s*[+-]\s*\d{1,2}\b|\btier\s+[123]\b|\bftse\s+100\b", re.I)
+_URL = re.compile(r"https?://\S+|www\.\S+")
+UNCHECKED_SECTIONS = ("references", "sources", "bibliography")
 _NUMBERING = re.compile(r"^\s*(?:#{1,6}\s*)?(?:[-*]\s*)?\d+(?:\.\d+)*[.)]\s", re.M)
 _NUMBER = re.compile(r"(?<![A-Za-z_\d.,])\d+(?:,\d{3})*(?:\.\d+)?")
 _SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z£(\[*_\"'])|\n+")
@@ -50,6 +59,13 @@ def _close_to_evidence(value: float, evidence_value: float) -> bool:
     """A prose number may round an evidence value: 12.4 written as 12 or 12.4."""
     return abs(value - evidence_value) <= 1e-9 or abs(round(evidence_value) - value) <= 1e-9 \
         or abs(round(evidence_value, 1) - value) <= 1e-9 or abs(round(evidence_value, 2) - value) <= 1e-9
+
+
+def _close_to_model(value: float, model_value: float) -> bool:
+    """Scenario values may appear to 1 or 2 decimals (£11.9bn), never rounded to a whole number: with dozens of
+    modelled values, integer rounding would let almost any small number through."""
+    return abs(value - model_value) <= 1e-9 or abs(round(model_value, 1) - value) <= 1e-9 \
+        or abs(round(model_value, 2) - value) <= 1e-9
 
 
 def allowed_fiscal_years(analysis: Analysis, report: PolicyAssessment) -> set[str]:
@@ -85,6 +101,11 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
             c = m.change
             allowed |= {c.old_rate_pct, c.new_rate_pct, round(abs(c.new_rate_pct - c.old_rate_pct), 6),
                         float(c.effective_date.year)}
+            allowed |= {abs(x.value_gbp_bn) for x in c.official_costings}
+            if c.announced_date:
+                allowed.add(float(c.announced_date.year))
+    if analysis.simulation and analysis.simulation.monte_carlo:
+        allowed.add(float(analysis.simulation.monte_carlo.n_draws))
     if analysis.verification:
         allowed |= {float(v) for v in analysis.verification.counts.values()}
         allowed.add(float(len(analysis.verification.checks)))
@@ -98,9 +119,16 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
     return allowed
 
 
+def scenario_values(analysis: Analysis) -> list[float]:
+    if analysis.simulation is None:
+        return []
+    return [abs(yv.value) for s in analysis.simulation.scenarios for m in s.result.metrics for yv in m.values]
+
+
 def prose(report: PolicyAssessment) -> list[tuple[str, str]]:
     blocks = [("executive_summary", report.executive_summary)]
-    blocks += [(f"section.{s.section_id}", s.body_markdown) for s in report.sections]
+    blocks += [(f"section.{s.section_id}", s.body_markdown) for s in report.sections
+               if s.section_id.lower() not in UNCHECKED_SECTIONS]
     blocks += [(f"caveat.{i}", c) for i, c in enumerate(report.caveats)]
     return [(loc, text) for loc, text in blocks if text]
 
@@ -111,6 +139,7 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
     years = allowed_fiscal_years(analysis, report)
     evidence = analysis.research.evidence if analysis.research else []
     by_id = {e.evidence_id: e for e in evidence}
+    modelled = scenario_values(analysis)
     found: list[tuple[str, str]] = []
     for location, text in prose(report):
         for raw in _SENTENCE.split(text):
@@ -128,8 +157,11 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
                 found.append((location, f"unsubstituted {m.group(0)}"))
             body = _PLACEHOLDER.sub(" ", sentence)
             body = _CITATION.sub(" ", body)
+            body = _URL.sub(" ", body)
             body = _CHECK_ID.sub(" ", body)
+            body = _PRECEDENT_ID.sub(" ", body)
             body = _PERCENTILE.sub(" ", body)
+            body = _LABELS.sub(" ", body)
             body = _NUMBERING.sub(" ", body)
             for m in _FY.finditer(body):
                 label = f"{m.group(1)}-{m.group(2)}"
@@ -139,7 +171,8 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
             for token in _NUMBER.findall(body):
                 value = _to_float(token)
                 if _matches(value, allowed) or _matches(value, quoted) \
-                        or any(_close_to_evidence(value, v) for v in cited_values):
+                        or any(_close_to_evidence(value, v) for v in cited_values) \
+                        or any(_close_to_model(value, v) for v in modelled):
                     continue
                 found.append((location, f"\"{token}\" in \"{sentence[:120]}\""))
     return found

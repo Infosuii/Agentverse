@@ -203,10 +203,28 @@ FIG = KeyFigure(figure_id="rev_y1", label="Behavioural revenue, 2027-28", value=
     ("Receipts would rise by £7.3bn.", False),                                        # invented number
     ("Revenue in 2041-42 is uncertain.", False),                                      # fiscal year not modelled
     ("Revenue is {{fig:missing}} in the first year.", False),                         # unsubstituted placeholder
+    ("By Year 3 (t+2) the effect fades; see CT-MAIN-1983 and Tier 1 sources at https://obr.uk/efo2026/.", True),
+    ("Results use 200 Monte Carlo draws.", True),                                      # n_draws from the fixture
 ])
 def test_report_001_whitelist(clean_analysis: Analysis, body: str, ok: bool) -> None:
     result = report_001(_report_with(clean_analysis, body, [FIG]))
     assert result.status == ("pass" if ok else "fail"), result.detail
+
+
+def test_report_001_accepts_rounded_scenario_values(clean_analysis: Analysis) -> None:
+    assert clean_analysis.simulation is not None
+    static = next(m for m in clean_analysis.simulation.scenarios[0].result.metrics
+                  if m.metric == "revenue_static_gbp_bn")
+    body = f"Static revenue is about £{static.values[0].value:.1f}bn in the first year."
+    assert report_001(_report_with(clean_analysis, body)).status == "pass"
+
+
+def test_report_001_skips_the_references_section(clean_analysis: Analysis) -> None:
+    a = _report_with(clean_analysis, "No numbers here.")
+    assert a.report is not None
+    a.report.sections.append(ReportSection(section_id="references", heading="9. References",
+                                           body_markdown="[1] OBR, accessed 7 November 2026, https://obr.uk/x"))
+    assert report_001(a).status == "pass"
 
 
 def test_report_001_lists_offending_snippets(clean_analysis: Analysis) -> None:
