@@ -448,13 +448,8 @@ def build_template_report(
     elif f_y1 and f_fin:
         exec_fig_ids.extend([f_y1.figure_id, f_fin.figure_id])
         exec_src_ids.extend(f_y1.source_ids + f_fin.source_ids)
-        range_clause = ""
         if f_p5 and f_p95:
             exec_fig_ids.extend([f_p5.figure_id, f_p95.figure_id])
-            range_clause = (
-                f", with an assumption-driven Monte Carlo p5–p95 range of "
-                f"{f_p5.display} to {f_p95.display}"
-            )
         inv_gdp_clause = ""
         if f_inv and f_gdp:
             exec_fig_ids.extend([f_inv.figure_id, f_gdp.figure_id])
@@ -465,20 +460,17 @@ def build_template_report(
         executive_summary = (
             f"Under the central scenario assumptions, the proposed policy is estimated to change Exchequer "
             f"corporation tax revenue (behavioural) by {f_y1.display} in {f_y1.fiscal_year} and by "
-            f"{f_fin.display} in {f_fin.fiscal_year}.{inv_gdp_clause}"
+            f"{f_fin.display} in {f_fin.fiscal_year} (with p5–p95 Monte Carlo bands reported in key figures)."
+            f"{inv_gdp_clause}"
         )
-        exec_section_body = (
-            f"Under the central scenario assumptions, the proposed policy is estimated to change Exchequer "
-            f"corporation tax revenue (behavioural) by {f_y1.display} in {f_y1.fiscal_year} and by "
-            f"{f_fin.display} in {f_fin.fiscal_year}{range_clause}.{inv_gdp_clause}"
-        )
+        exec_section_body = executive_summary
     else:
         executive_summary = "Policy assessment generated under deterministic template rules."
         exec_section_body = executive_summary
 
     exec_section = ReportSection(
         section_id="executive_summary",
-        heading="1. Executive summary",
+        heading="Executive summary",
         body_markdown=exec_section_body,
         source_ids=remember_sources(exec_src_ids),
         figure_ids=exec_fig_ids,
@@ -515,7 +507,7 @@ def build_template_report(
 
     policy_section = ReportSection(
         section_id="policy",
-        heading="2. Policy assessed",
+        heading="Policy assessed",
         body_markdown=policy_body,
         source_ids=[],
         figure_ids=[],
@@ -545,7 +537,7 @@ def build_template_report(
 
     research_section = ReportSection(
         section_id="research",
-        heading="3. Evidence from research",
+        heading="Evidence from research",
         body_markdown=research_body,
         source_ids=remember_sources(research_src_ids),
         figure_ids=[],
@@ -584,7 +576,7 @@ def build_template_report(
 
     precedents_section = ReportSection(
         section_id="precedents",
-        heading="4. Historical precedents",
+        heading="Historical precedents",
         body_markdown=prec_body,
         source_ids=remember_sources(prec_src_ids),
         figure_ids=prec_fig_ids,
@@ -616,10 +608,6 @@ def build_template_report(
             model_fig_ids.append(f_st.figure_id)
             model_src_ids.extend(f_st.source_ids)
         if f_p5 and f_p95:
-            table_rows.append(
-                f"| Behavioural revenue p5–p95 range | {f_p5.fiscal_year} (Monte Carlo) | "
-                f"`model_scenario` | {f_p5.display} to {f_p95.display} |"
-            )
             model_fig_ids.extend([f_p5.figure_id, f_p95.figure_id])
         if f_inv:
             table_rows.append(
@@ -643,7 +631,7 @@ def build_template_report(
 
     model_section = ReportSection(
         section_id="modelled_impacts",
-        heading="5. Modelled impacts",
+        heading="Modelled impacts",
         body_markdown=model_body,
         source_ids=remember_sources(model_src_ids),
         figure_ids=model_fig_ids,
@@ -669,8 +657,8 @@ def build_template_report(
             unc_fig_ids.extend([f_p5.figure_id, f_p95.figure_id])
             unc_src_ids.extend(f_p5.source_ids + f_p95.source_ids)
             unc_lines.append(
-                f"In {f_p5.fiscal_year}, the Monte Carlo p5–p95 range for behavioural revenue is "
-                f"**{f_p5.display}** to **{f_p95.display}** ({note})."
+                f"In {f_p5.fiscal_year}, the Monte Carlo p5–p95 range for behavioural revenue reflects "
+                f"{note} (reported in the key figures strip)."
             )
         else:
             unc_lines.append(f"Uncertainty bands represent {note}.")
@@ -685,21 +673,21 @@ def build_template_report(
 
         if tornado_items:
             unc_lines.append("\n**Top sensitivity drivers (tornado analysis):**")
-            for idx, item in enumerate(tornado_items, start=1):
-                unc_lines.append(f"{idx}. **{item.label}** (`{item.parameter}`)")
+            for item in tornado_items:
+                unc_lines.append(f"- **{item.label}** (`{item.parameter}`)")
         elif analysis.simulation and analysis.simulation.assumptions:
             adjustable = [a for a in analysis.simulation.assumptions if a.adjustable][:3]
             if adjustable:
                 unc_lines.append("\n**Primary uncertain parameters:**")
-                for idx, a in enumerate(adjustable, start=1):
-                    unc_lines.append(f"{idx}. **{a.label}** (`{a.name}`)")
+                for a in adjustable:
+                    unc_lines.append(f"- **{a.label}** (`{a.name}`)")
                     unc_src_ids.extend(a.source_ids)
 
         unc_body = "\n".join(unc_lines)
 
     uncertainty_section = ReportSection(
         section_id="uncertainty",
-        heading="6. Uncertainty and sensitivity",
+        heading="Uncertainty and sensitivity",
         body_markdown=unc_body,
         source_ids=remember_sources(unc_src_ids),
         figure_ids=unc_fig_ids,
@@ -708,16 +696,9 @@ def build_template_report(
     # 7. Verification findings
     if analysis.verification:
         v = analysis.verification
-        pass_c = v.counts.get("pass", 0)
-        warn_c = v.counts.get("warn", 0)
-        fail_c = v.counts.get("fail", 0)
-        skip_c = v.counts.get("skipped", 0)
         v_lines = [
             f"- **Overall status:** `{v.overall}`",
-            (
-                f"- **Summary:** {len(v.checks)} checks run "
-                f"({pass_c} passed, {warn_c} warnings, {fail_c} failed, {skip_c} skipped)."
-            ),
+            f"- **Forecast gate:** `{'forecast_allowed' if v.forecast_allowed else 'forecast_withheld'}`",
         ]
         if v.decline_reasons:
             v_lines.append("- **Decline reasons:** " + "; ".join(v.decline_reasons))
@@ -733,7 +714,7 @@ def build_template_report(
 
     verification_section = ReportSection(
         section_id="verification",
-        heading="7. Verification findings",
+        heading="Verification findings",
         body_markdown=verif_body,
         source_ids=[],
         figure_ids=[],
@@ -754,7 +735,7 @@ def build_template_report(
     limitations_body = "\n".join(f"- {c}" for c in caveats)
     limitations_section = ReportSection(
         section_id="limitations",
-        heading="8. Limitations and caveats",
+        heading="Limitations and caveats",
         body_markdown=limitations_body,
         source_ids=[],
         figure_ids=[],
@@ -764,7 +745,7 @@ def build_template_report(
     refs_body, ref_source_ids = _format_references_section(cited_source_ids, source_map)
     references_section = ReportSection(
         section_id="references",
-        heading="9. References",
+        heading="References",
         body_markdown=refs_body,
         source_ids=ref_source_ids,
         figure_ids=[],

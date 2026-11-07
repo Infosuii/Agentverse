@@ -163,15 +163,15 @@ def test_template_has_all_nine_sections_and_full_markdown(demo_request):
     report = generate_report(analysis)
     assert len(report.sections) == 9
     expected_headings = [
-        "1. Executive summary",
-        "2. Policy assessed",
-        "3. Evidence from research",
-        "4. Historical precedents",
-        "5. Modelled impacts",
-        "6. Uncertainty and sensitivity",
-        "7. Verification findings",
-        "8. Limitations and caveats",
-        "9. References",
+        "Executive summary",
+        "Policy assessed",
+        "Evidence from research",
+        "Historical precedents",
+        "Modelled impacts",
+        "Uncertainty and sensitivity",
+        "Verification findings",
+        "Limitations and caveats",
+        "References",
     ]
     assert [s.heading for s in report.sections] == expected_headings
     for heading in expected_headings:
