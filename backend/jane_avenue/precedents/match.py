@@ -21,8 +21,9 @@ def find_precedents(spec: PolicySpec, *, k: int = 5) -> PrecedentAnalysis:
     latest = registry.load_macro_context('latest')
     scales = {}
     for field in MACRO_FIELDS:
-        history = [getattr(c.macro_context, field) for c in changes if c.macro_context is not None
-                   and getattr(c.macro_context, field) is not None]
+        series = registry.load_series({'real_gdp_growth_pct': 'real_gdp_growth',
+                                       'cpi_inflation_pct': 'cpi', 'bank_rate_pct': 'bank_rate'}[field])
+        history = [p.value for p in series.points] if series else []
         scales[field] = pstdev(history) if len(history) > 1 else 0
     matches = []
     if prop is not None and spec.policy_type != 'unsupported':

@@ -1,14 +1,14 @@
 {
   "dataset_id": "ct_receipts",
   "title": "Ct Receipts",
-  "description": "Public finances databank October 2026",
-  "publisher": "OBR",
-  "source_url": "https://obr.uk/download/public-finances-databank-october-2026-efo/",
+  "description": "Central government Corporation Tax gross of tax credits N445",
+  "publisher": "ONS",
+  "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/n445/pusf",
   "licence": "Open Government Licence v3.0",
   "retrieved_at": "2026-11-07",
   "vintage": "OBR EFO October 2026",
   "file": "curated/ct_receipts.csv",
-  "source_id": "D-obr-databank",
+  "source_id": "D-ons-ct-receipts",
   "is_placeholder": false,
-  "notes": "Receipts (\u00a3bn) U+V; onshore U includes Bank Surcharge and EGL. GDP denominator: Aggregates (\u00a3bn) AE (financial-year GDP). Only outturn fiscal years through 2025-26; forecasts excluded.\nRaw SHA256: 16a4bf46d8692e18790e87add342c6c44aa909cebb19f68ae857126a36d36459"
+  "notes": "Total: ONS N445 central-government CT GROSS OF TAX CREDITS, NSA quarterly \u00a3m sum Q2\u2013Q1 /1000. GDP denominator: OBR databank Aggregates (\u00a3bn) AE. Supplementary onshore column only: OBR Receipts U, includes Bank Surcharge/EGL, available from 1999-00; therefore not directly additive/comparable to N445 total. No missing onshore history filled. Outturns only through 2025-26. Baseline uses OBR onshore, NOT this gross total.\nRaw SHA256: efaa57cab8c1a44887ebdd56933a798a17da8f169570daf1b7ff69596ce3a804"
 }

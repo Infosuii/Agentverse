@@ -6,3 +6,23 @@ D-obr-databank,Public finances databank October 2026,https://obr.uk/download/pub
 D-obr-efo,October 2026 EFO detailed forecast tables,https://obr.uk/download/october-2026-economic-and-fiscal-outlook-detailed-forecast-tables-zip-file/,OBR,obr,,1
 D-obr-measures,Policy measures database March 2026,https://obr.uk/download/policy-measures-database/,OBR,obr,,1
 D-ons-investment,Business investment time series,https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/businessinvestment/current/cxnv.csv,ONS,ons,,1
+D-ons-real-gdp,"Real GDP ABMI, quarterly national accounts",https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna,ONS,ons,,1
+D-ons-pnfc,PNFC gross operating surplus CAER,https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/caer/ukea,ONS,ons,,1
+D-ons-cpi,CPI annual inflation D7G7,https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7g7/mm23,ONS,ons,,1
+D-ons-ct-receipts,Central government Corporation Tax gross of tax credits N445,https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/n445/pusf,ONS,ons,,1
+D-ons-unemployment,Unemployment rate MGSX,https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms,ONS,ons,,1
+D-boe-bank-rate,Monthly average official Bank Rate IUMABEDR,https://www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp?CSVF=TT&DAT=ALL&FNY=Y&Filter=N&FromSeries=1&SeriesCodes=IUMABEDR%2CIUMTLMV%2CIUMBV34&ToSeries=50&Travel=NIxAZxSUx&UsingCodes=Y&html.x=66&html.y=26,Bank of England,boe,,1
+D-budget1984,Budget speech 13 March 1984: corporation tax and capital allowances,https://hansard.parliament.uk/Commons/1984-03-13/debates/6cf4b7c6-4a55-429a-a8a9-e7617b155785/CommonsChamber,Parliament,parliament,,1
+D-budget1991,Budget speech 19 March 1991: corporation tax,https://hansard.parliament.uk/commons/1991-03-19/debates/37cfce8d-a615-420f-a132-917ccf219ef4/CommonsChamber,Parliament,parliament,,1
+D-budget1997,Budget speech 2 July 1997: corporation tax,https://hansard.parliament.uk/Commons/1997-07-02/debates/25efc1ce-0352-4c6a-b353-def04ca4c618/CommonsChamber,Parliament,parliament,,1
+D-budget1998,Budget speech 17 March 1998: corporation tax and ACT,https://hansard.parliament.uk/commons/1998-03-17/debates/b52b11d8-562f-4016-b28b-110f2f11b404/CommonsChamber,Parliament,parliament,,1
+D-budget2007,Budget speech 21 March 2007: business tax reform,https://hansard.parliament.uk/Commons/2007-03-21/debates/d71fcb9d-858f-4a83-a532-3c88bb72b8be/CommonsChamber,Parliament,parliament,,1
+D-budget2011,"2011 Budget: Britain open for business, 23 March 2011",https://www.gov.uk/government/news/2011-budget-britain-open-for-business,HM Treasury,hmt,,1
+D-budget2012,"Budget 2012, 21 March: Table 2.1 corporation tax package",https://assets.publishing.service.gov.uk/media/5a7c923ced915d6969f45d0b/1853.pdf,HM Treasury,hmt,,1
+D-autumn2012,"Autumn Statement 2012 overview, 5 December",https://www.gov.uk/government/news/autumn-statement-2012-an-overview,HM Treasury,hmt,,1
+D-budget2013,Budget speech 20 March 2013: corporation tax unification,https://www.gov.uk/government/speeches/budget-2013-chancellors-statement,HM Treasury,hmt,,1
+D-budget2015,Summer Budget 8 July 2015: corporation tax package,https://www.gov.uk/government/publications/summer-budget-2015/summer-budget-2015,HM Treasury,hmt,,1
+D-budget2016,Budget 16 March 2016: planned corporation tax rate reduction,https://www.gov.uk/government/publications/budget-2016-documents/budget-2016,HM Treasury,hmt,,1
+D-budget2021,Budget 3 March 2021: Table 2.1 row 22,https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html,HM Treasury,hmt,,1
+D-reversal2020,HMRC March 2020: reversal of 2016-announced 17 percent rate,https://www.gov.uk/government/publications/changes-to-corporation-tax-rates-from-1-april-2020/corporation-tax-main-rate-at-19-in-2020-and-charge-and-main-rate-for-2021,HMRC,hmrc,,1
+D-full_expensing,HMRC 15 March 2023: introduction of full expensing,https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026,HMRC,hmrc,,1

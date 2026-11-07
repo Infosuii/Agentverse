@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import hashlib
-from functools import cache
+from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -37,15 +37,22 @@ def _version() -> str:
 DATASET_VERSION = _version()
 
 
-@cache
-def _rows(name: str) -> tuple[dict, ...]:
-    path = _directory() / f'{name}.csv'
+@lru_cache(maxsize=32)
+def _read_csv(path: Path) -> tuple[dict, ...]:
     return tuple(pd.read_csv(path, keep_default_na=False).to_dict('records')) if path.exists() else ()
 
 
-@cache
+def _rows(name: str) -> tuple[dict, ...]:
+    return _read_csv(_directory() / f'{name}.csv')
+
+
+@lru_cache(maxsize=32)
+def _read_meta(path: Path) -> DatasetMeta:
+    return DatasetMeta.model_validate_json(path.read_text(encoding='utf-8'))
+
+
 def _meta(name: str) -> DatasetMeta:
-    return DatasetMeta.model_validate_json((_directory() / f'{name}.meta.json').read_text(encoding='utf-8'))
+    return _read_meta(_directory() / f'{name}.meta.json')
 
 
 def list_datasets() -> list[DatasetMeta]:
@@ -88,12 +95,16 @@ def load_policy_changes(tax: str = 'corporation_tax') -> list[PolicyChange]:
         for dataset, metrics in [('ct_receipts', ('ct_receipts_gbp_bn', 'ct_receipts_pct_gdp')),
                                  ('macro_annual', ('business_investment_gbp_bn', 'real_gdp_growth_pct'))]:
             for r in _rows(dataset):
+                if str(row['reversed']).lower() == 'true':
+                    continue
                 if int(str(r['fiscal_year'])[:4]) not in range(year - 1, year + 3):
                     continue
                 for metric in metrics:
                     if r.get(metric, '') != '':
                         outcomes.append(ObservedOutcome(metric=metric, fiscal_year=r['fiscal_year'], value=r[metric],
-                                                        source_id=r.get('source_id') or _split(r['source_ids'])[0]))
+                                                        source_id=r.get('source_id') or {
+                                                            'business_investment_gbp_bn': 'D-ons-investment',
+                                                            'real_gdp_growth_pct': 'D-ons-real-gdp'}[metric]))
         costings = [Costing(**{k: (r[k] if r[k] != '' else None) for k in Costing.model_fields})
                     for r in _rows('ct_costings') if r['change_id'] == row['change_id']]
         result.append(PolicyChange(
@@ -101,6 +112,8 @@ def load_policy_changes(tax: str = 'corporation_tax') -> list[PolicyChange]:
             announced_date=row['announced_date'] or None, fiscal_event=row['fiscal_event'] or None,
             effective_date=row['effective_date'], old_rate_pct=row['old_rate_pct'], new_rate_pct=row['new_rate_pct'],
             other_measures=_split(row['other_measures']), notes=row['notes'] +
+            (' Official costing covers a joint phased package; it is not an isolated estimate for this rate step.'
+             if row['change_id'] in ('CT-MAIN-2012', 'CT-MAIN-2013', 'CT-MAIN-2017') else '') +
             (' Reversed: announced change did not take effect.' if str(row['reversed']).lower() == 'true' else ''),
             macro_context=load_macro_context(fiscal_year_range(f'{year - 1}-00', 1)[0]),
             official_costings=costings, observed_outcomes=outcomes, source_ids=_split(row['source_ids']),
@@ -125,7 +138,7 @@ def load_baseline(vintage: str = 'latest') -> BaselineProjection:
     return BaselineProjection(vintage=meta.vintage, current_main_rate_pct=rate['main_rate_pct'],
                               current_small_profits_rate_pct=rate['small_profits_rate_pct'], years=years,
                               source_ids=sorted({r['source_id'] for r in _rows('obr_baseline')} |
-                                                {'D-obr-databank', rate['source_id']}),
+                                                {'D-obr-databank', 'D-ons-investment', rate['source_id']}),
                               extrapolated_from=horizon, is_placeholder=meta.is_placeholder, notes=meta.notes +
                               ' Years after the official horizon extrapolate each series at its last annual growth rate.')
 

@@ -28,24 +28,30 @@ def test_all_implemented_changes_match_contiguous_rate_history():
     assert list(frame.index) == list(range(1982, 2027))
     assert list(frame.fiscal_year) == fiscal_year_range('1982-83', 45)
     changes = registry.load_policy_changes()
-    assert len(changes) == 16
+    assert len(changes) == 17
     for c in changes:
+        if 'REVERSED' in c.change_id:
+            assert not c.observed_outcomes
+            continue
         year = c.effective_date.year
         assert frame.loc[year - 1, 'main_rate_pct'] == c.old_rate_pct
         assert frame.loc[year, 'main_rate_pct'] == c.new_rate_pct
         assert not c.is_placeholder
+        assert c.announced_date and c.fiscal_event
     assert frame.loc[2017, 'main_rate_pct'] == 19  # reject stale Table A.6 forward row
 
 
-def test_baseline_extrapolation_and_missing_nominal_flag():
+def test_baseline_extrapolation_and_documented_nominal_transformation():
     baseline = registry.load_baseline()
     official = pd.read_csv(CURATED / 'obr_baseline.csv')
     assert len(official) >= 6
     assert baseline.extrapolated_from == official.fiscal_year.iloc[-1]
     assert baseline.current_main_rate_pct == 25
     assert baseline.current_small_profits_rate_pct == 19
-    assert baseline.is_placeholder  # real investment MUST NOT masquerade as nominal
-    assert 'NOT NOMINAL' in baseline.notes
+    assert not baseline.is_placeholder
+    assert 'NOT an official nominal OBR forecast' in baseline.notes
+    assert 'GDP deflator proxies the BI deflator' in baseline.notes
+    assert 'D-ons-investment' in baseline.source_ids
     last, extended = baseline.years[len(official) - 1:len(official) + 1]
     ratio = official.ct_receipts_gbp_bn.iloc[-1] / official.ct_receipts_gbp_bn.iloc[-2]
     assert extended.ct_receipts_gbp_bn == pytest.approx(last.ct_receipts_gbp_bn * ratio)
