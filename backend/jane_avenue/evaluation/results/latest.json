@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T19:28:46.142740Z",
+  "generated_at": "2026-11-07T20:17:38.795292Z",
   "dataset_version": "62059e64ffca",
   "target_description": "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal, ONS N445 central-government CT gross of tax credits, `D-ons-ct-receipts` / `D-obr-databank`) predicted from information at fiscal year y-1, conditioning on realised 2-year profit growth (`pnfc_gos`, `D-ons-pnfc`) from y-1 to y+1 (note: the forward engine baseline uses OBR onshore CT receipts, a different receipt perimeter). This conditional design isolates tax-policy response modelling from macroeconomic forecast error. Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 (FY2008-09 to FY2024-25). Leave-one-out 90% (5th–95th percentile) empirical residual interval coverage on FY2008-09 to FY2024-25: 14/17 (82.3%).",
   "methods": [

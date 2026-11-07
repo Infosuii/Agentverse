@@ -53,6 +53,13 @@ _COUNT = re.compile(
 _HEADING = re.compile(r"^#{1,6}\s+(.*)$", re.M)
 
 
+def without_small_counts(text: str) -> str:
+    """Remove small counts ("3 studies", "4 major studies"): an integer up to SMALL_COUNT_MAX followed by a count noun,
+    with at most one non-unit word between. Quantities ("8 percent cuts", "3%") stay. Public so that research
+    post-processing (agent-2) applies exactly the same rule as REPORT-001."""
+    return _COUNT.sub(lambda m: " " if int(m.group(1)) <= SMALL_COUNT_MAX else m.group(0), text)
+
+
 def _to_float(token: str) -> float:
     return float(token.replace(",", ""))
 
@@ -197,7 +204,7 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
             body = _PERCENTILE.sub(" ", body)
             body = _LABELS.sub(" ", body)
             body = _NUMBERING.sub(" ", body)
-            body = _COUNT.sub(lambda m: " " if int(m.group(1)) <= SMALL_COUNT_MAX else m.group(0), body)
+            body = without_small_counts(body)
             for m in _FY.finditer(body):
                 label = f"{m.group(1)}-{m.group(2)}"
                 if label not in years:
