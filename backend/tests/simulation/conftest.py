@@ -1,9 +1,9 @@
 """Simulation test fixtures. Owner: agent-4.
 
-`full_engine` swaps in a local, vectorised implementation of the MASTER_PROMPT section 9.5 formulas, so the scenario
-and tornado logic can be tested with non-zero behavioural, investment, GDP and dynamic metrics before agent-3's full
-engine lands. It honours the frozen `compute` signature from Appendix B. Tests that do not request it use the real
-`engine.core.compute`.
+`full_engine` guarantees a full section 9.5 engine (non-zero behavioural, investment, GDP and dynamic metrics). It uses
+agent-3's real engine once that has replaced the M0 stub. While the stub is in place, it swaps in `full_compute`, a
+local vectorised implementation of the same formulas behind the frozen `compute` signature from Appendix B. Tests that
+do not request it always use the real `engine.core.compute`.
 """
 from __future__ import annotations
 
@@ -84,7 +84,9 @@ def full_compute(spec: PolicySpec, params: Mapping[str, float | np.ndarray], bas
 
 @pytest.fixture
 def full_engine(monkeypatch: pytest.MonkeyPatch):
-    """Route `engine.core.compute` (and `run_engine`'s reference to it) through `full_compute`."""
+    """The real engine if it is no longer the M0 stub; otherwise route `compute` (and `run_engine`) via `full_compute`."""
+    if not engine_model.MODEL_VERSION.startswith("stub"):
+        return engine_core.compute
     monkeypatch.setattr(engine_core, "compute", full_compute)
     monkeypatch.setattr(engine_model, "compute", full_compute, raising=False)
     return full_compute
