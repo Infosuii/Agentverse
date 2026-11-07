@@ -686,6 +686,8 @@ export interface components {
         HealthResponse: {
             /** Contract Version */
             contract_version: string;
+            /** Data Dir Exists */
+            data_dir_exists?: boolean | null;
             /** Gemini Configured */
             gemini_configured: boolean;
             /**
@@ -697,6 +699,10 @@ export interface components {
             model_deep: string;
             /** Model Fast */
             model_fast: string;
+            /** Placeholder Datasets */
+            placeholder_datasets?: string[];
+            /** Research Cache Dir Exists */
+            research_cache_dir_exists?: boolean | null;
             /**
              * Status
              * @constant
