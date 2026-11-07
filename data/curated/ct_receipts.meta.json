@@ -1,0 +1,14 @@
+{
+  "dataset_id": "ct_receipts",
+  "title": "Ct Receipts",
+  "description": "Public finances databank October 2026",
+  "publisher": "OBR",
+  "source_url": "https://obr.uk/download/public-finances-databank-october-2026-efo/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "OBR EFO October 2026",
+  "file": "curated/ct_receipts.csv",
+  "source_id": "D-obr-databank",
+  "is_placeholder": false,
+  "notes": "Receipts (\u00a3bn) U+V; onshore U includes Bank Surcharge and EGL. GDP denominator: Aggregates (\u00a3bn) AE (financial-year GDP). Only outturn fiscal years through 2025-26; forecasts excluded.\nRaw SHA256: 16a4bf46d8692e18790e87add342c6c44aa909cebb19f68ae857126a36d36459"
+}

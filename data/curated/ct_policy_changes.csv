@@ -1,0 +1,17 @@
+change_id,policy_type,announced_date,fiscal_event,effective_date,old_rate_pct,new_rate_pct,other_measures,reversed,notes,source_ids
+CT-MAIN-1983,corporation_tax_main_rate,,,1983-04-01,52.0,50.0,phased capital-allowance reform,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1984,corporation_tax_main_rate,,,1984-04-01,50.0,45.0,phased capital-allowance reform,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1985,corporation_tax_main_rate,,,1985-04-01,45.0,40.0,phased capital-allowance reform,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1986,corporation_tax_main_rate,,,1986-04-01,40.0,35.0,phased capital-allowance reform,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1990,corporation_tax_main_rate,,,1990-04-01,35.0,34.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1991,corporation_tax_main_rate,,,1991-04-01,34.0,33.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1997,corporation_tax_main_rate,,,1997-04-01,33.0,31.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-1999,corporation_tax_main_rate,,,1999-04-01,31.0,30.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2008,corporation_tax_main_rate,,,2008-04-01,30.0,28.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2011,corporation_tax_main_rate,,,2011-04-01,28.0,26.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2012,corporation_tax_main_rate,,,2012-04-01,26.0,24.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2013,corporation_tax_main_rate,,,2013-04-01,24.0,23.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2014,corporation_tax_main_rate,,,2014-04-01,23.0,21.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2015,corporation_tax_main_rate,,,2015-04-01,21.0,20.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history
+CT-MAIN-2017,corporation_tax_main_rate,,,2017-04-01,20.0,19.0,,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-history; D-hmrc-background
+CT-MAIN-2023,corporation_tax_main_rate,,,2023-04-01,19.0,25.0,small profits rate and marginal relief; full expensing,False,Rate and effective financial year verified. Announcement event/date transcription pending.,D-hmrc-rates

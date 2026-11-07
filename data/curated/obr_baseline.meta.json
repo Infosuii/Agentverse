@@ -1,0 +1,14 @@
+{
+  "dataset_id": "obr_baseline",
+  "title": "Obr Baseline",
+  "description": "October 2026 EFO detailed forecast tables",
+  "publisher": "OBR",
+  "source_url": "https://obr.uk/download/october-2026-economic-and-fiscal-outlook-detailed-forecast-tables-zip-file/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "OBR EFO October 2026",
+  "file": "curated/obr_baseline.csv",
+  "source_id": "D-obr-efo",
+  "is_placeholder": true,
+  "notes": "CT: databank Receipts U (onshore); nominal GDP: Aggregates AE. BI: economy Table 1.1 F, CHAIN-LINKED VOLUMES, NOT NOMINAL: placeholder remains until a nominal forecast is sourced. Current rates from rate history. Do not clear placeholder on these inputs.\nRaw SHA256: 06ac908c69fce7d69dbfda4e16fc3b091a83bd8140ecd2f24990acd13d945fc2"
+}

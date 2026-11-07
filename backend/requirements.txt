@@ -12,3 +12,4 @@ google-genai>=2.30.1
 httpx
 beautifulsoup4
 pypdf
+openpyxl

@@ -1,0 +1,8 @@
+source_id,title,url,publisher,publisher_type,published_date,reliability_tier
+D-hmrc-history,HMRC Table A.6: Rates of Corporation Tax,https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf,HMRC,hmrc,,1
+D-hmrc-rates,Corporation Tax rates and allowances,https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax,HMRC,hmrc,,1
+D-hmrc-background,Corporation Tax statistics 2026: background,https://www.gov.uk/government/statistics/corporation-tax-statistics-2026/background-and-guidance-to-interpreting-corporation-tax-statistics-2026,HMRC,hmrc,,1
+D-obr-databank,Public finances databank October 2026,https://obr.uk/download/public-finances-databank-october-2026-efo/,OBR,obr,,1
+D-obr-efo,October 2026 EFO detailed forecast tables,https://obr.uk/download/october-2026-economic-and-fiscal-outlook-detailed-forecast-tables-zip-file/,OBR,obr,,1
+D-obr-measures,Policy measures database March 2026,https://obr.uk/download/policy-measures-database/,OBR,obr,,1
+D-ons-investment,Business investment time series,https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/businessinvestment/current/cxnv.csv,ONS,ons,,1
