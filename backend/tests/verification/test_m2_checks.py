@@ -16,6 +16,7 @@ from jane_avenue.verification.checks.citation import cite_001, url_problem
 from jane_avenue.verification.checks.evidence import evid_002, evid_003
 from jane_avenue.verification.checks.report import report_001
 from jane_avenue.verification.checks.uncertainty import claims_prediction_interval, unc_001
+from jane_avenue.verification.faults import untraceable_number
 
 from .conftest import run_pipeline
 
@@ -264,13 +265,14 @@ FIG = KeyFigure(figure_id="rev_y1", label="Behavioural revenue, 2027-28", value=
     ("The OBR costed the 2023 rise at around £12bn a year [E1].", True),              # cited evidence value
     ("The OBR costed the 2023 rise at around £12bn a year.", False),                  # same number, no citation
     ("1. Revenue rises under these assumptions (see CALC-001 and p95).", True),       # numbering, IDs, percentiles
-    ("Receipts would rise by £7.3bn.", False),                                        # invented number
+    ("Receipts would rise by £{X}bn.", False),                                        # invented number
     ("Revenue in 2041-42 is uncertain.", False),                                      # fiscal year not modelled
     ("Revenue is {{fig:missing}} in the first year.", False),                         # unsubstituted placeholder
     ("By Year 3 (t+2) the effect fades; see CT-MAIN-1983 and Tier 1 sources at https://obr.uk/efo2026/.", True),
     ("Results use 200 Monte Carlo draws.", True),                                      # n_draws from the fixture
 ])
 def test_report_001_whitelist(clean_analysis: Analysis, body: str, ok: bool) -> None:
+    body = body.replace("{X}", untraceable_number(clean_analysis))
     result = report_001(_report_with(clean_analysis, body, [FIG]))
     assert result.status == ("pass" if ok else "fail"), result.detail
 
@@ -292,9 +294,10 @@ def test_report_001_skips_the_references_section(clean_analysis: Analysis) -> No
 
 
 def test_report_001_lists_offending_snippets(clean_analysis: Analysis) -> None:
-    result = report_001(_report_with(clean_analysis, "Receipts would rise by £7.3bn. Costs fall by 4%."))
+    x, y = untraceable_number(clean_analysis), untraceable_number(clean_analysis, 2)
+    result = report_001(_report_with(clean_analysis, f"Receipts would rise by £{x}bn. Costs fall by {y}%."))
     assert result.affected_ids == ["section.impacts"]
-    assert "\"7.3\"" in result.detail and "\"4\"" in result.detail
+    assert f"\"{x}\"" in result.detail and f"\"{y}\"" in result.detail
 
 
 # --------------------------------------------------------------------------------- check_report and fault suite
@@ -348,3 +351,46 @@ def test_scenario_values_round_only_to_written_decimals(token: str, ok: bool) ->
     from jane_avenue.verification.checks.report import _close_to_model
 
     assert _close_to_model(token, 12.006584) == ok
+
+
+def test_report_001_reads_spelled_out_numbers_in_cited_quotes(clean_analysis: Analysis) -> None:
+    assert clean_analysis.research is not None
+    clean_analysis.research.evidence[0].quote = "Around ten per cent of the cost is recovered in receipts over time."
+    ok = "Expansion recovers around 10 per cent of the cost in receipts [E1]."
+    assert report_001(_report_with(clean_analysis, ok)).status == "pass"
+    uncited = "Expansion recovers around 10 per cent of the cost in receipts."
+    assert report_001(_report_with(clean_analysis, uncited)).status == "fail"
+
+
+@pytest.mark.parametrize(("body", "ok"), [
+    ("Three studies and 2 fiscal events support this.", True),
+    ("Research covered 9 official sources.", True),
+    ("Research covered 12 official sources.", False),   # above the small-count limit
+    ("Receipts rose by 9 per cent.", False),             # a quantity, not a count
+    ("Four reviews found 4 major studies agree.", True), # an adjective may sit between number and noun
+    ("Receipts see 8 percent cuts.", False),             # ...but never a unit (agent-2's review of #78)
+    ("There were 4 point changes.", False),             # 2 would be a real precedent change
+    ("A 7 pp rises scenario.", False),
+    ("Expect 9 bn changes.", False),
+])
+def test_report_001_small_counts(clean_analysis: Analysis, body: str, ok: bool) -> None:
+    assert report_001(_report_with(clean_analysis, body)).status == ("pass" if ok else "fail")
+
+
+def test_report_001_scans_the_downloadable_markdown(clean_analysis: Analysis) -> None:
+    a = _report_with(clean_analysis, "No numbers here.")
+    assert a.report is not None
+    x = untraceable_number(clean_analysis)
+    a.report.markdown = (f"# Assessment\n\n## Modelled impacts\n\nReceipts rise by £{x}bn.\n\n"
+                         "## References\n\n[1] OBR, accessed 7 November 2026, https://obr.uk/efo\n")
+    result = report_001(a)
+    assert result.status == "fail" and result.affected_ids == ["markdown:Modelled impacts"]
+    assert "accessed" not in result.detail  # the references section is not checked
+
+
+def test_report_001_does_not_double_report_the_markdown_copy(clean_analysis: Analysis) -> None:
+    x = untraceable_number(clean_analysis)
+    a = _report_with(clean_analysis, f"Receipts rise by £{x}bn.")
+    assert a.report is not None
+    a.report.markdown = f"# Assessment\n\n## Modelled impacts\n\nReceipts rise by £{x}bn.\n"
+    assert report_001(a).affected_ids == ["section.impacts"]
