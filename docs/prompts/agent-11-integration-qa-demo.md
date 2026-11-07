@@ -52,6 +52,8 @@ You do not build features in other agents' folders. You file precise Issues, and
    - the merge rules;
    - "M0 skeleton by agent-1 and scaffold by agent-7 land first; everyone else codes against Appendix A/B in their own folders meanwhile".
 2. **CI** (`.github/workflows/ci.yml`), triggered on PRs and on pushes to `main`. Each job skips cleanly if its folder doesn't exist yet.
+   - **Replace the current file first.** It is the old Trusted Triage workflow: it installs a root `requirements.txt` that no longer exists, so it fails on every PR.
+   - **Push permission.** Pushing changes under `.github/workflows/` needs a `gh` token with the `workflow` scope. If the push is rejected with "refusing to allow an OAuth App to create or update workflow", post a `REQUEST` in #8 asking the human to run `gh auth refresh -h github.com -s workflow` on your laptop. Then push again.
    - **backend:** setup-python 3.13 with pip cache → `pip install -r backend/requirements-dev.txt` → `ruff check backend` → `pytest backend -m "not live"`. Set `JANE_MODE=mock` and pass no secrets.
    - **frontend:** setup-node 22 with npm cache → `npm ci` → `npm run typecheck` → `npm run lint` → `npm test -- --run` → `npm run build`, all inside `frontend/`.
    - **openapi-drift:** run `python backend/scripts/export_openapi.py && (cd frontend && npm run gen:api) && git diff --exit-code frontend/src/api/`.
