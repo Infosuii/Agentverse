@@ -3,8 +3,8 @@
 Nothing the model returns is trusted:
 - a source survives only if its URL came from grounding metadata or one of our fetches;
 - evidence must point at a surviving source;
-- parameter evidence must name a known engine parameter and cite at least one non-failed evidence item;
-- interpretations must cite surviving evidence;
+- parameter evidence must name a known engine parameter and cite at least one verified evidence item;
+- interpretations must cite at least one verified evidence item (failed citations are removed);
 - summary and interpretation sentences that contain a number absent from the evidence (and from the policy itself)
   are removed, since Gemini must not introduce numbers;
 - IDs are renumbered densely (S1.., E1.., I1..) and every reference, including `[E3]` in prose, is rewritten;
@@ -117,18 +117,18 @@ def postprocess(findings: ResearchFindings, *, allowed_urls: set[str],
         else:
             notes.append(f"Dropped evidence {e.evidence_id}: source {e.source_id} does not exist.")
     emap = {e.evidence_id: f"E{i}" for i, e in enumerate(evidence, start=1)}
-    usable = {e.evidence_id for e in evidence if e.verification_status != "failed"}
+    usable = {e.evidence_id for e in evidence if e.verification_status == "verified"}
 
     allowed = allowed_numbers(findings, [e for e in evidence if e.evidence_id in usable])
 
     interpretations = []
     for it in findings.interpretations:
-        ids = [emap[x] for x in it.supporting_evidence_ids if x in emap]
+        ids = [emap[x] for x in it.supporting_evidence_ids if x in usable]
         statement, removed = strip_new_numbers(it.statement, allowed)
         if removed:
             notes.append(f"Removed {len(removed)} sentence(s) with unsupported numbers from {it.interpretation_id}.")
         if not ids or not statement:
-            notes.append(f"Dropped interpretation {it.interpretation_id}: no surviving supporting evidence or text.")
+            notes.append(f"Dropped interpretation {it.interpretation_id}: no verified supporting evidence or text.")
             continue
         interpretations.append(it.model_copy(update={"supporting_evidence_ids": ids, "statement": statement}))
     imap = {it.interpretation_id: f"I{i}" for i, it in enumerate(interpretations, start=1)}

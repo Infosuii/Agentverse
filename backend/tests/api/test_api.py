@@ -189,6 +189,21 @@ def test_simulate_unknown_override_422(client, demo_policy):
     assert "nope" in " ".join(r.json()["reasons"])
 
 
+def test_simulate_invalid_parameters_422(client, demo_policy, monkeypatch):
+    """simulate/compute raise ValueError for invalid parameters (agent-4 #62, agent-3 #57); that is a 422, not a 500."""
+    from jane_avenue import simulation
+
+    def invalid(*_, **__):
+        raise ValueError("investment shares must sum to 1 (got 1.23)")
+
+    monkeypatch.setattr(simulation, "simulate", invalid)
+    r = client.post("/api/simulate", json={"policy": demo_policy.model_dump(mode="json"),
+                                           "parameter_overrides": {"share_structures": 0.5}})
+    assert r.status_code == 422
+    assert r.json() == {"message": "Invalid simulation parameters",
+                        "reasons": ["investment shares must sum to 1 (got 1.23)"]}
+
+
 def test_simulate_out_of_scope_422(client, demo_policy):
     spec = demo_policy.model_copy(update={"proposed_rate_pct": 45.0})
     r = client.post("/api/simulate", json={"policy": spec.model_dump(mode="json")})

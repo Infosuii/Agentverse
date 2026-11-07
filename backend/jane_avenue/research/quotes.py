@@ -7,7 +7,7 @@ The model is never trusted to have copied a quote correctly. `verify_quote` chec
 3. Otherwise anchor on the rarest 4-word shingle of the quote that occurs in the text, and compare windows sized to
    the quote length +/-15% around each anchor with `difflib.SequenceMatcher`. A ratio >= 0.90 is `verified` with a
    note such as "fuzzy match 0.93".
-4. Anything else is `failed`.
+4. Anything else is `failed`, as is a quote shorter than MIN_QUOTE_WORDS words and MIN_QUOTE_CHARS characters.
 
 Quotes elided with "..." are verified part by part: every part must verify on its own.
 """
@@ -22,6 +22,8 @@ QuoteStatus = Literal["verified", "failed"]
 
 FUZZY_THRESHOLD = 0.90
 SHINGLE = 4
+MIN_QUOTE_WORDS = 6   # a quote must be at least this many words ...
+MIN_QUOTE_CHARS = 30  # ... or this many normalised characters, else "25%" or "higher than" would verify trivially
 _MAX_ANCHORS = 40  # windows compared per quote part; bounds the cost on very repetitive pages
 
 _CHAR_MAP = str.maketrans({
@@ -113,6 +115,10 @@ def verify_quote(quote: str | None, text: str | None) -> tuple[QuoteStatus, str 
     parts = [p for p in parts if p]
     if not parts:
         return "failed", "no quote supplied"
+    whole = " ".join(parts)
+    if len(whole.split(" ")) < MIN_QUOTE_WORDS and len(whole) < MIN_QUOTE_CHARS:
+        return "failed", (f"quote too short to verify (needs {MIN_QUOTE_WORDS} words or {MIN_QUOTE_CHARS} "
+                          "characters)")
     if len(parts) == 1:
         return _verify_part(parts[0], t)
     notes: list[str] = []

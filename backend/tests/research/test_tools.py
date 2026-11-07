@@ -5,10 +5,17 @@ import hashlib
 from collections.abc import Callable
 
 import httpx
+import pytest
 
 from jane_avenue.research import tools
 from jane_avenue.research.domains import classify
 from jane_avenue.research.tools import USER_AGENT, fetch_url, strip_injection
+
+
+@pytest.fixture(autouse=True)
+def _offline_dns(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No real DNS in tests: every name resolves to a public address unless a test says otherwise."""
+    monkeypatch.setattr(tools, "_resolve", lambda host: ["10.1.2.3"] if host == "intranet.example" else ["93.184.216.34"])
 
 
 def _client(handler: Callable[[httpx.Request], httpx.Response]) -> httpx.Client:
@@ -120,3 +127,31 @@ def test_domain_tiers() -> None:
     redirect = "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AAA"
     assert classify(redirect, "obr.uk").publisher_type == "obr"
     assert classify(redirect, "www.gov.uk").tier == 1
+
+
+def test_every_redirect_hop_is_checked_against_the_public_address_rule() -> None:
+    requested: list[str] = []
+
+    def handler(req: httpx.Request) -> httpx.Response:
+        requested.append(str(req.url))
+        if req.url.host == "public.example.org":
+            return httpx.Response(302, headers={"location": "http://169.254.169.254/latest/meta-data/"})
+        return httpx.Response(200, text="secret INSTANCE-CREDENTIALS", headers={"content-type": "text/plain"})
+
+    doc = fetch_url("https://public.example.org/report", client=_client(handler))
+    assert not doc.ok and "redirect blocked" in (doc.error or "") and "secret" not in doc.text
+    assert requested == ["https://public.example.org/report"]  # the metadata address was never requested
+
+
+def test_hosts_resolving_to_private_addresses_are_refused() -> None:
+    def boom(req: httpx.Request) -> httpx.Response:
+        raise AssertionError("must not be requested")
+
+    doc = fetch_url("https://intranet.example/page", client=_client(boom))
+    assert not doc.ok and "non-public" in (doc.error or "")
+
+
+def test_redirect_loops_stop() -> None:
+    doc = fetch_url("https://loop.example/a", client=_client(
+        lambda r: httpx.Response(302, headers={"location": "https://loop.example/a"})))
+    assert not doc.ok and "redirects" in (doc.error or "")

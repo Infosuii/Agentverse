@@ -115,3 +115,16 @@ def test_strip_new_numbers_and_value_in_quote_helpers() -> None:
     assert value_in_quote(0.25, "a rate of 25%")
     assert not value_in_quote(18.0, "raised GBP 17.2bn")
     assert not value_in_quote(1.0, None)
+
+
+def test_interpretations_need_verified_support() -> None:
+    f = _findings(sources=[_src("S1", GROUNDED)], evidence=[_ev("E1", "S1"), _ev("E2", "S1", status="failed")],
+                  interpretations=[
+                      Interpretation(interpretation_id="I1", statement="Interpretation: only failed support.",
+                                     supporting_evidence_ids=["E2"]),
+                      Interpretation(interpretation_id="I2", statement="Interpretation: mixed support.",
+                                     supporting_evidence_ids=["E2", "E1"])])
+    clean, notes = postprocess(f, allowed_urls={GROUNDED}, parameter_names=PARAMETER_NAMES)
+    assert [(i.interpretation_id, i.supporting_evidence_ids) for i in clean.interpretations] == [("I1", ["E1"])]
+    assert clean.interpretations[0].statement == "Interpretation: mixed support."
+    assert any("I1" in n and "verified" in n for n in notes)

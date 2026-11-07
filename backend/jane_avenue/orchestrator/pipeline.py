@@ -147,9 +147,16 @@ def _modelling(run: _Run) -> dict[str, Any]:
         run.emit("log", "Modelling skipped: policy is out of scope", stage="modelling")
         return {}
     opts = run.a.request.options
-    params = engine.apply_overrides(engine.default_parameters(run.a.policy), run.a.request.parameter_overrides)
-    bundle = simulation.simulate(run.a.policy, params, data.registry.load_baseline(), draws=opts.monte_carlo_draws,
-                                 seed=opts.seed, empirical_residuals=evaluation.revenue_relative_residuals)
+    try:
+        params = engine.apply_overrides(engine.default_parameters(run.a.policy), run.a.request.parameter_overrides)
+        bundle = simulation.simulate(run.a.policy, params, data.registry.load_baseline(),
+                                     draws=opts.monte_carlo_draws, seed=opts.seed,
+                                     empirical_residuals=evaluation.revenue_relative_residuals)
+    except ValueError as exc:
+        # Invalid parameters fail the analysis with a clear reason. Skipping modelling instead could let verification
+        # approve an analysis that has no numbers.
+        run.emit("error", f"Invalid simulation parameters: {exc}", stage="modelling")
+        raise ValueError(f"Invalid simulation parameters: {exc}") from exc
     return {"simulation": bundle}
 
 

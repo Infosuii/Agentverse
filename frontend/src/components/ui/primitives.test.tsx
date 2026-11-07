@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import {
   EvidenceBadge,
   PlaceholderBadge,
   Stat,
+  Tabs,
   WithheldBanner,
 } from './index';
 
@@ -56,5 +57,34 @@ describe('UI primitives', () => {
     expect(
       screen.getByLabelText('Data status: Placeholder (unverified)'),
     ).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation (ArrowRight, ArrowLeft, Home, End) on Tabs while skipping disabled tabs', () => {
+    const onChange = vi.fn();
+    render(
+      <Tabs
+        items={[
+          { id: 'overview', label: 'Overview' },
+          { id: 'research', label: 'Research' },
+          { id: 'scenarios', label: 'Scenarios', disabled: true },
+          { id: 'report', label: 'Report' },
+        ]}
+        activeId="research"
+        onChange={onChange}
+      />,
+    );
+
+    const researchTab = screen.getByRole('tab', { name: 'Research' });
+    fireEvent.keyDown(researchTab, { key: 'ArrowRight' });
+    expect(onChange).toHaveBeenCalledWith('report');
+
+    fireEvent.keyDown(researchTab, { key: 'ArrowLeft' });
+    expect(onChange).toHaveBeenCalledWith('overview');
+
+    fireEvent.keyDown(researchTab, { key: 'End' });
+    expect(onChange).toHaveBeenCalledWith('report');
+
+    fireEvent.keyDown(researchTab, { key: 'Home' });
+    expect(onChange).toHaveBeenCalledWith('overview');
   });
 });

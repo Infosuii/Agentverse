@@ -10,6 +10,7 @@ import io
 import ipaddress
 import logging
 import re
+import socket
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
@@ -22,6 +23,7 @@ TIMEOUT_S = 15.0
 MAX_CHARS = 400_000
 MAX_PDF_PAGES = 60
 MAX_BYTES = 25_000_000
+MAX_REDIRECTS = 5
 
 
 @dataclass(frozen=True)
@@ -45,8 +47,14 @@ def _failed(url: str, error: str, status: int = 0, final_url: str | None = None,
                       sha256=None, title=None, error=error)
 
 
+def _resolve(host: str) -> list[str]:
+    """IP addresses for `host` (tests replace this, so they never touch DNS)."""
+    return [info[4][0] for info in socket.getaddrinfo(host, None)]
+
+
 def _is_public_http_url(url: str) -> str | None:
-    """Return an error string when `url` must not be fetched (non-http scheme, or a local / private address)."""
+    """Return an error string when `url` must not be fetched: a non-http scheme, a local name, or a host that is (or
+    resolves to) a non-global address. Checked for the first URL and for every redirect hop."""
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https") or not parsed.hostname:
         return "only public http(s) URLs can be fetched"
@@ -54,12 +62,25 @@ def _is_public_http_url(url: str) -> str | None:
     if host == "localhost" or host.endswith((".localhost", ".local", ".internal")):
         return f"refusing to fetch non-public host {host}"
     try:
-        ip = ipaddress.ip_address(host)
+        addresses = [ipaddress.ip_address(host)]
     except ValueError:
-        return None  # a domain name; no DNS lookup here (tests run offline)
-    if not ip.is_global:
+        try:
+            addresses = [ipaddress.ip_address(a.split("%")[0]) for a in _resolve(host)]
+        except (OSError, ValueError):
+            return None  # unresolvable: the request itself will fail and say so
+    if any(not ip.is_global for ip in addresses):
         return f"refusing to fetch non-public address {host}"
     return None
+
+
+def _read_capped(resp: httpx.Response) -> bytes:
+    """Read a streamed body, stopping at MAX_BYTES so a huge file is never held in memory."""
+    buf = bytearray()
+    for chunk in resp.iter_bytes():
+        buf += chunk
+        if len(buf) >= MAX_BYTES:
+            break
+    return bytes(buf[:MAX_BYTES])
 
 
 _SPACES = re.compile(r"[ \t\f\v ]+")
@@ -70,7 +91,7 @@ def _collapse(text: str) -> str:
     return _NEWLINES.sub("\n", _SPACES.sub(" ", text)).strip()
 
 
-def _html_to_text(html: str) -> tuple[str, str | None]:
+def _html_to_text(html: str | bytes) -> tuple[str, str | None]:
     from bs4 import BeautifulSoup
 
     soup = BeautifulSoup(html, "html.parser")
@@ -99,32 +120,49 @@ def _pdf_to_text(data: bytes) -> tuple[str, str | None]:
 
 
 def fetch_url(url: str, *, client: httpx.Client | None = None) -> FetchedDoc:
-    """Fetch `url` and extract readable text. Never raises: failures come back as a FetchedDoc with `error` set."""
+    """Fetch `url` and extract readable text. Never raises: failures come back as a FetchedDoc with `error` set.
+
+    Redirects are followed by hand (at most MAX_REDIRECTS) so that every hop passes the public-address check, and
+    the body is streamed with a MAX_BYTES cap."""
     blocked = _is_public_http_url(url)
     if blocked:
         return _failed(url, blocked)
     own = client is None
-    http = client or httpx.Client(timeout=TIMEOUT_S, follow_redirects=True, headers={"User-Agent": USER_AGENT})
+    http = client or httpx.Client(timeout=TIMEOUT_S, follow_redirects=False, headers={"User-Agent": USER_AGENT})
     try:
-        resp = http.get(url)
-        final_url = str(resp.url)
-        ctype = resp.headers.get("content-type", "").split(";")[0].strip().lower()
-        if resp.status_code >= 400:
-            return _failed(url, f"HTTP {resp.status_code}", resp.status_code, final_url, ctype)
-        data = resp.content[:MAX_BYTES]
+        current = url
+        for _hop in range(MAX_REDIRECTS + 1):
+            with http.stream("GET", current, follow_redirects=False) as resp:
+                if resp.is_redirect and resp.headers.get("location"):
+                    nxt = str(resp.url.join(resp.headers["location"]))
+                    blocked = _is_public_http_url(nxt)
+                    if blocked:
+                        return _failed(url, f"redirect blocked: {blocked}", resp.status_code, nxt)
+                    current = nxt
+                    continue
+                final_url = str(resp.url)
+                ctype = resp.headers.get("content-type", "").split(";")[0].strip().lower()
+                if resp.status_code >= 400:
+                    return _failed(url, f"HTTP {resp.status_code}", resp.status_code, final_url, ctype)
+                status = resp.status_code
+                charset = resp.charset_encoding
+                data = _read_capped(resp)
+                break
+        else:
+            return _failed(url, f"more than {MAX_REDIRECTS} redirects", 0, current)
         is_pdf = "pdf" in ctype or data[:5] == b"%PDF-" or urlparse(final_url).path.lower().endswith(".pdf")
         if is_pdf:
             text, title = _pdf_to_text(data)
             ctype = ctype or "application/pdf"
         elif ctype in ("", "text/html", "application/xhtml+xml") or "html" in ctype:
-            text, title = _html_to_text(resp.text)
+            text, title = _html_to_text(data.decode(charset) if charset else data)  # bs4 sniffs bytes
         elif ctype.startswith("text/"):
-            text, title = _collapse(resp.text), None
+            text, title = _collapse(data.decode(charset or "utf-8", errors="replace")), None
         else:
-            return _failed(url, f"unsupported content type {ctype!r}", resp.status_code, final_url, ctype)
+            return _failed(url, f"unsupported content type {ctype!r}", status, final_url, ctype)
         text = text[:MAX_CHARS]
         sha = hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None
-        return FetchedDoc(url=url, final_url=final_url, status=resp.status_code, content_type=ctype, text=text,
+        return FetchedDoc(url=url, final_url=final_url, status=status, content_type=ctype, text=text,
                           sha256=sha, title=title, error=None if text else "no text could be extracted")
     except httpx.TimeoutException:
         return _failed(url, f"timed out after {TIMEOUT_S:.0f} s")
