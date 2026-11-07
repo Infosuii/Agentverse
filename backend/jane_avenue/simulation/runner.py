@@ -49,7 +49,7 @@ def simulate(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Basel
         values = central_values(params)
         definition = ScenarioDefinition(name="custom", label="Custom", description=CUSTOM_DESCRIPTION,
                                         parameter_values=values)
-        scenarios.append(ScenarioResult(scenario=definition, result=run_engine(spec, values, baseline, "custom")))
+        scenarios.append(ScenarioResult(scenario=definition, result=run_engine(spec, params, baseline, "custom")))
 
     mc = monte_carlo(spec, params, baseline, draws=draws, seed=seed) if draws > 0 else None
     sens = []
