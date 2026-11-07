@@ -1,4 +1,4 @@
 """Gemini research agent. Owner: agent-2."""
-from .agent import run_research
+from .agent import answer_question, run_research
 
-__all__ = ["run_research"]
+__all__ = ["answer_question", "run_research"]

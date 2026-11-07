@@ -170,10 +170,23 @@ def _reporting(run: _Run) -> dict[str, Any]:
         return {}
     assessment = report.generate_report(run.a)
     update: dict[str, Any] = {"report": assessment}
-    check_report = getattr(verification, "check_report", None)  # agent-5 ships REPORT-001 later
+    check_report = getattr(verification, "check_report", None)  # agent-5's REPORT-001 re-check
     if callable(check_report) and run.a.verification is not None:
-        update["verification"] = check_report(assessment, run.a)
+        final = check_report(assessment, run.a)
+        update["verification"] = final
+        if _report_disagrees(assessment, final):
+            # REPORT-001 changed the verdict after the report was written (e.g. an untraceable number withholds the
+            # forecast). The verdict stands; rewrite the report once from it so the report and verification agree.
+            run.emit("warning", f"Report check changed the verdict to {final.overall}; regenerating the report",
+                     stage="reporting", data={"verification_overall": final.overall})
+            log.warning("REPORT-001 changed the verdict to %s; regenerating the report", final.overall)
+            update["report"] = report.generate_report(run.a.model_copy(update={"verification": final}, deep=True))
     return update
+
+
+def _report_disagrees(assessment: Any, final: Any) -> bool:
+    return (assessment.forecast_withheld != (not final.forecast_allowed)
+            or assessment.verification_overall != final.overall)
 
 
 _STAGES: tuple[tuple[Stage, Callable[[_Run], dict[str, Any] | None]], ...] = (
