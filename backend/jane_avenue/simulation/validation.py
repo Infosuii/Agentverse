@@ -55,4 +55,4 @@ def validate_parameters(params: Mapping[str, Assumption]) -> None:
         if error:
             problems.append(f"{name}: {error}")
     if problems:
-        raise ValueError("Invalid simulation parameters: " + "; ".join(problems))
+        raise ValueError("; ".join(problems))  # the API and pipeline add their own "Invalid simulation parameters" prefix

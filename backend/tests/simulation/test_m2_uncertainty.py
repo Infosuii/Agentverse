@@ -60,7 +60,7 @@ def test_invalid_parameters_raise_a_clear_error(params, demo_policy, baseline, n
     with pytest.raises(ValueError, match=re.escape(name)) as exc:
         validate_parameters(bad)
     assert message in str(exc.value)
-    with pytest.raises(ValueError, match="Invalid simulation parameters"):
+    with pytest.raises(ValueError, match=re.escape(f"{name}: ")):
         simulate(demo_policy, bad, baseline, draws=10)
 
 
