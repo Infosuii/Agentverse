@@ -16,6 +16,7 @@ from jane_avenue.verification.checks.citation import cite_001, url_problem
 from jane_avenue.verification.checks.evidence import evid_002, evid_003
 from jane_avenue.verification.checks.report import report_001
 from jane_avenue.verification.checks.uncertainty import claims_prediction_interval, unc_001
+from jane_avenue.verification.faults import untraceable_number
 
 from .conftest import run_pipeline
 
@@ -264,13 +265,14 @@ FIG = KeyFigure(figure_id="rev_y1", label="Behavioural revenue, 2027-28", value=
     ("The OBR costed the 2023 rise at around £12bn a year [E1].", True),              # cited evidence value
     ("The OBR costed the 2023 rise at around £12bn a year.", False),                  # same number, no citation
     ("1. Revenue rises under these assumptions (see CALC-001 and p95).", True),       # numbering, IDs, percentiles
-    ("Receipts would rise by £7.3bn.", False),                                        # invented number
+    ("Receipts would rise by £{X}bn.", False),                                        # invented number
     ("Revenue in 2041-42 is uncertain.", False),                                      # fiscal year not modelled
     ("Revenue is {{fig:missing}} in the first year.", False),                         # unsubstituted placeholder
     ("By Year 3 (t+2) the effect fades; see CT-MAIN-1983 and Tier 1 sources at https://obr.uk/efo2026/.", True),
     ("Results use 200 Monte Carlo draws.", True),                                      # n_draws from the fixture
 ])
 def test_report_001_whitelist(clean_analysis: Analysis, body: str, ok: bool) -> None:
+    body = body.replace("{X}", untraceable_number(clean_analysis))
     result = report_001(_report_with(clean_analysis, body, [FIG]))
     assert result.status == ("pass" if ok else "fail"), result.detail
 
@@ -292,9 +294,10 @@ def test_report_001_skips_the_references_section(clean_analysis: Analysis) -> No
 
 
 def test_report_001_lists_offending_snippets(clean_analysis: Analysis) -> None:
-    result = report_001(_report_with(clean_analysis, "Receipts would rise by £7.3bn. Costs fall by 4%."))
+    x, y = untraceable_number(clean_analysis), untraceable_number(clean_analysis, 2)
+    result = report_001(_report_with(clean_analysis, f"Receipts would rise by £{x}bn. Costs fall by {y}%."))
     assert result.affected_ids == ["section.impacts"]
-    assert "\"7.3\"" in result.detail and "\"4\"" in result.detail
+    assert f"\"{x}\"" in result.detail and f"\"{y}\"" in result.detail
 
 
 # --------------------------------------------------------------------------------- check_report and fault suite
