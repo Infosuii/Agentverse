@@ -409,7 +409,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
 
       {/* Main Grid: Charts (2 cols) + Live Sliders Side Panel (1 col) */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        {/* Left/Center: 4 Charts */}
+        {/* Left/Center: 4 Charts + Reading the Uncertainty */}
         <div className="space-y-6 xl:col-span-2">
           {/* 2. Scenario LineChart */}
           <LineChart
@@ -461,6 +461,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             bands={fanData.bands}
             intervalNote={fanData.intervalNote}
             empiricalBands={showEmpiricalBand ? fanData.empiricalBands : undefined}
+            empiricalLabel="Empirical prediction interval (backtest-calibrated)"
             actions={
               hasEmpiricalBand ? (
                 <label className="inline-flex cursor-pointer items-center gap-1.5 rounded border border-teal-300 bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-900">
@@ -480,15 +481,18 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                   showEmpiricalBand &&
                   fanData.empiricalCalibrationNote && (
                     <p className="font-medium text-teal-800">
-                      Empirical calibration: {fanData.empiricalCalibrationNote}
+                      Empirical prediction interval (backtest-calibrated):{' '}
+                      {fanData.empiricalCalibrationNote}
                     </p>
                   )
                 ) : (
                   <p className="text-slate-500">
-                    {activeDistributionBundle?.warnings?.find((w) =>
-                      w.toLowerCase().includes('empirical'),
+                    {activeDistributionBundle?.warnings?.find(
+                      (w) =>
+                        w.toLowerCase().includes('no empirical prediction interval') ||
+                        w.toLowerCase().includes('empirical'),
                     ) ??
-                      'Backtest-calibrated empirical interval unavailable for this metric (requires at least 8 out-of-sample behavioural revenue backtest residuals).'}
+                      'No empirical prediction interval is shown: requires at least 8 out-of-sample behavioural revenue backtest residuals and reported coverage.'}
                   </p>
                 )}
               </div>
@@ -531,6 +535,66 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
               </Card>
             )}
           </div>
+
+          {/* Reading the Uncertainty Guide (agent-4 M2 copy) */}
+          <Card
+            title="Reading the uncertainty"
+            subtitle="How to interpret scenario paths, Monte Carlo assumption ranges, and sensitivity swings."
+          >
+            <div className="space-y-2.5 text-xs leading-relaxed text-slate-700">
+              {activeDistributionBundle?.warnings &&
+                activeDistributionBundle.warnings.length > 0 && (
+                  <div className="rounded-md border border-amber-300 bg-amber-50/70 p-2.5 text-amber-950">
+                    <div className="font-semibold">Simulation notes &amp; warnings:</div>
+                    <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                      {activeDistributionBundle.warnings.map((w, idx) => (
+                        <li key={idx}>{w}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              <ul className="list-disc space-y-1.5 pl-4">
+                <li>
+                  <strong className="text-slate-900">Scenarios.</strong>{' '}
+                  <em>Central</em> has every assumption at its central value.{' '}
+                  <em>Optimistic</em> and <em>pessimistic</em> take each uncertain
+                  assumption, one at a time, to the end of its range that gives
+                  higher (or lower) cumulative dynamic revenue. The profit base
+                  deviation is set by rule (high or low). They mark a stress
+                  envelope of jointly favourable or unfavourable assumptions. They
+                  are not probability-weighted, and all of them are unlikely to hold
+                  at once.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Monte Carlo bands.</strong>{' '}
+                  2,000 draws vary all uncertain assumptions together (independently,
+                  from their stated distributions) and rerun the model. The shaded
+                  bands show the 5th–95th and 25th–75th percentiles of the results,
+                  and the line shows the median. They are assumption-driven ranges,
+                  not statistical prediction intervals, and the note reports the
+                  Monte Carlo standard error of the median.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Tornado.</strong> Each uncertain
+                  assumption moves from its low to its high value with the others at
+                  central, for the final year. Bars are sorted by the size of the
+                  swing, so the top bars are the assumptions the result depends on
+                  most. Interactions between assumptions are not shown.
+                </li>
+                <li>
+                  <strong className="text-slate-900">
+                    Why these are not forecasts.
+                  </strong>{' '}
+                  Every range shows what the model implies under its assumptions.
+                  None includes model-specification error, data revisions,
+                  macroeconomic shocks or other policy changes. Only the separately
+                  labelled <em>empirical prediction interval</em> is checked against
+                  history, and it is shown only when the backtest has enough
+                  out-of-sample cases and reports its coverage.
+                </li>
+              </ul>
+            </div>
+          </Card>
         </div>
 
         {/* Right: 4.1 Live Sliders Side Panel */}
