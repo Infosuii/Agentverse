@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from jane_avenue import contracts as c
-from jane_avenue.api.app import create_app
+from jane_avenue.api.app import create_app, placeholder_data_in_use
 from jane_avenue.store import AnalysisStore
 
 GOLDEN = "What would happen if the UK increased corporation tax from 25% to 28%?"
@@ -44,6 +44,28 @@ def test_health(client):
     h = c.HealthResponse.model_validate(client.get("/api/health").json())
     assert h.status == "ok" and h.mode == "mock" and h.contract_version == c.CONTRACT_VERSION
     assert h.gemini_configured is False
+    assert isinstance(h.data_dir_exists, bool) and isinstance(h.research_cache_dir_exists, bool)
+    assert h.placeholder_datasets == placeholder_data_in_use()
+
+
+def test_health_reports_missing_dirs(monkeypatch, tmp_path):
+    from jane_avenue import config
+
+    monkeypatch.setenv("JANE_DATA_DIR", str(tmp_path / "nope"))
+    config.get_settings.cache_clear()
+    try:
+        store = AnalysisStore(":memory:")
+        h = TestClient(create_app(store)).get("/api/health").json()
+        assert h["data_dir_exists"] is False and h["research_cache_dir_exists"] is False
+    finally:
+        config.get_settings.cache_clear()
+
+
+def test_health_contract_change_is_additive():
+    old = {"status": "ok", "version": "x", "contract_version": "1.0.0", "mode": "mock", "gemini_configured": False,
+           "model_fast": "f", "model_deep": "d"}
+    h = c.HealthResponse.model_validate(old)  # a pre-change payload still validates
+    assert h.data_dir_exists is None and h.placeholder_datasets == []
 
 
 def test_parse_and_scope(client):
