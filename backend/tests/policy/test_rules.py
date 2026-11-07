@@ -54,6 +54,9 @@ TABLE: list[tuple[str, str, float | None, float | None, date, int]] = [
     ("Raise corporation tax by 3% from 2027-04-01", MAIN, 25, 28, date(2027, 4, 1), 5),
     ("Increase corporation tax by half a point from January 2028", MAIN, 25, 25.5, date(2028, 1, 1), 5),
     ("CT up 2pp over a 4-year horizon", MAIN, 25, 27, NEXT_APRIL, 4),
+    ("Raise corporation tax to twenty-eight per cent", MAIN, 25, 28, NEXT_APRIL, 5),
+    ("Cut corporation tax from thirty one percent to twenty five percent", MAIN, 31, 25, NEXT_APRIL, 5),
+    ("Raise corporation tax by two and a half points", MAIN, 25, 27.5, NEXT_APRIL, 5),
 ]
 
 
