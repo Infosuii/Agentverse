@@ -8,6 +8,7 @@ A fault raises `ValueError` if the analysis lacks the part it corrupts (for exam
 """
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 
 from ..contracts import Analysis, EngineResult, Evidence, ParameterEvidence, ReportSection, ScopeDecision, YearValue
@@ -217,13 +218,22 @@ def mislabelled_interval(analysis: Analysis) -> Analysis:
     return a
 
 
+def untraceable_number(analysis: Analysis, k: int = 1) -> str:
+    """A number that nothing in `analysis` can supply: ten times the largest magnitude anywhere in it, plus a
+    fractional tail. Deriving it (rather than hard-coding one) means engine or data changes can never make the
+    planted number accidentally traceable. `k` gives distinct numbers for the same analysis."""
+    numbers = [abs(float(x)) for x in re.findall(r"\d+(?:\.\d+)?", analysis.model_dump_json())]
+    return f"{max([100.0, *numbers]) * 10 * k + 0.37:.2f}"
+
+
 def raw_number_in_report(analysis: Analysis) -> Analysis:
     """Report prose containing a number that no key figure, evidence or policy field supplied."""
     a = _copy(analysis)
     if a.report is None:
         raise ValueError("this fault needs a generated report")
-    a.report.sections.append(ReportSection(section_id="injected", heading="Modelled impacts",
-                                           body_markdown="Receipts would rise by £7.3bn in the first full year."))
+    a.report.sections.append(ReportSection(
+        section_id="injected", heading="Modelled impacts",
+        body_markdown=f"Receipts would rise by £{untraceable_number(analysis)}bn in the first full year."))
     return a
 
 
