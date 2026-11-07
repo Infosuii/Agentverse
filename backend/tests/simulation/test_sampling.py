@@ -54,11 +54,29 @@ def test_triangular_stays_within_its_range():
     assert x.min() >= 0.3 and x.max() <= 1.0
 
 
-def test_samples_are_clipped_to_slider_bounds():
-    x = sample(_a("normal", {"mean": 0.0, "sd": 50.0}, slider=(-20.0, 20.0)), N, _rng())
-    assert x.min() == -20.0 and x.max() == 20.0
+def test_samples_are_truncated_to_slider_bounds_without_edge_spikes():
+    # profit_base_deviation_pct in agent-3's M2: normal(0, 10) on a ±20 slider (about 4.6% of mass outside)
+    x = sample(_a("normal", {"mean": 0.0, "sd": 10.0}, slider=(-20.0, 20.0)), N, _rng())
+    assert x.min() >= -20.0 and x.max() <= 20.0
+    assert np.mean(np.abs(x) == 20.0) == 0.0  # truncation, not clipping: no mass piled on the bounds
+    # symmetric truncation at ±2 sd: sd = 10 × sqrt(1 − 2·2·φ(2) / (2Φ(2) − 1)) ≈ 8.80
+    assert x.mean() == pytest.approx(0.0, abs=0.2)  # s.e. of the mean is about 0.044 at this n
+    assert x.std() == pytest.approx(8.80, rel=0.03)
     y = sample(_a("uniform", {"low": 0.0, "high": 2.0}, slider=(None, 1.0)), N, _rng())
-    assert y.min() >= 0.0 and y.max() == 1.0
+    assert y.min() >= 0.0 and y.max() < 1.0
+    assert y.mean() == pytest.approx(0.5, abs=0.01)  # uniform on [0, 1], not half the mass at 1.0
+
+
+def test_truncation_falls_back_to_clipping_when_no_mass_is_inside():
+    x = sample(_a("normal", {"mean": 0.7, "sd": 0.0}, slider=(0.0, 0.5)), 100, _rng())
+    assert np.all(x == 0.5)
+    y = sample(_a("normal", {"mean": 100.0, "sd": 1.0}, slider=(0.0, 1.0)), 100, _rng())
+    assert np.all(y == 1.0)
+
+
+def test_truncated_draws_are_deterministic_per_seed():
+    a = _a("normal", {"mean": 15.0, "sd": 10.0}, slider=(-20.0, 20.0))
+    assert np.array_equal(sample(a, 500, _rng(5)), sample(a, 500, _rng(5)))
 
 
 @pytest.mark.parametrize(("kind", "params", "expected"), [

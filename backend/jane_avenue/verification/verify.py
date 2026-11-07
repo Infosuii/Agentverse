@@ -8,14 +8,18 @@ the decision rule:
 - otherwise `approved`.
 
 `counts` and `summary` are deterministic functions of the checks. Verification never changes the analysis.
+
+`check_report` adds REPORT-001 (and re-runs CAUSAL-001) once the report exists. The orchestrator calls it after report
+generation, and agent-9 calls it before accepting a Gemini draft.
 """
 from __future__ import annotations
 
 import logging
 from collections.abc import Iterable
 
-from ..contracts import Analysis, VerificationCheck, VerificationReport, utcnow
-from .checks import ALL_CHECKS, CheckFn, meta_of
+from ..contracts import Analysis, PolicyAssessment, VerificationCheck, VerificationReport, utcnow
+from .checks import ALL_CHECKS, REPORT_CHECKS, CheckFn, meta_of
+from .checks.causal import critic_model
 
 log = logging.getLogger(__name__)
 
@@ -65,5 +69,24 @@ def build_report(checks: list[VerificationCheck], *, critic_model: str | None = 
                               critic_model=critic_model, verified_at=utcnow())
 
 
+def _critic(checks: list[VerificationCheck]) -> str | None:
+    return critic_model() if any(c.method == "llm_critic" for c in checks) else None
+
+
 def verify(analysis: Analysis) -> VerificationReport:
-    return build_report(run_checks(analysis))
+    checks = run_checks(analysis)
+    return build_report(checks, critic_model=_critic(checks))
+
+
+def check_report(report: PolicyAssessment, analysis: Analysis) -> VerificationReport:
+    """Run REPORT-001 against a finished report and return the merged VerificationReport (overall recomputed).
+
+    CAUSAL-001 is re-run as well, because the report prose did not exist when `verify` ran. The other checks are taken
+    from `analysis.verification` (or run now if the analysis was never verified). Neither argument is modified.
+    """
+    with_report = analysis.model_copy(update={"report": report})
+    previous = analysis.verification.checks if analysis.verification else run_checks(with_report)
+    fresh = {c.check_id: c for c in run_checks(with_report, REPORT_CHECKS)}
+    merged = [fresh.pop(c.check_id, c) for c in previous]
+    merged += list(fresh.values())
+    return build_report(merged, critic_model=_critic(merged))
