@@ -1,0 +1,23 @@
+change_id,costing_body,fiscal_event,fiscal_year,value_gbp_bn,includes_behavioural,source_id
+CT-MAIN-2023,HMT,Spring Budget 2021,2020-21,-0.005,,D-budget2021
+CT-MAIN-2023,HMT,Spring Budget 2021,2021-22,0.02,,D-budget2021
+CT-MAIN-2023,HMT,Spring Budget 2021,2022-23,2.39,,D-budget2021
+CT-MAIN-2023,HMT,Spring Budget 2021,2023-24,11.9,,D-budget2021
+CT-MAIN-2023,HMT,Spring Budget 2021,2024-25,16.25,,D-budget2021
+CT-MAIN-2023,HMT,Spring Budget 2021,2025-26,17.2,,D-budget2021
+CT-MAIN-2017,HMT,Summer Budget 2015,2015-16,0.0,,D-budget2015
+CT-MAIN-2017,HMT,Summer Budget 2015,2016-17,-0.01,,D-budget2015
+CT-MAIN-2017,HMT,Summer Budget 2015,2017-18,-0.605,,D-budget2015
+CT-MAIN-2017,HMT,Summer Budget 2015,2018-19,-1.6,,D-budget2015
+CT-MAIN-2017,HMT,Summer Budget 2015,2019-20,-1.87,,D-budget2015
+CT-MAIN-2017,HMT,Summer Budget 2015,2020-21,-2.475,,D-budget2015
+CT-MAIN-2012,HMT,Budget 2012 (joint phased package),2012-13,-0.405,,D-budget2012
+CT-MAIN-2012,HMT,Budget 2012 (joint phased package),2013-14,-0.73,,D-budget2012
+CT-MAIN-2012,HMT,Budget 2012 (joint phased package),2014-15,-0.82,,D-budget2012
+CT-MAIN-2012,HMT,Budget 2012 (joint phased package),2015-16,-0.88,,D-budget2012
+CT-MAIN-2012,HMT,Budget 2012 (joint phased package),2016-17,-0.92,,D-budget2012
+CT-MAIN-2013,HMT,Budget 2012 (joint phased package),2012-13,-0.405,,D-budget2012
+CT-MAIN-2013,HMT,Budget 2012 (joint phased package),2013-14,-0.73,,D-budget2012
+CT-MAIN-2013,HMT,Budget 2012 (joint phased package),2014-15,-0.82,,D-budget2012
+CT-MAIN-2013,HMT,Budget 2012 (joint phased package),2015-16,-0.88,,D-budget2012
+CT-MAIN-2013,HMT,Budget 2012 (joint phased package),2016-17,-0.92,,D-budget2012

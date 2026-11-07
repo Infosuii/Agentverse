@@ -1,0 +1,14 @@
+{
+  "dataset_id": "ct_policy_changes",
+  "title": "Ct Policy Changes",
+  "description": "HMRC Table A.6: Rates of Corporation Tax",
+  "publisher": "HMRC",
+  "source_url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "HMRC history through 2026",
+  "file": "curated/ct_policy_changes.csv",
+  "source_id": "D-hmrc-history",
+  "is_placeholder": false,
+  "notes": "All 16 implemented seed changes verified. Announcement dates/events: policy_events.py, explicit Budget speech dates; location is each speech corporation-tax section. 1983/1990/1997 changes are retrospective. 2020 reversed proposal is separately labelled; no implemented outcomes attributed.\nRaw SHA256: b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d"
+}
