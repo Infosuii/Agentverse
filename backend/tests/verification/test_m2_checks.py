@@ -45,11 +45,31 @@ def test_cite_001_fetches_unverified_urls_in_live_mode(clean_analysis: Analysis,
     assert result.status == "fail" and result.affected_ids == [clean_analysis.sources[0].source_id]
 
 
+def test_cite_001_only_requires_verification_for_cited_sources(clean_analysis: Analysis,
+                                                                monkeypatch: pytest.MonkeyPatch) -> None:
+    clean_analysis.mode = "live"
+    grounding = clean_analysis.sources[0].model_copy(update={
+        "source_id": "S7", "url_verified": False, "access_method": "google_search",
+        "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/XYZ"})
+    clean_analysis.sources.append(grounding)
+    monkeypatch.setattr(citation, "FETCH", lambda url: pytest.fail("uncited search results are not re-fetched"))
+    result = cite_001(clean_analysis)
+    assert result.status == "pass" and "1 uncited search result was not fetched" in result.detail
+
+    assert clean_analysis.research is not None
+    clean_analysis.research.evidence[0].source_id = "S7"  # now it is cited, so it must verify
+    monkeypatch.setattr(citation, "FETCH", lambda url: False)
+    assert cite_001(clean_analysis).affected_ids == ["S7"]
+
+
 def test_cite_001_fetches_at_most_ten(clean_analysis: Analysis, monkeypatch: pytest.MonkeyPatch) -> None:
     clean_analysis.mode = "live"
     template = clean_analysis.sources[0]
     clean_analysis.sources = [template.model_copy(update={"source_id": f"S{i}", "url_verified": False})
                               for i in range(1, 13)]
+    assert clean_analysis.research is not None
+    clean_analysis.research.evidence = [clean_analysis.research.evidence[0].model_copy(
+        update={"evidence_id": f"E{i}", "source_id": f"S{i}"}) for i in range(1, 13)]
     calls: list[str] = []
     monkeypatch.setattr(citation, "FETCH", lambda url: calls.append(url) or True)
     result = cite_001(clean_analysis)
@@ -59,7 +79,7 @@ def test_cite_001_fetches_at_most_ten(clean_analysis: Analysis, monkeypatch: pyt
 def test_cite_001_in_cached_mode_requires_recorded_verification(clean_analysis: Analysis) -> None:
     clean_analysis.mode = "cached"
     assert cite_001(clean_analysis).status == "pass"
-    clean_analysis.sources[1].url_verified = False
+    clean_analysis.sources[1].url_verified = False  # S2 is cited by E2
     assert cite_001(clean_analysis).status == "fail"
 
 

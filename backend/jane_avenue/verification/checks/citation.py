@@ -57,8 +57,23 @@ def _fetch_all(sources: list[Source]) -> dict[str, bool]:
     return {s.source_id: ok for s, ok in zip(sources, results, strict=True)}
 
 
+def cited_source_ids(analysis: Analysis) -> set[str]:
+    """Sources that something relies on: evidence, assumptions or official costings."""
+    ids: set[str] = set()
+    if analysis.research:
+        ids |= {e.source_id for e in analysis.research.evidence}
+    if analysis.simulation:
+        ids |= {sid for a in analysis.simulation.assumptions for sid in a.source_ids}
+    if analysis.precedents:
+        ids |= {c.source_id for m in analysis.precedents.matches for c in m.change.official_costings}
+    return ids
+
+
 @check("CITE-001", "citation", "error", "source_fetch", "Source URLs are real and retrievable")
 def cite_001(analysis: Analysis) -> Outcome:
+    """Every non-placeholder URL must be well-formed. Sources that are cited must also be verified: fetched during
+    research, or (live mode) re-fetched now. Uncited Google Search grounding results are listed for context only:
+    many were never fetched, and some hosts refuse bots, so requiring them would fail every live run."""
     sources = [s for s in analysis.sources if not s.is_placeholder]
     if not sources:
         return Outcome("skipped", "No non-placeholder sources to check (placeholders are reported by DATA-001).")
@@ -67,27 +82,35 @@ def cite_001(analysis: Analysis) -> Outcome:
         return Outcome("issue", "Source URLs that cannot be real documents: "
                                 + "; ".join(f"{sid} {why}" for sid, why in malformed) + ".",
                        [sid for sid, _ in malformed])
-    unverified = [s for s in sources if s.access_method in RESEARCH_ACCESS and not s.url_verified]
+    cited = cited_source_ids(analysis)
+    unverified = [s for s in sources
+                  if s.access_method in RESEARCH_ACCESS and not s.url_verified and s.source_id in cited]
+    uncited = sum(1 for s in sources if s.access_method in RESEARCH_ACCESS and not s.url_verified
+                  and s.source_id not in cited)
+    was, are = ("was", "is") if uncited == 1 else ("were", "are")
+    context = (f" {plural(uncited, 'uncited search result')} {was} not fetched and {are} shown for context only."
+               if uncited else "")
     if analysis.mode == "mock":
         return Outcome("skipped", f"All {plural(len(sources), 'source URL')} are well-formed; re-fetching is skipped "
                                   "in mock mode.")
     if analysis.mode == "cached":
         if unverified:
             ids = [s.source_id for s in unverified]
-            return Outcome("issue", f"{listing(ids)} {'was' if len(ids) == 1 else 'were'} never fetched and "
-                                    "verified during the recorded research run.", ids)
-        return Outcome("pass", f"All {plural(len(sources), 'source URL')} are well-formed and were verified when the "
-                               "research was recorded.")
+            return Outcome("issue", f"Cited {listing(ids)} {'was' if len(ids) == 1 else 'were'} never fetched and "
+                                    f"verified during the recorded research run.{context}", ids)
+        return Outcome("pass", f"All {plural(len(sources), 'source URL')} are well-formed, and every cited source was "
+                               f"verified when the research was recorded.{context}")
     to_fetch, too_many = unverified[:FETCH_LIMIT], unverified[FETCH_LIMIT:]
     results = _fetch_all(to_fetch)
     failed = [sid for sid, ok in results.items() if not ok] + [s.source_id for s in too_many]
     if failed:
         extra = f" ({len(too_many)} more were over the {FETCH_LIMIT}-fetch limit)" if too_many else ""
-        return Outcome("issue", f"Could not retrieve {listing(failed)} within {FETCH_TIMEOUT_S:g}s, and "
+        return Outcome("issue", f"Could not retrieve cited {listing(failed)} within {FETCH_TIMEOUT_S:g}s, and "
                                 f"{'it was' if len(failed) == 1 else 'they were'} not verified during research"
-                                f"{extra}.", failed)
+                                f"{extra}.{context}", failed)
     fetched = f"; re-fetched {plural(len(results), 'unverified URL')} successfully" if results else ""
-    return Outcome("pass", f"All {plural(len(sources), 'source URL')} are well-formed and verified{fetched}.")
+    return Outcome("pass", f"All {plural(len(sources), 'source URL')} are well-formed and every cited source is "
+                           f"verified{fetched}.{context}")
 
 
 @check("CITE-002", "citation", "error", "rule", "Quantitative evidence has verified verbatim quotes")
