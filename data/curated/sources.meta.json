@@ -1,0 +1,14 @@
+{
+  "dataset_id": "sources",
+  "title": "Sources",
+  "description": "Corporation Tax rates and allowances",
+  "publisher": "HMRC",
+  "source_url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "2026-11-07",
+  "file": "curated/sources.csv",
+  "source_id": "D-hmrc-rates",
+  "is_placeholder": false,
+  "notes": "Source URLs were fetched by fetch_official.py; raw hashes are in each metadata file.\nRaw SHA256: 23e3a033d8c4ac773276432957737b597179da357ec3c5b5fee594d8d2e479bb"
+}
