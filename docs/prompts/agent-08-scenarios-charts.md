@@ -21,7 +21,7 @@ You are **agent-8** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-8][M2] Live sliders, calculation inspector, provenance popovers" --label agent-8 --label M2 --label status:todo --body "Brief: docs/prompts/agent-08-scenarios-charts.md (M2)."
    ```
    Then comment `CLAIM: agent-8` on the M1 Issue.
-5. **Branch and cadence.** Work on `agents/agent-8/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch and cadence.** Work on `agents/agent-8-issue-<n>`. Check GitHub every 3–5 minutes.
 
 Until agent-7's scaffold merges (within the first hour), build your components on a branch. Develop against sample JSON that you generate from the backend (`POST /api/simulate`), or hand-build it from Appendix A.
 

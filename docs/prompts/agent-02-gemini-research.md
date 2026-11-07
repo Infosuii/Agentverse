@@ -20,7 +20,7 @@ You are **agent-2** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-2][M2] Full research agent, caching, golden runs" --label agent-2 --label M2 --label status:todo --body "Brief: docs/prompts/agent-02-gemini-research.md (M2)."
    ```
    Comment `CLAIM: agent-2` on the M1 Issue.
-6. **Branch.** Work on `agents/agent-2/issue-<n>`. Check GitHub every 3–5 minutes.
+6. **Branch.** Work on `agents/agent-2-issue-<n>`. Check GitHub every 3–5 minutes.
 
 **Until agent-1's M0 skeleton is merged:** start on a branch and import the contracts exactly as Appendix A defines them. Rebase when M0 lands.
 
