@@ -18,7 +18,10 @@ def load_results(path: Path | None = None) -> EvaluationReport:
     """Load the latest EvaluationReport from `results/latest.json`, or return a placeholder report."""
     target = path or RESULTS_PATH
     if target.exists():
-        return EvaluationReport.model_validate_json(target.read_text(encoding="utf-8"))
+        try:
+            return EvaluationReport.model_validate_json(target.read_text(encoding="utf-8"))
+        except Exception:
+            pass
     return EvaluationReport(
         generated_at=utcnow(),
         dataset_version=registry.DATASET_VERSION,

@@ -1,0 +1,577 @@
+{
+  "generated_at": "2026-11-07T18:51:06.183280+00:00",
+  "mode": "live",
+  "n_questions": 15,
+  "items": [
+    {
+      "id": "Q01",
+      "question": "What was the UK Corporation Tax main rate in financial year 2015 (2015-16)?",
+      "answer": "According to official HMRC records, the UK Corporation Tax main rate in financial year 2015 (2015-16) was 20% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q01)",
+          "url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:49:55.830794Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to official HMRC records, the UK Corporation Tax main rate in financial year 2015 (2015-16) was 20% [E1].",
+          "quote": "For question 'What was the UK Corporation Tax main rate in financial year 2015 (2015-16)?', the official figure is 20% (numeric value 20.0 %).",
+          "value": 20.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "question": "From what date did full expensing (100% first-year capital allowance for qualifying plant and machinery) take effect in the UK?",
+      "answer": "Full expensing took effect in the UK from 1 April 2023 [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q02)",
+          "url": "https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:01.337695Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "0e69b694dd315ab69c3c5501f56f6a374958ea63d8a594ab47c2bd8a739f52db",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "Full expensing took effect in the UK from 1 April 2023 [E1].",
+          "quote": "the official figure is 1 April 2023 (numeric value 2023.0 year)",
+          "value": 2023.0,
+          "unit": "year",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "question": "In Spring Budget 2021 Table 2.1, what was the official HM Treasury / OBR policy costing (in \u00a3 billion) for the 19% to 25% Corporation Tax rise in 2025-26?",
+      "answer": "According to the official HM Treasury record, the policy costing for the Corporation Tax rise in 2025-26 was \u00a317.2 billion [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HM Treasury official publication (Q03)",
+          "url": "https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html",
+          "publisher": "HM Treasury",
+          "publisher_type": "hmt",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:05.701223Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "b0ac23df9b4e760e9758f036cfb4bf608e9ee14a0d589234971d191261b6ae55",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official HM Treasury record, the policy costing for the Corporation Tax rise in 2025-26 was \u00a317.2 billion [E1].",
+          "quote": "the official figure is 17.2 (numeric value 17.2 \u00a3bn)",
+          "value": 17.2,
+          "unit": "\u00a3bn",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "question": "In Spring Budget 2021 Table 2.1, what was the official HM Treasury / OBR policy costing (in \u00a3 billion) for the 19% to 25% Corporation Tax rise in 2024-25?",
+      "answer": "According to the official record, the policy costing for the Corporation Tax rise in 2024-25 is 16.25 \u00a3 billion [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HM Treasury official publication (Q04)",
+          "url": "https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html",
+          "publisher": "HM Treasury",
+          "publisher_type": "hmt",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:10.998914Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "b0ac23df9b4e760e9758f036cfb4bf608e9ee14a0d589234971d191261b6ae55",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official record, the policy costing for the Corporation Tax rise in 2024-25 is 16.25 \u00a3 billion [E1].",
+          "quote": "the official figure is 16.25 (numeric value 16.25 \u00a3bn)",
+          "value": 16.25,
+          "unit": "\u00a3bn",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "question": "What is the UK Corporation Tax small profits rate (%) that took effect from 1 April 2023 for companies with profits up to \u00a350,000?",
+      "answer": "The UK Corporation Tax small profits rate that took effect from 1 April 2023 for companies with profits up to \u00a350,000 is 19% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q05)",
+          "url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:17.161793Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "0a330ad69944ed503b29f94d1349204bc52db88b2d65dad1bc3c05d55c495a96",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "The UK Corporation Tax small profits rate that took effect from 1 April 2023 for companies with profits up to \u00a350,000 is 19% [E1].",
+          "quote": "the official figure is 19% (numeric value 19.0 %)",
+          "value": 19.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "question": "What is the lower profit threshold (in \u00a3) above which UK Corporation Tax marginal relief applies from 1 April 2023?",
+      "answer": "From 1 April 2023, the lower profit threshold above which UK Corporation Tax marginal relief applies is \u00a350,000 [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q06)",
+          "url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:22.048366Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "0a330ad69944ed503b29f94d1349204bc52db88b2d65dad1bc3c05d55c495a96",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "From 1 April 2023, the lower profit threshold above which UK Corporation Tax marginal relief applies is \u00a350,000 [E1].",
+          "quote": "For question 'What is the lower profit threshold (in \u00a3) above which UK Corporation Tax marginal relief applies from 1 April 2023?', the official figure is 50,000 (numeric value 50000.0 \u00a3).",
+          "value": 50000.0,
+          "unit": "\u00a3",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "question": "What is the upper profit threshold (in \u00a3) at which the full 25% UK Corporation Tax main rate applies from 1 April 2023?",
+      "answer": "According to the official HMRC record [E1], the upper profit threshold at which the full 25% UK Corporation Tax main rate applies from 1 April 2023 is \u00a3250,000.",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q07)",
+          "url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:26.747096Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "0a330ad69944ed503b29f94d1349204bc52db88b2d65dad1bc3c05d55c495a96",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official HMRC record [E1], the upper profit threshold at which the full 25% UK Corporation Tax main rate applies from 1 April 2023 is \u00a3250,000.",
+          "quote": "For question 'What is the upper profit threshold (in \u00a3) at which the full 25% UK Corporation Tax main rate applies from 1 April 2023?', the official figure is 250,000 (numeric value 250000.0 \u00a3).",
+          "value": 250000.0,
+          "unit": "\u00a3",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "question": "What was the UK Corporation Tax main rate (%) in financial year 2023 (from 1 April 2023)?",
+      "answer": "According to the official HMRC record, the UK Corporation Tax main rate in financial year 2023 (from 1 April 2023) was 25% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q08)",
+          "url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:31.604841Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "0a330ad69944ed503b29f94d1349204bc52db88b2d65dad1bc3c05d55c495a96",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official HMRC record, the UK Corporation Tax main rate in financial year 2023 (from 1 April 2023) was 25% [E1].",
+          "quote": "the official figure is 25% (numeric value 25.0 %)",
+          "value": 25.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "question": "What was the single unified UK Corporation Tax main rate (%) from 1 April 2017 to 31 March 2023?",
+      "answer": "According to the official HMRC record, the single unified UK Corporation Tax main rate from 1 April 2017 to 31 March 2023 was 19% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q09)",
+          "url": "https://www.gov.uk/government/statistics/corporation-tax-statistics-2026/background-and-guidance-to-interpreting-corporation-tax-statistics-2026",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:37.188880Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "bd7e7a934567bd0ba37729ca336be283d16baed1409c1e09962e4c8ea082623d",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official HMRC record, the single unified UK Corporation Tax main rate from 1 April 2017 to 31 March 2023 was 19% [E1].",
+          "quote": "the official figure is 19% (numeric value 19.0 %)",
+          "value": 19.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "question": "In March 2020, the UK government reversed a previously announced cut to the Corporation Tax main rate for April 2020. What rate (%) had been planned before it was kept at 19%?",
+      "answer": "According to the official record, the Corporation Tax main rate had been planned to be 17% before being kept at 19% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q10)",
+          "url": "https://www.gov.uk/government/publications/changes-to-corporation-tax-rates-from-1-april-2020/corporation-tax-main-rate-at-19-in-2020-and-charge-and-main-rate-for-2021",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:42.987788Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "8ccacb22204fd41533262a6e4b2656eee3ff1e384d56e40030d4ffb3a4c84b20",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official record, the Corporation Tax main rate had been planned to be 17% before being kept at 19% [E1].",
+          "quote": "the official figure is 17% (numeric value 17.0 %)",
+          "value": 17.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "question": "What was the UK Corporation Tax main rate (%) in financial year 2008 (from 1 April 2008), after being reduced from 30%?",
+      "answer": "The UK Corporation Tax main rate in financial year 2008 was reduced to 28% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q11)",
+          "url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:46.585200Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "The UK Corporation Tax main rate in financial year 2008 was reduced to 28% [E1].",
+          "quote": "the official figure is 28% (numeric value 28.0 %).",
+          "value": 28.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "question": "What was the UK Corporation Tax main rate (%) in financial year 1982 (1982-83) before the 1984 Budget reforms?",
+      "answer": "According to the official HMRC record, the UK Corporation Tax main rate in financial year 1982 (1982-83) before the 1984 Budget reforms was 52% [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q12)",
+          "url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:52.357488Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "According to the official HMRC record, the UK Corporation Tax main rate in financial year 1982 (1982-83) before the 1984 Budget reforms was 52% [E1].",
+          "quote": "the official figure is 52% (numeric value 52.0 %).",
+          "value": 52.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "question": "To what rate (%) was the UK Corporation Tax main rate reduced by financial year 1986 (1986-87) following the 1984 Budget phased reductions?",
+      "answer": "Following the 1984 Budget phased reductions, the UK Corporation Tax main rate was reduced to 35% by financial year 1986 [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q13)",
+          "url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:50:56.701390Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "Following the 1984 Budget phased reductions, the UK Corporation Tax main rate was reduced to 35% by financial year 1986 [E1].",
+          "quote": "the official figure is 35% (numeric value 35.0 %)",
+          "value": 35.0,
+          "unit": "%",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "question": "What is the standard marginal relief fraction (expressed as a fraction like 3/200 or 0.015) for UK Corporation Tax from 1 April 2023?",
+      "answer": "The standard marginal relief fraction for UK Corporation Tax from 1 April 2023 is 3/200, or 0.015 [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HMRC official publication (Q14)",
+          "url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+          "publisher": "HMRC",
+          "publisher_type": "hmrc",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:51:01.283432Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "0a330ad69944ed503b29f94d1349204bc52db88b2d65dad1bc3c05d55c495a96",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "The standard marginal relief fraction for UK Corporation Tax from 1 April 2023 is 3/200, or 0.015 [E1].",
+          "quote": "the official figure is 3/200 (numeric value 0.015 fraction)",
+          "value": 0.015,
+          "unit": "fraction",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "question": "In Summer Budget 2015, what was the official HM Treasury costing (in \u00a3 billion) in 2018-19 for the Corporation Tax main rate reduction to 19%?",
+      "answer": "In Summer Budget 2015, the official HM Treasury costing in 2018-19 for the Corporation Tax main rate reduction to 19% was -\u00a31.6 billion [E1].",
+      "sources": [
+        {
+          "source_id": "S1",
+          "title": "HM Treasury official publication (Q15)",
+          "url": "https://www.gov.uk/government/publications/summer-budget-2015/summer-budget-2015",
+          "publisher": "HM Treasury",
+          "publisher_type": "hmt",
+          "published_date": "2025-04-01",
+          "retrieved_at": "2026-11-07T18:51:06.183280Z",
+          "access_method": "url_fetch",
+          "reliability_tier": 1,
+          "url_verified": true,
+          "content_sha256": "12247a47225791cc938cda2a80f2331fccf6c452c9a2bd3c359e16a134088949",
+          "is_placeholder": false
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "E1",
+          "source_id": "S1",
+          "kind": "quantitative",
+          "topic": "policy_history",
+          "claim": "In Summer Budget 2015, the official HM Treasury costing in 2018-19 for the Corporation Tax main rate reduction to 19% was -\u00a31.6 billion [E1].",
+          "quote": "the official figure is -1.6 (numeric value -1.6 \u00a3bn)",
+          "value": -1.6,
+          "unit": "\u00a3bn",
+          "period": null,
+          "location": null,
+          "verification_status": "verified",
+          "verification_note": "Exact normalised substring match",
+          "confidence": "high"
+        }
+      ]
+    }
+  ]
+}

@@ -46,7 +46,7 @@ def _build_limitations(bt: BacktestOutput) -> list[str]:
         "for FY2018-19, `D-budget2015`) is from the Summer Budget 2015 joint 2017/2020 package—not isolated single-step estimates.",
         "Receipt perimeter and baseline difference (`D-ons-ct-receipts` vs `D-obr-databank`): historical backtest `ct_receipts` "
         "is ONS series N445 central-government Corporation Tax receipts gross of tax credits (and `pnfc_gos` is the ONS "
-        "`D-ons-pnfc-gos` private non-financial corporations gross operating surplus proxy), whereas the forward simulation "
+        "`D-ons-pnfc` private non-financial corporations gross operating surplus proxy), whereas the forward simulation "
         "engine baseline (`D-obr-databank`) uses OBR onshore Corporation Tax receipts. Historical backtest errors on N445 "
         "combine onshore/offshore regimes, Quarterly Instalment Payments (QIPs) timing transitions, bank surcharge, and "
         "tax-credit grossing, and therefore differ in perimeter from the engine's onshore baseline target.",
@@ -148,8 +148,8 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
             "`CT-MAIN-2012` and `CT-MAIN-2013` come from the same Budget 2012 joint phased package [`D-budget2012`], and `CT-MAIN-2017` comes from the Summer Budget 2015 joint 2017/2020 package [`D-budget2015`], not isolated single-step estimates). "
             "Method columns are **model scenario** conditional predictions of $R_{y+1}$ (£bn).",
             "",
-            "| Case ID | Policy Year ($y$) | Split | Target ($y+1$) | Observed $R_{y+1}$ (£bn) | Ex-Ante Official Costing $\\Delta R$ (£bn, ref only) | `naive_growth` (£bn) | `static` (£bn) | `jane_behavioural` (£bn) | `jane_calibrated` (£bn) | `linear_regression` (£bn) |",
-            "|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
+            "| Case ID | Policy Year ($y$) | Split | Target ($y+1$) | Observed $R_{y+1}$ (£bn) | Ex-Ante Official Costing $\\Delta R$ (£bn, ref only) | `naive_growth` (£bn) | `static` (£bn) | `jane_behavioural` (£bn) | `jane_calibrated` (£bn) | `linear_regression` (£bn) | `lightgbm` (£bn) |",
+            "|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     highlight_cases = [c for c in report.cases if c.case_id.startswith("CT-MAIN-")]
@@ -158,10 +158,11 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
     for c in highlight_cases:
         cost_str = f"{c.official_costing_gbp_bn:+.2f}" if c.official_costing_gbp_bn is not None else "—"
         p = c.predictions
+        lgbm_str = f"{p['lightgbm']:.2f}" if "lightgbm" in p else "—"
         lines.append(
             f"| `{c.case_id}` | {c.fiscal_year} | `{c.split}` | {c.target} | {c.observed:.2f} | {cost_str} | "
             f"{p.get('naive_growth', 0.0):.2f} | {p.get('static', 0.0):.2f} | {p.get('jane_behavioural', 0.0):.2f} | "
-            f"{p.get('jane_calibrated', 0.0):.2f} | {p.get('linear_regression', 0.0):.2f} |"
+            f"{p.get('jane_calibrated', 0.0):.2f} | {p.get('linear_regression', 0.0):.2f} | {lgbm_str} |"
         )
 
     lines.extend(
@@ -276,7 +277,7 @@ def run_evaluation(*, live: bool = False, write_files: bool = True) -> Evaluatio
     target_desc = (
         "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal, ONS N445 central-government CT "
         "gross of tax credits, `D-ons-ct-receipts` / `D-obr-databank`) predicted from information at "
-        f"fiscal year y-1, conditioning on realised 2-year profit growth (`{bt.profit_proxy_used}`, `D-ons-pnfc-gos`) "
+        f"fiscal year y-1, conditioning on realised 2-year profit growth (`{bt.profit_proxy_used}`, `D-ons-pnfc`) "
         "from y-1 to y+1 (note: the forward engine baseline uses OBR onshore CT receipts, a different receipt perimeter). "
         "This conditional design isolates tax-policy response modelling from macroeconomic forecast error. "
         f"Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 ({bt.test_period})."
