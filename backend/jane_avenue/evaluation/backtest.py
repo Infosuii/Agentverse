@@ -622,15 +622,16 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         if c.observed > 0
     ]
 
-    # Leave-one-out 5-95% empirical interval coverage on test cases
+    # Leave-one-out 5-95% empirical interval coverage on test cases using u = 1/(1+r) - 1 = obs/pred - 1
     loo_covered = 0
     loo_coverage: float | None = None
     if len(test_residuals) >= 8:
-        res_arr = np.asarray(test_residuals, dtype=float)
-        for i in range(len(test_residuals)):
-            other = np.delete(res_arr, i)
-            q5, q95 = np.percentile(other, (5, 95))
-            if float(q5) <= test_residuals[i] <= float(q95):
+        u_arr = np.asarray([1.0 / (1.0 + r) - 1.0 for r in test_residuals], dtype=float)
+        for i, tc in enumerate(test_cases):
+            other_u = np.delete(u_arr, i)
+            q5, q95 = np.percentile(other_u, (5, 95))
+            pred_val = tc.predictions["jane_behavioural"]
+            if pred_val * (1.0 + float(q5)) <= tc.observed <= pred_val * (1.0 + float(q95)):
                 loo_covered += 1
         loo_coverage = round(loo_covered / len(test_residuals), 4)
 

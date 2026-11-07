@@ -106,8 +106,8 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
             "`official_costing_gbp_bn` is an **official costing** (ex-ante HMT/OBR policy-measure delta $\\Delta R$ in £bn relative to a contemporary Budget baseline, **not** total receipts ground truth). "
             "Method columns are **model scenario** conditional predictions of $R_{y+1}$ (£bn).",
             "",
-            "| Case ID | Policy Year ($y$) | Split | Target ($y+1$) | Observed $R_{y+1}$ (£bn) | Ex-Ante Official Costing $\\Delta R$ (£bn, ref only) | `naive_growth` (£bn) | `static` (£bn) | `jane_behavioural` (£bn) | `jane_calibrated` (£bn) | `linear_regression` (£bn) |",
-            "|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
+            "| Case ID | Policy Year ($y$) | Split | Target ($y+1$) | Observed $R_{y+1}$ (£bn) | Ex-Ante Official Costing $\\Delta R$ (£bn, ref only) | `naive_growth` (£bn) | `static` (£bn) | `jane_behavioural` (£bn) | `jane_calibrated` (£bn) | `linear_regression` (£bn) | `lightgbm` (£bn) |",
+            "|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     highlight_cases = [c for c in report.cases if c.case_id.startswith("CT-MAIN-")]
@@ -116,10 +116,11 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
     for c in highlight_cases:
         cost_str = f"{c.official_costing_gbp_bn:+.2f}" if c.official_costing_gbp_bn is not None else "—"
         p = c.predictions
+        lgbm_str = f"{p['lightgbm']:.2f}" if "lightgbm" in p else "—"
         lines.append(
             f"| `{c.case_id}` | {c.fiscal_year} | `{c.split}` | {c.target} | {c.observed:.2f} | {cost_str} | "
             f"{p.get('naive_growth', 0.0):.2f} | {p.get('static', 0.0):.2f} | {p.get('jane_behavioural', 0.0):.2f} | "
-            f"{p.get('jane_calibrated', 0.0):.2f} | {p.get('linear_regression', 0.0):.2f} |"
+            f"{p.get('jane_calibrated', 0.0):.2f} | {p.get('linear_regression', 0.0):.2f} | {lgbm_str} |"
         )
 
     lines.extend(

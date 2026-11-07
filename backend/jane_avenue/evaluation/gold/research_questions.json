@@ -1,0 +1,152 @@
+[
+  {
+    "id": "Q01",
+    "question": "What was the UK Corporation Tax main rate in financial year 2015 (2015-16)?",
+    "expected_value": 20.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["20%", "20 per cent", "20"],
+    "official_url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q02",
+    "question": "From what date did full expensing (100% first-year capital allowance for qualifying plant and machinery) take effect in the UK?",
+    "expected_value": 2023.0,
+    "tolerance": 0.01,
+    "unit": "year",
+    "expected_keywords": ["1 April 2023", "April 2023", "2023-04-01"],
+    "official_url": "https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q03",
+    "question": "In Spring Budget 2021 Table 2.1, what was the official HM Treasury / OBR policy costing (in £ billion) for the 19% to 25% Corporation Tax rise in 2025-26?",
+    "expected_value": 17.2,
+    "tolerance": 0.15,
+    "unit": "£bn",
+    "expected_keywords": ["17.2", "17,200"],
+    "official_url": "https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html",
+    "publisher": "HM Treasury"
+  },
+  {
+    "id": "Q04",
+    "question": "In Spring Budget 2021 Table 2.1, what was the official HM Treasury / OBR policy costing (in £ billion) for the 19% to 25% Corporation Tax rise in 2024-25?",
+    "expected_value": 16.25,
+    "tolerance": 0.15,
+    "unit": "£bn",
+    "expected_keywords": ["16.25", "16,250", "16.3"],
+    "official_url": "https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html",
+    "publisher": "HM Treasury"
+  },
+  {
+    "id": "Q05",
+    "question": "What is the UK Corporation Tax small profits rate (%) that took effect from 1 April 2023 for companies with profits up to £50,000?",
+    "expected_value": 19.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["19%", "19 per cent", "19"],
+    "official_url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q06",
+    "question": "What is the lower profit threshold (in £) above which UK Corporation Tax marginal relief applies from 1 April 2023?",
+    "expected_value": 50000.0,
+    "tolerance": 1.0,
+    "unit": "£",
+    "expected_keywords": ["50,000", "50000", "50k"],
+    "official_url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q07",
+    "question": "What is the upper profit threshold (in £) at which the full 25% UK Corporation Tax main rate applies from 1 April 2023?",
+    "expected_value": 250000.0,
+    "tolerance": 1.0,
+    "unit": "£",
+    "expected_keywords": ["250,000", "250000", "250k"],
+    "official_url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q08",
+    "question": "What was the UK Corporation Tax main rate (%) in financial year 2023 (from 1 April 2023)?",
+    "expected_value": 25.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["25%", "25 per cent", "25"],
+    "official_url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q09",
+    "question": "What was the single unified UK Corporation Tax main rate (%) from 1 April 2017 to 31 March 2023?",
+    "expected_value": 19.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["19%", "19 per cent", "19"],
+    "official_url": "https://www.gov.uk/government/statistics/corporation-tax-statistics-2026/background-and-guidance-to-interpreting-corporation-tax-statistics-2026",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q10",
+    "question": "In March 2020, the UK government reversed a previously announced cut to the Corporation Tax main rate for April 2020. What rate (%) had been planned before it was kept at 19%?",
+    "expected_value": 17.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["17%", "17 per cent", "17"],
+    "official_url": "https://www.gov.uk/government/publications/changes-to-corporation-tax-rates-from-1-april-2020/corporation-tax-main-rate-at-19-in-2020-and-charge-and-main-rate-for-2021",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q11",
+    "question": "What was the UK Corporation Tax main rate (%) in financial year 2008 (from 1 April 2008), after being reduced from 30%?",
+    "expected_value": 28.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["28%", "28 per cent", "28"],
+    "official_url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q12",
+    "question": "What was the UK Corporation Tax main rate (%) in financial year 1982 (1982-83) before the 1984 Budget reforms?",
+    "expected_value": 52.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["52%", "52 per cent", "52"],
+    "official_url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q13",
+    "question": "To what rate (%) was the UK Corporation Tax main rate reduced by financial year 1986 (1986-87) following the 1984 Budget phased reductions?",
+    "expected_value": 35.0,
+    "tolerance": 0.01,
+    "unit": "%",
+    "expected_keywords": ["35%", "35 per cent", "35"],
+    "official_url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q14",
+    "question": "What is the standard marginal relief fraction (expressed as a fraction like 3/200 or 0.015) for UK Corporation Tax from 1 April 2023?",
+    "expected_value": 0.015,
+    "tolerance": 0.001,
+    "unit": "fraction",
+    "expected_keywords": ["3/200", "0.015", "1.5%"],
+    "official_url": "https://www.gov.uk/government/publications/rates-and-allowances-corporation-tax/rates-and-allowances-corporation-tax",
+    "publisher": "HMRC"
+  },
+  {
+    "id": "Q15",
+    "question": "In Summer Budget 2015, what was the official HM Treasury costing (in £ billion) in 2018-19 for the Corporation Tax main rate reduction to 19%?",
+    "expected_value": -1.6,
+    "tolerance": 0.15,
+    "unit": "£bn",
+    "expected_keywords": ["-1.6", "1.6", "1,600"],
+    "official_url": "https://www.gov.uk/government/publications/summer-budget-2015/summer-budget-2015",
+    "publisher": "HM Treasury"
+  }
+]
