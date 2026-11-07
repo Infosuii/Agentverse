@@ -1,0 +1,505 @@
+[
+  {
+    "name": "taxable_profit_elasticity",
+    "label": "Taxable profit elasticity",
+    "description": "Elasticity of the taxable profit base with respect to the net-of-tax rate (1 − t). Captures profit shifting, timing and real responses that change declared profits.",
+    "category": "behavioural",
+    "unit": "elasticity",
+    "value": 0.2,
+    "low": 0.05,
+    "high": 0.5,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.05,
+        "mode": 0.2,
+        "high": 0.5
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "user_cost_elasticity",
+    "label": "User cost elasticity of investment",
+    "description": "Long-run percentage fall in business investment for a 1% rise in the user cost of capital (σ).",
+    "category": "behavioural",
+    "unit": "elasticity",
+    "value": 0.6,
+    "low": 0.3,
+    "high": 1.0,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.3,
+        "mode": 0.6,
+        "high": 1.0
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.5,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "profit_gdp_elasticity",
+    "label": "Profit-GDP elasticity",
+    "description": "Percentage change in the taxable profit base for a 1% change in the GDP level (η); drives dynamic revenue.",
+    "category": "structural",
+    "unit": "elasticity",
+    "value": 1.0,
+    "low": 0.5,
+    "high": 1.5,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.5,
+        "mode": 1.0,
+        "high": 1.5
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 2.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "behavioural_first_year_share",
+    "label": "Behavioural response in year 1",
+    "description": "Share of the long-run taxable-profit response that occurs in the first fiscal year.",
+    "category": "timing",
+    "unit": "fraction",
+    "value": 0.5,
+    "low": 0.25,
+    "high": 0.75,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.25,
+        "mode": 0.5,
+        "high": 0.75
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "receipts_first_year_share",
+    "label": "Receipts in year 1",
+    "description": "Share of the first year's change in liabilities received as cash in that fiscal year (instalment timing).",
+    "category": "timing",
+    "unit": "fraction",
+    "value": 0.6,
+    "low": 0.45,
+    "high": 0.75,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.45,
+        "mode": 0.6,
+        "high": 0.75
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "investment_adjustment_speed",
+    "label": "Investment adjustment speed",
+    "description": "Share of the remaining gap to long-run investment closed each year (λ, partial adjustment).",
+    "category": "timing",
+    "unit": "fraction",
+    "value": 0.5,
+    "low": 0.3,
+    "high": 0.8,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.3,
+        "mode": 0.5,
+        "high": 0.8
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.1,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "main_rate_profit_share",
+    "label": "Share of receipts from main-rate profits",
+    "description": "Share of onshore CT receipts paid on profits taxed at the main rate; the rest is small profits and marginal relief.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.85,
+    "low": 0.78,
+    "high": 0.92,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.78,
+        "mode": 0.85,
+        "high": 0.92
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.5,
+    "slider_max": 1.0,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "real_required_return",
+    "label": "Real required return",
+    "description": "Real discount rate (r) used in the user cost of capital and the present value of capital allowances.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.05,
+    "low": 0.03,
+    "high": 0.07,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.03,
+        "mode": 0.05,
+        "high": 0.07
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.01,
+    "slider_max": 0.1,
+    "slider_step": 0.005,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "full_expensing_coverage",
+    "label": "Full expensing coverage of P&M",
+    "description": "Share of plant & machinery investment eligible for full expensing; the rest gets the 18% main-pool WDA.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.8,
+    "low": 0.6,
+    "high": 0.95,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.6,
+        "mode": 0.8,
+        "high": 0.95
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "allowance_pv_intangibles",
+    "label": "PV of allowances for intangibles",
+    "description": "Present value of tax relief per £1 of intangible investment (intangibles regime and R&D relief).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.9,
+    "low": 0.7,
+    "high": 1.0,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.7,
+        "mode": 0.9,
+        "high": 1.0
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "capital_share",
+    "label": "Capital share of output",
+    "description": "Output elasticity with respect to the capital stock (1 − labour share).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.35,
+    "low": 0.3,
+    "high": 0.4,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.3,
+        "mode": 0.35,
+        "high": 0.4
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": 0.2,
+    "slider_max": 0.5,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "share_plant_machinery",
+    "label": "Investment share: plant & machinery",
+    "description": "Share of business investment in plant & machinery (incl. transport and ICT equipment).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.4,
+    "low": 0.4,
+    "high": 0.4,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "share_structures",
+    "label": "Investment share: structures",
+    "description": "Share of business investment in non-residential buildings and structures.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.27,
+    "low": 0.27,
+    "high": 0.27,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "share_intangibles",
+    "label": "Investment share: intangibles",
+    "description": "Share of business investment in intellectual property products.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.33,
+    "low": 0.33,
+    "high": 0.33,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "depreciation_plant_machinery",
+    "label": "Depreciation: plant & machinery",
+    "description": "Annual economic depreciation rate of plant & machinery (δ_pm).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.175,
+    "low": 0.175,
+    "high": 0.175,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "depreciation_structures",
+    "label": "Depreciation: structures",
+    "description": "Annual economic depreciation rate of structures (δ_st).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.0361,
+    "low": 0.0361,
+    "high": 0.0361,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "depreciation_intangibles",
+    "label": "Depreciation: intangibles",
+    "description": "Annual economic depreciation rate of intangibles (δ_in).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.1535,
+    "low": 0.1535,
+    "high": 0.1535,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "profit_base_deviation_pct",
+    "label": "Profit base deviation from baseline",
+    "description": "Percentage error in the baseline profit base, representing receipts forecast uncertainty.",
+    "category": "macro",
+    "unit": "%",
+    "value": 0.0,
+    "low": -5.0,
+    "high": 5.0,
+    "distribution": {
+      "kind": "normal",
+      "params": {
+        "mean": 0.0,
+        "sd": 5.0
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": true,
+    "slider_min": -20.0,
+    "slider_max": 20.0,
+    "slider_step": 0.5,
+    "is_user_override": false,
+    "is_placeholder": true
+  },
+  {
+    "name": "trend_real_growth",
+    "label": "Trend real growth",
+    "description": "Long-run trend real growth rate (g), used in the capital-stock law of motion.",
+    "category": "macro",
+    "unit": "fraction",
+    "value": 0.015,
+    "low": 0.015,
+    "high": 0.015,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": true
+  }
+]
