@@ -115,9 +115,57 @@ def test_research_failure_does_not_fail_analysis(store, demo_request, monkeypatc
     assert errors and "quota exceeded" in errors[0].message and errors[0].stage == "researching"
 
 
+def test_report_check_verdict_regenerates_report(store, demo_request, monkeypatch):
+    """REPORT-001 can withhold the forecast after the report is written; the final report must then agree with it."""
+    if not callable(getattr(pipeline.verification, "check_report", None)):
+        pytest.skip("check_report not available")
+    real = pipeline.report.generate_report
+    seen = []
+
+    def stray_number_in_first_draft(analysis):
+        seen.append(analysis.verification.overall)
+        draft = real(analysis)
+        if len(seen) == 1:
+            draft = draft.model_copy(update={"executive_summary": draft.executive_summary + " Revenue rises by 99.9bn."})
+        return draft
+
+    monkeypatch.setattr(pipeline.report, "generate_report", stray_number_in_first_draft)
+    a = _run(store, demo_request)
+    assert a.status == "completed", a.error
+    assert next(c for c in a.verification.checks if c.check_id == "REPORT-001").status == "fail"
+    assert a.verification.overall == "forecast_withheld"
+    assert len(seen) == 2 and seen[1] == "forecast_withheld"  # rewritten once, from the final verdict
+    assert a.report.forecast_withheld and a.report.verification_overall == a.verification.overall
+    assert any(e.type == "warning" and e.stage == "reporting" for e in store.events_after(a.analysis_id))
+
+
+def test_clean_report_is_not_regenerated(store, demo_request, monkeypatch):
+    real = pipeline.report.generate_report
+    calls = []
+    monkeypatch.setattr(pipeline.report, "generate_report", lambda a: calls.append(1) or real(a))
+    a = _run(store, demo_request)
+    assert a.status == "completed" and len(calls) == 1
+    assert a.report.verification_overall == a.verification.overall
+    assert a.report.forecast_withheld == (not a.verification.forecast_allowed)
+
+
 def test_unknown_override_fails_cleanly(store, demo_request):
     a = _run(store, demo_request.model_copy(update={"parameter_overrides": {"nope": 1.0}}))
     assert a.status == "failed" and "nope" in a.error
+    assert "Invalid simulation parameters" in a.error
+
+
+def test_invalid_simulation_parameters_fail_with_reason(store, demo_request, monkeypatch):
+    def invalid(*_, **__):
+        raise ValueError("investment shares must sum to 1")
+
+    monkeypatch.setattr(pipeline.simulation, "simulate", invalid)
+    a = _run(store, demo_request)
+    assert a.status == "failed"
+    assert a.error == "ValueError: Invalid simulation parameters: investment shares must sum to 1"
+    assert a.simulation is None and a.verification is None  # never "approved" without numbers
+    errors = [e for e in store.events_after(a.analysis_id) if e.type == "error"]
+    assert errors and errors[0].stage == "modelling"
 
 
 def test_store_list_newest_first(store, demo_request):

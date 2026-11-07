@@ -1,91 +1,72 @@
-"""Owner: agent-4. STUB: scenarios + Monte Carlo (agent-1 M0). Agent-4 replaces it.
+"""Owner: agent-4. `simulate`: scenarios, Monte Carlo and the tornado in one bundle (MASTER_PROMPT section 9.6).
 
-STUB behaviour: optimistic and pessimistic equal the central scenario; Monte Carlo samples every non-fixed parameter;
-sensitivity is empty. Bands are assumption-driven ranges, not prediction intervals.
+- Named scenarios (central / optimistic / pessimistic) use the registry defaults for any parameter the analyst
+  overrode. When overrides exist, a `custom` scenario carries them, so the UI can overlay custom on central.
+- The Monte Carlo and the tornado use the parameters as given, so overrides recentre them.
+- The Monte Carlo bands are assumption-driven ranges. A separately labelled empirical interval for behavioural revenue
+  is added only when the backtest justifies it (see `empirical.py`).
+- Parameters are validated first (`validation.py`); a bad parameter raises ValueError.
 """
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 
-import numpy as np
+from ..contracts import Assumption, BaselineProjection, PolicySpec, ScenarioDefinition, ScenarioResult, SimulationBundle
+from ..engine.model import run_engine
+from ..engine.parameters import central_values, default_parameters
+from .empirical import empirical_interval
+from .endpoints import evaluate_endpoints
+from .montecarlo import monte_carlo
+from .scenarios import build_scenarios
+from .tornado import sensitivity
+from .validation import validate_parameters
 
-from ..contracts import (
-    METRIC_NAMES,
-    Assumption,
-    BaselineProjection,
-    Histogram,
-    MetricDistribution,
-    MonteCarloResult,
-    PercentileBand,
-    PolicySpec,
-    ScenarioDefinition,
-    ScenarioResult,
-    SimulationBundle,
-)
-from ..engine.core import compute
-from ..engine.model import _METRIC_META, run_engine
-from ..engine.parameters import central_values
-
-INTERVAL_NOTE = ("assumption-driven ranges, not statistical prediction intervals; "
-                 "exclude model and data uncertainty")
+MIN_RELIABLE_DRAWS = 500
+CUSTOM_DESCRIPTION = ("Every assumption at its central value, with the analyst's overrides applied. Compare it with "
+                      "the central scenario, which uses the registry defaults. Not a forecast.")
 
 
-def _sample(p: Assumption, n: int, rng: np.random.Generator) -> np.ndarray:
-    d = p.distribution
-    if d.kind == "triangular":
-        lo, mode, hi = d.params["low"], d.params["mode"], d.params["high"]
-        x = rng.triangular(lo, mode, hi, n) if hi > lo else np.full(n, mode)
-    elif d.kind in ("normal", "truncated_normal"):
-        x = rng.normal(d.params["mean"], d.params["sd"], n)
-    elif d.kind == "uniform":
-        x = rng.uniform(d.params["low"], d.params["high"], n)
-    elif d.kind == "lognormal":
-        x = rng.lognormal(d.params["mu"], d.params["sigma"], n)
-    else:
-        x = np.full(n, p.value)
-    lo_b = p.slider_min if p.slider_min is not None else -np.inf
-    hi_b = p.slider_max if p.slider_max is not None else np.inf
-    return np.clip(x, lo_b, hi_b)
-
-
-def _monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection,
-                 n: int, seed: int) -> MonteCarloResult:
-    rng = np.random.default_rng(seed)
-    sampled = [name for name, p in params.items() if p.distribution.kind != "fixed"]
-    values: dict[str, float | np.ndarray] = dict(central_values(params))
-    for name in sampled:
-        values[name] = _sample(params[name], n, rng)
-    out = compute(spec, values, baseline)
-    dists: list[MetricDistribution] = []
-    hists: list[Histogram] = []
-    for metric in METRIC_NAMES:
-        arr = np.broadcast_to(out.metrics[metric], (n, len(out.fiscal_years)))
-        q = np.percentile(arr, [5, 10, 25, 50, 75, 90, 95], axis=0)
-        bands = [PercentileBand(fiscal_year=fy, p5=q[0, i], p10=q[1, i], p25=q[2, i], p50=q[3, i], p75=q[4, i],
-                                p90=q[5, i], p95=q[6, i], mean=float(arr[:, i].mean()))
-                 for i, fy in enumerate(out.fiscal_years)]
-        dists.append(MetricDistribution(metric=metric, unit=_METRIC_META[metric][1], bands=bands))  # type: ignore[arg-type]
-        counts, edges = np.histogram(arr[:, -1], bins=30)
-        hists.append(Histogram(metric=metric, fiscal_year=out.fiscal_years[-1],  # type: ignore[arg-type]
-                               bin_edges=edges.tolist(), counts=counts.tolist()))
-    return MonteCarloResult(n_draws=n, seed=seed, sampled_parameters=sampled, distributions=dists, histograms=hists,
-                            interval_kind="assumption_range", interval_note=INTERVAL_NOTE)
+def _registry_base(spec: PolicySpec, params: Mapping[str, Assumption]) -> Mapping[str, Assumption]:
+    """`params` with every user-overridden entry put back to its registry default."""
+    overridden = [name for name, p in params.items() if p.is_user_override]
+    if not overridden:
+        return params
+    defaults = default_parameters(spec)
+    return {name: (defaults[name] if name in overridden and name in defaults else p) for name, p in params.items()}
 
 
 def simulate(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *, draws: int = 2000,
              seed: int = 42, include_sensitivity: bool = True,
              empirical_residuals: Callable[[], list[float] | None] | None = None) -> SimulationBundle:
-    central = central_values(params)
-    scenarios = []
-    for name, label in (("central", "Central"), ("optimistic", "Optimistic"), ("pessimistic", "Pessimistic")):
-        definition = ScenarioDefinition(name=name, label=label, parameter_values=central,  # type: ignore[arg-type]
-                                        description="STUB: all parameters at central values.")
-        scenarios.append(ScenarioResult(scenario=definition, result=run_engine(spec, params, baseline, name)))
-    if any(p.is_user_override for p in params.values()):
-        definition = ScenarioDefinition(name="custom", label="Custom", parameter_values=central,
-                                        description="Central values with the analyst's overrides applied.")
+    validate_parameters(params)
+    warnings: list[str] = []
+    base = _registry_base(spec, params)
+    if base is not params:
+        validate_parameters(base)
+    base_endpoints = evaluate_endpoints(spec, base, baseline)
+    scenarios = build_scenarios(spec, base, baseline, endpoints=base_endpoints)
+    if base is not params:
+        values = central_values(params)
+        definition = ScenarioDefinition(name="custom", label="Custom", description=CUSTOM_DESCRIPTION,
+                                        parameter_values=values)
         scenarios.append(ScenarioResult(scenario=definition, result=run_engine(spec, params, baseline, "custom")))
-    mc = _monte_carlo(spec, params, baseline, draws, seed) if draws > 0 else None
+
+    mc = monte_carlo(spec, params, baseline, draws=draws, seed=seed) if draws > 0 else None
+    sens = []
+    if include_sensitivity:
+        endpoints = base_endpoints if base is params else evaluate_endpoints(spec, params, baseline)
+        sens = sensitivity(spec, params, baseline, endpoints=endpoints)
+    if mc is not None:
+        if draws < MIN_RELIABLE_DRAWS:
+            warnings.append(f"Only {draws} Monte Carlo draws: the percentile bands are noisy. Use at least "
+                            f"{MIN_RELIABLE_DRAWS} draws before relying on them.")
+        residuals = empirical_residuals() if empirical_residuals is not None else None
+        # the scenario whose values match the MC parameters: custom when overrides exist, otherwise central
+        current = scenarios[-1].result if base is not params else scenarios[0].result
+        empirical = empirical_interval(current, residuals)
+        if empirical.bands is not None:
+            mc = mc.model_copy(update={"empirical_interval": empirical.bands,
+                                       "empirical_calibration_note": empirical.note})
+        warnings.extend(empirical.warnings)
     return SimulationBundle(policy=spec, baseline_vintage=baseline.vintage, scenarios=scenarios, monte_carlo=mc,
-                            sensitivity=[], assumptions=list(params.values()),
-                            warnings=["STUB simulation: optimistic/pessimistic equal central; no sensitivity."])
+                            sensitivity=sens, assumptions=list(params.values()), warnings=warnings)

@@ -1,0 +1,396 @@
+{
+  "policy": {
+    "policy_type": "corporation_tax_main_rate",
+    "tax": "corporation_tax",
+    "baseline_rate_pct": 25.0,
+    "proposed_rate_pct": 28.0,
+    "effective_date": "2027-04-01",
+    "horizon_years": 5,
+    "jurisdiction": "UK",
+    "description": "Raise the CT main rate from 25% to 28% from 1 April 2027",
+    "raw_query": "",
+    "parse_method": "fixture",
+    "parse_confidence": 1.0,
+    "ambiguities": []
+  },
+  "mode": "mock",
+  "model": null,
+  "summary": "Placeholder research summary (mock mode): no live sources were consulted. Official costings include behavioural responses [E1], taxable profits respond to the rate [E2], and investment responds to the cost of capital [E3]. Profit shifting [E4], the economic cycle [E5] and changes to capital allowances [E6] complicate comparisons with past changes.",
+  "research_questions": [
+    "What revenue effects did official costings and observed receipts show for past UK corporation tax main-rate changes?",
+    "What behavioural assumptions do the OBR and HMRC use when costing changes to the corporation tax main rate?",
+    "What does the evidence say about the elasticity of UK taxable profits to the corporation tax rate?",
+    "How does the corporation tax rate affect business investment through the user cost of capital?",
+    "Which confounders (capital allowances, the economic cycle, profit shifting) complicate comparisons with past changes?",
+    "What is the current baseline forecast for UK corporation tax receipts?"
+  ],
+  "sources": [
+    {
+      "source_id": "S1",
+      "title": "Office for Budget Responsibility (placeholder)",
+      "url": "https://obr.uk/",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "fixture",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": true
+    },
+    {
+      "source_id": "S2",
+      "title": "HM Revenue & Customs (placeholder)",
+      "url": "https://www.gov.uk/government/organisations/hm-revenue-customs",
+      "publisher": "HM Revenue & Customs",
+      "publisher_type": "hmrc",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "fixture",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": true
+    },
+    {
+      "source_id": "S3",
+      "title": "Institute for Fiscal Studies (placeholder)",
+      "url": "https://ifs.org.uk/",
+      "publisher": "Institute for Fiscal Studies",
+      "publisher_type": "ifs",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "fixture",
+      "reliability_tier": 2,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": true
+    },
+    {
+      "source_id": "S4",
+      "title": "Office for National Statistics (placeholder)",
+      "url": "https://www.ons.gov.uk/",
+      "publisher": "Office for National Statistics",
+      "publisher_type": "ons",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "fixture",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": true
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E1",
+      "source_id": "S1",
+      "kind": "qualitative",
+      "topic": "revenue",
+      "claim": "Placeholder (mock mode, not real research): official costings of corporation tax rate changes include an adjustment for behavioural responses.",
+      "quote": null,
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": null,
+      "verification_status": "unverified",
+      "verification_note": "mock fixture: no document was fetched",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E2",
+      "source_id": "S2",
+      "kind": "qualitative",
+      "topic": "elasticity",
+      "claim": "Placeholder (mock mode, not real research): taxable profits are treated as responsive to the corporation tax rate.",
+      "quote": null,
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": null,
+      "verification_status": "unverified",
+      "verification_note": "mock fixture: no document was fetched",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E3",
+      "source_id": "S3",
+      "kind": "qualitative",
+      "topic": "investment",
+      "claim": "Placeholder (mock mode, not real research): a higher corporation tax rate raises the cost of capital, which can reduce business investment.",
+      "quote": null,
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": null,
+      "verification_status": "unverified",
+      "verification_note": "mock fixture: no document was fetched",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E4",
+      "source_id": "S3",
+      "kind": "counter_evidence",
+      "topic": "profit_shifting",
+      "claim": "Placeholder (mock mode, not real research): profit shifting by multinationals can reduce the revenue raised by a rate increase.",
+      "quote": null,
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": null,
+      "verification_status": "unverified",
+      "verification_note": "mock fixture: no document was fetched",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E5",
+      "source_id": "S4",
+      "kind": "qualitative",
+      "topic": "macro_context",
+      "claim": "Placeholder (mock mode, not real research): corporation tax receipts move with profits and the economic cycle.",
+      "quote": null,
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": null,
+      "verification_status": "unverified",
+      "verification_note": "mock fixture: no document was fetched",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E6",
+      "source_id": "S1",
+      "kind": "qualitative",
+      "topic": "policy_history",
+      "claim": "Placeholder (mock mode, not real research): past main-rate changes coincided with changes to capital allowances, which complicates comparison.",
+      "quote": null,
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": null,
+      "verification_status": "unverified",
+      "verification_note": "mock fixture: no document was fetched",
+      "confidence": "low"
+    }
+  ],
+  "interpretations": [
+    {
+      "interpretation_id": "I1",
+      "statement": "Interpretation (placeholder): the revenue gain from a rate rise is likely to be smaller than a static estimate because taxable profits respond to the rate.",
+      "supporting_evidence_ids": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "low"
+    }
+  ],
+  "confounders": [
+    {
+      "name": "Capital allowances",
+      "description": "Placeholder (mock mode, not real research): allowance changes alter the effective tax rate on investment.",
+      "evidence_ids": [
+        "E6"
+      ],
+      "likely_direction": "ambiguous"
+    },
+    {
+      "name": "Economic cycle",
+      "description": "Placeholder (mock mode, not real research): receipts move with profits over the cycle.",
+      "evidence_ids": [
+        "E5"
+      ],
+      "likely_direction": "ambiguous"
+    },
+    {
+      "name": "Profit shifting",
+      "description": "Placeholder (mock mode, not real research): shifting profits abroad erodes the base.",
+      "evidence_ids": [
+        "E4"
+      ],
+      "likely_direction": "lowers_revenue"
+    }
+  ],
+  "parameter_evidence": [
+    {
+      "parameter": "taxable_profit_elasticity",
+      "value": null,
+      "low": null,
+      "high": null,
+      "evidence_ids": [
+        "E2"
+      ],
+      "note": "Placeholder (mock mode, not real research): link only; no value."
+    },
+    {
+      "parameter": "user_cost_elasticity",
+      "value": null,
+      "low": null,
+      "high": null,
+      "evidence_ids": [
+        "E3"
+      ],
+      "note": "Placeholder (mock mode, not real research): link only; no value."
+    }
+  ],
+  "open_questions": [
+    "Placeholder: run live research to replace this fixture with verified, cited evidence."
+  ],
+  "trace": [
+    {
+      "step_id": 1,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "plan",
+      "title": "Planned 6 research questions",
+      "detail": "Mock plan (no network in mock mode).\n1. What revenue effects did official costings and observed receipts show for past UK corporation tax main-rate changes?\n2. What behavioural assumptions do the OBR and HMRC use when costing changes to the corporation tax main rate?\n3. What does the evidence say about the elasticity of UK taxable profits to the corporation tax rate?\n4. How does the corporation tax rate affect business investment through the user cost of capital?\n5. Which confounders (capital allowances, the economic cycle, profit shifting) complicate comparisons with past changes?\n6. What is the current baseline forecast for UK corporation tax receipts?",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 2,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "search",
+      "title": "Searched: What revenue effects did official costings and observed receipts show for past UK corporation tax main-rate changes?",
+      "detail": "Mock search: placeholder sources only.",
+      "tool": "google_search",
+      "query": "What revenue effects did official costings and observed receipts show for past UK corporation tax main-rate changes?",
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 3,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "search",
+      "title": "Searched: What does the evidence say about the elasticity of UK taxable profits to the corporation tax rate?",
+      "detail": "Mock search: placeholder sources only.",
+      "tool": "google_search",
+      "query": "What does the evidence say about the elasticity of UK taxable profits to the corporation tax rate?",
+      "source_ids": [
+        "S3"
+      ],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 4,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "search",
+      "title": "Searched: What is the current baseline forecast for UK corporation tax receipts?",
+      "detail": "Mock search: placeholder sources only.",
+      "tool": "google_search",
+      "query": "What is the current baseline forecast for UK corporation tax receipts?",
+      "source_ids": [
+        "S4"
+      ],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 5,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "fetch",
+      "title": "Fetched Office for Budget Responsibility (placeholder)",
+      "detail": "Mock fetch: nothing was downloaded.",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S1"
+      ],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 6,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "fetch",
+      "title": "Fetched Institute for Fiscal Studies (placeholder)",
+      "detail": "Mock fetch: nothing was downloaded.",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S3"
+      ],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 7,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "extract",
+      "title": "Extracted 3 evidence items from Office for Budget Responsibility",
+      "detail": "Mock evidence: unverified placeholders.",
+      "tool": "record_evidence",
+      "query": null,
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "evidence_ids": [
+        "E1",
+        "E2",
+        "E6"
+      ],
+      "duration_ms": null
+    },
+    {
+      "step_id": 8,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "extract",
+      "title": "Extracted 3 evidence items from Institute for Fiscal Studies",
+      "detail": "Mock evidence: unverified placeholders.",
+      "tool": "record_evidence",
+      "query": null,
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_ids": [
+        "E3",
+        "E4",
+        "E5"
+      ],
+      "duration_ms": null
+    },
+    {
+      "step_id": 9,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "synthesis",
+      "title": "Synthesised findings",
+      "detail": "Mock synthesis: no numbers are produced here.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6"
+      ],
+      "duration_ms": null
+    },
+    {
+      "step_id": 10,
+      "ts": "2026-11-07T00:00:00Z",
+      "kind": "reason",
+      "title": "Research complete",
+      "detail": "Mock mode: 4 placeholder sources, 6 unverified evidence items.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": null
+    }
+  ],
+  "started_at": "2026-11-07T00:00:00Z",
+  "completed_at": "2026-11-07T00:00:00Z",
+  "cache_key": null
+}

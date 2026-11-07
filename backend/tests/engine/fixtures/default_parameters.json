@@ -1,0 +1,540 @@
+[
+  {
+    "name": "taxable_profit_elasticity",
+    "label": "Taxable profit elasticity",
+    "description": "Elasticity of the taxable profit base with respect to the net-of-tax rate (1 − t). Captures profit shifting, timing and real responses that change declared profits.",
+    "category": "behavioural",
+    "unit": "elasticity",
+    "value": 0.2,
+    "low": 0.05,
+    "high": 0.5,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.05,
+        "mode": 0.2,
+        "high": 0.5
+      }
+    },
+    "basis": "literature",
+    "source_ids": [
+      "D-lit-devereux2014",
+      "D-lit-devereux2012",
+      "D-lit-obr2021"
+    ],
+    "evidence_ids": [],
+    "rationale": "Devereux, Liu & Loretz (UK CT returns 2001-08; abstract) estimate an elasticity of taxable income of 0.14-0.18 for companies around the £300k kink and 0.54-0.57 around the £10k kink. The OBR's March 2021 costing of the 19%→25% rise (supplementary release, Table 1.1) cuts the 2025-26 static yield by 6% for profit shifting (semi-elasticity 0.65, 0.38 effective) and 10% for all behaviour, which this model reproduces with ε ≈ 0.19 and ε ≈ 0.32 respectively. Central 0.20; the range spans the small-company estimate.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "user_cost_elasticity",
+    "label": "User cost elasticity of investment",
+    "description": "Long-run percentage fall in business investment for a 1% rise in the user cost of capital (σ).",
+    "category": "behavioural",
+    "unit": "elasticity",
+    "value": 0.6,
+    "low": 0.3,
+    "high": 1.0,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.3,
+        "mode": 0.6,
+        "high": 1.0
+      }
+    },
+    "basis": "literature",
+    "source_ids": [
+      "D-lit-chirinko2008"
+    ],
+    "evidence_ids": [],
+    "rationale": "Chirinko (2008, J. Macroeconomics 30(2), abstract): 'the weight of the evidence suggests a value of σ in the range of 0.40-0.60'. With a CES technology σ equals the long-run user cost elasticity of capital. Central 0.60 sits at the top of that range; the high end of 1.0 covers Cobb-Douglas.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.5,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "profit_gdp_elasticity",
+    "label": "Profit-GDP elasticity",
+    "description": "Percentage change in the taxable profit base for a 1% change in the GDP level (η); drives dynamic revenue.",
+    "category": "structural",
+    "unit": "elasticity",
+    "value": 1.0,
+    "low": 0.3,
+    "high": 1.7,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.3,
+        "mode": 1.0,
+        "high": 1.7
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team judgement: no citable estimate found, so the range was widened from the 9.5 prior. Unit elasticity assumes the taxable profit base moves in proportion to GDP.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 2.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "behavioural_first_year_share",
+    "label": "Behavioural response in year 1",
+    "description": "Share of the long-run taxable-profit response that occurs in the first fiscal year.",
+    "category": "timing",
+    "unit": "fraction",
+    "value": 0.5,
+    "low": 0.15,
+    "high": 0.85,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.15,
+        "mode": 0.5,
+        "high": 0.85
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [
+      "D-lit-obr2021"
+    ],
+    "evidence_ids": [],
+    "rationale": "Team judgement: no citable estimate found, so the range was widened from the 9.5 prior. OBR's 2021 costing note reports behaviour by year but no phasing parameter.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "receipts_first_year_share",
+    "label": "Receipts in year 1",
+    "description": "Share of the first year's change in liabilities received as cash in that fiscal year (instalment timing).",
+    "category": "timing",
+    "unit": "fraction",
+    "value": 0.6,
+    "low": 0.45,
+    "high": 0.75,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.45,
+        "mode": 0.6,
+        "high": 0.75
+      }
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-lit-hmt2021"
+    ],
+    "evidence_ids": [],
+    "rationale": "HM Treasury Budget 2021 policy costings (p.20, CT main rate to 25% from April 2023): +£11,900m in 2023-24 vs +£16,250m in 2024-25, a first-year ratio of 0.73. That ratio also contains a smaller first-year behavioural response, so it is an upper bound on the cash-timing share; central 0.6 kept, high 0.75 covers it.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "investment_adjustment_speed",
+    "label": "Investment adjustment speed",
+    "description": "Share of the remaining gap to long-run investment closed each year (λ, partial adjustment).",
+    "category": "timing",
+    "unit": "fraction",
+    "value": 0.5,
+    "low": 0.2,
+    "high": 0.9,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.2,
+        "mode": 0.5,
+        "high": 0.9
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team judgement: no citable estimate found, so the range was widened from the 9.5 prior.",
+    "adjustable": true,
+    "slider_min": 0.1,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "main_rate_profit_share",
+    "label": "Share of receipts from main-rate profits",
+    "description": "Share of onshore CT receipts paid on profits taxed at the main rate; the rest is small profits and marginal relief.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.87,
+    "low": 0.78,
+    "high": 0.92,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.78,
+        "mode": 0.87,
+        "high": 0.92
+      }
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-lit-hmrc2026"
+    ],
+    "evidence_ids": [],
+    "rationale": "HMRC Corporation Tax statistics 2026 (Figure 8, 2024-25 CT chargeable by rate): main rate £77.5bn, marginal relief £9.0bn, small profits rate £2.9bn, so the main rate is 77.5/89.4 = 0.87 of the total.",
+    "adjustable": true,
+    "slider_min": 0.5,
+    "slider_max": 1.0,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "real_required_return",
+    "label": "Real required return",
+    "description": "Real discount rate (r) used in the user cost of capital and the present value of capital allowances.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.05,
+    "low": 0.02,
+    "high": 0.07,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.02,
+        "mode": 0.05,
+        "high": 0.07
+      }
+    },
+    "basis": "literature",
+    "source_ids": [
+      "D-lit-hanappi2018"
+    ],
+    "evidence_ids": [],
+    "rationale": "Hanappi (2018), OECD Taxation Working Paper 38, Tables 1-A/1-B (p.19): real interest rate 5.00% in scenario 1 and 2.00% in scenario 2 (pre-tax real return p = 20%). Central 5%; low widened to 2%.",
+    "adjustable": true,
+    "slider_min": 0.01,
+    "slider_max": 0.1,
+    "slider_step": 0.005,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "full_expensing_coverage",
+    "label": "Full expensing coverage of P&M",
+    "description": "Share of plant & machinery investment eligible for full expensing; the rest gets the 18% main-pool WDA.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.8,
+    "low": 0.5,
+    "high": 0.95,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.5,
+        "mode": 0.8,
+        "high": 0.95
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [
+      "D-lit-hmrc2023",
+      "D-lit-hmt2023"
+    ],
+    "evidence_ids": [],
+    "rationale": "Team judgement: no citable estimate found, so the range was widened from the 9.5 prior. HMRC guidance limits full expensing to companies' new, unused main-rate plant and machinery (no cars, no assets bought to lease); special-rate assets get a 50% FYA. The Autumn Statement 2023 costing (p.22) does not publish the qualifying share.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "allowance_pv_intangibles",
+    "label": "PV of allowances for intangibles",
+    "description": "Present value of tax relief per £1 of intangible investment (intangibles regime and R&D relief).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.9,
+    "low": 0.6,
+    "high": 1.0,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.6,
+        "mode": 0.9,
+        "high": 1.0
+      }
+    },
+    "basis": "team_judgement",
+    "source_ids": [],
+    "evidence_ids": [],
+    "rationale": "Team judgement: no citable estimate found, so the range was widened from the 9.5 prior. Reflects relief at accounting amortisation or 4% a year plus R&D relief.",
+    "adjustable": true,
+    "slider_min": 0.0,
+    "slider_max": 1.0,
+    "slider_step": 0.05,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "capital_share",
+    "label": "Capital share of output",
+    "description": "Output elasticity with respect to the capital stock (1 − labour share).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.4,
+    "low": 0.35,
+    "high": 0.45,
+    "distribution": {
+      "kind": "triangular",
+      "params": {
+        "low": 0.35,
+        "mode": 0.4,
+        "high": 0.45
+      }
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-lit-ons2024"
+    ],
+    "evidence_ids": [],
+    "rationale": "ONS 'Trends in the UK labour share: 1997 to 2023' (main points): labour share 59.5% of GVA at factor cost in 2023, so the capital share is 0.405. Central 0.40, range 0.35-0.45.",
+    "adjustable": true,
+    "slider_min": 0.2,
+    "slider_max": 0.5,
+    "slider_step": 0.01,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "share_plant_machinery",
+    "label": "Investment share: plant & machinery",
+    "description": "Share of business investment in plant & machinery (incl. transport and ICT equipment).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.2670429068419018,
+    "low": 0.2670429068419018,
+    "high": 0.2670429068419018,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-ons-investment"
+    ],
+    "evidence_ids": [],
+    "rationale": "ONS business investment by asset (Investment shares 2025, agent-6 dataset business_investment_by_asset): 26.7% of the three-asset total.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "share_structures",
+    "label": "Investment share: structures",
+    "description": "Share of business investment in non-residential buildings and structures.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.2883308851952068,
+    "low": 0.2883308851952068,
+    "high": 0.2883308851952068,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-ons-investment"
+    ],
+    "evidence_ids": [],
+    "rationale": "ONS business investment by asset (Investment shares 2025, agent-6 dataset business_investment_by_asset): 28.8% of the three-asset total.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "share_intangibles",
+    "label": "Investment share: intangibles",
+    "description": "Share of business investment in intellectual property products.",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.4446262079628914,
+    "low": 0.4446262079628914,
+    "high": 0.4446262079628914,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-ons-investment"
+    ],
+    "evidence_ids": [],
+    "rationale": "ONS business investment by asset (Investment shares 2025, agent-6 dataset business_investment_by_asset): 44.5% of the three-asset total.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "depreciation_plant_machinery",
+    "label": "Depreciation: plant & machinery",
+    "description": "Annual economic depreciation rate of plant & machinery (δ_pm).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.175,
+    "low": 0.12,
+    "high": 0.37,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [
+      "D-lit-oecd2023"
+    ],
+    "evidence_ids": [],
+    "rationale": "Team judgement: a standard Devereux-Griffith input that could not be verified against a primary source. The range is widened to the OECD explanatory annex (Table A.4), which uses 12.6% for industrial machinery to 37.0% for computer hardware.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "depreciation_structures",
+    "label": "Depreciation: structures",
+    "description": "Annual economic depreciation rate of structures (δ_st).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.0361,
+    "low": 0.025,
+    "high": 0.05,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [
+      "D-lit-oecd2023"
+    ],
+    "evidence_ids": [],
+    "rationale": "Team judgement: a standard Devereux-Griffith input that could not be verified against a primary source. The range is widened to the OECD explanatory annex (Table A.4), which uses 3.29% for non-residential structures.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "depreciation_intangibles",
+    "label": "Depreciation: intangibles",
+    "description": "Annual economic depreciation rate of intangibles (δ_in).",
+    "category": "structural",
+    "unit": "fraction",
+    "value": 0.1535,
+    "low": 0.1,
+    "high": 0.4,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [
+      "D-lit-oecd2023"
+    ],
+    "evidence_ids": [],
+    "rationale": "Team judgement: a standard Devereux-Griffith input that could not be verified against a primary source. The range is widened to the OECD explanatory annex (Table A.4), which uses 40.3% for acquired software.",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "profit_base_deviation_pct",
+    "label": "Profit base deviation from baseline",
+    "description": "Percentage error in the baseline profit base, representing receipts forecast uncertainty.",
+    "category": "macro",
+    "unit": "%",
+    "value": 0.0,
+    "low": -10.0,
+    "high": 10.0,
+    "distribution": {
+      "kind": "normal",
+      "params": {
+        "mean": 0.0,
+        "sd": 10.0
+      }
+    },
+    "basis": "official",
+    "source_ids": [
+      "D-lit-obr2024"
+    ],
+    "evidence_ids": [],
+    "rationale": "OBR Forecast evaluation report October 2024 (Table 3.1): the March 2023 forecast of 2023-24 onshore CT was £76.9bn against an outturn of £91.6bn (+19%; £10.9bn from fiscal forecasting differences). The 9.5 prior of ±5% is too narrow for such errors, so widened to normal(0, 10).",
+    "adjustable": true,
+    "slider_min": -20.0,
+    "slider_max": 20.0,
+    "slider_step": 0.5,
+    "is_user_override": false,
+    "is_placeholder": false
+  },
+  {
+    "name": "trend_real_growth",
+    "label": "Trend real growth",
+    "description": "Long-run trend real growth rate (g), used in the capital-stock law of motion.",
+    "category": "macro",
+    "unit": "fraction",
+    "value": 0.015,
+    "low": 0.01,
+    "high": 0.02,
+    "distribution": {
+      "kind": "fixed",
+      "params": {}
+    },
+    "basis": "team_judgement",
+    "source_ids": [
+      "D-lit-obr2018"
+    ],
+    "evidence_ids": [],
+    "rationale": "Team judgement anchored on the OBR: trend productivity growth of 1.2% a year at the end of the November 2017 medium term, rising to 2.0% from 2030-31 in the July 2018 FSR (Box 3.1).",
+    "adjustable": false,
+    "slider_min": null,
+    "slider_max": null,
+    "slider_step": null,
+    "is_user_override": false,
+    "is_placeholder": false
+  }
+]

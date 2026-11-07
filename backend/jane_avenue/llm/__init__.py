@@ -1,4 +1,17 @@
 """Gemini gateway. Owner: agent-2."""
-from .client import GeminiLLM, LLMClient, LLMUnavailable, MockLLM, get_llm
+from .client import (
+    Citation,
+    FunctionCall,
+    GeminiLLM,
+    GroundedAnswer,
+    LLMClient,
+    LLMUnavailable,
+    MockLLM,
+    ToolTurn,
+    function_result,
+    get_llm,
+    user_input,
+)
 
-__all__ = ["GeminiLLM", "LLMClient", "LLMUnavailable", "MockLLM", "get_llm"]
+__all__ = ["Citation", "FunctionCall", "GeminiLLM", "GroundedAnswer", "LLMClient", "LLMUnavailable", "MockLLM", "ToolTurn",
+           "function_result", "get_llm", "user_input"]

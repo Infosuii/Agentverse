@@ -1,0 +1,3229 @@
+{
+ "policy": {
+  "policy_type": "corporation_tax_main_rate",
+  "tax": "corporation_tax",
+  "baseline_rate_pct": 25.0,
+  "proposed_rate_pct": 28.0,
+  "effective_date": "2027-04-01",
+  "horizon_years": 5,
+  "jurisdiction": "UK",
+  "description": "Raise the CT main rate from 25% to 28% from 1 April 2027",
+  "raw_query": "What would happen if the UK increased corporation tax from 25% to 28%?",
+  "parse_method": "manual",
+  "parse_confidence": 1.0,
+  "ambiguities": []
+ },
+ "baseline_vintage": "placeholder",
+ "scenarios": [
+  {
+   "scenario": {
+    "name": "central",
+    "label": "Central",
+    "description": "Every assumption at its central value. This is the model's central scenario under these assumptions, not a forecast.",
+    "parameter_values": {
+     "taxable_profit_elasticity": 0.2,
+     "user_cost_elasticity": 0.6,
+     "profit_gdp_elasticity": 1.0,
+     "behavioural_first_year_share": 0.5,
+     "receipts_first_year_share": 0.6,
+     "investment_adjustment_speed": 0.5,
+     "main_rate_profit_share": 0.85,
+     "real_required_return": 0.05,
+     "full_expensing_coverage": 0.8,
+     "allowance_pv_intangibles": 0.9,
+     "capital_share": 0.35,
+     "share_plant_machinery": 0.4,
+     "share_structures": 0.27,
+     "share_intangibles": 0.33,
+     "depreciation_plant_machinery": 0.175,
+     "depreciation_structures": 0.0361,
+     "depreciation_intangibles": 0.1535,
+     "profit_base_deviation_pct": 0.0,
+     "trend_real_growth": 0.015
+    }
+   },
+   "result": {
+    "model_version": "stub-0",
+    "policy": {
+     "policy_type": "corporation_tax_main_rate",
+     "tax": "corporation_tax",
+     "baseline_rate_pct": 25.0,
+     "proposed_rate_pct": 28.0,
+     "effective_date": "2027-04-01",
+     "horizon_years": 5,
+     "jurisdiction": "UK",
+     "description": "Raise the CT main rate from 25% to 28% from 1 April 2027",
+     "raw_query": "What would happen if the UK increased corporation tax from 25% to 28%?",
+     "parse_method": "manual",
+     "parse_confidence": 1.0,
+     "ambiguities": []
+    },
+    "scenario": "central",
+    "baseline_vintage": "placeholder",
+    "fiscal_years": [
+     "2027-28",
+     "2028-29",
+     "2029-30",
+     "2030-31",
+     "2031-32"
+    ],
+    "metrics": [
+     {
+      "metric": "revenue_static_gbp_bn",
+      "label": "Static revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 6.181200000000005
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 10.71000000000001
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 11.11800000000001
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 11.52600000000001
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 11.934000000000012
+       }
+      ],
+      "confidence": "high",
+      "note": ""
+     },
+     {
+      "metric": "revenue_behavioural_gbp_bn",
+      "label": "Behavioural revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 5.946173054787684
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 9.897209174685344
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 10.274245714673341
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 10.651282254661353
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 11.02831879464938
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "revenue_dynamic_gbp_bn",
+      "label": "Dynamic revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 5.938349997293447
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 9.865423085980769
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 10.221522314725371
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 10.57733123526638
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 10.93373865689539
+       }
+      ],
+      "confidence": "low",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "business_investment_pct",
+      "label": "Business investment change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.26754781069462513
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -0.40132171604193767
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -0.468208668715594
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -0.5016521450524222
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -0.5183738832208362
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "business_investment_gbp_bn",
+      "label": "Business investment change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.775888651014413
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -1.2039651481258131
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -1.4514468730183414
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -1.605286864167751
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -1.7106338146287596
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "gdp_level_pct",
+      "label": "GDP level change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.013615695369716959
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -0.03205948908614481
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -0.05122544215104585
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -0.06930658922961877
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -0.08560968232128034
+       }
+      ],
+      "confidence": "low",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "cost_of_capital_pct",
+      "label": "Cost of capital change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 0.8918260356487505
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 0.8918260356487505
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 0.8918260356487505
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 0.8918260356487505
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 0.8918260356487505
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     }
+    ],
+    "calc_trace": [
+     {
+      "step_id": "rev.base.2027-28",
+      "label": "Implied main-rate profit base 2027-28",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 343.4,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2027-28",
+      "label": "Static revenue change 2027-28",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 343.4,
+       "timing": 0.6
+      },
+      "output": 6.181200000000005,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2028-29",
+      "label": "Implied main-rate profit base 2028-29",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 357.0,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2028-29",
+      "label": "Static revenue change 2028-29",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 357.0,
+       "timing": 1.0
+      },
+      "output": 10.71000000000001,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2029-30",
+      "label": "Implied main-rate profit base 2029-30",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 370.59999999999997,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2029-30",
+      "label": "Static revenue change 2029-30",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 370.59999999999997,
+       "timing": 1.0
+      },
+      "output": 11.11800000000001,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2030-31",
+      "label": "Implied main-rate profit base 2030-31",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 384.2,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2030-31",
+      "label": "Static revenue change 2030-31",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 384.2,
+       "timing": 1.0
+      },
+      "output": 11.52600000000001,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2031-32",
+      "label": "Implied main-rate profit base 2031-32",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 397.8,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2031-32",
+      "label": "Static revenue change 2031-32",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 397.8,
+       "timing": 1.0
+      },
+      "output": 11.934000000000012,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     }
+    ],
+    "parameters_used": {
+     "taxable_profit_elasticity": 0.2,
+     "user_cost_elasticity": 0.6,
+     "profit_gdp_elasticity": 1.0,
+     "behavioural_first_year_share": 0.5,
+     "receipts_first_year_share": 0.6,
+     "investment_adjustment_speed": 0.5,
+     "main_rate_profit_share": 0.85,
+     "real_required_return": 0.05,
+     "full_expensing_coverage": 0.8,
+     "allowance_pv_intangibles": 0.9,
+     "capital_share": 0.35,
+     "share_plant_machinery": 0.4,
+     "share_structures": 0.27,
+     "share_intangibles": 0.33,
+     "depreciation_plant_machinery": 0.175,
+     "depreciation_structures": 0.0361,
+     "depreciation_intangibles": 0.1535,
+     "profit_base_deviation_pct": 0.0,
+     "trend_real_growth": 0.015
+    },
+    "warnings": []
+   }
+  },
+  {
+   "scenario": {
+    "name": "optimistic",
+    "label": "Optimistic",
+    "description": "Optimistic: Each uncertain assumption (any non-fixed distribution) is tested one at a time at the low and the high end of its range, with every other assumption at its central value, and the end giving the higher cumulative dynamic revenue (revenue_dynamic_gbp_bn summed over the horizon) is used. This works the same way for rises and cuts. The profit base deviation is a macro assumption and is set by rule to its high value. Assumptions that do not change cumulative dynamic revenue, and fixed assumptions, stay at central. This is a combination of favourable assumptions under the model, not a forecast.",
+    "parameter_values": {
+     "taxable_profit_elasticity": 0.05,
+     "user_cost_elasticity": 0.3,
+     "profit_gdp_elasticity": 0.5,
+     "behavioural_first_year_share": 0.25,
+     "receipts_first_year_share": 0.75,
+     "investment_adjustment_speed": 0.3,
+     "main_rate_profit_share": 0.92,
+     "real_required_return": 0.03,
+     "full_expensing_coverage": 0.95,
+     "allowance_pv_intangibles": 1.0,
+     "capital_share": 0.3,
+     "share_plant_machinery": 0.4,
+     "share_structures": 0.27,
+     "share_intangibles": 0.33,
+     "depreciation_plant_machinery": 0.175,
+     "depreciation_structures": 0.0361,
+     "depreciation_intangibles": 0.1535,
+     "profit_base_deviation_pct": 5.0,
+     "trend_real_growth": 0.015
+    }
+   },
+   "result": {
+    "model_version": "stub-0",
+    "policy": {
+     "policy_type": "corporation_tax_main_rate",
+     "tax": "corporation_tax",
+     "baseline_rate_pct": 25.0,
+     "proposed_rate_pct": 28.0,
+     "effective_date": "2027-04-01",
+     "horizon_years": 5,
+     "jurisdiction": "UK",
+     "description": "Raise the CT main rate from 25% to 28% from 1 April 2027",
+     "raw_query": "What would happen if the UK increased corporation tax from 25% to 28%?",
+     "parse_method": "manual",
+     "parse_confidence": 1.0,
+     "ambiguities": []
+    },
+    "scenario": "optimistic",
+    "baseline_vintage": "placeholder",
+    "fiscal_years": [
+     "2027-28",
+     "2028-29",
+     "2029-30",
+     "2030-31",
+     "2031-32"
+    ],
+    "metrics": [
+     {
+      "metric": "revenue_static_gbp_bn",
+      "label": "Static revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 8.780940000000008
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 12.171600000000012
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 12.635280000000012
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 13.098960000000014
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 13.562640000000012
+       }
+      ],
+      "confidence": "high",
+      "note": ""
+     },
+     {
+      "metric": "revenue_behavioural_gbp_bn",
+      "label": "Behavioural revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 8.739130861452544
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 11.939964281583997
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 12.394820063739573
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 12.849675845895149
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 13.30453162805074
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "revenue_dynamic_gbp_bn",
+      "label": "Dynamic revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 8.738345269404075
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 11.937186734178415
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 12.38988411187092
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 12.842338895016532
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 13.294679828603229
+       }
+      ],
+      "confidence": "low",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "business_investment_pct",
+      "label": "Business investment change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.04397230817377984
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -0.07475292389542572
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -0.09629935490057784
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -0.11138185660418431
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -0.12193960779670887
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "business_investment_gbp_bn",
+      "label": "Business investment change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.12751969370396152
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -0.22425877168627714
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -0.29852800019179127
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -0.35642194113338976
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -0.4024007057291393
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "gdp_level_pct",
+      "label": "GDP level change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.0019180984659251802
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -0.004899970504855533
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -0.008388140633884673
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -0.012027031623625053
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -0.015597356027343844
+       }
+      ],
+      "confidence": "low",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "cost_of_capital_pct",
+      "label": "Cost of capital change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 0.48858120193088705
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 0.48858120193088705
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 0.48858120193088705
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 0.48858120193088705
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 0.48858120193088705
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     }
+    ],
+    "calc_trace": [
+     {
+      "step_id": "rev.base.2027-28",
+      "label": "Implied main-rate profit base 2027-28",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 390.264,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2027-28",
+      "label": "Static revenue change 2027-28",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 390.264,
+       "timing": 0.75
+      },
+      "output": 8.780940000000008,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2028-29",
+      "label": "Implied main-rate profit base 2028-29",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 405.72,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2028-29",
+      "label": "Static revenue change 2028-29",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 405.72,
+       "timing": 1.0
+      },
+      "output": 12.171600000000012,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2029-30",
+      "label": "Implied main-rate profit base 2029-30",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 421.17600000000004,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2029-30",
+      "label": "Static revenue change 2029-30",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 421.17600000000004,
+       "timing": 1.0
+      },
+      "output": 12.635280000000012,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2030-31",
+      "label": "Implied main-rate profit base 2030-31",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 436.63200000000006,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2030-31",
+      "label": "Static revenue change 2030-31",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 436.63200000000006,
+       "timing": 1.0
+      },
+      "output": 13.098960000000014,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2031-32",
+      "label": "Implied main-rate profit base 2031-32",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 452.088,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2031-32",
+      "label": "Static revenue change 2031-32",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 452.088,
+       "timing": 1.0
+      },
+      "output": 13.562640000000012,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     }
+    ],
+    "parameters_used": {
+     "taxable_profit_elasticity": 0.05,
+     "user_cost_elasticity": 0.3,
+     "profit_gdp_elasticity": 0.5,
+     "behavioural_first_year_share": 0.25,
+     "receipts_first_year_share": 0.75,
+     "investment_adjustment_speed": 0.3,
+     "main_rate_profit_share": 0.92,
+     "real_required_return": 0.03,
+     "full_expensing_coverage": 0.95,
+     "allowance_pv_intangibles": 1.0,
+     "capital_share": 0.3,
+     "share_plant_machinery": 0.4,
+     "share_structures": 0.27,
+     "share_intangibles": 0.33,
+     "depreciation_plant_machinery": 0.175,
+     "depreciation_structures": 0.0361,
+     "depreciation_intangibles": 0.1535,
+     "profit_base_deviation_pct": 5.0,
+     "trend_real_growth": 0.015
+    },
+    "warnings": []
+   }
+  },
+  {
+   "scenario": {
+    "name": "pessimistic",
+    "label": "Pessimistic",
+    "description": "Pessimistic: Each uncertain assumption (any non-fixed distribution) is tested one at a time at the low and the high end of its range, with every other assumption at its central value, and the end giving the lower cumulative dynamic revenue (revenue_dynamic_gbp_bn summed over the horizon) is used. This works the same way for rises and cuts. The profit base deviation is a macro assumption and is set by rule to its low value. Assumptions that do not change cumulative dynamic revenue, and fixed assumptions, stay at central. This is a combination of unfavourable assumptions under the model, not a forecast.",
+    "parameter_values": {
+     "taxable_profit_elasticity": 0.5,
+     "user_cost_elasticity": 1.0,
+     "profit_gdp_elasticity": 1.5,
+     "behavioural_first_year_share": 0.75,
+     "receipts_first_year_share": 0.45,
+     "investment_adjustment_speed": 0.8,
+     "main_rate_profit_share": 0.78,
+     "real_required_return": 0.07,
+     "full_expensing_coverage": 0.6,
+     "allowance_pv_intangibles": 0.7,
+     "capital_share": 0.4,
+     "share_plant_machinery": 0.4,
+     "share_structures": 0.27,
+     "share_intangibles": 0.33,
+     "depreciation_plant_machinery": 0.175,
+     "depreciation_structures": 0.0361,
+     "depreciation_intangibles": 0.1535,
+     "profit_base_deviation_pct": -5.0,
+     "trend_real_growth": 0.015
+    }
+   },
+   "result": {
+    "model_version": "stub-0",
+    "policy": {
+     "policy_type": "corporation_tax_main_rate",
+     "tax": "corporation_tax",
+     "baseline_rate_pct": 25.0,
+     "proposed_rate_pct": 28.0,
+     "effective_date": "2027-04-01",
+     "horizon_years": 5,
+     "jurisdiction": "UK",
+     "description": "Raise the CT main rate from 25% to 28% from 1 April 2027",
+     "raw_query": "What would happen if the UK increased corporation tax from 25% to 28%?",
+     "parse_method": "manual",
+     "parse_confidence": 1.0,
+     "ambiguities": []
+    },
+    "scenario": "pessimistic",
+    "baseline_vintage": "placeholder",
+    "fiscal_years": [
+     "2027-28",
+     "2028-29",
+     "2029-30",
+     "2030-31",
+     "2031-32"
+    ],
+    "metrics": [
+     {
+      "metric": "revenue_static_gbp_bn",
+      "label": "Static revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 4.041414000000003
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 9.33660000000001
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 9.692280000000007
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 10.047960000000007
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 10.40364000000001
+       }
+      ],
+      "confidence": "high",
+      "note": ""
+     },
+     {
+      "metric": "revenue_behavioural_gbp_bn",
+      "label": "Behavioural revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 3.468386185714676
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 7.5759821478858385
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 7.864590991614833
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 8.153199835343813
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 8.441808679072793
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "revenue_dynamic_gbp_bn",
+      "label": "Dynamic revenue change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 3.4311290372241836
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 7.400037609812598
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 7.598269038984491
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 7.802234882940427
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 8.01201910086688
+       }
+      ],
+      "confidence": "low",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "business_investment_pct",
+      "label": "Business investment change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -1.1496513442461709
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -1.379581613095405
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -1.425567666865252
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -1.4347648776192212
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -1.4366043197700151
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "business_investment_gbp_bn",
+      "label": "Business investment change",
+      "unit": "\u00a3bn",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -3.333988898313896
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -4.138744839286215
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -4.419259767282281
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -4.591247608381508
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -4.74079425524105
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "gdp_level_pct",
+      "label": "GDP level change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": -0.06686464190243269
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": -0.1373799595234544
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": -0.20031679460784158
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": -0.2546374051325082
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": -0.3011666736727111
+       }
+      ],
+      "confidence": "low",
+      "note": "STUB: not modelled yet (zeros)."
+     },
+     {
+      "metric": "cost_of_capital_pct",
+      "label": "Cost of capital change",
+      "unit": "%",
+      "values": [
+       {
+        "fiscal_year": "2027-28",
+        "value": 1.4370641803077135
+       },
+       {
+        "fiscal_year": "2028-29",
+        "value": 1.4370641803077135
+       },
+       {
+        "fiscal_year": "2029-30",
+        "value": 1.4370641803077135
+       },
+       {
+        "fiscal_year": "2030-31",
+        "value": 1.4370641803077135
+       },
+       {
+        "fiscal_year": "2031-32",
+        "value": 1.4370641803077135
+       }
+      ],
+      "confidence": "medium",
+      "note": "STUB: not modelled yet (zeros)."
+     }
+    ],
+    "calc_trace": [
+     {
+      "step_id": "rev.base.2027-28",
+      "label": "Implied main-rate profit base 2027-28",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 299.364,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2027-28",
+      "label": "Static revenue change 2027-28",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 299.364,
+       "timing": 0.45
+      },
+      "output": 4.041414000000003,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2027-28",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2028-29",
+      "label": "Implied main-rate profit base 2028-29",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 311.22,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2028-29",
+      "label": "Static revenue change 2028-29",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 311.22,
+       "timing": 1.0
+      },
+      "output": 9.33660000000001,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2028-29",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2029-30",
+      "label": "Implied main-rate profit base 2029-30",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 323.07599999999996,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2029-30",
+      "label": "Static revenue change 2029-30",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 323.07599999999996,
+       "timing": 1.0
+      },
+      "output": 9.692280000000007,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2029-30",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2030-31",
+      "label": "Implied main-rate profit base 2030-31",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 334.93199999999996,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2030-31",
+      "label": "Static revenue change 2030-31",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 334.93199999999996,
+       "timing": 1.0
+      },
+      "output": 10.047960000000007,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2030-31",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.base.2031-32",
+      "label": "Implied main-rate profit base 2031-32",
+      "formula": "B0 = main_rate_profit_share \u00d7 R \u00d7 (1 + profit_base_deviation_pct/100) / t0",
+      "inputs": {
+       "t0": 0.25
+      },
+      "output": 346.788,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+       "main_rate_profit_share",
+       "profit_base_deviation_pct"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     },
+     {
+      "step_id": "rev.static.2031-32",
+      "label": "Static revenue change 2031-32",
+      "formula": "\u0394R_static = (t1 \u2212 t0) \u00d7 B0 \u00d7 timing",
+      "inputs": {
+       "t0": 0.25,
+       "t1": 0.28,
+       "B0": 346.788,
+       "timing": 1.0
+      },
+      "output": 10.40364000000001,
+      "unit": "\u00a3bn",
+      "fiscal_year": "2031-32",
+      "parameter_names": [
+       "receipts_first_year_share"
+      ],
+      "source_ids": [
+       "D-placeholder-obr"
+      ]
+     }
+    ],
+    "parameters_used": {
+     "taxable_profit_elasticity": 0.5,
+     "user_cost_elasticity": 1.0,
+     "profit_gdp_elasticity": 1.5,
+     "behavioural_first_year_share": 0.75,
+     "receipts_first_year_share": 0.45,
+     "investment_adjustment_speed": 0.8,
+     "main_rate_profit_share": 0.78,
+     "real_required_return": 0.07,
+     "full_expensing_coverage": 0.6,
+     "allowance_pv_intangibles": 0.7,
+     "capital_share": 0.4,
+     "share_plant_machinery": 0.4,
+     "share_structures": 0.27,
+     "share_intangibles": 0.33,
+     "depreciation_plant_machinery": 0.175,
+     "depreciation_structures": 0.0361,
+     "depreciation_intangibles": 0.1535,
+     "profit_base_deviation_pct": -5.0,
+     "trend_real_growth": 0.015
+    },
+    "warnings": []
+   }
+  }
+ ],
+ "monte_carlo": {
+  "n_draws": 2000,
+  "seed": 42,
+  "sampled_parameters": [
+   "taxable_profit_elasticity",
+   "user_cost_elasticity",
+   "profit_gdp_elasticity",
+   "behavioural_first_year_share",
+   "receipts_first_year_share",
+   "investment_adjustment_speed",
+   "main_rate_profit_share",
+   "real_required_return",
+   "full_expensing_coverage",
+   "allowance_pv_intangibles",
+   "capital_share",
+   "profit_base_deviation_pct"
+  ],
+  "distributions": [
+   {
+    "metric": "revenue_static_gbp_bn",
+    "unit": "\u00a3bn",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": 5.0206629113053935,
+      "p10": 5.234878098844299,
+      "p25": 5.688440666638268,
+      "p50": 6.162953299572256,
+      "p75": 6.697281369186552,
+      "p90": 7.159962394892381,
+      "p95": 7.421089729973535,
+      "mean": 6.189371433719376
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": 9.702603111046852,
+      "p10": 9.9249342742952,
+      "p25": 10.285639251221976,
+      "p50": 10.718132847769315,
+      "p75": 11.13668975532751,
+      "p90": 11.530879175227431,
+      "p95": 11.80768710089937,
+      "mean": 10.719265282582821
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": 10.07222608670578,
+      "p10": 10.303027008554064,
+      "p25": 10.677473127459002,
+      "p50": 11.12644267054148,
+      "p75": 11.56094460314951,
+      "p90": 11.970150762855143,
+      "p95": 12.257503752362203,
+      "mean": 11.127618245728852
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": 10.441849062364707,
+      "p10": 10.681119742812928,
+      "p25": 11.069307003696032,
+      "p50": 11.534752493313643,
+      "p75": 11.98519945097151,
+      "p90": 12.409422350482853,
+      "p95": 12.707320403825035,
+      "mean": 11.53597120887485
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": 10.811472038023634,
+      "p10": 11.059212477071794,
+      "p25": 11.46114087993306,
+      "p50": 11.943062316085808,
+      "p75": 12.409454298793511,
+      "p90": 12.848693938110564,
+      "p95": 13.15713705528787,
+      "mean": 11.94432417202087
+     }
+    ]
+   },
+   {
+    "metric": "revenue_behavioural_gbp_bn",
+    "unit": "\u00a3bn",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": 4.776050316550439,
+      "p10": 4.976284276986754,
+      "p25": 5.4083531461011445,
+      "p50": 5.865158803644366,
+      "p75": 6.382454321489257,
+      "p90": 6.8327006959386845,
+      "p95": 7.071245239477837,
+      "mean": 5.894780056783414
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": 8.62645024325669,
+      "p10": 8.817872105100093,
+      "p25": 9.227987655935838,
+      "p50": 9.690459217989485,
+      "p75": 10.14279747184862,
+      "p90": 10.58436046680619,
+      "p95": 10.841689004097415,
+      "mean": 9.69846255880157
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": 8.955076919190272,
+      "p10": 9.153791042437241,
+      "p25": 9.579530042828623,
+      "p50": 10.059619569150982,
+      "p75": 10.52918975649047,
+      "p90": 10.98757419887501,
+      "p95": 11.254705728063028,
+      "mean": 10.067927799136863
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": 9.283703595123855,
+      "p10": 9.489709979774387,
+      "p25": 9.931072429721418,
+      "p50": 10.428779920312493,
+      "p75": 10.915582041132314,
+      "p90": 11.390787930943818,
+      "p95": 11.667722452028656,
+      "mean": 10.437393039472163
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": 9.612330271057438,
+      "p10": 9.825628917111535,
+      "p25": 10.282614816614213,
+      "p50": 10.797940271474005,
+      "p75": 11.301974325774168,
+      "p90": 11.794001663012624,
+      "p95": 12.080739175994271,
+      "mean": 10.806858279807468
+     }
+    ]
+   },
+   {
+    "metric": "revenue_dynamic_gbp_bn",
+    "unit": "\u00a3bn",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": 4.7698728161608175,
+      "p10": 4.963645106498569,
+      "p25": 5.400866461912116,
+      "p50": 5.85339685359134,
+      "p75": 6.3707223906669235,
+      "p90": 6.824117258158585,
+      "p95": 7.0568224285566075,
+      "mean": 5.8855027085856895
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": 8.595150284269936,
+      "p10": 8.788015904814424,
+      "p25": 9.191477720537682,
+      "p50": 9.659931055562225,
+      "p75": 10.10534341997467,
+      "p90": 10.541381335612984,
+      "p95": 10.804495867904741,
+      "mean": 9.661614442201126
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": 8.901393421477433,
+      "p10": 9.099049719534323,
+      "p25": 9.521142080218775,
+      "p50": 10.003878698333398,
+      "p75": 10.469101122484838,
+      "p90": 10.924430992228071,
+      "p95": 11.193445909352683,
+      "mean": 10.007701069627913
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": 9.19841115267897,
+      "p10": 9.415178077837787,
+      "p25": 9.849384966269941,
+      "p50": 10.351109334179062,
+      "p75": 10.833795254344379,
+      "p90": 11.302302643289394,
+      "p95": 11.58070777431861,
+      "mean": 10.353713025014388
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": 9.499745980887907,
+      "p10": 9.727394003241178,
+      "p25": 10.179360986273148,
+      "p50": 10.697491532923301,
+      "p75": 11.196434631818542,
+      "p90": 11.677915348657274,
+      "p95": 11.969656933204966,
+      "mean": 10.700485120636452
+     }
+    ]
+   },
+   {
+    "metric": "business_investment_pct",
+    "unit": "%",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": -0.5175715468090594,
+      "p10": -0.4617757516543801,
+      "p25": -0.3828358204892559,
+      "p50": -0.30405546459702215,
+      "p75": -0.24043069699902803,
+      "p90": -0.19289713943523262,
+      "p95": -0.17259176533108003,
+      "mean": -0.31895966097013295
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": -0.7116171528664998,
+      "p10": -0.6495434143434119,
+      "p25": -0.5489100645531448,
+      "p50": -0.44704944613277,
+      "p75": -0.3605699235200595,
+      "p90": -0.2963869988878764,
+      "p95": -0.26287322653793,
+      "mean": -0.4613911221502167
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": -0.7941977952891179,
+      "p10": -0.7276551954348027,
+      "p25": -0.6269023909444075,
+      "p50": -0.5124365582053557,
+      "p75": -0.41869331627636025,
+      "p90": -0.34649430985948737,
+      "p95": -0.3095999588204431,
+      "mean": -0.5283152315807003
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": -0.8329269803512412,
+      "p10": -0.7656509521980729,
+      "p25": -0.6646771440749546,
+      "p50": -0.5453097585727593,
+      "p75": -0.44839343477606164,
+      "p90": -0.3723240246632906,
+      "p95": -0.33206901774805064,
+      "mean": -0.5611431767591042
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": -0.8529625796588106,
+      "p10": -0.7870630236569167,
+      "p25": -0.6842997346014992,
+      "p50": -0.5604450762942761,
+      "p75": -0.4641022135370669,
+      "p90": -0.38533514707262717,
+      "p95": -0.3423918745079984,
+      "mean": -0.5778399744761046
+     }
+    ]
+   },
+   {
+    "metric": "business_investment_gbp_bn",
+    "unit": "\u00a3bn",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": -1.5009574857462722,
+      "p10": -1.3391496797977025,
+      "p25": -1.1102238794188422,
+      "p50": -0.8817608473313643,
+      "p75": -0.6972490212971812,
+      "p90": -0.5594017043621745,
+      "p95": -0.5005161194601321,
+      "mean": -0.9249830168133841
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": -2.1348514585994995,
+      "p10": -1.9486302430302358,
+      "p25": -1.6467301936594343,
+      "p50": -1.34114833839831,
+      "p75": -1.0817097705601786,
+      "p90": -0.8891609966636291,
+      "p95": -0.7886196796137901,
+      "mean": -1.3841733664506497
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": -2.4620131653962654,
+      "p10": -2.2557311058478886,
+      "p25": -1.9433974119276631,
+      "p50": -1.5885533304366026,
+      "p75": -1.2979492804567168,
+      "p90": -1.074132360564411,
+      "p95": -0.9597598723433735,
+      "mean": -1.6377772179001744
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": -2.6653663371239724,
+      "p10": -2.4500830470338335,
+      "p25": -2.1269668610398544,
+      "p50": -1.7449912274328299,
+      "p75": -1.4348589912833971,
+      "p90": -1.19143687892253,
+      "p95": -1.062620856793762,
+      "mean": -1.7956581656291377
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": -2.8147765128740754,
+      "p10": -2.597307978067825,
+      "p25": -2.2581891241849474,
+      "p50": -1.849468751771111,
+      "p75": -1.5315373046723209,
+      "p90": -1.2716059853396697,
+      "p95": -1.1298931858763945,
+      "mean": -1.9068719157711487
+     }
+    ]
+   },
+   {
+    "metric": "gdp_level_pct",
+    "unit": "%",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": -0.026612197841192974,
+      "p10": -0.023547867969063514,
+      "p25": -0.019628804547197093,
+      "p50": -0.015456673980188837,
+      "p75": -0.012162697602139108,
+      "p90": -0.009752047998855352,
+      "p95": -0.008582318000870542,
+      "mean": -0.016270152507180974
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": -0.05892569404238203,
+      "p10": -0.05345577628926812,
+      "p25": -0.04483208757201716,
+      "p50": -0.0361404908568868,
+      "p75": -0.02890138222718558,
+      "p90": -0.023103226634402056,
+      "p95": -0.020779628724328696,
+      "mean": -0.03744139378778402
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": -0.0913460283267281,
+      "p10": -0.08331258509334437,
+      "p25": -0.07026701053516819,
+      "p50": -0.057024685925740795,
+      "p75": -0.04605704987040245,
+      "p90": -0.03721592624357055,
+      "p95": -0.03368702290685646,
+      "mean": -0.0589490868050288
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": -0.12007945662359801,
+      "p10": -0.11115516316706199,
+      "p25": -0.09374358930471899,
+      "p50": -0.07659658562001376,
+      "p75": -0.06213916118516817,
+      "p90": -0.05055893346713346,
+      "p95": -0.04552886212951514,
+      "mean": -0.07900461372083104
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": -0.14641417486398783,
+      "p10": -0.1356951454331059,
+      "p25": -0.11462700078729057,
+      "p50": -0.09378158521587747,
+      "p75": -0.07665963507477841,
+      "p90": -0.06297767666791926,
+      "p95": -0.05642618789054711,
+      "mean": -0.0969959874561722
+     }
+    ]
+   },
+   {
+    "metric": "cost_of_capital_pct",
+    "unit": "%",
+    "bands": [
+     {
+      "fiscal_year": "2027-28",
+      "p5": 0.7460345751988144,
+      "p10": 0.7879374127552733,
+      "p25": 0.858110720912376,
+      "p50": 0.940595152146881,
+      "p75": 1.0366073665046944,
+      "p90": 1.118075702780907,
+      "p95": 1.1637025819955282,
+      "mean": 0.9477079748105051
+     },
+     {
+      "fiscal_year": "2028-29",
+      "p5": 0.7460345751988144,
+      "p10": 0.7879374127552733,
+      "p25": 0.858110720912376,
+      "p50": 0.940595152146881,
+      "p75": 1.0366073665046944,
+      "p90": 1.118075702780907,
+      "p95": 1.1637025819955282,
+      "mean": 0.9477079748105051
+     },
+     {
+      "fiscal_year": "2029-30",
+      "p5": 0.7460345751988144,
+      "p10": 0.7879374127552733,
+      "p25": 0.858110720912376,
+      "p50": 0.940595152146881,
+      "p75": 1.0366073665046944,
+      "p90": 1.118075702780907,
+      "p95": 1.1637025819955282,
+      "mean": 0.9477079748105051
+     },
+     {
+      "fiscal_year": "2030-31",
+      "p5": 0.7460345751988144,
+      "p10": 0.7879374127552733,
+      "p25": 0.858110720912376,
+      "p50": 0.940595152146881,
+      "p75": 1.0366073665046944,
+      "p90": 1.118075702780907,
+      "p95": 1.1637025819955282,
+      "mean": 0.9477079748105051
+     },
+     {
+      "fiscal_year": "2031-32",
+      "p5": 0.7460345751988144,
+      "p10": 0.7879374127552733,
+      "p25": 0.858110720912376,
+      "p50": 0.940595152146881,
+      "p75": 1.0366073665046944,
+      "p90": 1.118075702780907,
+      "p95": 1.1637025819955282,
+      "mean": 0.9477079748105051
+     }
+    ]
+   }
+  ],
+  "histograms": [
+   {
+    "metric": "revenue_static_gbp_bn",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     9.433224432459824,
+     9.590273676547582,
+     9.747322920635343,
+     9.904372164723101,
+     10.06142140881086,
+     10.21847065289862,
+     10.375519896986379,
+     10.532569141074138,
+     10.689618385161898,
+     10.846667629249657,
+     11.003716873337416,
+     11.160766117425176,
+     11.317815361512935,
+     11.474864605600693,
+     11.631913849688452,
+     11.788963093776212,
+     11.946012337863971,
+     12.103061581951732,
+     12.26011082603949,
+     12.417160070127249,
+     12.574209314215008,
+     12.731258558302768,
+     12.888307802390527,
+     13.045357046478287,
+     13.202406290566046,
+     13.359455534653804,
+     13.516504778741563,
+     13.673554022829324,
+     13.830603266917082,
+     13.987652511004843,
+     14.144701755092601
+    ],
+    "counts": [
+     1,
+     0,
+     0,
+     3,
+     3,
+     10,
+     18,
+     30,
+     47,
+     62,
+     85,
+     121,
+     134,
+     150,
+     169,
+     175,
+     175,
+     172,
+     152,
+     142,
+     102,
+     69,
+     49,
+     42,
+     46,
+     21,
+     7,
+     2,
+     9,
+     4
+    ]
+   },
+   {
+    "metric": "revenue_behavioural_gbp_bn",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     8.515138313192125,
+     8.682887162893948,
+     8.850636012595771,
+     9.018384862297594,
+     9.186133711999418,
+     9.35388256170124,
+     9.521631411403064,
+     9.689380261104887,
+     9.85712911080671,
+     10.024877960508533,
+     10.192626810210356,
+     10.36037565991218,
+     10.528124509614003,
+     10.695873359315826,
+     10.863622209017649,
+     11.031371058719472,
+     11.199119908421295,
+     11.366868758123118,
+     11.534617607824941,
+     11.702366457526765,
+     11.870115307228588,
+     12.03786415693041,
+     12.205613006632234,
+     12.373361856334057,
+     12.54111070603588,
+     12.708859555737703,
+     12.876608405439526,
+     13.04435725514135,
+     13.212106104843173,
+     13.379854954544996,
+     13.547603804246819
+    ],
+    "counts": [
+     1,
+     0,
+     6,
+     19,
+     21,
+     33,
+     52,
+     85,
+     96,
+     117,
+     138,
+     176,
+     165,
+     165,
+     164,
+     172,
+     135,
+     114,
+     100,
+     61,
+     63,
+     46,
+     23,
+     23,
+     11,
+     6,
+     4,
+     0,
+     3,
+     1
+    ]
+   },
+   {
+    "metric": "revenue_dynamic_gbp_bn",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     8.45260676361401,
+     8.618008553428279,
+     8.783410343242547,
+     8.948812133056816,
+     9.114213922871084,
+     9.279615712685352,
+     9.445017502499622,
+     9.61041929231389,
+     9.775821082128159,
+     9.941222871942427,
+     10.106624661756696,
+     10.272026451570964,
+     10.437428241385232,
+     10.6028300311995,
+     10.768231821013769,
+     10.93363361082804,
+     11.099035400642308,
+     11.264437190456576,
+     11.429838980270844,
+     11.595240770085113,
+     11.760642559899381,
+     11.92604434971365,
+     12.091446139527918,
+     12.256847929342186,
+     12.422249719156454,
+     12.587651508970723,
+     12.753053298784991,
+     12.91845508859926,
+     13.083856878413528,
+     13.249258668227796,
+     13.414660458042066
+    ],
+    "counts": [
+     1,
+     0,
+     9,
+     18,
+     23,
+     32,
+     59,
+     88,
+     94,
+     119,
+     144,
+     162,
+     166,
+     162,
+     164,
+     170,
+     143,
+     112,
+     99,
+     58,
+     61,
+     47,
+     22,
+     22,
+     11,
+     5,
+     5,
+     1,
+     2,
+     1
+    ]
+   },
+   {
+    "metric": "business_investment_pct",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     -1.194781482885338,
+     -1.1619056533267933,
+     -1.1290298237682488,
+     -1.096153994209704,
+     -1.0632781646511593,
+     -1.0304023350926148,
+     -0.9975265055340701,
+     -0.9646506759755255,
+     -0.9317748464169808,
+     -0.8988990168584362,
+     -0.8660231872998916,
+     -0.8331473577413469,
+     -0.8002715281828022,
+     -0.7673956986242576,
+     -0.7345198690657129,
+     -0.7016440395071682,
+     -0.6687682099486236,
+     -0.635892380390079,
+     -0.6030165508315344,
+     -0.5701407212729896,
+     -0.537264891714445,
+     -0.5043890621559004,
+     -0.47151323259735567,
+     -0.43863740303881105,
+     -0.4057615734802664,
+     -0.3728857439217218,
+     -0.3400099143631772,
+     -0.30713408480463245,
+     -0.2742582552460878,
+     -0.2413824256875432,
+     -0.20850659612899858
+    ],
+    "counts": [
+     1,
+     0,
+     0,
+     2,
+     4,
+     5,
+     9,
+     18,
+     21,
+     25,
+     41,
+     48,
+     76,
+     95,
+     103,
+     101,
+     127,
+     125,
+     158,
+     159,
+     168,
+     168,
+     162,
+     117,
+     98,
+     76,
+     63,
+     20,
+     9,
+     1
+    ]
+   },
+   {
+    "metric": "business_investment_gbp_bn",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     -3.942778893521616,
+     -3.8342886559784186,
+     -3.7257984184352213,
+     -3.617308180892024,
+     -3.5088179433488267,
+     -3.400327705805629,
+     -3.2918374682624316,
+     -3.1833472307192343,
+     -3.074856993176037,
+     -2.9663667556328397,
+     -2.8578765180896424,
+     -2.749386280546445,
+     -2.6408960430032478,
+     -2.5324058054600505,
+     -2.423915567916853,
+     -2.315425330373656,
+     -2.2069350928304585,
+     -2.098444855287261,
+     -1.9899546177440637,
+     -1.8814643802008661,
+     -1.7729741426576688,
+     -1.6644839051144715,
+     -1.5559936675712742,
+     -1.447503430028077,
+     -1.3390131924848796,
+     -1.2305229549416823,
+     -1.122032717398485,
+     -1.0135424798552872,
+     -0.9050522423120899,
+     -0.7965620047688926,
+     -0.6880717672256953
+    ],
+    "counts": [
+     1,
+     0,
+     0,
+     2,
+     4,
+     5,
+     9,
+     18,
+     21,
+     25,
+     41,
+     48,
+     76,
+     95,
+     103,
+     101,
+     127,
+     125,
+     158,
+     159,
+     168,
+     168,
+     162,
+     117,
+     98,
+     76,
+     63,
+     20,
+     9,
+     1
+    ]
+   },
+   {
+    "metric": "gdp_level_pct",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     -0.20904336350533176,
+     -0.2031520146571587,
+     -0.19726066580898569,
+     -0.19136931696081264,
+     -0.18547796811263959,
+     -0.17958661926446653,
+     -0.1736952704162935,
+     -0.16780392156812046,
+     -0.1619125727199474,
+     -0.15602122387177436,
+     -0.15012987502360134,
+     -0.1442385261754283,
+     -0.13834717732725527,
+     -0.13245582847908222,
+     -0.12656447963090917,
+     -0.12067313078273612,
+     -0.11478178193456308,
+     -0.10889043308639004,
+     -0.10299908423821699,
+     -0.09710773539004396,
+     -0.0912163865418709,
+     -0.08532503769369787,
+     -0.07943368884552482,
+     -0.07354233999735177,
+     -0.06765099114917875,
+     -0.061759642301005696,
+     -0.055868293452832646,
+     -0.04997694460465962,
+     -0.04408559575648657,
+     -0.03819424690831352,
+     -0.03230289806014046
+    ],
+    "counts": [
+     1,
+     0,
+     4,
+     4,
+     3,
+     4,
+     5,
+     10,
+     22,
+     25,
+     36,
+     49,
+     78,
+     66,
+     92,
+     98,
+     121,
+     150,
+     140,
+     160,
+     186,
+     179,
+     150,
+     119,
+     116,
+     86,
+     61,
+     28,
+     5,
+     2
+    ]
+   },
+   {
+    "metric": "cost_of_capital_pct",
+    "fiscal_year": "2031-32",
+    "bin_edges": [
+     0.5575457215486799,
+     0.5831864200617493,
+     0.6088271185748186,
+     0.634467817087888,
+     0.6601085156009574,
+     0.6857492141140268,
+     0.7113899126270962,
+     0.7370306111401654,
+     0.7626713096532349,
+     0.7883120081663042,
+     0.8139527066793737,
+     0.839593405192443,
+     0.8652341037055123,
+     0.8908748022185817,
+     0.9165155007316511,
+     0.9421561992447205,
+     0.9677968977577899,
+     0.9934375962708593,
+     1.0190782947839288,
+     1.044718993296998,
+     1.0703596918100673,
+     1.0960003903231368,
+     1.1216410888362063,
+     1.1472817873492756,
+     1.1729224858623448,
+     1.198563184375414,
+     1.2242038828884836,
+     1.249844581401553,
+     1.2754852799146223,
+     1.3011259784276916,
+     1.3267666769407611
+    ],
+    "counts": [
+     1,
+     2,
+     4,
+     10,
+     9,
+     13,
+     41,
+     61,
+     60,
+     92,
+     109,
+     133,
+     154,
+     163,
+     154,
+     159,
+     131,
+     124,
+     116,
+     108,
+     88,
+     77,
+     57,
+     49,
+     29,
+     23,
+     18,
+     7,
+     7,
+     1
+    ]
+   }
+  ],
+  "interval_kind": "assumption_range",
+  "interval_note": "Shaded bands show the spread of outcomes when uncertain assumptions are varied together (Monte Carlo over parameter distributions). They are assumption-driven ranges, not statistical prediction intervals, and exclude model and data uncertainty. (MC s.e. of the final-year median of behavioural revenue \u00b1\u00a30.02bn at n=2000)",
+  "empirical_interval": null,
+  "empirical_calibration_note": null
+ },
+ "sensitivity": [
+  {
+   "metric": "revenue_behavioural_gbp_bn",
+   "fiscal_year": "2031-32",
+   "base_output": 11.02831879464938,
+   "items": [
+    {
+     "parameter": "taxable_profit_elasticity",
+     "label": "Taxable profit elasticity",
+     "low_input": 0.05,
+     "high_input": 0.5,
+     "output_at_low": 11.706886008119184,
+     "output_at_high": 9.68358620406461,
+     "swing": 2.0232998040545738
+    },
+    {
+     "parameter": "main_rate_profit_share",
+     "label": "Share of receipts from main-rate profits",
+     "low_input": 0.78,
+     "high_input": 0.92,
+     "output_at_low": 10.120104305678254,
+     "output_at_high": 11.936533283620506,
+     "swing": 1.8164289779422518
+    },
+    {
+     "parameter": "profit_base_deviation_pct",
+     "label": "Profit base deviation from baseline",
+     "low_input": -5.0,
+     "high_input": 5.0,
+     "output_at_low": 10.476902854916915,
+     "output_at_high": 11.579734734381859,
+     "swing": 1.1028318794649437
+    },
+    {
+     "parameter": "allowance_pv_intangibles",
+     "label": "PV of allowances for intangibles",
+     "low_input": 0.7,
+     "high_input": 1.0,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "behavioural_first_year_share",
+     "label": "Behavioural response in year 1",
+     "low_input": 0.25,
+     "high_input": 0.75,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "capital_share",
+     "label": "Capital share of output",
+     "low_input": 0.3,
+     "high_input": 0.4,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "full_expensing_coverage",
+     "label": "Full expensing coverage of P&M",
+     "low_input": 0.6,
+     "high_input": 0.95,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "investment_adjustment_speed",
+     "label": "Investment adjustment speed",
+     "low_input": 0.3,
+     "high_input": 0.8,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "profit_gdp_elasticity",
+     "label": "Profit-GDP elasticity",
+     "low_input": 0.5,
+     "high_input": 1.5,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "real_required_return",
+     "label": "Real required return",
+     "low_input": 0.03,
+     "high_input": 0.07,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "receipts_first_year_share",
+     "label": "Receipts in year 1",
+     "low_input": 0.45,
+     "high_input": 0.75,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    },
+    {
+     "parameter": "user_cost_elasticity",
+     "label": "User cost elasticity of investment",
+     "low_input": 0.3,
+     "high_input": 1.0,
+     "output_at_low": 11.02831879464938,
+     "output_at_high": 11.02831879464938,
+     "swing": 0.0
+    }
+   ]
+  },
+  {
+   "metric": "business_investment_pct",
+   "fiscal_year": "2031-32",
+   "base_output": -0.5183738832208362,
+   "items": [
+    {
+     "parameter": "user_cost_elasticity",
+     "label": "User cost elasticity of investment",
+     "low_input": 0.3,
+     "high_input": 1.0,
+     "output_at_low": -0.2591869416104181,
+     "output_at_high": -0.863956472034727,
+     "swing": 0.6047695304243089
+    },
+    {
+     "parameter": "allowance_pv_intangibles",
+     "label": "PV of allowances for intangibles",
+     "low_input": 0.7,
+     "high_input": 1.0,
+     "output_at_low": -0.7058738832208317,
+     "output_at_high": -0.415248883220832,
+     "swing": 0.2906249999999997
+    },
+    {
+     "parameter": "real_required_return",
+     "label": "Real required return",
+     "low_input": 0.03,
+     "high_input": 0.07,
+     "output_at_low": -0.40958949436904357,
+     "output_at_high": -0.5911097052201495,
+     "swing": 0.18152021085110592
+    },
+    {
+     "parameter": "investment_adjustment_speed",
+     "label": "Investment adjustment speed",
+     "low_input": 0.3,
+     "high_input": 0.8,
+     "output_at_low": -0.44516210030235903,
+     "output_at_high": -0.5349243907904058,
+     "swing": 0.08976229048804674
+    },
+    {
+     "parameter": "full_expensing_coverage",
+     "label": "Full expensing coverage of P&M",
+     "low_input": 0.6,
+     "high_input": 0.95,
+     "output_at_low": -0.5628271943236747,
+     "output_at_high": -0.48434257880311327,
+     "swing": 0.07848461552056141
+    },
+    {
+     "parameter": "behavioural_first_year_share",
+     "label": "Behavioural response in year 1",
+     "low_input": 0.25,
+     "high_input": 0.75,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    },
+    {
+     "parameter": "capital_share",
+     "label": "Capital share of output",
+     "low_input": 0.3,
+     "high_input": 0.4,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    },
+    {
+     "parameter": "main_rate_profit_share",
+     "label": "Share of receipts from main-rate profits",
+     "low_input": 0.78,
+     "high_input": 0.92,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    },
+    {
+     "parameter": "profit_base_deviation_pct",
+     "label": "Profit base deviation from baseline",
+     "low_input": -5.0,
+     "high_input": 5.0,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    },
+    {
+     "parameter": "profit_gdp_elasticity",
+     "label": "Profit-GDP elasticity",
+     "low_input": 0.5,
+     "high_input": 1.5,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    },
+    {
+     "parameter": "receipts_first_year_share",
+     "label": "Receipts in year 1",
+     "low_input": 0.45,
+     "high_input": 0.75,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    },
+    {
+     "parameter": "taxable_profit_elasticity",
+     "label": "Taxable profit elasticity",
+     "low_input": 0.05,
+     "high_input": 0.5,
+     "output_at_low": -0.5183738832208362,
+     "output_at_high": -0.5183738832208362,
+     "swing": 0.0
+    }
+   ]
+  },
+  {
+   "metric": "gdp_level_pct",
+   "fiscal_year": "2031-32",
+   "base_output": -0.08560968232128034,
+   "items": [
+    {
+     "parameter": "user_cost_elasticity",
+     "label": "User cost elasticity of investment",
+     "low_input": 0.3,
+     "high_input": 1.0,
+     "output_at_low": -0.04280484116064017,
+     "output_at_high": -0.14268280386880056,
+     "swing": 0.09987796270816038
+    },
+    {
+     "parameter": "allowance_pv_intangibles",
+     "label": "PV of allowances for intangibles",
+     "low_input": 0.7,
+     "high_input": 1.0,
+     "output_at_low": -0.11657539250618434,
+     "output_at_high": -0.06857854171958204,
+     "swing": 0.047996850786602305
+    },
+    {
+     "parameter": "investment_adjustment_speed",
+     "label": "Investment adjustment speed",
+     "low_input": 0.3,
+     "high_input": 0.8,
+     "output_at_low": -0.06643105722069317,
+     "output_at_high": -0.09812285997665746,
+     "swing": 0.03169180275596428
+    },
+    {
+     "parameter": "real_required_return",
+     "label": "Real required return",
+     "low_input": 0.03,
+     "high_input": 0.07,
+     "output_at_low": -0.06764389107953853,
+     "output_at_high": -0.09762203636976861,
+     "swing": 0.029978145290230088
+    },
+    {
+     "parameter": "capital_share",
+     "label": "Capital share of output",
+     "low_input": 0.3,
+     "high_input": 0.4,
+     "output_at_low": -0.07337972770395458,
+     "output_at_high": -0.09783963693860612,
+     "swing": 0.024459909234651536
+    },
+    {
+     "parameter": "full_expensing_coverage",
+     "label": "Full expensing coverage of P&M",
+     "low_input": 0.6,
+     "high_input": 0.95,
+     "output_at_low": -0.09295116684591984,
+     "output_at_high": -0.07998939693560847,
+     "swing": 0.012961769910311366
+    },
+    {
+     "parameter": "behavioural_first_year_share",
+     "label": "Behavioural response in year 1",
+     "low_input": 0.25,
+     "high_input": 0.75,
+     "output_at_low": -0.08560968232128034,
+     "output_at_high": -0.08560968232128034,
+     "swing": 0.0
+    },
+    {
+     "parameter": "main_rate_profit_share",
+     "label": "Share of receipts from main-rate profits",
+     "low_input": 0.78,
+     "high_input": 0.92,
+     "output_at_low": -0.08560968232128034,
+     "output_at_high": -0.08560968232128034,
+     "swing": 0.0
+    },
+    {
+     "parameter": "profit_base_deviation_pct",
+     "label": "Profit base deviation from baseline",
+     "low_input": -5.0,
+     "high_input": 5.0,
+     "output_at_low": -0.08560968232128034,
+     "output_at_high": -0.08560968232128034,
+     "swing": 0.0
+    },
+    {
+     "parameter": "profit_gdp_elasticity",
+     "label": "Profit-GDP elasticity",
+     "low_input": 0.5,
+     "high_input": 1.5,
+     "output_at_low": -0.08560968232128034,
+     "output_at_high": -0.08560968232128034,
+     "swing": 0.0
+    },
+    {
+     "parameter": "receipts_first_year_share",
+     "label": "Receipts in year 1",
+     "low_input": 0.45,
+     "high_input": 0.75,
+     "output_at_low": -0.08560968232128034,
+     "output_at_high": -0.08560968232128034,
+     "swing": 0.0
+    },
+    {
+     "parameter": "taxable_profit_elasticity",
+     "label": "Taxable profit elasticity",
+     "low_input": 0.05,
+     "high_input": 0.5,
+     "output_at_low": -0.08560968232128034,
+     "output_at_high": -0.08560968232128034,
+     "swing": 0.0
+    }
+   ]
+  }
+ ],
+ "assumptions": [
+  {
+   "name": "taxable_profit_elasticity",
+   "label": "Taxable profit elasticity",
+   "description": "Taxable profit elasticity (team prior; not yet sourced).",
+   "category": "behavioural",
+   "unit": "elasticity",
+   "value": 0.2,
+   "low": 0.05,
+   "high": 0.5,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.05,
+     "mode": 0.2,
+     "high": 0.5
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 1.0,
+   "slider_step": 0.01,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "user_cost_elasticity",
+   "label": "User cost elasticity of investment",
+   "description": "User cost elasticity of investment (team prior; not yet sourced).",
+   "category": "behavioural",
+   "unit": "elasticity",
+   "value": 0.6,
+   "low": 0.3,
+   "high": 1.0,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.3,
+     "mode": 0.6,
+     "high": 1.0
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 1.5,
+   "slider_step": 0.01,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "profit_gdp_elasticity",
+   "label": "Profit-GDP elasticity",
+   "description": "Profit-GDP elasticity (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "elasticity",
+   "value": 1.0,
+   "low": 0.5,
+   "high": 1.5,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.5,
+     "mode": 1.0,
+     "high": 1.5
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 2.0,
+   "slider_step": 0.05,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "behavioural_first_year_share",
+   "label": "Behavioural response in year 1",
+   "description": "Behavioural response in year 1 (team prior; not yet sourced).",
+   "category": "timing",
+   "unit": "fraction",
+   "value": 0.5,
+   "low": 0.25,
+   "high": 0.75,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.25,
+     "mode": 0.5,
+     "high": 0.75
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 1.0,
+   "slider_step": 0.05,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "receipts_first_year_share",
+   "label": "Receipts in year 1",
+   "description": "Receipts in year 1 (team prior; not yet sourced).",
+   "category": "timing",
+   "unit": "fraction",
+   "value": 0.6,
+   "low": 0.45,
+   "high": 0.75,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.45,
+     "mode": 0.6,
+     "high": 0.75
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 1.0,
+   "slider_step": 0.05,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "investment_adjustment_speed",
+   "label": "Investment adjustment speed",
+   "description": "Investment adjustment speed (team prior; not yet sourced).",
+   "category": "timing",
+   "unit": "fraction",
+   "value": 0.5,
+   "low": 0.3,
+   "high": 0.8,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.3,
+     "mode": 0.5,
+     "high": 0.8
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.1,
+   "slider_max": 1.0,
+   "slider_step": 0.05,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "main_rate_profit_share",
+   "label": "Share of receipts from main-rate profits",
+   "description": "Share of receipts from main-rate profits (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.85,
+   "low": 0.78,
+   "high": 0.92,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.78,
+     "mode": 0.85,
+     "high": 0.92
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.5,
+   "slider_max": 1.0,
+   "slider_step": 0.01,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "real_required_return",
+   "label": "Real required return",
+   "description": "Real required return (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.05,
+   "low": 0.03,
+   "high": 0.07,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.03,
+     "mode": 0.05,
+     "high": 0.07
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.01,
+   "slider_max": 0.1,
+   "slider_step": 0.005,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "full_expensing_coverage",
+   "label": "Full expensing coverage of P&M",
+   "description": "Full expensing coverage of P&M (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.8,
+   "low": 0.6,
+   "high": 0.95,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.6,
+     "mode": 0.8,
+     "high": 0.95
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 1.0,
+   "slider_step": 0.05,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "allowance_pv_intangibles",
+   "label": "PV of allowances for intangibles",
+   "description": "PV of allowances for intangibles (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.9,
+   "low": 0.7,
+   "high": 1.0,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.7,
+     "mode": 0.9,
+     "high": 1.0
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.0,
+   "slider_max": 1.0,
+   "slider_step": 0.05,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "capital_share",
+   "label": "Capital share of output",
+   "description": "Capital share of output (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.35,
+   "low": 0.3,
+   "high": 0.4,
+   "distribution": {
+    "kind": "triangular",
+    "params": {
+     "low": 0.3,
+     "mode": 0.35,
+     "high": 0.4
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": 0.2,
+   "slider_max": 0.5,
+   "slider_step": 0.01,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "share_plant_machinery",
+   "label": "Investment share: plant & machinery",
+   "description": "Investment share: plant & machinery (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.4,
+   "low": 0.4,
+   "high": 0.4,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "share_structures",
+   "label": "Investment share: structures",
+   "description": "Investment share: structures (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.27,
+   "low": 0.27,
+   "high": 0.27,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "share_intangibles",
+   "label": "Investment share: intangibles",
+   "description": "Investment share: intangibles (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.33,
+   "low": 0.33,
+   "high": 0.33,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "depreciation_plant_machinery",
+   "label": "Depreciation: plant & machinery",
+   "description": "Depreciation: plant & machinery (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.175,
+   "low": 0.175,
+   "high": 0.175,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "depreciation_structures",
+   "label": "Depreciation: structures",
+   "description": "Depreciation: structures (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.0361,
+   "low": 0.0361,
+   "high": 0.0361,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "depreciation_intangibles",
+   "label": "Depreciation: intangibles",
+   "description": "Depreciation: intangibles (team prior; not yet sourced).",
+   "category": "structural",
+   "unit": "fraction",
+   "value": 0.1535,
+   "low": 0.1535,
+   "high": 0.1535,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "profit_base_deviation_pct",
+   "label": "Profit base deviation from baseline",
+   "description": "Profit base deviation from baseline (team prior; not yet sourced).",
+   "category": "macro",
+   "unit": "%",
+   "value": 0.0,
+   "low": -5.0,
+   "high": 5.0,
+   "distribution": {
+    "kind": "normal",
+    "params": {
+     "mean": 0.0,
+     "sd": 5.0
+    }
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": true,
+   "slider_min": -20.0,
+   "slider_max": 20.0,
+   "slider_step": 0.5,
+   "is_user_override": false,
+   "is_placeholder": true
+  },
+  {
+   "name": "trend_real_growth",
+   "label": "Trend real growth",
+   "description": "Trend real growth (team prior; not yet sourced).",
+   "category": "macro",
+   "unit": "fraction",
+   "value": 0.015,
+   "low": 0.015,
+   "high": 0.015,
+   "distribution": {
+    "kind": "fixed",
+    "params": {}
+   },
+   "basis": "team_judgement",
+   "source_ids": [],
+   "evidence_ids": [],
+   "rationale": "Team prior from MASTER_PROMPT 9.5; awaiting a citable source.",
+   "adjustable": false,
+   "slider_min": null,
+   "slider_max": null,
+   "slider_step": null,
+   "is_user_override": false,
+   "is_placeholder": true
+  }
+ ],
+ "warnings": [
+  "No empirical prediction interval is shown: the historical backtest supplied 0 out-of-sample residuals, fewer than the 8 needed to calibrate one. The bands shown are assumption-driven ranges only."
+ ]
+}
