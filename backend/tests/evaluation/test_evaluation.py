@@ -35,6 +35,13 @@ def test_chronological_split_has_no_test_years_in_training() -> None:
     case_years = [fy_start_year(c.fiscal_year) for c in bt.cases]
     assert case_years == sorted(case_years)
 
+    # Verify corner-solution bound detection is flagged honestly
+    assert bt.calibrated_at_bound is True
+    cal_methods = [m for m in bt.methods if m.method == "jane_calibrated"]
+    assert cal_methods
+    assert "search bound" in cal_methods[0].description.lower()
+    assert "corner solution" in cal_methods[0].description.lower()
+
 
 def test_metrics_on_toy_data() -> None:
     obs = [100.0, 200.0, 50.0, 150.0]

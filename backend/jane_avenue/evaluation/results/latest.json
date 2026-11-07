@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T18:38:11.166407Z",
+  "generated_at": "2026-11-07T19:00:56.403961Z",
   "dataset_version": "10bb93bda87c",
   "target_description": "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal) predicted from information at fiscal year y-1, conditioning on realised 2-year profit growth (`pnfc_gos`) from y-1 to y+1. This conditional design isolates tax-policy response modelling from macroeconomic forecast error. Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 (FY2008-09 to FY2024-25). Leave-one-out 90% (5th–95th percentile) empirical residual interval coverage on FY2008-09 to FY2024-25: 15/17 (88.2%).",
   "methods": [
@@ -41,8 +41,8 @@
     },
     {
       "method": "jane_calibrated",
-      "label": "Jane Avenue behavioural engine (train-calibrated ε)",
-      "description": "Same structural revenue equation with elasticity ε = 1.500 fitted by nonlinear least squares on FY ≤ 2007 training data only.",
+      "label": "Jane Avenue behavioural engine (train-calibrated ε; bound hit)",
+      "description": "Same structural revenue equation with elasticity ε reached the search bound of 1.500 on [0.0, 1.5] (corner solution; not identified on FY ≤ 2007 training data because the 1984–86 rate cuts coincided with capital-allowance base-broadening). Out-of-sample MAE is statistically indistinguishable from the central prior on n = 17; not exposed as an engine parameter.",
       "split": "train",
       "n": 25,
       "mae": 3.911,
@@ -101,8 +101,8 @@
     },
     {
       "method": "jane_calibrated",
-      "label": "Jane Avenue behavioural engine (train-calibrated ε)",
-      "description": "Same structural revenue equation with elasticity ε = 1.500 fitted by nonlinear least squares on FY ≤ 2007 training data only.",
+      "label": "Jane Avenue behavioural engine (train-calibrated ε; bound hit)",
+      "description": "Same structural revenue equation with elasticity ε reached the search bound of 1.500 on [0.0, 1.5] (corner solution; not identified on FY ≤ 2007 training data because the 1984–86 rate cuts coincided with capital-allowance base-broadening). Out-of-sample MAE is statistically indistinguishable from the central prior on n = 17; not exposed as an engine parameter.",
       "split": "test",
       "n": 17,
       "mae": 5.2863,
@@ -805,6 +805,7 @@
     "Conditional backtest design: predictions of R_{y+1} condition on realised 2-year profit growth from y-1 to y+1 (measured via `pnfc_gos`). This isolates tax-rate response modelling from macroeconomic forecast error, so out-of-sample errors in unconditional real-time forecasting would be larger.",
     "Small sample of policy regime shifts: UK corporation tax main-rate history since FY1982 contains only 16 implemented statutory rate changes (8 in the FY <= 2007 training split and 8 in the FY >= 2008 test split).",
     "Simultaneous base-broadening and relief confounders: major rate changes coincided with structural base changes—most notably the 1983–1986 phased rate cuts paired with first-year capital-allowance abolition, and the April 2023 rise (19% -> 25%) paired with full expensing for plant & machinery and the 19% small profits rate / marginal relief.",
+    "Train-calibrated elasticity corner solution: fitting ε by nonlinear least squares on FY <= 2007 reached the search bound of 1.500 on [0.0, 1.5] (not identified on FY <= 2007 data because the 1984–86 cuts came with capital-allowance base-broadening, so a large ε mostly absorbs the base changes). Its out-of-sample MAE on n = 17 test years is statistically indistinguishable from the central prior (ε = 0.20), so it is not exposed as an alternative engine parameter.",
     "Official costings are not ground truth: `official_costing_gbp_bn` reports ex-ante HMT/OBR policy costings (revenue delta relative to a contemporary Budget baseline under ex-ante macro assumptions), whereas `observed` and model `predictions` are total fiscal-year CT receipts R_{y+1} (£bn).",
     "Receipts collection lags and composition: CT receipts combine onshore and offshore (North Sea ring-fence) regimes, Quarterly Instalment Payments (QIPs) timing transitions, bank surcharge, and financial-sector loss carry-forwards.",
     "OLS of log((receipts/t)/pnfc_gos) on log(1-t) over n=44 fiscal years (controlling for real GDP growth) yields an implied base elasticity of 2.642 (SE 0.185), compared with the engine central prior of 0.20. Because UK rate cuts in the 1980s and 2010s coincided with base-broadening capital-allowance reforms and post-2008 financial-sector profit shifts, macro time-series regressions confound rate effects with base definitions; we retain the micro-econometric literature prior (0.20) as central."

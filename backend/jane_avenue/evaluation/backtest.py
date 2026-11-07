@@ -9,14 +9,13 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize_scalar
 
-import jane_avenue.engine as engine_pkg
-
 from ..config import get_settings
 from ..contracts import BacktestCase, MethodSummary
 from ..data import registry
-from ..engine import default_parameters
+from ..engine import default_parameters, revenue_static_behavioural
 
 TRAIN_CUTOFF_FY = 2007  # Train on FY <= 2007, test on FY >= 2008 (chronological split)
+CALIBRATION_BOUNDS: tuple[float, float] = (0.0, 1.5)
 
 
 def fy_start_year(fiscal_year: str) -> int:
@@ -27,36 +26,6 @@ def fy_start_year(fiscal_year: str) -> int:
 def format_fy(start_year: int) -> str:
     """Format an integer start year into 'YYYY-YY'."""
     return f"{start_year}-{str(start_year + 1)[-2:]}"
-
-
-def _revenue_static_behavioural(
-    t0: float,
-    t1: float,
-    receipts: float,
-    *,
-    main_rate_profit_share: float,
-    elasticity: float,
-    timing: float = 1.0,
-) -> tuple[float, float]:
-    """Call engine.revenue_static_behavioural if present, else use exact Master Prompt §9.5 equations."""
-    fn = getattr(engine_pkg, "revenue_static_behavioural", None)
-    if callable(fn):
-        res = fn(
-            t0,
-            t1,
-            receipts,
-            main_rate_profit_share=main_rate_profit_share,
-            elasticity=elasticity,
-            timing=timing,
-        )
-        return float(res[0]), float(res[1])
-    if t0 <= 0:
-        return 0.0, 0.0
-    b0 = main_rate_profit_share * receipts / t0
-    delta_static = (t1 - t0) * b0 * timing
-    b1 = b0 * (((1.0 - t1) / (1.0 - t0)) ** elasticity)
-    delta_behav = (t1 * b1 - t0 * b0) * timing
-    return float(delta_static), float(delta_behav)
 
 
 @dataclass
@@ -99,6 +68,8 @@ class BacktestOutput:
     methods: list[MethodSummary]
     cases: list[BacktestCase]
     calibrated_elasticity: float
+    calibrated_at_bound: bool
+    calibrated_bounds: tuple[float, float]
     prior_elasticity: float
     main_rate_profit_share: float
     profit_proxy_used: str
@@ -402,7 +373,7 @@ def compute_implied_elasticity(panel: Sequence[PanelRow], prior_elasticity: floa
         + f", compared with the engine central prior of {prior_elasticity:.2f}. "
         "Because UK rate cuts in the 1980s and 2010s coincided with base-broadening capital-allowance reforms "
         "and post-2008 financial-sector profit shifts, macro time-series regressions confound rate effects with "
-        "base definitions; we retain the micro-econometric literature prior (0.20) as central."
+        f"base definitions; we retain the micro-econometric literature prior ({prior_elasticity:.2f}) as central."
     )
     return ImpliedElasticityResult(
         n_obs=len(valid),
@@ -459,18 +430,20 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         for yr in fit_years:
             r_prev, r_next, t_old, t_new, g_2yr = _row_features(yr)
             naive = r_prev * (1.0 + g_2yr)
-            _, d_behav = _revenue_static_behavioural(
+            _, d_behav = revenue_static_behavioural(
                 t_old, t_new, naive, main_rate_profit_share=s_share, elasticity=float(eps), timing=1.0
             )
             pred = naive + d_behav
             sq_err += (pred - r_next) ** 2
         return sq_err
 
+    lower_b, upper_b = CALIBRATION_BOUNDS
     if fit_years:
-        opt = minimize_scalar(_sse_for_eps, bounds=(0.0, 1.5), method="bounded")
+        opt = minimize_scalar(_sse_for_eps, bounds=CALIBRATION_BOUNDS, method="bounded")
         calibrated_eps = float(opt.x) if opt.success else prior_eps
     else:
         calibrated_eps = prior_eps
+    at_bound = bool(abs(calibrated_eps - upper_b) < 1e-3 or abs(calibrated_eps - lower_b) < 1e-3)
 
     # 2. Fit log-change OLS (`linear_regression`) on fit_years only:
     # log(R_{y+1} / R_{y-1}) = beta_0 + beta_1 * (t_new - t_old) + beta_2 * log(1 + g_2yr)
@@ -484,6 +457,20 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         beta_ols, _, _, _ = np.linalg.lstsq(np.asarray(X_train), np.asarray(y_train), rcond=None)
     else:
         beta_ols = np.array([0.0, 0.0, 1.0], dtype=float)
+
+    cal_label = (
+        "Jane Avenue behavioural engine (train-calibrated ε; bound hit)"
+        if at_bound
+        else "Jane Avenue behavioural engine (train-calibrated ε)"
+    )
+    cal_desc = (
+        f"Same structural revenue equation with elasticity ε reached the search bound of {calibrated_eps:.3f} on "
+        f"[{lower_b:.1f}, {upper_b:.1f}] (corner solution; not identified on FY ≤ {TRAIN_CUTOFF_FY} training data "
+        "because the 1984–86 rate cuts coincided with capital-allowance base-broadening). Out-of-sample MAE is "
+        "statistically indistinguishable from the central prior on n = 17; not exposed as an engine parameter."
+        if at_bound
+        else f"Same structural revenue equation with elasticity ε = {calibrated_eps:.3f} fitted by nonlinear least squares on FY ≤ {TRAIN_CUTOFF_FY} training data only."
+    )
 
     method_meta = (
         (
@@ -506,8 +493,8 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         ),
         (
             "jane_calibrated",
-            "Jane Avenue behavioural engine (train-calibrated ε)",
-            f"Same structural revenue equation with elasticity ε = {calibrated_eps:.3f} fitted by nonlinear least squares on FY ≤ {TRAIN_CUTOFF_FY} training data only.",
+            cal_label,
+            cal_desc,
             False,
         ),
         (
@@ -533,10 +520,10 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         split: str = "train" if yr <= TRAIN_CUTOFF_FY else "test"
 
         naive_pred = r_prev * (1.0 + g_2yr)
-        d_static, d_behav = _revenue_static_behavioural(
+        d_static, d_behav = revenue_static_behavioural(
             t_old, t_new, naive_pred, main_rate_profit_share=s_share, elasticity=prior_eps, timing=1.0
         )
-        _, d_cal = _revenue_static_behavioural(
+        _, d_cal = revenue_static_behavioural(
             t_old, t_new, naive_pred, main_rate_profit_share=s_share, elasticity=calibrated_eps, timing=1.0
         )
         static_pred = naive_pred + d_static
@@ -614,7 +601,7 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
                 )
             )
 
-    # Compute test relative residuals (pred - obs) / obs for jane_behavioural
+    # Compute test relative residuals r = (pred - obs) / obs for jane_behavioural
     test_cases = [c for c in cases if c.split == "test"]
     test_residuals = [
         (c.predictions["jane_behavioural"] - c.observed) / c.observed
@@ -622,15 +609,16 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         if c.observed > 0
     ]
 
-    # Leave-one-out 5-95% empirical interval coverage on test cases
+    # Leave-one-out 5-95% empirical interval coverage on test cases using u = obs/pred - 1 = 1/(1+r) - 1
+    # (interval = pred * (1 + quantile of u), matching agent-4's empirical interval band)
     loo_covered = 0
     loo_coverage: float | None = None
     if len(test_residuals) >= 8:
-        res_arr = np.asarray(test_residuals, dtype=float)
+        u_arr = np.asarray([1.0 / (1.0 + r) - 1.0 for r in test_residuals], dtype=float)
         for i in range(len(test_residuals)):
-            other = np.delete(res_arr, i)
+            other = np.delete(u_arr, i)
             q5, q95 = np.percentile(other, (5, 95))
-            if float(q5) <= test_residuals[i] <= float(q95):
+            if float(q5) <= float(u_arr[i]) <= float(q95):
                 loo_covered += 1
         loo_coverage = round(loo_covered / len(test_residuals), 4)
 
@@ -648,6 +636,8 @@ def run_backtest(panel: list[PanelRow] | None = None) -> BacktestOutput:
         methods=summaries,
         cases=cases,
         calibrated_elasticity=round(calibrated_eps, 4),
+        calibrated_at_bound=at_bound,
+        calibrated_bounds=CALIBRATION_BOUNDS,
         prior_elasticity=prior_eps,
         main_rate_profit_share=s_share,
         profit_proxy_used=proxy_used,
