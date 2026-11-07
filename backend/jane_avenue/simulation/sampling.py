@@ -1,8 +1,8 @@
 """Owner: agent-4. Draw samples from an `Assumption`'s distribution (MASTER_PROMPT section 9.6).
 
 Every `DistributionKind` is supported. Missing distribution parameters fall back to the assumption's own
-`low` / `value` / `high`, and degenerate distributions (zero spread) return a constant. All samples are clipped to
-`[slider_min, slider_max]` when those bounds are set.
+`low` / `value` / `high`, and degenerate distributions (zero spread) return a constant. When slider bounds are set,
+samples are truncated to `[slider_min, slider_max]` by rejection, with clipping only as a last-resort fallback.
 """
 from __future__ import annotations
 
@@ -56,11 +56,23 @@ def _draw(a: Assumption, n: int, rng: np.random.Generator) -> np.ndarray:
 
 
 def sample(a: Assumption, n: int, rng: np.random.Generator) -> np.ndarray:
-    """Return `n` draws of assumption `a` as a float array of shape (n,), clipped to the slider bounds."""
+    """Return `n` draws of assumption `a` as a float array of shape (n,), truncated to the slider bounds.
+
+    Draws outside `[slider_min, slider_max]` are redrawn from the same distribution (rejection), so the distribution
+    is truncated rather than piled up at the bounds. Any draws still outside after the round limit (only for a
+    distribution with almost no mass inside the bounds) are clipped, so every sample is always within bounds.
+    """
     if n <= 0:
         return np.empty(0)
-    x = np.asarray(_draw(a, n, rng), dtype=float)
-    if a.slider_min is not None or a.slider_max is not None:
-        x = np.clip(x, a.slider_min if a.slider_min is not None else -np.inf,
-                    a.slider_max if a.slider_max is not None else np.inf)
-    return x
+    x = np.array(_draw(a, n, rng), dtype=float)
+    if a.slider_min is None and a.slider_max is None:
+        return x
+    lo = a.slider_min if a.slider_min is not None else -np.inf
+    hi = a.slider_max if a.slider_max is not None else np.inf
+    for _ in range(_MAX_REJECTION_ROUNDS):
+        out_of_bounds = (x < lo) | (x > hi)
+        k = int(out_of_bounds.sum())
+        if k == 0:
+            return x
+        x[out_of_bounds] = _draw(a, k, rng)
+    return np.clip(x, lo, hi)
