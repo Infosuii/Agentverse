@@ -394,3 +394,16 @@ def test_report_001_does_not_double_report_the_markdown_copy(clean_analysis: Ana
     assert a.report is not None
     a.report.markdown = f"# Assessment\n\n## Modelled impacts\n\nReceipts rise by £{x}bn.\n"
     assert report_001(a).affected_ids == ["section.impacts"]
+
+
+@pytest.mark.parametrize(("text", "expected_numbers"), [
+    ("Across 3 studies and 4 major studies.", []),
+    ("In 12 studies it differs.", ["12"]),
+    ("Receipts see 8 percent cuts and rose 7%.", ["8", "7"]),
+])
+def test_without_small_counts_is_the_shared_rule(text: str, expected_numbers: list[str]) -> None:
+    import re
+
+    from jane_avenue.verification.checks.report import without_small_counts
+
+    assert re.findall(r"\d+", without_small_counts(text)) == expected_numbers
