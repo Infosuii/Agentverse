@@ -16,6 +16,7 @@ from ..contracts import (
     Source,
     utcnow,
 )
+from ..verification.checks.report import offending_numbers
 
 MINUS = "−"  # Unicode minus (\u2212), matching frontend/src/lib/format.ts
 
@@ -516,22 +517,55 @@ def build_template_report(
     # 3. Evidence from research
     research_src_ids: list[str] = []
     if analysis.research:
-        r_lines = [analysis.research.summary]
+        def _line_passes_report_001(candidate_line: str) -> bool:
+            probe = PolicyAssessment(
+                title=title,
+                generated_at=utcnow(),
+                generated_by="template",
+                executive_summary="",
+                key_figures=[],
+                sections=[
+                    ReportSection(
+                        section_id="research",
+                        heading="Evidence from research",
+                        body_markdown=candidate_line,
+                    )
+                ],
+                caveats=[],
+                verification_overall=overall,
+                forecast_withheld=withheld,
+                markdown="",
+            )
+            return not offending_numbers(analysis, probe)
+
+        r_lines: list[str] = []
+        if analysis.research.summary and _line_passes_report_001(analysis.research.summary):
+            r_lines.append(analysis.research.summary)
         for ev in analysis.research.evidence:
             sid = ev.source_id
             cite = f"[{sid}]" if sid in source_map else ""
             if sid in source_map:
                 research_src_ids.append(sid)
+            claim_clean = ev.claim.replace("\n", " ").strip().rstrip(".")
             val_part = f" ({ev.value:g} {ev.unit or ''})".rstrip() if ev.value is not None else ""
-            quote_part = f' — *"{ev.quote}"*' if ev.quote else ""
-            r_lines.append(f"- **[{ev.evidence_id}]** {ev.claim}{val_part} {cite}{quote_part}".strip())
+            cite_part = f" {cite}" if cite else ""
+            bullet = f"- **[{ev.evidence_id}]** {claim_clean}{val_part}{cite_part}."
+            if _line_passes_report_001(bullet):
+                r_lines.append(bullet)
         for interp in analysis.research.interpretations:
             ev_refs = ", ".join(f"[{eid}]" for eid in interp.supporting_evidence_ids)
-            r_lines.append(
-                f"- **[AI interpretation · {interp.interpretation_id}]** {interp.statement}"
-                + (f" (supported by {ev_refs})" if ev_refs else "")
+            stmt_clean = interp.statement.replace("\n", " ").strip().rstrip(".")
+            interp_line = (
+                f"- **[AI interpretation · {interp.interpretation_id}]** {stmt_clean}"
+                + (f" (supported by {ev_refs})." if ev_refs else ".")
             )
-        research_body = "\n".join(r_lines)
+            if _line_passes_report_001(interp_line):
+                r_lines.append(interp_line)
+        research_body = (
+            "\n".join(r_lines)
+            if r_lines
+            else "Empirical literature and official-document evidence items are recorded in the Research tab."
+        )
     else:
         research_body = "Live literature and official-document research was skipped or unavailable for this run."
 

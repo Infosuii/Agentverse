@@ -490,6 +490,8 @@ def generate_narrative_report(
     retry once on failure quoting offending snippets, and fall back to `build_template_report`."""
     if is_forecast_withheld(analysis):
         return build_template_report(analysis)
+    if llm_client is None and analysis.mode != "live":
+        return build_template_report(analysis)
 
     client = llm_client or get_llm()
     model_name = narrative_model()
