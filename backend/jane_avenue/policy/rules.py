@@ -1,0 +1,323 @@
+"""Deterministic rules parser: plain English -> `PolicySpec` (MASTER_PROMPT 9.1). Owner: agent-5.
+
+The query is untrusted user text. It is only pattern-matched here, never executed or forwarded as instructions.
+
+Every default the parser fills in, and every interpretation it makes, is recorded in `ambiguities`, and
+`parse_confidence` falls with each one, so the analyst can see and correct what was assumed.
+"""
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+from datetime import date
+
+from ..contracts import BaselineProjection, PolicySpec, PolicyType, TaxName
+
+DEFAULT_HORIZON_YEARS = 5
+MIN_HORIZON_YEARS, MAX_HORIZON_YEARS = 1, 10
+
+_MONTHS = ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
+           "november", "december")
+_UNITS = ("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50}
+_NUMBER_WORDS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+    "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
+    "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+}
+
+_NUM = r"(\d+(?:\.\d+)?)"
+_ARROW = r"(?:to|->|→|=>)"
+
+# Tax detection.
+_CT = re.compile(r"\bcorporation[\s-]*tax\b|\bcorporate\s+(?:income\s+|profits?\s+)?tax(?:es)?\b|\bcompany\s+tax"
+                 r"(?:es)?\b|\bbusiness\s+profits?\s+tax\b|\bct\b")
+_VAT = re.compile(r"\bvat\b|\bvalue[\s-]+added[\s-]+tax\b|\bsales\s+tax\b")
+_SMALL_PROFITS = re.compile(r"\bsmall[\s-]+profits?\b|\bsmall\s+companies(?:'|’)?\s+rate\b")
+_OTHER_TAX = re.compile(r"\b(income tax|national insurance|capital gains tax|inheritance tax|stamp duty|fuel duty|"
+                        r"council tax|business rates|alcohol duty|tobacco duty|wealth tax|carbon tax|"
+                        r"digital services tax|bank levy|windfall tax|energy profits levy)\b")
+
+# Rates. Text is normalised first: "per cent" -> "%", "percentage points" / "points" -> "pp", number words -> digits.
+_FROM_TO = (
+    re.compile(rf"\bfrom\s+{_NUM}\s*%?\s*{_ARROW}\s*{_NUM}\s*%"),        # from 25(%) to 28%
+    re.compile(rf"\bfrom\s+{_NUM}\s*%\s*{_ARROW}\s*{_NUM}(?![\d.]|\s*pp)"),  # from 25% to 28
+    re.compile(rf"(?<![\d.]){_NUM}\s*%\s*{_ARROW}\s*{_NUM}\s*%"),         # 25% to 28%
+)
+# A "strong" target names the new rate ("to 28%"); a "weak" one may name the current rate ("the rate is 25%").
+_TO_STRONG = re.compile(rf"\b(?:to|reach(?:es|ing)?|becomes?|set\s+at|fixed\s+at)\s+(?:a\s+rate\s+of\s+)?{_NUM}\s*%")
+_TO_WEAK = re.compile(rf"\b(?:at|of|be|were|was|is|stood\s+at)\s+(?:a\s+rate\s+of\s+)?{_NUM}\s*%")
+_BY = re.compile(rf"\bby\s+(?:an?\s+)?(?:extra\s+|additional\s+|further\s+|another\s+)?{_NUM}\s*(pp|%)")
+_DELTA_PP = re.compile(rf"(?<![\d.]){_NUM}\s*-?\s*pp\b")
+_ANY_PCT = re.compile(rf"(?<![\d.]){_NUM}\s*%")
+
+_UP = re.compile(r"\b(rais\w*|increas\w*|hik\w*|lift\w*|up|ris(?:e|es|ing)|rose|higher|boost\w*|put\s+up)\b")
+_DOWN = re.compile(r"\b(cut\w*|reduc\w*|lower\w*|decreas\w*|slash\w*|drop\w*|fall\w*|fell|trim\w*)\b")
+
+# Dates.
+_ISO_DATE = re.compile(r"\b(20\d\d)-(\d\d)-(\d\d)\b")
+_FISCAL_YEAR = re.compile(r"\b(20\d\d)\s*[-/–]\s*(\d\d)\b")
+_DAY_MONTH_YEAR = re.compile(rf"\b(?:(\d{{1,2}})(?:st|nd|rd|th)?\s+)?({'|'.join(_MONTHS)})\s+(?:of\s+)?(20\d\d)\b")
+_YEAR = re.compile(r"\b(?:from|in|by|during|for|starting(?:\s+in)?|start\s+of|beginning(?:\s+of)?)\s+(20\d\d)\b")
+_NEXT_YEAR = re.compile(r"\bnext\s+(?:financial\s+|tax\s+|fiscal\s+)?year\b")
+
+# Horizon.
+_HORIZON = (
+    re.compile(r"\bover\s+(?:the\s+)?(?:next\s+|following\s+|first\s+)?(\d{1,3})\s+years?\b"),
+    re.compile(r"\bfor\s+(?:the\s+)?(?:next\s+|following\s+|first\s+)?(\d{1,3})\s+years?\b"),
+    re.compile(r"\b(\d{1,3})\s*-?\s*years?\s+(?:horizon|period|window|forecast|outlook)\b"),
+    re.compile(r"\bhorizon\s+of\s+(\d{1,3})\s+years?\b"),
+)
+
+
+@dataclass
+class _State:
+    ambiguities: list[str] = field(default_factory=list)
+    penalty: float = 0.0
+
+    def note(self, text: str, penalty: float) -> None:
+        if text not in self.ambiguities:
+            self.ambiguities.append(text)
+        self.penalty += penalty
+
+
+def normalise(query: str) -> str:
+    """Lower-case the query and rewrite units and number words into one canonical form for matching."""
+    t = query.lower()
+    t = t.replace("–", "-").replace("—", "-").replace("’", "'").replace("％", "%")
+    t = re.sub(r"\bpercentage[\s-]+points?\b|\bppts?\b|\bpp\b|\bpoints?\b|\bpts?\b", " pp", t)
+    t = re.sub(r"\bper[\s-]*cent\b|\bpercent\b|\bpc\b", "%", t)
+    t = re.sub(r"\bhalf\s+an?\s+pp\b|\bhalf\s+a\s+%", "0.5 pp", t)
+    t = re.sub(r"\ban?\s+(?=pp\b)", "1 ", t)  # "a point" -> "1 pp"
+    # "twenty-eight" -> 28 before single words, so it never becomes "20-8".
+    t = re.sub(rf"\b({'|'.join(_TENS)})[\s-]+({'|'.join(_UNITS)})\b",
+               lambda m: str(_TENS[m.group(1)] + _UNITS.index(m.group(2)) + 1), t)
+    t = re.sub(r"\b(" + "|".join(_NUMBER_WORDS) + r")\b", lambda m: str(_NUMBER_WORDS[m.group(1)]), t)
+    t = re.sub(r"\b(\d+)\s+and\s+an?\s+half\b", lambda m: f"{m.group(1)}.5", t)  # "two and a half" -> 2.5
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def _num(text: str) -> float:
+    return float(text)
+
+
+def _is_rate(x: float) -> bool:
+    return 0 <= x <= 100
+
+
+def _policy_type(t: str, st: _State) -> PolicyType:
+    # The small profits rate exists only in corporation tax, so naming it is enough.
+    has_ct, has_vat = bool(_CT.search(t) or _SMALL_PROFITS.search(t)), bool(_VAT.search(t))
+    if has_ct:
+        if has_vat:
+            st.note("The request also mentions VAT, which is ignored: only corporation tax is modelled.", 0.1)
+        if other := _OTHER_TAX.search(t):
+            st.note(f"The request also mentions {other.group(1)}, which is ignored: only corporation tax is modelled.",
+                    0.1)
+        return "corporation_tax_small_profits_rate" if _SMALL_PROFITS.search(t) else "corporation_tax_main_rate"
+    if has_vat:
+        return "vat_standard_rate"
+    if other := _OTHER_TAX.search(t):
+        st.note(f"{other.group(1).capitalize()} is not supported: only UK corporation tax is modelled.", 0.0)
+    else:
+        st.note("Could not identify a supported tax policy (UK corporation tax main rate).", 0.0)
+    return "unsupported"
+
+
+def _direction(t: str) -> int:
+    """+1 for raise wording, -1 for cut wording, 0 if neither or both."""
+    up, down = bool(_UP.search(t)), bool(_DOWN.search(t))
+    return 1 if up and not down else -1 if down and not up else 0
+
+
+def _rates(t: str, current: float | None, st: _State) -> tuple[float | None, float | None]:
+    """Return (baseline, proposed) in percent, noting every interpretation."""
+    m = next((found for pattern in _FROM_TO if (found := pattern.search(t))), None)
+    if m:
+        baseline, proposed = _num(m.group(1)), _num(m.group(2))
+        if _is_rate(baseline) and _is_rate(proposed):
+            words = _direction(t)
+            implied = (proposed > baseline) - (proposed < baseline)
+            if words and implied and words != implied:
+                st.note(f"The wording suggests a {'rise' if words > 0 else 'cut'}, but the stated rates "
+                        f"({baseline:g}% to {proposed:g}%) imply a {'rise' if implied > 0 else 'cut'}; "
+                        "used the stated rates.", 0.15)
+            if current is not None and baseline != current:
+                st.note(f"The stated starting rate of {baseline:g}% differs from the current rate of {current:g}%; "
+                        "used the stated rate.", 0.05)
+            return baseline, proposed
+
+    strong = _TO_STRONG.search(t)
+    weak = None if strong else _TO_WEAK.search(t)
+    by = _BY.search(t)
+    delta_text, delta_unit = (by.group(1), by.group(2)) if by else (None, None)
+    if delta_text is None and (d := _DELTA_PP.search(t)):
+        delta_text, delta_unit = d.group(1), "pp"
+    delta = _num(delta_text) if delta_text is not None else None
+    if delta_unit == "%":
+        st.note(f"Read 'by {delta_text}%' as {delta_text} percentage points, not a {delta_text}% proportional "
+                "change.", 0.1)
+
+    # "The rate is 25%; raise it by 3 points": with a change stated, a weak target is the starting rate.
+    start = _num(weak.group(1)) if weak and delta is not None and _is_rate(_num(weak.group(1))) else None
+    target = strong or (weak if delta is None else None)
+
+    def assume_current() -> float | None:
+        if current is None:
+            st.note("Baseline rate not stated and no current rate is known for this tax.", 0.2)
+        else:
+            st.note(f"Baseline rate not stated; assumed the current rate of {current:g}%.", 0.1)
+        return current
+
+    if target is not None and _is_rate(_num(target.group(1))):
+        proposed = _num(target.group(1))
+        if delta is not None:  # "raise by 3pp to 28%": the starting rate is implied by the two numbers.
+            sign = _direction(t) or (1 if current is None or proposed >= current else -1)
+            implied_start = round(proposed - sign * delta, 6)
+            if _is_rate(implied_start):
+                if current is not None and implied_start != current:
+                    st.note(f"The implied starting rate of {implied_start:g}% differs from the current rate of "
+                            f"{current:g}%; used the implied rate.", 0.05)
+                return implied_start, proposed
+        baseline = assume_current()
+        words = _direction(t)
+        implied = 0 if baseline is None else (proposed > baseline) - (proposed < baseline)
+        if words and implied and words != implied:
+            st.note(f"The wording suggests a {'rise' if words > 0 else 'cut'}, but {proposed:g}% is "
+                    f"{'above' if implied > 0 else 'below'} the current rate of {baseline:g}%; used {proposed:g}%.",
+                    0.15)
+        return baseline, proposed
+
+    if delta is not None:
+        baseline = start if start is not None else assume_current()
+        if baseline is None:
+            st.note("A change was stated but the starting rate is unknown, so the new rate is unknown.", 0.1)
+            return None, None
+        sign = _direction(t)
+        if sign == 0:
+            sign = 1
+            st.note("Direction of the change not stated; assumed an increase.", 0.25)
+        proposed = round(baseline + sign * delta, 6)
+        if not _is_rate(proposed):
+            st.note(f"A {delta:g}pp change from {baseline:g}% gives an impossible rate of {proposed:g}%.", 0.3)
+            return baseline, None
+        return baseline, proposed
+
+    pcts = [_num(x) for x in _ANY_PCT.findall(t) if _is_rate(_num(x))]
+    if len(pcts) == 1:
+        st.note(f"Read {pcts[0]:g}% as the proposed rate.", 0.15)
+        return assume_current(), pcts[0]
+    if len(pcts) >= 2:
+        st.note(f"Read {pcts[0]:g}% as the current rate and {pcts[1]:g}% as the proposed rate.", 0.2)
+        return pcts[0], pcts[1]
+
+    st.note("No proposed rate found in the request.", 0.5)
+    return None, None
+
+
+def _effective_date(t: str, today: date, st: _State) -> date:
+    if (m := _ISO_DATE.search(t)) and 1 <= int(m.group(2)) <= 12:
+        try:
+            return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+        except ValueError:
+            pass
+    if (m := _FISCAL_YEAR.search(t)) and int(m.group(2)) == (int(m.group(1)) + 1) % 100:
+        year = int(m.group(1))
+        st.note(f"Read the {year}-{m.group(2)} financial year as starting on 1 April {year}.", 0.0)
+        return date(year, 4, 1)
+    if m := _DAY_MONTH_YEAR.search(t):
+        month = _MONTHS.index(m.group(2)) + 1
+        day = int(m.group(1)) if m.group(1) else 1
+        try:
+            return date(int(m.group(3)), month, day)
+        except ValueError:
+            st.note(f"Invalid day {day} in {m.group(2).capitalize()}; used the 1st of the month.", 0.05)
+            return date(int(m.group(3)), month, 1)
+    if m := _YEAR.search(t):
+        year = int(m.group(1))
+        st.note(f"Month not stated; assumed 1 April {year} (start of the CT financial year).", 0.05)
+        return date(year, 4, 1)
+    if _NEXT_YEAR.search(t):
+        st.note(f"Read 'next year' as 1 April {today.year + 1} (start of the CT financial year).", 0.05)
+        return date(today.year + 1, 4, 1)
+    st.note(f"Effective date not stated; assumed 1 April {today.year + 1}.", 0.1)
+    return date(today.year + 1, 4, 1)
+
+
+def _horizon(t: str, st: _State) -> int:
+    for pattern in _HORIZON:
+        if m := pattern.search(t):
+            years = int(m.group(1))
+            clamped = max(MIN_HORIZON_YEARS, min(MAX_HORIZON_YEARS, years))
+            if clamped != years:
+                st.note(f"A {years}-year horizon is outside the supported 1-10 years; used {clamped} years.", 0.05)
+            return clamped
+    st.note(f"Horizon not stated; assumed {DEFAULT_HORIZON_YEARS} years.", 0.05)
+    return DEFAULT_HORIZON_YEARS
+
+
+_TAX_LABEL: dict[PolicyType, str] = {
+    "corporation_tax_main_rate": "CT main rate",
+    "corporation_tax_small_profits_rate": "CT small profits rate",
+    "vat_standard_rate": "VAT standard rate",
+}
+
+
+def describe(policy_type: PolicyType, baseline: float | None, proposed: float | None, effective: date | None,
+             raw_query: str) -> str:
+    """One readable sentence, e.g. "Raise the CT main rate from 25% to 28% from 1 April 2027"."""
+    label = _TAX_LABEL.get(policy_type)
+    if label is None:
+        short = raw_query if len(raw_query) <= 80 else raw_query[:77] + "..."
+        return f"Unsupported request: \"{short}\""
+    when = f" from {effective.day} {effective.strftime('%B %Y')}" if effective else ""
+    if proposed is None:
+        return f"Change the {label}{when} (new rate not stated)"
+    if baseline is None:
+        return f"Set the {label} to {proposed:g}%{when}"
+    verb = "Raise" if proposed > baseline else "Cut" if proposed < baseline else "Keep"
+    if verb == "Keep":
+        return f"Keep the {label} at {proposed:g}%{when}"
+    return f"{verb} the {label} from {baseline:g}% to {proposed:g}%{when}"
+
+
+def parse_rules(query: str, *, baseline: BaselineProjection | None = None, today: date | None = None) -> PolicySpec:
+    """Parse `query` with rules only. `baseline` supplies the current CT rates; `today` anchors relative dates."""
+    raw = query.strip()
+    t = normalise(raw)
+    today = today or date.today()
+    st = _State()
+
+    policy_type = _policy_type(t, st)
+    tax: TaxName | None = {"vat_standard_rate": "vat", "unsupported": None}.get(policy_type, "corporation_tax")  # type: ignore[assignment]
+
+    # Only corporation tax has a known current rate (from the baseline); never borrow it for another tax.
+    current: float | None = None
+    if tax == "corporation_tax" and baseline is not None:
+        current = (baseline.current_small_profits_rate_pct if policy_type == "corporation_tax_small_profits_rate"
+                   else baseline.current_main_rate_pct)
+
+    rate_from, rate_to = _rates(t, current, st)
+    effective = _effective_date(t, today, st)
+    horizon = _horizon(t, st)
+
+    confidence = 1.0 - st.penalty
+    if policy_type == "unsupported":
+        confidence = min(confidence, 0.3)
+    if rate_to is None:
+        confidence = min(confidence, 0.3)
+    confidence = round(max(0.05, min(1.0, confidence)), 2)
+
+    return PolicySpec(
+        policy_type=policy_type,
+        tax=tax,
+        baseline_rate_pct=rate_from,
+        proposed_rate_pct=rate_to,
+        effective_date=effective,
+        horizon_years=horizon,
+        description=describe(policy_type, rate_from, rate_to, effective, raw),
+        raw_query=raw,
+        parse_method="rules",
+        parse_confidence=confidence,
+        ambiguities=st.ambiguities,
+    )

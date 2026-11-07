@@ -1,0 +1,14 @@
+{
+  "dataset_id": "ct_main_rate_history",
+  "title": "Ct Main Rate History",
+  "description": "HMRC Table A.6: Rates of Corporation Tax",
+  "publisher": "HMRC",
+  "source_url": "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/257049/table-a6.pdf",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "HMRC August 2017 / April 2026",
+  "file": "curated/ct_main_rate_history.csv",
+  "source_id": "D-hmrc-history",
+  "is_placeholder": false,
+  "notes": "Table A.6 rows 1982\u20132016; 2017\u20132021 from HMRC 2026 Historical Background; 2022\u20132026 from HMRC current rates table. Starting-rate bands are not represented.\nRaw SHA256: b42283e085497f7d9c4aead60a8c3583753c90d3ae81c49ac9b1a1d7bd310c1d"
+}

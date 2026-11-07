@@ -1,0 +1,14 @@
+{
+  "dataset_id": "ct_costings",
+  "title": "Ct Costings",
+  "description": "Budget 3 March 2021: Table 2.1 row 22",
+  "publisher": "HM Treasury",
+  "source_url": "https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-07",
+  "vintage": "Original HMT Budget 2012 / 2015 / 2021",
+  "file": "curated/ct_costings.csv",
+  "source_id": "D-budget2021",
+  "is_placeholder": false,
+  "notes": "Original HMT tables, \u00a3m/1000, positive=Exchequer revenue. Budget 2021 Table 2.1 row 22; Summer Budget 2015 Table 2.1 row 9 (joint 19/18 percent package, including subsequently reversed 2020 element); Budget 2012 Table 2.1 row 7 printed p50/PDF p51 (joint 2012\u201314 package, linked to 2012 and 2013 changes: do NOT add these duplicated package references together). No isolated causal costings implied. Behavioural inclusion unspecified in these tables: null, not guessed. Earlier unsourced costings are absent, never zero-filled. OBR measures workbook extrapolates original policy effects and is not used as an original costing.\nRaw SHA256: 48ccc15f25dbf227d37ab2fca8b56630767f11cf9a22ac98fe45b9ad5c4ff1f0"
+}
