@@ -1,14 +1,9 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router';
 import {
-  Bar,
-  BarChart,
   CartesianGrid,
-  Legend,
   Line,
   LineChart as RechartsLineChart,
-  ReferenceDot,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
   XAxis,
@@ -22,6 +17,12 @@ import {
   type PrecedentMatch,
   type Source,
 } from '../../api/hooks';
+import {
+  BarCompare,
+  TimelineChart,
+  type BarCompareRow,
+  type BarCompareSeries,
+} from '../../components/charts';
 import {
   Badge,
   Card,
@@ -152,7 +153,7 @@ function PrecedentComparisonCharts({
     return map;
   }, [receiptsLevels]);
 
-  const barRows = useMemo(() => {
+  const barRows = useMemo<BarCompareRow[]>(() => {
     const fys = new Set<string>();
     for (const c of costings) fys.add(c.fiscal_year);
     for (const fy of derivedChangesByFy.keys()) fys.add(fy);
@@ -162,13 +163,36 @@ function PrecedentComparisonCharts({
       const c = costings.find((item) => item.fiscal_year === fy);
       const obsDiff = derivedChangesByFy.get(fy);
       return {
-        fiscalYear: fmtFiscalYear(fy),
+        category: fmtFiscalYear(fy),
         officialCosting: c ? c.value_gbp_bn : null,
         observedChange: obsDiff !== undefined ? obsDiff : null,
         modelScenario: idx === 0 && modelY1Rev !== null ? modelY1Rev : null,
       };
     });
   }, [costings, derivedChangesByFy, modelY1Rev]);
+
+  const barSeries = useMemo<BarCompareSeries[]>(() => {
+    const list: BarCompareSeries[] = [
+      {
+        id: 'officialCosting',
+        label: 'Official costing (ex-ante £bn)',
+        evidenceClass: 'official_costing',
+      },
+      {
+        id: 'observedChange',
+        label: 'Observed receipts YoY Δ (derived £bn)',
+        evidenceClass: 'observed_outcome',
+      },
+    ];
+    if (modelY1Rev !== null) {
+      list.push({
+        id: 'modelScenario',
+        label: 'Current proposal model Y1 (£bn)',
+        evidenceClass: 'model_scenario',
+      });
+    }
+    return list;
+  }, [modelY1Rev]);
 
   if (barRows.length === 0 && pctGdpOutcomes.length === 0 && receiptsLevels.length === 0) {
     return null;
@@ -194,58 +218,17 @@ function PrecedentComparisonCharts({
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {barRows.length > 0 && (
-          <div className="rounded-lg border border-slate-200 bg-white p-3">
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <h5 className="text-xs font-semibold text-slate-900">
-                Official Costing vs Derived Outturn Receipts Change (£bn)
-              </h5>
-              <span className="text-[11px] text-slate-500">Unit: £bn</span>
-            </div>
-            <div className="h-52 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barRows} margin={{ top: 8, right: 12, left: 4, bottom: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="fiscalYear" tick={{ fontSize: 11, fill: '#475569' }} />
-                  <YAxis
-                    tickFormatter={(v: number) => fmtGbpBn(v)}
-                    tick={{ fontSize: 11, fill: '#475569' }}
-                    width={60}
-                  />
-                  <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
-                  <RechartsTooltip
-                    formatter={(val: unknown, name: string) => [
-                      fmtGbpBn(typeof val === 'number' ? val : Number(val)),
-                      name,
-                    ]}
-                  />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                  <Bar
-                    dataKey="officialCosting"
-                    name="Official costing (ex-ante £bn)"
-                    fill={EVIDENCE_CLASS_COLORS.official_costing}
-                    radius={[3, 3, 0, 0]}
-                    isAnimationActive={false}
-                  />
-                  <Bar
-                    dataKey="observedChange"
-                    name="Observed receipts YoY Δ (derived £bn)"
-                    fill={EVIDENCE_CLASS_COLORS.observed_outcome}
-                    radius={[3, 3, 0, 0]}
-                    isAnimationActive={false}
-                  />
-                  {modelY1Rev !== null && (
-                    <Bar
-                      dataKey="modelScenario"
-                      name="Current proposal model Y1 (£bn)"
-                      fill={EVIDENCE_CLASS_COLORS.model_scenario}
-                      radius={[3, 3, 0, 0]}
-                      isAnimationActive={false}
-                    />
-                  )}
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <BarCompare
+            data={barRows}
+            series={barSeries}
+            unit="£bn"
+            title="Official Costing vs Derived Outturn Receipts Change (£bn)"
+            caption="Ex-ante HMT/OBR policy costing (violet) vs derived ONS outturn receipts YoY Δ (slate) vs current model scenario (blue)."
+            evidenceClass="official_costing"
+            xLabel="Fiscal year"
+            height={220}
+            formatValue={(v) => fmtGbpBn(v)}
+          />
         )}
 
         {pctGdpOutcomes.length > 0 && (
@@ -639,80 +622,29 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
           />
         ) : (
           <div className="space-y-3">
-            <div className="h-72 w-full" aria-label="UK Corporation Tax main rate timeline chart">
-              <ResponsiveContainer width="100%" height="100%">
-                <RechartsLineChart
-                  data={timelinePoints}
-                  margin={{ top: 16, right: 24, left: 8, bottom: 16 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis
-                    dataKey="year"
-                    tick={{ fontSize: 11, fill: '#475569' }}
-                  />
-                  <YAxis
-                    domain={[15, 55]}
-                    tickFormatter={(v: number) => `${v}%`}
-                    tick={{ fontSize: 11, fill: '#475569' }}
-                    width={52}
-                  />
-                  <RechartsTooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const pt = payload[0]?.payload as TimelinePoint | undefined;
-                      if (!pt) return null;
-                      return (
-                        <div className="rounded-md border border-slate-300 bg-white p-2.5 text-xs shadow-md">
-                          <div className="font-semibold text-slate-900">
-                            FY {pt.fiscalYear} ({pt.year})
-                          </div>
-                          <div className="mt-0.5 text-slate-700 tabular-nums">
-                            Statutory main rate: <strong>{pt.ratePct}%</strong>
-                          </div>
-                          {pt.changeId && (
-                            <div className="mt-1 border-t border-slate-100 pt-1 text-[11px]">
-                              <span className="font-semibold text-blue-800">
-                                {pt.changeId}: {pt.oldRatePct}% → {pt.newRatePct}%
-                              </span>
-                              {pt.fiscalEvent && (
-                                <span className="block text-slate-600">{pt.fiscalEvent}</span>
-                              )}
-                              {pt.isMatched && (
-                                <span className="mt-0.5 inline-block rounded bg-blue-100 px-1.5 py-0.5 font-semibold text-blue-900">
-                                  Matched precedent
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
-                  />
-                  <Line
-                    type="stepAfter"
-                    dataKey="ratePct"
-                    name="Implemented CT main rate (%)"
-                    stroke={EVIDENCE_CLASS_COLORS.observed_outcome}
-                    strokeWidth={2.5}
-                    dot={false}
-                    isAnimationActive={false}
-                  />
-                  {timelinePoints
-                    .filter((pt) => Boolean(pt.changeId))
-                    .map((pt) => (
-                      <ReferenceDot
-                        key={pt.changeId}
-                        x={pt.year}
-                        y={pt.ratePct}
-                        r={pt.isMatched ? 6 : 3.5}
-                        fill={pt.isMatched ? '#2563eb' : '#64748b'}
-                        stroke="#ffffff"
-                        strokeWidth={1.5}
-                      />
-                    ))}
-                </RechartsLineChart>
-              </ResponsiveContainer>
-            </div>
+            <TimelineChart
+              points={timelinePoints.map((pt) => ({
+                x: pt.year,
+                y: pt.ratePct,
+                label: pt.fiscalYear,
+              }))}
+              events={timelinePoints
+                .filter((pt) => Boolean(pt.changeId))
+                .map((pt) => ({
+                  x: pt.year,
+                  y: pt.ratePct,
+                  label: `${pt.changeId}: ${pt.oldRatePct}% → ${pt.newRatePct}%`,
+                  detail: pt.fiscalEvent ?? undefined,
+                  color: pt.isMatched ? '#2563eb' : '#64748b',
+                }))}
+              unit="%"
+              seriesLabel="Implemented CT main rate (%)"
+              evidenceClass="observed_outcome"
+              xLabel="Year"
+              yLabel="Main rate (%)"
+              height={280}
+              caption="Historical UK statutory corporation tax main rate step-line (1982–present)."
+            />
 
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
               <div className="flex flex-wrap items-center gap-4">

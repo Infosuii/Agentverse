@@ -1,4 +1,3 @@
-import { useId, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,6 +8,7 @@ import {
   type KeyFigure,
   type Source,
 } from '../../api/hooks';
+import { ProvenanceNumber } from '../../components/charts';
 import {
   Badge,
   Card,
@@ -34,99 +34,19 @@ interface FigureProvenanceProps {
 }
 
 function FigureProvenance({ figure, analysisId, sources }: FigureProvenanceProps) {
-  const [open, setOpen] = useState(false);
-  const popoverId = useId();
-
-  const inspectorParams = new URLSearchParams();
-  if (figure.metric) inspectorParams.set('metric', figure.metric);
-  if (figure.fiscal_year) inspectorParams.set('year', figure.fiscal_year);
-  const qs = inspectorParams.toString();
-  const inspectorHref = analysisId
-    ? `/analyses/${analysisId}/assumptions${qs ? `?${qs}` : ''}`
-    : null;
-  const calcStepIds = figure.calc_step_ids ?? [];
-  const sourceIds = figure.source_ids ?? [];
-
   return (
-    <div
-      className="relative inline-block"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
-          setOpen(false);
-        }
-      }}
-    >
-      <button
-        type="button"
-        aria-describedby={open ? popoverId : undefined}
-        onClick={() => setOpen((prev) => !prev)}
-        className="text-left text-xl font-bold tracking-tight text-slate-900 tabular-nums underline decoration-slate-400 decoration-dotted underline-offset-4 hover:text-blue-700 hover:decoration-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-      >
-        {figure.display}
-      </button>
-
-      {open && (
-        <div
-          id={popoverId}
-          role="dialog"
-          aria-label={`Provenance for ${figure.label}`}
-          className="absolute bottom-full left-0 z-50 mb-2 w-72 rounded-lg border border-slate-200 bg-white p-3 text-xs text-slate-700 shadow-lg"
-        >
-          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
-            <span className="font-semibold text-slate-900 tabular-nums">{figure.display}</span>
-            <EvidenceBadge evidenceClass={figure.evidence_class} short />
-          </div>
-
-          <div className="mt-2 space-y-2">
-            {calcStepIds.length > 0 && (
-              <div>
-                <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
-                  Calculation steps
-                </div>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {calcStepIds.map((stepId) => (
-                    <code
-                      key={stepId}
-                      className="rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 font-mono text-[10px] text-blue-800"
-                    >
-                      {stepId}
-                    </code>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {sourceIds.length > 0 && (
-              <div>
-                <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
-                  Sources
-                </div>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {sourceIds.map((sid) => (
-                    <SourceChip key={sid} sourceId={sid} sources={sources} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {inspectorHref && figure.evidence_class === 'model_scenario' && (
-              <div className="border-t border-slate-100 pt-2">
-                <Link
-                  to={inspectorHref}
-                  className="inline-flex items-center gap-1 font-medium text-blue-700 hover:text-blue-800 hover:underline"
-                >
-                  <span>Open in Calculation Inspector</span>
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+    <ProvenanceNumber
+      value={figure.value}
+      display={figure.display}
+      calcStepIds={figure.calc_step_ids ?? []}
+      sources={figure.source_ids ?? []}
+      allSources={sources}
+      evidenceClass={figure.evidence_class}
+      analysisId={figure.evidence_class === 'model_scenario' ? analysisId : undefined}
+      metric={figure.metric ?? undefined}
+      year={figure.fiscal_year ?? undefined}
+      className="text-xl font-bold tracking-tight text-slate-900"
+    />
   );
 }
 

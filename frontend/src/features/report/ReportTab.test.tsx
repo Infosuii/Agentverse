@@ -116,7 +116,7 @@ describe('ReportTab', () => {
     fireEvent.click(figBtn);
 
     expect(screen.getByText('STEP-CENTRAL-2027-28-BEHAV')).toBeInTheDocument();
-    const calcInspectorLink = screen.getByRole('link', { name: /Open in Calculation Inspector/i });
+    const calcInspectorLink = screen.getByRole('link', { name: /Inspect in Calculation Inspector/i });
     expect(calcInspectorLink).toHaveAttribute(
       'href',
       '/analyses/A-REP-01/assumptions?metric=revenue_behavioural_gbp_bn&year=2027-28',
