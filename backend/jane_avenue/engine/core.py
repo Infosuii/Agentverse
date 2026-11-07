@@ -19,18 +19,24 @@ import numpy as np
 
 from ..contracts import METRIC_NAMES, BaselineProjection, PolicySpec, fiscal_year_of, fiscal_year_range
 
-# Statutory capital-allowance constants (UK, Capital Allowances Act 2001 as amended):
-# - Main-pool writing-down allowance: 18% a year on a reducing balance.
-#   gov.uk "Claim capital allowances: Writing down allowances" (https://www.gov.uk/work-out-capital-allowances/rates-and-pools)
+# Statutory capital-allowance constants (UK, Capital Allowances Act 2001 as amended), verified on gov.uk 2026-11-07:
+# - Main-pool writing-down allowance: 18% a year, reducing balance. HMRC helpsheet HS252 (2026), "Writing down
+#   allowances": "main pool rate — 18%" (special rate pool 6%). Source D-lit-hmrc2026hs252.
 MAIN_POOL_WDA = 0.18
-# - Structures and buildings allowance: 3% a year straight line on qualifying cost, for contracts from 1 April 2020
-#   (33 1/3 years). gov.uk "Claiming capital allowances for structures and buildings"
-#   (https://www.gov.uk/guidance/claiming-capital-allowances-for-structures-and-buildings)
+# - Structures and buildings allowance: 3% a year straight line (33 1/3 years); raised from 2% to 3% "From 1 April
+#   2020 for the purposes of corporation tax" (HMRC policy paper on the SBA rate increase). Source D-lit-hmrc2020.
 SBA_RATE = 0.03
-# - Full expensing: 100% first-year allowance on new, unused main-pool plant and machinery bought by companies from
-#   1 April 2023 (made permanent from Autumn Statement 2023). Assets outside it (used, leased-out, special rate pool at
-#   50% FYA, unincorporated businesses) fall back to the WDA; `full_expensing_coverage` is the covered share.
-#   gov.uk "Full expensing" (https://www.gov.uk/guidance/capital-allowances-full-expensing-and-50-first-year-allowance)
+# - Full expensing: 100% first-year allowance for companies on new and unused main-rate plant or machinery bought on or
+#   after 1 April 2023; not cars, not assets bought to lease; special-rate assets get a 50% first-year allowance
+#   (HMRC "Check if you can claim full expensing or 50% first-year allowances"). Source D-lit-hmrc2023. Assets
+#   outside it fall back to the WDA; `full_expensing_coverage` is the covered share.
+STATUTORY_SOURCE_IDS: dict[str, str] = {
+    "main_pool_wda": "D-lit-hmrc2026hs252", "sba_rate": "D-lit-hmrc2020", "full_expensing": "D-lit-hmrc2023",
+}
+# Devereux-Griffith effective tax rates for the representative investment use a pre-tax real return of 20%, as in
+# Hanappi (2018), OECD Taxation Working Paper 38, Tables 1-A/1-B. Source D-lit-hanappi2018.
+DG_PRE_TAX_RETURN = 0.20
+DG_SOURCE_ID = "D-lit-hanappi2018"
 
 ASSETS: tuple[str, ...] = ("plant_machinery", "structures", "intangibles")
 SHARE_DRIFT_TOLERANCE = 0.01  # |Σ shares − 1| below this is renormalised with a warning; above it is an error
@@ -101,6 +107,21 @@ def allowance_pv_structures(real_required_return):
 def user_cost(t, z, r, delta):
     """Hall–Jorgenson / King–Fullerton user cost of capital: c(t) = (r + δ)(1 − t·z)/(1 − t)."""
     return (r + delta) * (1.0 - t * z) / (1.0 - t)
+
+
+def devereux_griffith(t, z, r, delta, p: float = DG_PRE_TAX_RETURN):
+    """Devereux-Griffith cost of capital, EMTR and EATR for one asset (equity finance, no inflation).
+
+    Investment of 1 now; returns (p + δ) a year on capital depreciating at δ; allowances worth A = t·z.
+      cost of capital p̃ = (1 − t·z)(r + δ)/(1 − t) − δ        (the user cost minus δ)
+      EMTR = (p̃ − r)/p̃
+      EATR = [(p − r) − (p + δ)(1 − t) + (1 − t·z)(r + δ)] / p  (= (R* − R)·(r + δ)/p)
+    With full expensing (z = 1), p̃ = r so EMTR = 0 and EATR = t·(p − r)/p.
+    """
+    p_tilde = user_cost(t, z, r, delta) - delta
+    emtr = (p_tilde - r) / p_tilde
+    eatr = ((p - r) - (p + delta) * (1.0 - t) + (1.0 - t * z) * (r + delta)) / p
+    return p_tilde, emtr, eatr
 
 
 # ----------------------------------------------------------------------------------------------------------------------
