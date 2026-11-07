@@ -48,7 +48,7 @@ def test_percentiles_are_ordered_and_histograms_complete(full_engine, demo_polic
 def test_interval_semantics(full_engine, demo_policy, params, baseline):
     mc = monte_carlo(demo_policy, params, baseline, draws=100)
     assert mc.interval_kind == "assumption_range"
-    assert mc.interval_note == INTERVAL_NOTE == VERBATIM_NOTE
+    assert INTERVAL_NOTE == VERBATIM_NOTE and mc.interval_note.startswith(VERBATIM_NOTE + " (MC s.e. of")
     assert mc.empirical_interval is None
     assert mc.sampled_parameters == [n for n, p in params.items() if p.distribution.kind != "fixed"]
 
@@ -149,5 +149,5 @@ def test_sample_bundle_fixture_matches_the_contract():
     raw = json.loads((pathlib.Path(__file__).parent / "fixtures" / "sample_bundle.json").read_text(encoding="utf-8"))
     bundle = SimulationBundle.model_validate(raw)
     assert [s.scenario.name for s in bundle.scenarios] == ["central", "optimistic", "pessimistic"]
-    assert bundle.monte_carlo and bundle.monte_carlo.interval_note == VERBATIM_NOTE
+    assert bundle.monte_carlo and bundle.monte_carlo.interval_note.startswith(VERBATIM_NOTE)
     assert len(bundle.sensitivity) == 3
