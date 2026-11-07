@@ -75,6 +75,31 @@ describe('AssumptionsTab & Calculation Inspector', () => {
     expect(getCalcStepDependencyRank(SAMPLE_CALC_STEPS[4]!)).toBe(4); // behav
     expect(getCalcStepDependencyRank(SAMPLE_CALC_STEPS[0]!)).toBe(8); // dynamic
 
+    expect(
+      getCalcStepDependencyRank({
+        step_id: 'etr.emtr.baseline',
+        label: 'Effective marginal tax rate at 25% (representative investment)',
+        formula: 'EMTR = (p̃ − r)/p̃',
+        inputs: { r: 0.05 },
+        output: 21.4,
+        unit: '%',
+        parameter_names: ['real_required_return'],
+        source_ids: ['L-devereux-griffith-2003'],
+      }),
+    ).toBe(1);
+    expect(
+      getCalcStepDependencyRank({
+        step_id: 'etr.eatr.proposed',
+        label: 'Effective average tax rate at 28% (representative investment)',
+        formula: 'EATR = ...',
+        inputs: { p: 0.2, r: 0.05 },
+        output: 26.8,
+        unit: '%',
+        parameter_names: ['real_required_return'],
+        source_ids: ['L-devereux-griffith-2003'],
+      }),
+    ).toBe(1);
+
     const sorted = filterAndSortCalcSteps(
       SAMPLE_CALC_STEPS,
       'revenue_dynamic_gbp_bn',

@@ -206,18 +206,23 @@ export function getCalcStepDependencyRank(step: CalcStep): number {
   const label = step.label.toLowerCase();
   const formula = step.formula.toLowerCase();
 
-  // 1. User-cost & allowance PV steps
+  // 1. User-cost, allowance PV & Devereux-Griffith EMTR/EATR steps
   if (
     id.startsWith('inv.allowance_pv') ||
     id.startsWith('inv.user_cost') ||
+    id.startsWith('etr.') ||
     id.includes('ucc') ||
     id.includes('user_cost') ||
     id.includes('cost_of_capital') ||
+    id.includes('emtr') ||
+    id.includes('eatr') ||
     id.includes('z_') ||
     id.includes('c_') ||
     label.includes('user cost') ||
     label.includes('allowance') ||
-    label.includes('cost of capital')
+    label.includes('cost of capital') ||
+    label.includes('effective marginal tax rate') ||
+    label.includes('effective average tax rate')
   ) {
     return 1;
   }
