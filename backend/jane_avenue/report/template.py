@@ -19,6 +19,26 @@ from ..contracts import (
 
 MINUS = "−"  # Unicode minus (\u2212), matching frontend/src/lib/format.ts
 
+SECTION_ORDER = (
+    "executive_summary",
+    "policy",
+    "research",
+    "precedents",
+    "modelled_impacts",
+    "uncertainty",
+    "verification",
+    "limitations",
+    "references",
+)
+
+
+def compose_full_markdown(title: str, sections: list[ReportSection]) -> str:
+    """Compose the full markdown document from title and sections."""
+    md_parts = [f"# {title}"]
+    for sec in sections:
+        md_parts.append(f"## {sec.heading}\n\n{sec.body_markdown}")
+    return "\n\n".join(md_parts) + "\n"
+
 
 def fmt_gbp_bn(value: float, dp: int = 1) -> str:
     """Format £ billions matching frontend fmtGbpBn: fmt_gbp_bn(3.1) -> '£3.1bn', fmt_gbp_bn(-0.4) -> '−£0.4bn'."""
@@ -424,6 +444,7 @@ def build_template_report(
             f"Quantitative model projections are withheld for this request ({reasons_str}). "
             "Empirical evidence from research and historical UK corporation tax precedents are summarised below."
         )
+        exec_section_body = executive_summary
     elif f_y1 and f_fin:
         exec_fig_ids.extend([f_y1.figure_id, f_fin.figure_id])
         exec_src_ids.extend(f_y1.source_ids + f_fin.source_ids)
@@ -444,15 +465,21 @@ def build_template_report(
         executive_summary = (
             f"Under the central scenario assumptions, the proposed policy is estimated to change Exchequer "
             f"corporation tax revenue (behavioural) by {f_y1.display} in {f_y1.fiscal_year} and by "
+            f"{f_fin.display} in {f_fin.fiscal_year}.{inv_gdp_clause}"
+        )
+        exec_section_body = (
+            f"Under the central scenario assumptions, the proposed policy is estimated to change Exchequer "
+            f"corporation tax revenue (behavioural) by {f_y1.display} in {f_y1.fiscal_year} and by "
             f"{f_fin.display} in {f_fin.fiscal_year}{range_clause}.{inv_gdp_clause}"
         )
     else:
         executive_summary = "Policy assessment generated under deterministic template rules."
+        exec_section_body = executive_summary
 
     exec_section = ReportSection(
         section_id="executive_summary",
         heading="1. Executive summary",
-        body_markdown=executive_summary,
+        body_markdown=exec_section_body,
         source_ids=remember_sources(exec_src_ids),
         figure_ids=exec_fig_ids,
     )
