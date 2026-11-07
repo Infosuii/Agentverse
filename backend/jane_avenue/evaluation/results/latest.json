@@ -1,0 +1,813 @@
+{
+  "generated_at": "2026-11-07T18:38:11.166407Z",
+  "dataset_version": "10bb93bda87c",
+  "target_description": "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal) predicted from information at fiscal year y-1, conditioning on realised 2-year profit growth (`pnfc_gos`) from y-1 to y+1. This conditional design isolates tax-policy response modelling from macroeconomic forecast error. Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 (FY2008-09 to FY2024-25). Leave-one-out 90% (5th–95th percentile) empirical residual interval coverage on FY2008-09 to FY2024-25: 15/17 (88.2%).",
+  "methods": [
+    {
+      "method": "naive_growth",
+      "label": "Naive profit-growth baseline",
+      "description": "R̂_{y+1} = R_{y-1} × (1 + g_{y-1→y+1}), assuming receipts grow one-for-one with the profit proxy and ignoring tax-rate changes.",
+      "split": "train",
+      "n": 25,
+      "mae": 3.9433,
+      "rmse": 4.8185,
+      "mape_pct": 15.9158,
+      "directional_accuracy": 0.0,
+      "is_baseline": true
+    },
+    {
+      "method": "static",
+      "label": "Static tax-rate scaling baseline",
+      "description": "R̂_{y+1} = naive × (s·t_new/t_old + (1−s)), scaling the main-rate share s of receipts proportionally to the statutory rate change with zero behavioural response.",
+      "split": "train",
+      "n": 25,
+      "mae": 4.1653,
+      "rmse": 4.9258,
+      "mape_pct": 17.702,
+      "directional_accuracy": 0.3333,
+      "is_baseline": true
+    },
+    {
+      "method": "jane_behavioural",
+      "label": "Jane Avenue behavioural engine (central prior ε)",
+      "description": "Engine static + behavioural revenue equation with central taxable-profit elasticity ε = 0.20 and main-rate profit share s = 0.85.",
+      "split": "train",
+      "n": 25,
+      "mae": 4.1329,
+      "rmse": 4.9013,
+      "mape_pct": 17.4412,
+      "directional_accuracy": 0.3333,
+      "is_baseline": false
+    },
+    {
+      "method": "jane_calibrated",
+      "label": "Jane Avenue behavioural engine (train-calibrated ε)",
+      "description": "Same structural revenue equation with elasticity ε = 1.500 fitted by nonlinear least squares on FY ≤ 2007 training data only.",
+      "split": "train",
+      "n": 25,
+      "mae": 3.911,
+      "rmse": 4.7798,
+      "mape_pct": 15.5975,
+      "directional_accuracy": 0.5,
+      "is_baseline": false
+    },
+    {
+      "method": "linear_regression",
+      "label": "Log-change OLS baseline",
+      "description": "OLS regression of log(R_{y+1}/R_{y-1}) on statutory rate change Δt and log(1+g) fitted on FY ≤ 2007 training data only.",
+      "split": "train",
+      "n": 25,
+      "mae": 3.8025,
+      "rmse": 4.8831,
+      "mape_pct": 14.3358,
+      "directional_accuracy": 0.5833,
+      "is_baseline": true
+    },
+    {
+      "method": "naive_growth",
+      "label": "Naive profit-growth baseline",
+      "description": "R̂_{y+1} = R_{y-1} × (1 + g_{y-1→y+1}), assuming receipts grow one-for-one with the profit proxy and ignoring tax-rate changes.",
+      "split": "test",
+      "n": 17,
+      "mae": 6.5616,
+      "rmse": 8.2466,
+      "mape_pct": 11.0949,
+      "directional_accuracy": 0.0,
+      "is_baseline": true
+    },
+    {
+      "method": "static",
+      "label": "Static tax-rate scaling baseline",
+      "description": "R̂_{y+1} = naive × (s·t_new/t_old + (1−s)), scaling the main-rate share s of receipts proportionally to the statutory rate change with zero behavioural response.",
+      "split": "test",
+      "n": 17,
+      "mae": 5.6469,
+      "rmse": 7.1861,
+      "mape_pct": 9.4565,
+      "directional_accuracy": 0.5455,
+      "is_baseline": true
+    },
+    {
+      "method": "jane_behavioural",
+      "label": "Jane Avenue behavioural engine (central prior ε)",
+      "description": "Engine static + behavioural revenue equation with central taxable-profit elasticity ε = 0.20 and main-rate profit share s = 0.85.",
+      "split": "test",
+      "n": 17,
+      "mae": 5.4788,
+      "rmse": 7.008,
+      "mape_pct": 9.288,
+      "directional_accuracy": 0.5455,
+      "is_baseline": false
+    },
+    {
+      "method": "jane_calibrated",
+      "label": "Jane Avenue behavioural engine (train-calibrated ε)",
+      "description": "Same structural revenue equation with elasticity ε = 1.500 fitted by nonlinear least squares on FY ≤ 2007 training data only.",
+      "split": "test",
+      "n": 17,
+      "mae": 5.2863,
+      "rmse": 6.6816,
+      "mape_pct": 9.4335,
+      "directional_accuracy": 0.5455,
+      "is_baseline": false
+    },
+    {
+      "method": "linear_regression",
+      "label": "Log-change OLS baseline",
+      "description": "OLS regression of log(R_{y+1}/R_{y-1}) on statutory rate change Δt and log(1+g) fitted on FY ≤ 2007 training data only.",
+      "split": "test",
+      "n": 17,
+      "mae": 8.3531,
+      "rmse": 10.9031,
+      "mape_pct": 13.891,
+      "directional_accuracy": 0.4545,
+      "is_baseline": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "CT-MAIN-1983",
+      "fiscal_year": "1983-84",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1984-85)",
+      "observed": 8.341,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 7.5534,
+        "static": 6.6891,
+        "jane_behavioural": 6.8425,
+        "jane_calibrated": 7.9478,
+        "linear_regression": 9.2469
+      },
+      "notes": "Info year 1982-83 (R=5.68bn, t=52.0%) → target 1984-85 (t=45.0%, Δt=-7.0pp, 2yr profit growth=+33.0%). Rate-change event CT-MAIN-1983: implied static ΔR=-0.86bn, behavioural ΔR=-0.71bn vs naive."
+    },
+    {
+      "case_id": "CT-MAIN-1984",
+      "fiscal_year": "1984-85",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1985-86)",
+      "observed": 10.708,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 8.3993,
+        "static": 6.9715,
+        "jane_behavioural": 7.1836,
+        "jane_calibrated": 8.7679,
+        "linear_regression": 11.0217
+      },
+      "notes": "Info year 1983-84 (R=6.18bn, t=50.0%) → target 1985-86 (t=40.0%, Δt=-10.0pp, 2yr profit growth=+35.8%). Rate-change event CT-MAIN-1984: implied static ΔR=-1.43bn, behavioural ΔR=-1.22bn vs naive."
+    },
+    {
+      "case_id": "CT-MAIN-1985",
+      "fiscal_year": "1985-86",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1986-87)",
+      "observed": 13.495,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 9.7197,
+        "static": 7.8837,
+        "jane_behavioural": 8.102,
+        "jane_calibrated": 9.7136,
+        "linear_regression": 12.1724
+      },
+      "notes": "Info year 1984-85 (R=8.34bn, t=45.0%) → target 1986-87 (t=35.0%, Δt=-10.0pp, 2yr profit growth=+16.5%). Rate-change event CT-MAIN-1985: implied static ΔR=-1.84bn, behavioural ΔR=-1.62bn vs naive."
+    },
+    {
+      "case_id": "CT-MAIN-1986",
+      "fiscal_year": "1986-87",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1987-88)",
+      "observed": 15.734,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 12.9018,
+        "static": 11.531,
+        "jane_behavioural": 11.6859,
+        "jane_calibrated": 12.7551,
+        "linear_regression": 14.6951
+      },
+      "notes": "Info year 1985-86 (R=10.71bn, t=40.0%) → target 1987-88 (t=35.0%, Δt=-5.0pp, 2yr profit growth=+20.5%). Rate-change event CT-MAIN-1986: implied static ΔR=-1.37bn, behavioural ΔR=-1.22bn vs naive."
+    },
+    {
+      "case_id": "FY-1987-88",
+      "fiscal_year": "1987-88",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1988-89)",
+      "observed": 18.537,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 18.6081,
+        "static": 18.6081,
+        "jane_behavioural": 18.6081,
+        "jane_calibrated": 18.6081,
+        "linear_regression": 19.8815
+      },
+      "notes": "Info year 1986-87 (R=13.50bn, t=35.0%) → target 1988-89 (t=35.0%, Δt=+0.0pp, 2yr profit growth=+37.9%)."
+    },
+    {
+      "case_id": "FY-1988-89",
+      "fiscal_year": "1988-89",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1989-90)",
+      "observed": 21.495,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 19.9852,
+        "static": 19.9852,
+        "jane_behavioural": 19.9852,
+        "jane_calibrated": 19.9852,
+        "linear_regression": 20.8252
+      },
+      "notes": "Info year 1987-88 (R=15.73bn, t=35.0%) → target 1989-90 (t=35.0%, Δt=+0.0pp, 2yr profit growth=+27.0%)."
+    },
+    {
+      "case_id": "FY-1989-90",
+      "fiscal_year": "1989-90",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1990-91)",
+      "observed": 21.495,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 21.7494,
+        "static": 21.2212,
+        "jane_behavioural": 21.2761,
+        "jane_calibrated": 21.6372,
+        "linear_regression": 22.5918
+      },
+      "notes": "Info year 1988-89 (R=18.54bn, t=35.0%) → target 1990-91 (t=34.0%, Δt=-1.0pp, 2yr profit growth=+17.3%)."
+    },
+    {
+      "case_id": "CT-MAIN-1990",
+      "fiscal_year": "1990-91",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1991-92)",
+      "observed": 18.263,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 22.3531,
+        "static": 21.2673,
+        "jane_behavioural": 21.3763,
+        "jane_calibrated": 22.1005,
+        "linear_regression": 22.8558
+      },
+      "notes": "Info year 1989-90 (R=21.50bn, t=35.0%) → target 1991-92 (t=33.0%, Δt=-2.0pp, 2yr profit growth=+4.0%). Rate-change event CT-MAIN-1990: implied static ΔR=-1.09bn, behavioural ΔR=-0.98bn vs naive."
+    },
+    {
+      "case_id": "CT-MAIN-1991",
+      "fiscal_year": "1991-92",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1992-93)",
+      "observed": 15.783,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 21.5507,
+        "static": 21.0119,
+        "jane_behavioural": 21.0655,
+        "jane_calibrated": 21.4175,
+        "linear_regression": 21.3382
+      },
+      "notes": "Info year 1990-91 (R=21.50bn, t=34.0%) → target 1992-93 (t=33.0%, Δt=-1.0pp, 2yr profit growth=+0.3%). Rate-change event CT-MAIN-1991: implied static ΔR=-0.54bn, behavioural ΔR=-0.49bn vs naive."
+    },
+    {
+      "case_id": "FY-1992-93",
+      "fiscal_year": "1992-93",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1993-94)",
+      "observed": 14.887,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 20.1646,
+        "static": 20.1646,
+        "jane_behavioural": 20.1646,
+        "jane_calibrated": 20.1646,
+        "linear_regression": 20.1338
+      },
+      "notes": "Info year 1991-92 (R=18.26bn, t=33.0%) → target 1993-94 (t=33.0%, Δt=+0.0pp, 2yr profit growth=+10.4%)."
+    },
+    {
+      "case_id": "FY-1993-94",
+      "fiscal_year": "1993-94",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1994-95)",
+      "observed": 19.39,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 18.3248,
+        "static": 18.3248,
+        "jane_behavioural": 18.3248,
+        "jane_calibrated": 18.3248,
+        "linear_regression": 18.5793
+      },
+      "notes": "Info year 1992-93 (R=15.78bn, t=33.0%) → target 1994-95 (t=33.0%, Δt=+0.0pp, 2yr profit growth=+16.1%)."
+    },
+    {
+      "case_id": "FY-1994-95",
+      "fiscal_year": "1994-95",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1995-96)",
+      "observed": 23.569,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 17.1261,
+        "static": 17.1261,
+        "jane_behavioural": 17.1261,
+        "jane_calibrated": 17.1261,
+        "linear_regression": 17.3154
+      },
+      "notes": "Info year 1993-94 (R=14.89bn, t=33.0%) → target 1995-96 (t=33.0%, Δt=+0.0pp, 2yr profit growth=+15.0%)."
+    },
+    {
+      "case_id": "FY-1995-96",
+      "fiscal_year": "1995-96",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1996-97)",
+      "observed": 27.787,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 23.299,
+        "static": 23.299,
+        "jane_behavioural": 23.299,
+        "jane_calibrated": 23.299,
+        "linear_regression": 23.871
+      },
+      "notes": "Info year 1994-95 (R=19.39bn, t=33.0%) → target 1996-97 (t=33.0%, Δt=+0.0pp, 2yr profit growth=+20.2%)."
+    },
+    {
+      "case_id": "FY-1996-97",
+      "fiscal_year": "1996-97",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1997-98)",
+      "observed": 30.437,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 26.9134,
+        "static": 25.527,
+        "jane_behavioural": 25.6538,
+        "jane_calibrated": 26.4963,
+        "linear_regression": 28.3145
+      },
+      "notes": "Info year 1995-96 (R=23.57bn, t=33.0%) → target 1997-98 (t=31.0%, Δt=-2.0pp, 2yr profit growth=+14.2%)."
+    },
+    {
+      "case_id": "CT-MAIN-1997",
+      "fiscal_year": "1997-98",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1998-99)",
+      "observed": 30.032,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 28.6907,
+        "static": 27.2127,
+        "jane_behavioural": 27.3479,
+        "jane_calibrated": 28.2461,
+        "linear_regression": 29.2723
+      },
+      "notes": "Info year 1996-97 (R=27.79bn, t=33.0%) → target 1998-99 (t=31.0%, Δt=-2.0pp, 2yr profit growth=+3.3%). Rate-change event CT-MAIN-1997: implied static ΔR=-1.48bn, behavioural ΔR=-1.34bn vs naive."
+    },
+    {
+      "case_id": "FY-1998-99",
+      "fiscal_year": "1998-99",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (1999-00)",
+      "observed": 34.322,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 30.497,
+        "static": 29.6608,
+        "jane_behavioural": 29.7331,
+        "jane_calibrated": 30.2081,
+        "linear_regression": 30.1906
+      },
+      "notes": "Info year 1997-98 (R=30.44bn, t=31.0%) → target 1999-00 (t=30.0%, Δt=-1.0pp, 2yr profit growth=+0.2%)."
+    },
+    {
+      "case_id": "CT-MAIN-1999",
+      "fiscal_year": "1999-00",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2000-01)",
+      "observed": 32.421,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 29.4366,
+        "static": 28.6295,
+        "jane_behavioural": 28.6993,
+        "jane_calibrated": 29.1578,
+        "linear_regression": 28.9463
+      },
+      "notes": "Info year 1998-99 (R=30.03bn, t=31.0%) → target 2000-01 (t=30.0%, Δt=-1.0pp, 2yr profit growth=-2.0%). Rate-change event CT-MAIN-1999: implied static ΔR=-0.81bn, behavioural ΔR=-0.74bn vs naive."
+    },
+    {
+      "case_id": "FY-2000-01",
+      "fiscal_year": "2000-01",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2001-02)",
+      "observed": 32.062,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 36.5378,
+        "static": 36.5378,
+        "jane_behavioural": 36.5378,
+        "jane_calibrated": 36.5378,
+        "linear_regression": 36.0787
+      },
+      "notes": "Info year 1999-00 (R=34.32bn, t=30.0%) → target 2001-02 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+6.5%)."
+    },
+    {
+      "case_id": "FY-2001-02",
+      "fiscal_year": "2001-02",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2002-03)",
+      "observed": 29.487,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 36.6632,
+        "static": 36.6632,
+        "jane_behavioural": 36.6632,
+        "jane_calibrated": 36.6632,
+        "linear_regression": 36.875
+      },
+      "notes": "Info year 2000-01 (R=32.42bn, t=30.0%) → target 2002-03 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+13.1%)."
+    },
+    {
+      "case_id": "FY-2002-03",
+      "fiscal_year": "2002-03",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2003-04)",
+      "observed": 28.464,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 36.1386,
+        "static": 36.1386,
+        "jane_behavioural": 36.1386,
+        "jane_calibrated": 36.1386,
+        "linear_regression": 36.3112
+      },
+      "notes": "Info year 2001-02 (R=32.06bn, t=30.0%) → target 2003-04 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+12.7%)."
+    },
+    {
+      "case_id": "FY-2003-04",
+      "fiscal_year": "2003-04",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2004-05)",
+      "observed": 34.022,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 32.3905,
+        "static": 32.3905,
+        "jane_behavioural": 32.3905,
+        "jane_calibrated": 32.3905,
+        "linear_regression": 32.2906
+      },
+      "notes": "Info year 2002-03 (R=29.49bn, t=30.0%) → target 2004-05 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+9.8%)."
+    },
+    {
+      "case_id": "FY-2004-05",
+      "fiscal_year": "2004-05",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2005-06)",
+      "observed": 42.309,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 30.9891,
+        "static": 30.9891,
+        "jane_behavioural": 30.9891,
+        "jane_calibrated": 30.9891,
+        "linear_regression": 30.8097
+      },
+      "notes": "Info year 2003-04 (R=28.46bn, t=30.0%) → target 2005-06 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+8.9%)."
+    },
+    {
+      "case_id": "FY-2005-06",
+      "fiscal_year": "2005-06",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2006-07)",
+      "observed": 44.827,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 36.5986,
+        "static": 36.5986,
+        "jane_behavioural": 36.5986,
+        "jane_calibrated": 36.5986,
+        "linear_regression": 36.2539
+      },
+      "notes": "Info year 2004-05 (R=34.02bn, t=30.0%) → target 2006-07 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+7.6%)."
+    },
+    {
+      "case_id": "FY-2006-07",
+      "fiscal_year": "2006-07",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2007-08)",
+      "observed": 47.031,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 45.6828,
+        "static": 45.6828,
+        "jane_behavioural": 45.6828,
+        "jane_calibrated": 45.6828,
+        "linear_regression": 45.3039
+      },
+      "notes": "Info year 2005-06 (R=42.31bn, t=30.0%) → target 2007-08 (t=30.0%, Δt=+0.0pp, 2yr profit growth=+8.0%)."
+    },
+    {
+      "case_id": "FY-2007-08",
+      "fiscal_year": "2007-08",
+      "split": "train",
+      "target": "ct_receipts_gbp_bn (2008-09)",
+      "observed": 43.929,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 50.3109,
+        "static": 47.4599,
+        "jane_behavioural": 47.6854,
+        "jane_calibrated": 49.1827,
+        "linear_regression": 52.652
+      },
+      "notes": "Info year 2006-07 (R=44.83bn, t=30.0%) → target 2008-09 (t=28.0%, Δt=-2.0pp, 2yr profit growth=+12.2%)."
+    },
+    {
+      "case_id": "CT-MAIN-2008",
+      "fiscal_year": "2008-09",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2009-10)",
+      "observed": 36.633,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 45.4503,
+        "static": 42.8748,
+        "jane_behavioural": 43.0785,
+        "jane_calibrated": 44.4311,
+        "linear_regression": 45.4457
+      },
+      "notes": "Info year 2007-08 (R=47.03bn, t=30.0%) → target 2009-10 (t=28.0%, Δt=-2.0pp, 2yr profit growth=-3.4%). Rate-change event CT-MAIN-2008: implied static ΔR=-2.58bn, behavioural ΔR=-2.37bn vs naive."
+    },
+    {
+      "case_id": "FY-2009-10",
+      "fiscal_year": "2009-10",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2010-11)",
+      "observed": 43.045,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 43.2157,
+        "static": 43.2157,
+        "jane_behavioural": 43.2157,
+        "jane_calibrated": 43.2157,
+        "linear_regression": 41.6587
+      },
+      "notes": "Info year 2008-09 (R=43.93bn, t=28.0%) → target 2010-11 (t=28.0%, Δt=+0.0pp, 2yr profit growth=-1.6%)."
+    },
+    {
+      "case_id": "FY-2010-11",
+      "fiscal_year": "2010-11",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2011-12)",
+      "observed": 42.475,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 41.0476,
+        "static": 38.5554,
+        "jane_behavioural": 38.7335,
+        "jane_calibrated": 39.9147,
+        "linear_regression": 42.9364
+      },
+      "notes": "Info year 2009-10 (R=36.63bn, t=28.0%) → target 2011-12 (t=26.0%, Δt=-2.0pp, 2yr profit growth=+12.1%)."
+    },
+    {
+      "case_id": "CT-MAIN-2011",
+      "fiscal_year": "2011-12",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2012-13)",
+      "observed": 39.842,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 47.5926,
+        "static": 41.8135,
+        "jane_behavioural": 42.1905,
+        "jane_calibrated": 44.7428,
+        "linear_regression": 51.7084
+      },
+      "notes": "Info year 2010-11 (R=43.05bn, t=28.0%) → target 2012-13 (t=24.0%, Δt=-4.0pp, 2yr profit growth=+10.6%). Rate-change event CT-MAIN-2011: implied static ΔR=-5.78bn, behavioural ΔR=-5.40bn vs naive."
+    },
+    {
+      "case_id": "CT-MAIN-2012",
+      "fiscal_year": "2012-13",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2013-14)",
+      "observed": 38.932,
+      "official_costing_gbp_bn": -0.73,
+      "predictions": {
+        "naive_growth": 46.0896,
+        "static": 41.5693,
+        "jane_behavioural": 41.8458,
+        "jane_calibrated": 43.6979,
+        "linear_regression": 48.7547
+      },
+      "notes": "Info year 2011-12 (R=42.48bn, t=26.0%) → target 2013-14 (t=23.0%, Δt=-3.0pp, 2yr profit growth=+8.5%). Rate-change event CT-MAIN-2012: implied static ΔR=-4.52bn, behavioural ΔR=-4.24bn vs naive. Ex-ante official costing (-0.73bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+    },
+    {
+      "case_id": "CT-MAIN-2013",
+      "fiscal_year": "2013-14",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2014-15)",
+      "observed": 41.092,
+      "official_costing_gbp_bn": -0.82,
+      "predictions": {
+        "naive_growth": 45.5489,
+        "static": 40.7094,
+        "jane_behavioural": 40.9727,
+        "jane_calibrated": 42.7349,
+        "linear_regression": 48.9552
+      },
+      "notes": "Info year 2012-13 (R=39.84bn, t=24.0%) → target 2014-15 (t=21.0%, Δt=-3.0pp, 2yr profit growth=+14.3%). Rate-change event CT-MAIN-2013: implied static ΔR=-4.84bn, behavioural ΔR=-4.58bn vs naive. Ex-ante official costing (-0.82bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+    },
+    {
+      "case_id": "CT-MAIN-2014",
+      "fiscal_year": "2014-15",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2015-16)",
+      "observed": 43.017,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 42.8762,
+        "static": 38.1225,
+        "jane_behavioural": 38.3657,
+        "jane_calibrated": 39.9925,
+        "linear_regression": 45.5608
+      },
+      "notes": "Info year 2013-14 (R=38.93bn, t=23.0%) → target 2015-16 (t=20.0%, Δt=-3.0pp, 2yr profit growth=+10.1%). Rate-change event CT-MAIN-2014: implied static ΔR=-4.75bn, behavioural ΔR=-4.51bn vs naive."
+    },
+    {
+      "case_id": "CT-MAIN-2015",
+      "fiscal_year": "2015-16",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2016-17)",
+      "observed": 49.299,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 41.663,
+        "static": 39.9766,
+        "jane_behavioural": 40.0616,
+        "jane_calibrated": 40.6191,
+        "linear_regression": 41.3935
+      },
+      "notes": "Info year 2014-15 (R=41.09bn, t=21.0%) → target 2016-17 (t=20.0%, Δt=-1.0pp, 2yr profit growth=+1.4%). Rate-change event CT-MAIN-2015: implied static ΔR=-1.69bn, behavioural ΔR=-1.60bn vs naive."
+    },
+    {
+      "case_id": "FY-2016-17",
+      "fiscal_year": "2016-17",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2017-18)",
+      "observed": 54.71,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 46.5418,
+        "static": 44.5637,
+        "jane_behavioural": 44.6572,
+        "jane_calibrated": 45.2706,
+        "linear_regression": 47.165
+      },
+      "notes": "Info year 2015-16 (R=43.02bn, t=20.0%) → target 2017-18 (t=19.0%, Δt=-1.0pp, 2yr profit growth=+8.2%)."
+    },
+    {
+      "case_id": "CT-MAIN-2017",
+      "fiscal_year": "2017-18",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2018-19)",
+      "observed": 56.297,
+      "official_costing_gbp_bn": -1.6,
+      "predictions": {
+        "naive_growth": 53.9084,
+        "static": 51.6173,
+        "jane_behavioural": 51.7256,
+        "jane_calibrated": 52.4361,
+        "linear_regression": 54.8075
+      },
+      "notes": "Info year 2016-17 (R=49.30bn, t=20.0%) → target 2018-19 (t=19.0%, Δt=-1.0pp, 2yr profit growth=+9.3%). Rate-change event CT-MAIN-2017: implied static ΔR=-2.29bn, behavioural ΔR=-2.18bn vs naive. Ex-ante official costing (-1.60bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+    },
+    {
+      "case_id": "FY-2018-19",
+      "fiscal_year": "2018-19",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2019-20)",
+      "observed": 63.547,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 58.9406,
+        "static": 58.9406,
+        "jane_behavioural": 58.9406,
+        "jane_calibrated": 58.9406,
+        "linear_regression": 58.4119
+      },
+      "notes": "Info year 2017-18 (R=54.71bn, t=19.0%) → target 2019-20 (t=19.0%, Δt=+0.0pp, 2yr profit growth=+7.7%)."
+    },
+    {
+      "case_id": "FY-2019-20",
+      "fiscal_year": "2019-20",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2020-21)",
+      "observed": 52.049,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 56.8417,
+        "static": 56.8417,
+        "jane_behavioural": 56.8417,
+        "jane_calibrated": 56.8417,
+        "linear_regression": 55.2295
+      },
+      "notes": "Info year 2018-19 (R=56.30bn, t=19.0%) → target 2020-21 (t=19.0%, Δt=+0.0pp, 2yr profit growth=+1.0%)."
+    },
+    {
+      "case_id": "FY-2020-21",
+      "fiscal_year": "2020-21",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2021-22)",
+      "observed": 66.318,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 68.4259,
+        "static": 68.4259,
+        "jane_behavioural": 68.4259,
+        "jane_calibrated": 68.4259,
+        "linear_regression": 67.8014
+      },
+      "notes": "Info year 2019-20 (R=63.55bn, t=19.0%) → target 2021-22 (t=19.0%, Δt=+0.0pp, 2yr profit growth=+7.7%)."
+    },
+    {
+      "case_id": "FY-2021-22",
+      "fiscal_year": "2021-22",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2022-23)",
+      "observed": 83.292,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 65.0138,
+        "static": 65.0138,
+        "jane_behavioural": 65.0138,
+        "jane_calibrated": 65.0138,
+        "linear_regression": 67.4013
+      },
+      "notes": "Info year 2020-21 (R=52.05bn, t=19.0%) → target 2022-23 (t=19.0%, Δt=+0.0pp, 2yr profit growth=+24.9%)."
+    },
+    {
+      "case_id": "FY-2022-23",
+      "fiscal_year": "2022-23",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2023-24)",
+      "observed": 92.375,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 75.7847,
+        "static": 96.1269,
+        "jane_behavioural": 94.8323,
+        "jane_calibrated": 86.8859,
+        "linear_regression": 67.4089
+      },
+      "notes": "Info year 2021-22 (R=66.32bn, t=19.0%) → target 2023-24 (t=25.0%, Δt=+6.0pp, 2yr profit growth=+14.3%)."
+    },
+    {
+      "case_id": "CT-MAIN-2023",
+      "fiscal_year": "2023-24",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2024-25)",
+      "observed": 95.699,
+      "official_costing_gbp_bn": 16.25,
+      "predictions": {
+        "naive_growth": 84.8319,
+        "static": 107.6026,
+        "jane_behavioural": 106.1534,
+        "jane_calibrated": 97.2583,
+        "linear_regression": 72.8553
+      },
+      "notes": "Info year 2022-23 (R=83.29bn, t=19.0%) → target 2024-25 (t=25.0%, Δt=+6.0pp, 2yr profit growth=+1.8%). Rate-change event CT-MAIN-2023: implied static ΔR=+22.77bn, behavioural ΔR=+21.32bn vs naive. Ex-ante official costing (+16.25bn) is a policy-change delta under ex-ante macro forecasts, not total receipts ground truth."
+    },
+    {
+      "case_id": "FY-2024-25",
+      "fiscal_year": "2024-25",
+      "split": "test",
+      "target": "ct_receipts_gbp_bn (2025-26)",
+      "observed": 99.573,
+      "official_costing_gbp_bn": null,
+      "predictions": {
+        "naive_growth": 93.3821,
+        "static": 93.3821,
+        "jane_behavioural": 93.3821,
+        "jane_calibrated": 93.3821,
+        "linear_regression": 90.7671
+      },
+      "notes": "Info year 2023-24 (R=92.38bn, t=25.0%) → target 2025-26 (t=25.0%, Δt=+0.0pp, 2yr profit growth=+1.1%)."
+    }
+  ],
+  "ml_experiment": null,
+  "research_eval": null,
+  "verification_eval": null,
+  "limitations": [
+    "Conditional backtest design: predictions of R_{y+1} condition on realised 2-year profit growth from y-1 to y+1 (measured via `pnfc_gos`). This isolates tax-rate response modelling from macroeconomic forecast error, so out-of-sample errors in unconditional real-time forecasting would be larger.",
+    "Small sample of policy regime shifts: UK corporation tax main-rate history since FY1982 contains only 16 implemented statutory rate changes (8 in the FY <= 2007 training split and 8 in the FY >= 2008 test split).",
+    "Simultaneous base-broadening and relief confounders: major rate changes coincided with structural base changes—most notably the 1983–1986 phased rate cuts paired with first-year capital-allowance abolition, and the April 2023 rise (19% -> 25%) paired with full expensing for plant & machinery and the 19% small profits rate / marginal relief.",
+    "Official costings are not ground truth: `official_costing_gbp_bn` reports ex-ante HMT/OBR policy costings (revenue delta relative to a contemporary Budget baseline under ex-ante macro assumptions), whereas `observed` and model `predictions` are total fiscal-year CT receipts R_{y+1} (£bn).",
+    "Receipts collection lags and composition: CT receipts combine onshore and offshore (North Sea ring-fence) regimes, Quarterly Instalment Payments (QIPs) timing transitions, bank surcharge, and financial-sector loss carry-forwards.",
+    "OLS of log((receipts/t)/pnfc_gos) on log(1-t) over n=44 fiscal years (controlling for real GDP growth) yields an implied base elasticity of 2.642 (SE 0.185), compared with the engine central prior of 0.20. Because UK rate cuts in the 1980s and 2010s coincided with base-broadening capital-allowance reforms and post-2008 financial-sector profit shifts, macro time-series regressions confound rate effects with base definitions; we retain the micro-econometric literature prior (0.20) as central."
+  ],
+  "is_placeholder": false
+}
