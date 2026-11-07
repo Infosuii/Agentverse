@@ -154,3 +154,51 @@ jobs:
           python backend/scripts/export_openapi.py
           (cd frontend && npm run gen:api)
           git diff --exit-code frontend/src/api/
+
+  e2e:
+    name: End-to-End Playwright (mock mode)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if e2e, backend, and frontend exist
+        id: check_e2e
+        run: |
+          if [ -f "e2e/package.json" ] && [ -f "backend/requirements-dev.txt" ] && [ -f "frontend/package.json" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "e2e/package.json, backend/requirements-dev.txt, or frontend/package.json not found yet; skipping e2e job."
+          fi
+
+      - name: Set up Python 3.13
+        if: steps.check_e2e.outputs.exists == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: "backend/requirements*.txt"
+
+      - name: Set up Node 22
+        if: steps.check_e2e.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install backend, frontend, and e2e dependencies
+        if: steps.check_e2e.outputs.exists == 'true'
+        run: |
+          pip install -r backend/requirements-dev.txt
+          (cd frontend && if [ -f "package-lock.json" ]; then npm ci; else npm install; fi)
+          (cd e2e && if [ -f "package-lock.json" ]; then npm ci; else npm install; fi)
+          (cd e2e && npx playwright install --with-deps chromium)
+
+      - name: Run Playwright E2E tests
+        if: steps.check_e2e.outputs.exists == 'true'
+        working-directory: e2e
+        env:
+          CI: "true"
+          JANE_MODE: mock
+          JANE_DB_PATH: ":memory:"
+          PYTHON_BIN: python
+        run: npx playwright test

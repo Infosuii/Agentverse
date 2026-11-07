@@ -22,8 +22,11 @@ data/raw/
 # Jane Avenue build & runtime artifacts
 node_modules/
 frontend/node_modules/
+e2e/node_modules/
 frontend/dist/
 backend/.data/
 *.db
 playwright-report/
+e2e/playwright-report/
 test-results/
+e2e/test-results/
