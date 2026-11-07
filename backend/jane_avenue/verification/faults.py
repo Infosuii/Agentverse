@@ -222,8 +222,8 @@ def untraceable_number(analysis: Analysis, k: int = 1) -> str:
     """A number that nothing in `analysis` can supply: ten times the largest magnitude anywhere in it, plus a
     fractional tail. Deriving it (rather than hard-coding one) means engine or data changes can never make the
     planted number accidentally traceable. `k` gives distinct numbers for the same analysis."""
-    numbers = [abs(float(x)) for x in re.findall(r"\d+(?:\.\d+)?", analysis.model_dump_json())]
-    return f"{max([100.0, *numbers]) * 10 * k + 0.37:.2f}"
+    numbers = [min(abs(float(x)), 1e12) for x in re.findall(r"\d+(?:\.\d+)?", analysis.model_dump_json())]
+    return f"{max([100.0, *numbers]) * 10 * k + 0.37:.2f}"  # the 1e12 cap keeps very long digit runs finite
 
 
 def raw_number_in_report(analysis: Analysis) -> Analysis:
