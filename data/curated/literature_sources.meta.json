@@ -1,0 +1,14 @@
+{
+  "dataset_id": "literature_sources",
+  "title": "Literature and official sources for engine parameters",
+  "description": "Register of the studies, official costings, statistics and statutory guidance cited by the econometric engine's parameter registry (engine/parameters.py) and its statutory constants (engine/core.py).",
+  "publisher": "Jane Avenue (agent-3), compiled from the listed publishers",
+  "source_url": "https://obr.uk/download/march-2021-economic-and-fiscal-outlook-corporation-tax-rate-increase",
+  "licence": "Bibliographic references only; each document keeps its publisher's licence (Open Government Licence v3.0 for gov.uk, OBR and ONS material).",
+  "retrieved_at": "2026-11-07",
+  "vintage": "2026-11-07",
+  "file": "curated/literature_sources.csv",
+  "source_id": "D-lit-obr2021",
+  "is_placeholder": false,
+  "notes": "Owner: agent-3 (one-file exception inside data/, agreed with agent-6). Each URL was opened on 2026-11-07 and the cited figure was read there, except D-lit-devereux2014 (the figure quoted is from the abstract of the working-paper version, D-lit-devereux2012) and D-lit-hanappi2018 (read via a mirror of the same PDF). The figure used and where it appears are recorded in each parameter's rationale in engine/parameters.py. published_date is approximate (first day of the month) where the exact day was not shown."
+}
