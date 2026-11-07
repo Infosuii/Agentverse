@@ -206,7 +206,10 @@ export function getCalcStepDependencyRank(step: CalcStep): number {
   const label = step.label.toLowerCase();
   const formula = step.formula.toLowerCase();
 
+  // 1. User-cost & allowance PV steps
   if (
+    id.startsWith('inv.allowance_pv') ||
+    id.startsWith('inv.user_cost') ||
     id.includes('ucc') ||
     id.includes('user_cost') ||
     id.includes('cost_of_capital') ||
@@ -218,16 +221,32 @@ export function getCalcStepDependencyRank(step: CalcStep): number {
   ) {
     return 1;
   }
-  if (id.includes('base') || id.includes('b0') || id.includes('b1') || label.includes('base')) {
+  // 2. Base & base response steps (B0, B1)
+  if (
+    id.startsWith('rev.base') ||
+    id.includes('base') ||
+    id.includes('b0') ||
+    id.includes('b1') ||
+    label.includes('base')
+  ) {
     return 2;
   }
-  if (id.includes('static') || label.includes('static')) {
+  // 3. Static revenue steps
+  if (id.startsWith('rev.static') || id.includes('static') || label.includes('static')) {
     return 3;
   }
-  if (id.includes('behav') || label.includes('behavioural')) {
+  // 4. Behavioural revenue steps
+  if (
+    id.startsWith('rev.behav') ||
+    id.includes('behav') ||
+    label.includes('behavioural')
+  ) {
     return 4;
   }
+  // 5. Investment steps (inv.long_run, inv.change, inv.change_gbp)
   if (
+    id.startsWith('inv.long_run') ||
+    id.startsWith('inv.change') ||
     id.includes('inv') ||
     id.includes('investment') ||
     formula.includes('δi') ||
@@ -235,18 +254,23 @@ export function getCalcStepDependencyRank(step: CalcStep): number {
   ) {
     return 5;
   }
+  // 6. Capital stock / turnover / gap steps (gdp.capital_turnover, gdp.capital_gap)
   if (
+    id.startsWith('gdp.capital_') ||
     id.includes('cap') ||
     id.includes('x_') ||
     label.includes('capital stock') ||
-    label.includes('capital gap')
+    label.includes('capital gap') ||
+    label.includes('capital turnover')
   ) {
     return 6;
   }
-  if (id.includes('gdp') || label.includes('gdp')) {
+  // 7. GDP level steps (gdp.level)
+  if (id.startsWith('gdp.level') || id.includes('gdp') || label.includes('gdp')) {
     return 7;
   }
-  if (id.includes('dyn') || label.includes('dynamic')) {
+  // 8. Dynamic revenue steps (rev.dynamic)
+  if (id.startsWith('rev.dynamic') || id.includes('dyn') || label.includes('dynamic')) {
     return 8;
   }
   return 9;
@@ -278,11 +302,12 @@ export function filterAndSortCalcSteps(
   const maxRank = METRIC_MAX_RANK[metric] ?? 8;
   const relevant = yearSteps.filter((step) => {
     const rank = getCalcStepDependencyRank(step);
+    const id = step.step_id.toLowerCase();
     if (metric === 'cost_of_capital_pct') {
       return rank === 1;
     }
     if (metric === 'revenue_static_gbp_bn') {
-      return rank === 2 || rank === 3;
+      return (rank === 2 && !id.includes('base_response')) || rank === 3;
     }
     if (metric === 'revenue_behavioural_gbp_bn') {
       return rank >= 2 && rank <= 4;

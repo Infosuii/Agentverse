@@ -485,8 +485,10 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                   )
                 ) : (
                   <p className="text-slate-500">
-                    Backtest-calibrated empirical interval unavailable for this metric
-                    (requires at least 8 out-of-sample behavioural revenue backtest residuals).
+                    {activeDistributionBundle?.warnings?.find((w) =>
+                      w.toLowerCase().includes('empirical'),
+                    ) ??
+                      'Backtest-calibrated empirical interval unavailable for this metric (requires at least 8 out-of-sample behavioural revenue backtest residuals).'}
                   </p>
                 )}
               </div>
