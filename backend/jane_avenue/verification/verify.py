@@ -1,54 +1,69 @@
-"""Owner: agent-5. STUB: verification with SCOPE-001 and CALC-001 only (agent-1 M0). Agent-5 adds the catalogue."""
+"""`verify(analysis) -> VerificationReport` (MASTER_PROMPT 9.7). Owner: agent-5.
+
+Runs every registered check, isolates crashes (a crashing check is reported as `skipped`, never raised), then applies
+the decision rule:
+
+- any `blocking` check with status `fail` -> `forecast_withheld`;
+- otherwise any `warn` or `fail` -> `approved_with_warnings`;
+- otherwise `approved`.
+
+`counts` and `summary` are deterministic functions of the checks. Verification never changes the analysis.
+"""
 from __future__ import annotations
 
-from collections import Counter
+import logging
+from collections.abc import Iterable
 
 from ..contracts import Analysis, VerificationCheck, VerificationReport, utcnow
-from ..data import registry
-from ..engine.core import compute
+from .checks import ALL_CHECKS, CheckFn, meta_of
+
+log = logging.getLogger(__name__)
+
+STATUSES = ("pass", "warn", "fail", "skipped")
 
 
-def _scope_001(analysis: Analysis) -> VerificationCheck:
-    ok = analysis.scope is not None and analysis.scope.forecast_allowed
-    detail = "Policy is within the validated scope." if ok else "; ".join(
-        analysis.scope.reasons if analysis.scope else ["Scope was not checked."])
-    return VerificationCheck(check_id="SCOPE-001", category="scope", severity="blocking",
-                             status="pass" if ok else "fail", title="Policy within validated scope",
-                             detail=detail, method="rule")
+def run_check(fn: CheckFn, analysis: Analysis) -> VerificationCheck:
+    meta = meta_of(fn)
+    try:
+        return fn(analysis)
+    except Exception as exc:  # one broken check must never break verification or the pipeline
+        log.exception("verification check %s crashed", meta.check_id)
+        return VerificationCheck(check_id=meta.check_id, category=meta.category, severity=meta.severity,
+                                 status="skipped", title=meta.title, method=meta.method,
+                                 detail=f"The check could not run: {type(exc).__name__}: {exc}"[:500])
 
 
-def _calc_001(analysis: Analysis) -> VerificationCheck:
-    base = dict(check_id="CALC-001", category="calculation", severity="blocking", method="recompute",
-                title="Engine recompute matches the central scenario")
-    sim = analysis.simulation
-    if sim is None or not sim.scenarios or analysis.policy is None:
-        return VerificationCheck(**base, status="skipped", detail="No simulation to recompute.")
-    central = sim.scenarios[0].result
-    out = compute(analysis.policy, central.parameters_used, registry.load_baseline())
-    bad = []
-    for m in central.metrics:
-        for i, yv in enumerate(m.values):
-            if abs(float(out.metrics[m.metric][0, i]) - yv.value) > 1e-9:
-                bad.append(f"{m.metric}.{yv.fiscal_year}")
-    if bad:
-        return VerificationCheck(**base, status="fail", detail=f"{len(bad)} values differ on recompute.",
-                                 affected_ids=bad)
-    return VerificationCheck(**base, status="pass", detail="All central-scenario values reproduce to within 1e-9.")
+def run_checks(analysis: Analysis, checks: Iterable[CheckFn] = ALL_CHECKS) -> list[VerificationCheck]:
+    return [run_check(fn, analysis) for fn in checks]
 
 
-def verify(analysis: Analysis) -> VerificationReport:
-    checks = [_scope_001(analysis), _calc_001(analysis)]
-    blocking_fail = [c for c in checks if c.severity == "blocking" and c.status == "fail"]
-    if blocking_fail:
+def _decline_reason(c: VerificationCheck) -> str:
+    return c.detail if c.check_id == "SCOPE-001" else f"{c.title} ({c.check_id}): {c.detail}"
+
+
+def build_report(checks: list[VerificationCheck], *, critic_model: str | None = None) -> VerificationReport:
+    blocking = [c for c in checks if c.severity == "blocking" and c.status == "fail"]
+    if blocking:
         overall = "forecast_withheld"
     elif any(c.status in ("warn", "fail") for c in checks):
         overall = "approved_with_warnings"
     else:
         overall = "approved"
-    counts = dict(Counter(c.status for c in checks))
-    return VerificationReport(
-        overall=overall, forecast_allowed=not blocking_fail, checks=checks,  # type: ignore[arg-type]
-        decline_reasons=[c.detail for c in blocking_fail],
-        summary=f"{len(checks)} checks run (STUB catalogue): " + ", ".join(f"{v} {k}" for k, v in sorted(counts.items())),
-        counts=counts, verified_at=utcnow(),
-    )
+    counts = {s: sum(1 for c in checks if c.status == s) for s in STATUSES}
+    summary = (f"{len(checks)} checks: {counts['pass']} passed, {counts['warn']} warnings, {counts['fail']} failed, "
+               f"{counts['skipped']} skipped.")
+    if blocking:
+        summary += (f" Quantitative forecast withheld by {len(blocking)} blocking "
+                    f"{'failure' if len(blocking) == 1 else 'failures'} ({', '.join(c.check_id for c in blocking)}).")
+    elif overall == "approved_with_warnings":
+        flagged = [c.check_id for c in checks if c.status in ("warn", "fail")]
+        summary += f" Forecast shown with warnings ({', '.join(flagged)})."
+    else:
+        summary += " Forecast approved."
+    return VerificationReport(overall=overall, forecast_allowed=not blocking, checks=checks,
+                              decline_reasons=[_decline_reason(c) for c in blocking], summary=summary, counts=counts,
+                              critic_model=critic_model, verified_at=utcnow())
+
+
+def verify(analysis: Analysis) -> VerificationReport:
+    return build_report(run_checks(analysis))
