@@ -37,26 +37,27 @@ def test_registry_defaults_and_overrides_are_valid(params):
     validate_parameters(apply_overrides(params, {"taxable_profit_elasticity": 0.9, "profit_base_deviation_pct": -15}))
 
 
+# Each case builds its bad values from the parameter's own value and range, so the tests do not depend on the registry's
+# current numbers (agent-3 sources and changes them).
 @pytest.mark.parametrize(("name", "update", "message"), [
-    ("taxable_profit_elasticity", {"value": 0.6}, "low <= value <= high"),
-    ("capital_share", {"low": 0.38}, "low <= value <= high"),
-    ("user_cost_elasticity", {"distribution": Distribution(kind="triangular",
-                                                           params={"low": 0.3, "mode": 1.2, "high": 1.0})},
-     "triangular mode"),
-    ("real_required_return", {"distribution": Distribution(kind="uniform", params={"low": 0.06, "high": 0.07})},
-     "outside the uniform support"),
-    ("capital_share", {"distribution": Distribution(kind="truncated_normal",
-                                                    params={"mean": 0.35, "sd": 0.02, "low": 0.0, "high": 0.3})},
+    ("taxable_profit_elasticity", lambda p: {"value": p.high + 0.1}, "low <= value <= high"),
+    ("capital_share", lambda p: {"low": p.value + 0.01, "high": p.value + 0.02}, "low <= value <= high"),
+    ("user_cost_elasticity", lambda p: {"distribution": Distribution(
+        kind="triangular", params={"low": p.low, "mode": p.high + 0.1, "high": p.high})}, "triangular mode"),
+    ("real_required_return", lambda p: {"distribution": Distribution(
+        kind="uniform", params={"low": p.value + 0.01, "high": p.value + 0.02})}, "outside the uniform support"),
+    ("capital_share", lambda p: {"distribution": Distribution(
+        kind="truncated_normal", params={"mean": p.value, "sd": 0.02, "low": p.value - 0.2, "high": p.value - 0.1})},
      "outside the truncated_normal support"),
-    ("profit_base_deviation_pct", {"distribution": Distribution(kind="lognormal", params={"mu": 0.0, "sigma": 0.1})},
-     "positive value"),
-    ("profit_base_deviation_pct", {"distribution": Distribution(kind="normal", params={"mean": 0.0, "sd": -1.0})},
-     "sd must be >= 0"),
-    ("capital_share", {"value": float("nan")}, "finite"),
+    ("profit_base_deviation_pct", lambda p: {"value": 0.0, "low": -1.0, "high": 1.0, "distribution": Distribution(
+        kind="lognormal", params={"mu": 0.0, "sigma": 0.1})}, "positive value"),
+    ("profit_base_deviation_pct", lambda p: {"distribution": Distribution(
+        kind="normal", params={"mean": p.value, "sd": -1.0})}, "sd must be >= 0"),
+    ("capital_share", lambda p: {"value": float("nan")}, "finite"),
 ])
 def test_invalid_parameters_raise_a_clear_error(params, demo_policy, baseline, name, update, message):
     bad = dict(params)
-    bad[name] = params[name].model_copy(update=update)
+    bad[name] = params[name].model_copy(update=update(params[name]))
     with pytest.raises(ValueError, match=re.escape(name)) as exc:
         validate_parameters(bad)
     assert message in str(exc.value)

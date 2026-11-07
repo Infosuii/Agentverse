@@ -1,11 +1,13 @@
 """Verifier fault-injection evaluation. Owner: agent-10."""
 from __future__ import annotations
 
+import os
 from contextlib import contextmanager
 from datetime import date
 
 import jane_avenue.verification as verification_pkg
 
+from ..config import get_settings
 from ..contracts import (
     Analysis,
     AnalysisRequest,
@@ -23,11 +25,15 @@ from ..store.repository import AnalysisStore
 
 @contextmanager
 def _clean_registry_context():
-    """Ensure registry baseline and datasets are in a clean non-extrapolated state during fault-suite evaluation,
-    matching agent-5's `clean_registry` fixture so `DATA-001` and `DATA-002` can be fault-injected cleanly.
+    """Ensure registry baseline and datasets are in a clean non-extrapolated state and mode='mock' during
+    deterministic fault-suite evaluation, matching agent-5's `clean_registry` fixture so `DATA-001` and
+    `DATA-002` can be fault-injected cleanly without live LLM calls.
     """
     orig_load_baseline = registry.load_baseline
     orig_list_datasets = registry.list_datasets
+    prev_mode = os.environ.get("JANE_MODE")
+    os.environ["JANE_MODE"] = "mock"
+    get_settings.cache_clear()
     clean_base = orig_load_baseline().model_copy(
         update={
             "is_placeholder": False,
@@ -44,6 +50,11 @@ def _clean_registry_context():
     finally:
         registry.load_baseline = orig_load_baseline  # type: ignore[assignment]
         registry.list_datasets = orig_list_datasets  # type: ignore[assignment]
+        if prev_mode is None:
+            os.environ.pop("JANE_MODE", None)
+        else:
+            os.environ["JANE_MODE"] = prev_mode
+        get_settings.cache_clear()
 
 
 def build_clean_golden_analysis() -> Analysis:
@@ -171,203 +182,8 @@ def build_clean_golden_analysis() -> Analysis:
     return clean
 
 
-def _fallback_fault_suite(clean: Analysis) -> VerificationEval:
-    """Fallback fault-injection runner used before agent-5's `run_fault_suite` lands on main."""
-    verify_fn = verification_pkg.verify
-    check_rep_fn = getattr(verification_pkg, "check_report", None)
-
-    def _full_verify(a: Analysis):
-        fresh = verify_fn(a)
-        if a.report is not None and callable(check_rep_fn):
-            return check_rep_fn(a.report, a.model_copy(update={"verification": fresh}))
-        return fresh
-
-    clean_report = _full_verify(clean)
-    clean_by_id = {c.check_id: c for c in clean_report.checks}
-    flagged_clean = [c.check_id for c in clean_report.checks if c.status in ("warn", "fail")]
-
-    faults_dict = getattr(verification_pkg, "FAULTS", None)
-    targets_dict = getattr(verification_pkg, "FAULT_TARGETS", None)
-    if isinstance(faults_dict, dict) and isinstance(targets_dict, dict) and faults_dict:
-        by_fault: dict[str, bool] = {}
-        not_applicable: list[str] = []
-        for name, fault in faults_dict.items():
-            try:
-                faulty = fault(clean)
-            except ValueError as exc:
-                not_applicable.append(f"{name} ({exc})")
-                continue
-            target = targets_dict.get(name, "")
-            before = clean_by_id.get(target)
-            after_rep = _full_verify(faulty)
-            after = next((c for c in after_rep.checks if c.check_id == target), None)
-            if (
-                before is not None
-                and after is not None
-                and before.status in ("warn", "fail")
-                and (after.status, after.detail, after.affected_ids)
-                == (before.status, before.detail, before.affected_ids)
-            ):
-                not_applicable.append(f"{name} ({target} already flags the clean case)")
-                continue
-            detected_flag = after is not None and after.status in ("warn", "fail") and (
-                before is None
-                or before.status not in ("warn", "fail")
-                or (after.status, after.detail, after.affected_ids)
-                != (before.status, before.detail, before.affected_ids)
-            )
-            by_fault[name] = detected_flag
-        detected = sum(1 for v in by_fault.values() if v)
-        notes = [f"Clean case: {clean_report.overall}; flagged checks: {', '.join(flagged_clean) or 'none'}."]
-        if not_applicable:
-            notes.append(f"Not applicable: {'; '.join(not_applicable)}.")
-        return VerificationEval(
-            n_fault_cases=len(by_fault),
-            detected=detected,
-            n_clean_cases=1,
-            false_positives=len(flagged_clean),
-            by_fault=by_fault,
-            notes=" ".join(notes),
-        )
-
-    # Built-in 10 core faults from Master Prompt §9.11.4
-    by_fault = {}
-
-    # 1. out_of_scope_policy (SCOPE-001)
-    f_scope = clean.model_copy(deep=True)
-    if f_scope.scope is not None:
-        f_scope.scope.forecast_allowed = False
-        f_scope.scope.status = "unsupported"
-    rep_scope = verify_fn(f_scope)
-    by_fault["out_of_scope_policy"] = not rep_scope.forecast_allowed or any(
-        c.check_id == "SCOPE-001" and c.status == "fail" for c in rep_scope.checks
-    )
-
-    # 2. fake_source_url (CITE-001)
-    f_url = clean.model_copy(deep=True)
-    f_url.sources.append(
-        Source(
-            source_id="S-FAKE",
-            title="Invented source",
-            url="https://hallucinated.invalid/report",
-            publisher="Unknown",
-            access_method="url_fetch",
-            url_verified=False,
-            is_placeholder=False,
-        )
-    )
-    rep_url = verify_fn(f_url)
-    by_fault["fake_source_url"] = any(
-        c.check_id.startswith("CITE-") and c.status in ("warn", "fail") for c in rep_url.checks
-    ) or not f_url.sources[-1].url_verified
-
-    # 3. unverified_quote (CITE-002)
-    f_quote = clean.model_copy(deep=True)
-    if f_quote.research is not None and f_quote.research.evidence:
-        f_quote.research.evidence[0].verification_status = "failed"
-        f_quote.research.evidence[0].quote = None
-    rep_quote = verify_fn(f_quote)
-    by_fault["unverified_quote"] = any(
-        c.check_id == "CITE-002" and c.status in ("warn", "fail") for c in rep_quote.checks
-    ) or (f_quote.research is not None and f_quote.research.evidence[0].verification_status == "failed")
-
-    # 4. orphan_evidence (CITE-003)
-    f_orphan = clean.model_copy(deep=True)
-    if f_orphan.research is not None and f_orphan.research.evidence:
-        f_orphan.research.evidence[0].source_id = "S-MISSING-999"
-    rep_orphan = verify_fn(f_orphan)
-    by_fault["orphan_evidence"] = any(
-        c.check_id == "CITE-003" and c.status in ("warn", "fail") for c in rep_orphan.checks
-    ) or ("S-MISSING-999" not in {s.source_id for s in f_orphan.sources})
-
-    # 5. tampered_metric (CALC-001)
-    f_calc = clean.model_copy(deep=True)
-    if f_calc.simulation is not None and f_calc.simulation.scenarios:
-        f_calc.simulation.scenarios[0].result.metrics[0].values[0].value += 50.0
-    rep_calc = verify_fn(f_calc)
-    by_fault["tampered_metric"] = any(
-        c.check_id.startswith("CALC-") and c.status in ("warn", "fail") for c in rep_calc.checks
-    ) or True
-
-    # 6. unsourced_assumption (EVID-001)
-    f_assump = clean.model_copy(deep=True)
-    if f_assump.simulation is not None and f_assump.simulation.assumptions:
-        f_assump.simulation.assumptions[0].source_ids = []
-        f_assump.simulation.assumptions[0].basis = "literature"
-    rep_assump = verify_fn(f_assump)
-    by_fault["unsourced_assumption"] = any(
-        c.check_id == "EVID-001" and c.status in ("warn", "fail") for c in rep_assump.checks
-    ) or (f_assump.simulation is not None and not f_assump.simulation.assumptions[0].source_ids)
-
-    # 7. placeholder_data (DATA-001)
-    f_data = clean.model_copy(deep=True)
-    f_data.sources[0].is_placeholder = True
-    rep_data = verify_fn(f_data)
-    by_fault["placeholder_data"] = any(
-        c.check_id == "DATA-001" and c.status in ("warn", "fail") for c in rep_data.checks
-    )
-
-    # 8. causal_claim (CAUSAL-001)
-    f_causal = clean.model_copy(deep=True)
-    if f_causal.research is not None:
-        f_causal.research.summary = "This tax hike will cause a severe recession and drives firms abroad."
-    rep_causal = verify_fn(f_causal)
-    by_fault["causal_claim"] = any(
-        c.check_id == "CAUSAL-001" and c.status in ("warn", "fail") for c in rep_causal.checks
-    ) or ("will cause" in (f_causal.research.summary if f_causal.research else ""))
-
-    # 9. mislabelled_interval (UNC-001)
-    f_unc = clean.model_copy(deep=True)
-    if f_unc.simulation is not None and f_unc.simulation.monte_carlo is not None:
-        f_unc.simulation.monte_carlo.interval_kind = "empirical_prediction_interval"
-        f_unc.simulation.monte_carlo.empirical_interval = None
-    rep_unc = verify_fn(f_unc)
-    by_fault["mislabelled_interval"] = any(
-        c.check_id == "UNC-001" and c.status in ("warn", "fail") for c in rep_unc.checks
-    ) or (
-        f_unc.simulation is not None
-        and f_unc.simulation.monte_carlo is not None
-        and f_unc.simulation.monte_carlo.empirical_interval is None
-    )
-
-    # 10. raw_number_in_report (REPORT-001)
-    f_rep = clean.model_copy(deep=True)
-    if f_rep.report is not None:
-        f_rep.report.sections.append(
-            ReportSection(
-                section_id="injected",
-                heading="Injected fault",
-                body_markdown="Receipts will jump by £99.7bn in year 1.",
-            )
-        )
-    check_rep_fn = getattr(verification_pkg, "check_report", None)
-    if callable(check_rep_fn) and f_rep.report is not None:
-        rep_r = check_rep_fn(f_rep.report, f_rep)
-        by_fault["raw_number_in_report"] = any(
-            c.check_id == "REPORT-001" and c.status in ("warn", "fail") for c in rep_r.checks
-        )
-    else:
-        by_fault["raw_number_in_report"] = True
-
-    detected = sum(1 for v in by_fault.values() if v)
-    return VerificationEval(
-        n_fault_cases=len(by_fault),
-        detected=detected,
-        n_clean_cases=1,
-        false_positives=len(flagged_clean),
-        by_fault=by_fault,
-        notes=(
-            f"Clean golden analysis status: {clean_report.overall} (flagged: {', '.join(flagged_clean) or 'none'}). "
-            f"Detected {detected}/{len(by_fault)} injected faults."
-        ),
-    )
-
-
 def evaluate_verifier(analysis: Analysis | None = None) -> VerificationEval:
     """Run the verifier fault-injection suite on the clean golden analysis via agent-5's `run_fault_suite`."""
     with _clean_registry_context():
         target_analysis = analysis if analysis is not None else build_clean_golden_analysis()
-        suite_fn = getattr(verification_pkg, "run_fault_suite", None)
-        if callable(suite_fn):
-            return suite_fn(target_analysis)
-        return _fallback_fault_suite(target_analysis)
+        return verification_pkg.run_fault_suite(target_analysis)

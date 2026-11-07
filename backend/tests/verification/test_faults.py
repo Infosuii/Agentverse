@@ -4,27 +4,27 @@ from __future__ import annotations
 import pytest
 
 from jane_avenue.contracts import Analysis
-from jane_avenue.verification import FAULT_TARGETS, FAULTS, verify
-from jane_avenue.verification.checks import ALL_CHECKS, meta_of
+from jane_avenue.verification import FAULT_TARGETS, FAULTS, full_verify
+from jane_avenue.verification.checks import CATALOGUE, meta_of
 
-BRIEF_M1_FAULTS = {"unverified_quote", "orphan_evidence", "tampered_metric", "unsourced_assumption",
-                   "out_of_scope_policy", "placeholder_data"}
+BRIEF_FAULTS = {"fake_source_url", "unverified_quote", "orphan_evidence", "tampered_metric", "unsourced_assumption",
+                "out_of_scope_policy", "placeholder_data", "causal_claim", "mislabelled_interval", "raw_number_in_report"}
 
 
 def test_every_fault_has_a_target_and_every_check_has_a_fault() -> None:
     assert set(FAULTS) == set(FAULT_TARGETS)
-    assert BRIEF_M1_FAULTS <= set(FAULTS)
-    assert {meta_of(fn).check_id for fn in ALL_CHECKS} <= set(FAULT_TARGETS.values())
+    assert BRIEF_FAULTS <= set(FAULTS)
+    assert {meta_of(fn).check_id for fn in CATALOGUE} == set(FAULT_TARGETS.values())  # all 18 checks covered
 
 
 @pytest.mark.parametrize("name", sorted(FAULTS))
 def test_fault_is_caught_by_its_target_check(name: str, clean_analysis: Analysis) -> None:
     target = FAULT_TARGETS[name]
-    before = {c.check_id: c.status for c in verify(clean_analysis).checks}
-    assert before[target] == "pass"
+    before = {c.check_id: c.status for c in full_verify(clean_analysis).checks}
+    assert before[target] in ("pass", "skipped")
 
     faulty = FAULTS[name](clean_analysis)
-    result = next(c for c in verify(faulty).checks if c.check_id == target)
+    result = next(c for c in full_verify(faulty).checks if c.check_id == target)
     assert result.status == ("warn" if result.severity in ("warning", "info") else "fail"), result.detail
     assert result.detail
 
@@ -38,9 +38,9 @@ def test_fault_deep_copies_its_input(name: str, clean_analysis: Analysis) -> Non
     assert faulty.model_dump() != before
 
 
-@pytest.mark.parametrize("name", ["out_of_scope_policy", "tampered_metric"])
+@pytest.mark.parametrize("name", ["out_of_scope_policy", "tampered_metric", "raw_number_in_report"])
 def test_blocking_faults_withhold_the_forecast(name: str, clean_analysis: Analysis) -> None:
-    report = verify(FAULTS[name](clean_analysis))
+    report = full_verify(FAULTS[name](clean_analysis))
     assert report.overall == "forecast_withheld" and report.decline_reasons
 
 

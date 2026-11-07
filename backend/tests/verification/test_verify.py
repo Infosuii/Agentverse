@@ -4,13 +4,15 @@ from __future__ import annotations
 import pytest
 
 from jane_avenue.contracts import Analysis, VerificationCheck
-from jane_avenue.verification import build_report, run_checks, verify
-from jane_avenue.verification.checks import ALL_CHECKS, Outcome, check, meta_of
+from jane_avenue.verification import build_report, full_verify, run_checks, verify
+from jane_avenue.verification.checks import ALL_CHECKS, CATALOGUE, Outcome, check, meta_of
 
 from .conftest import run_pipeline
 
-M1_IDS = ["SCOPE-001", "SCOPE-002", "SCOPE-003", "CITE-002", "CITE-003", "EVID-001", "EVID-004", "CALC-001",
-          "CALC-002", "CALC-003", "DATA-001", "DATA-002"]
+VERIFY_IDS = ["SCOPE-001", "SCOPE-002", "SCOPE-003", "CITE-001", "CITE-002", "CITE-003", "EVID-001", "EVID-002",
+              "EVID-003", "EVID-004", "CALC-001", "CALC-002", "CALC-003", "DATA-001", "DATA-002", "CAUSAL-001",
+              "UNC-001"]
+ALL_IDS = [*VERIFY_IDS, "REPORT-001"]
 
 
 def _vc(check_id: str, severity: str, status: str) -> VerificationCheck:
@@ -19,12 +21,14 @@ def _vc(check_id: str, severity: str, status: str) -> VerificationCheck:
 
 
 def test_checks_run_in_catalogue_order() -> None:
-    assert [meta_of(fn).check_id for fn in ALL_CHECKS] == M1_IDS
+    assert [meta_of(fn).check_id for fn in ALL_CHECKS] == VERIFY_IDS
+    assert [meta_of(fn).check_id for fn in CATALOGUE] == ALL_IDS
+    assert len(ALL_IDS) == 18
 
 
 def test_golden_mock_analysis_has_no_blocking_failures(golden_analysis: Analysis) -> None:
-    report = verify(golden_analysis)
-    assert [c.check_id for c in report.checks] == M1_IDS
+    report = full_verify(golden_analysis)
+    assert [c.check_id for c in report.checks] == ALL_IDS
     assert report.forecast_allowed and report.overall != "forecast_withheld"
     assert not [c for c in report.checks if c.severity == "blocking" and c.status == "fail"]
     # Honest about the M0 stubs: placeholders and mock evidence are surfaced as warnings.
@@ -32,10 +36,11 @@ def test_golden_mock_analysis_has_no_blocking_failures(golden_analysis: Analysis
 
 
 def test_clean_analysis_passes_every_check(clean_analysis: Analysis) -> None:
-    report = verify(clean_analysis)
-    assert {c.check_id: c.status for c in report.checks} == dict.fromkeys(M1_IDS, "pass")
+    report = full_verify(clean_analysis)
+    expected = dict.fromkeys(ALL_IDS, "pass") | {"CITE-001": "skipped"}  # no re-fetch in mock mode
+    assert {c.check_id: c.status for c in report.checks} == expected
     assert report.overall == "approved"
-    assert report.summary == "12 checks: 12 passed, 0 warnings, 0 failed, 0 skipped. Forecast approved."
+    assert report.summary == "18 checks: 17 passed, 0 warnings, 0 failed, 1 skipped. Forecast approved."
 
 
 def test_out_of_scope_policy_is_withheld_end_to_end() -> None:

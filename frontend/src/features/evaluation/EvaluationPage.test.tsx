@@ -1,7 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import type { EvaluationReport } from '../../api/hooks';
 import { EvaluationPage } from './EvaluationPage';
+
+function renderWithQueryClient(ui: React.ReactElement) {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>);
+}
 
 beforeAll(() => {
   if (typeof globalThis.ResizeObserver === 'undefined') {
@@ -186,8 +194,8 @@ const SAMPLE_REPORT: EvaluationReport = {
     notes: 'Evaluated 15 gold factual UK CT questions.',
   },
   verification_eval: {
-    n_fault_cases: 12,
-    detected: 12,
+    n_fault_cases: 18,
+    detected: 18,
     n_clean_cases: 1,
     false_positives: 0,
     by_fault: {
@@ -213,14 +221,14 @@ describe('EvaluationPage', () => {
       refetch: vi.fn(),
     });
 
-    render(<EvaluationPage />);
+    renderWithQueryClient(<EvaluationPage />);
 
     // Headline metrics
     expect(
       screen.getByText('Central Engine Out-of-Sample MAE (jane_behavioural)'),
     ).toBeInTheDocument();
     expect(screen.getByText('Rejected (Not Adopted)')).toBeInTheDocument();
-    expect(screen.getByText('12 / 12 (100%)')).toBeInTheDocument();
+    expect(screen.getAllByText('18/18 (100.0%)').length).toBeGreaterThanOrEqual(1);
 
     // Methods table & corner-solution note
     expect(
@@ -234,20 +242,21 @@ describe('EvaluationPage', () => {
     expect(screen.getByText('CT-MAIN-2023')).toBeInTheDocument();
     expect(screen.queryByText('FY-2019-20')).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /All fiscal years/i }));
+    fireEvent.click(screen.getByRole('button', { name: /All panel years/i }));
     expect(screen.getByText('FY-2019-20')).toBeInTheDocument();
 
     // ML card
-    expect(screen.getByText('NOT ADOPTED IN SIMULATOR')).toBeInTheDocument();
+    expect(screen.getByText('NOT ADOPTED')).toBeInTheDocument();
     expect(screen.getByText('rate_change_pp')).toBeInTheDocument();
 
     // Research & verifier cards
-    expect(screen.getByText('0 hallucinated sources')).toBeInTheDocument();
-    expect(screen.getByText('0 false positives')).toBeInTheDocument();
+    expect(screen.getByText('Hallucinated Sources')).toBeInTheDocument();
+    expect(screen.getByText('Clean-Case False Positives')).toBeInTheDocument();
+    expect(screen.getByText('wrong_static_sign')).toBeInTheDocument();
 
     // Limitations section
     expect(
-      screen.getByText('Limitations, Confounders & Honest Caveats'),
+      screen.getByText('Methodological Limitations & Honest Caveats'),
     ).toBeInTheDocument();
   });
 
@@ -260,7 +269,7 @@ describe('EvaluationPage', () => {
       refetch: vi.fn(),
     });
 
-    render(<EvaluationPage />);
+    renderWithQueryClient(<EvaluationPage />);
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByText('Placeholder Evaluation Data Active')).toBeInTheDocument();
   });

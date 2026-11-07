@@ -984,7 +984,7 @@ export function EvaluationPage() {
         subtitle="Explicit econometric, historical, and data limitations that analysts must weigh alongside model outputs."
       >
         <ul className="space-y-2.5 text-xs leading-relaxed text-slate-700">
-          {evaluation.limitations.map((lim, idx) => (
+          {(evaluation.limitations ?? []).map((lim, idx) => (
             <li
               key={idx}
               className="flex items-start gap-2.5 rounded-md border border-slate-200 bg-slate-50/70 p-3"
