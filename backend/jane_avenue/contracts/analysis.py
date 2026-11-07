@@ -98,3 +98,6 @@ class HealthResponse(Contract):
     gemini_configured: bool
     model_fast: str
     model_deep: str
+    data_dir_exists: bool | None = None                  # contract-change #23 (additive, agreed in #20)
+    research_cache_dir_exists: bool | None = None
+    placeholder_datasets: list[str] = Field(default_factory=list)  # is_placeholder dataset_ids, plus "baseline"

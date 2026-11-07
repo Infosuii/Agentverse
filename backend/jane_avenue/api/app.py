@@ -151,8 +151,15 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
     @app.get("/api/health", response_model=HealthResponse)
     def health() -> HealthResponse:
         s = get_settings()
+        try:
+            placeholders = placeholder_data_in_use()
+        except Exception:  # health must answer even if the registry is broken; the log has the traceback
+            log.exception("health: could not read the data registry")
+            placeholders = ["registry-unavailable"]
         return HealthResponse(status="ok", version=__version__, contract_version=CONTRACT_VERSION, mode=s.mode,
-                              gemini_configured=s.gemini_configured, model_fast=s.model_fast, model_deep=s.model_deep)
+                              gemini_configured=s.gemini_configured, model_fast=s.model_fast, model_deep=s.model_deep,
+                              data_dir_exists=s.data_dir.is_dir(), research_cache_dir_exists=s.research_cache_dir.is_dir(),
+                              placeholder_datasets=placeholders)
 
     @app.post("/api/policy/parse", response_model=ParseResponse)
     def parse_policy(body: ParseRequest) -> ParseResponse:

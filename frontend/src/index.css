@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* Amber hatched pattern for forecast-withheld states (MASTER_PROMPT §9.10) */
+.withheld-hatch {
+  background-color: #fffbeb;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(217, 119, 6, 0.12),
+    rgba(217, 119, 6, 0.12) 8px,
+    rgba(254, 243, 199, 0.45) 8px,
+    rgba(254, 243, 199, 0.45) 16px
+  );
+  border-color: #f59e0b;
+}
+
+/* Global print stylesheet (M2 requirement + Agent-9 report printing) */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt;
+  }
+
+  header[data-print-hide="true"],
+  nav[data-print-hide="true"],
+  footer[data-print-hide="true"],
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .print-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+}
