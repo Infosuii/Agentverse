@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useOutletContext, useParams } from 'react-router';
 import clsx from 'clsx';
 import {
@@ -23,6 +24,7 @@ import {
   Skeleton,
   SourceChip,
   Spinner,
+  Table,
 } from '../../components/ui';
 
 export interface ResearchTabProps {
@@ -30,15 +32,46 @@ export interface ResearchTabProps {
   liveSteps?: ResearchStep[];
 }
 
-const STEP_ICONS: Record<ResearchStepKind, { icon: string; label: string; color: string }> = {
+const STEP_ICONS: Record<
+  ResearchStepKind,
+  { icon: string; label: string; color: string }
+> = {
   plan: { icon: '📋', label: 'Plan', color: 'bg-blue-50 text-blue-800 border-blue-200' },
-  search: { icon: '🔍', label: 'Search', color: 'bg-indigo-50 text-indigo-800 border-indigo-200' },
-  fetch: { icon: '📄', label: 'Fetch URL', color: 'bg-cyan-50 text-cyan-800 border-cyan-200' },
-  extract: { icon: '❝', label: 'Extract Quote', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
-  dataset_lookup: { icon: '📊', label: 'Dataset', color: 'bg-violet-50 text-violet-800 border-violet-200' },
-  reason: { icon: '🧠', label: 'Reason', color: 'bg-slate-100 text-slate-800 border-slate-300' },
-  synthesis: { icon: '✦', label: 'Synthesise', color: 'bg-blue-50 text-blue-800 border-blue-300' },
-  warning: { icon: '⚠', label: 'Warning', color: 'bg-amber-50 text-amber-900 border-amber-300' },
+  search: {
+    icon: '🔍',
+    label: 'Search',
+    color: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+  },
+  fetch: {
+    icon: '📄',
+    label: 'Fetch URL',
+    color: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+  },
+  extract: {
+    icon: '❝',
+    label: 'Extract Quote',
+    color: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+  },
+  dataset_lookup: {
+    icon: '📊',
+    label: 'Dataset',
+    color: 'bg-violet-50 text-violet-800 border-violet-200',
+  },
+  reason: {
+    icon: '🧠',
+    label: 'Reason',
+    color: 'bg-slate-100 text-slate-800 border-slate-300',
+  },
+  synthesis: {
+    icon: '✦',
+    label: 'Synthesise',
+    color: 'bg-blue-50 text-blue-800 border-blue-300',
+  },
+  warning: {
+    icon: '⚠',
+    label: 'Warning',
+    color: 'bg-amber-50 text-amber-900 border-amber-300',
+  },
   error: { icon: '✕', label: 'Error', color: 'bg-red-50 text-red-900 border-red-300' },
 };
 
@@ -62,7 +95,7 @@ function renderTextWithEvidenceRefs(text: string): React.ReactNode {
           type="button"
           onClick={() => scrollToEvidence(evId)}
           aria-label={`Jump to evidence ${evId}`}
-          className="mx-0.5 inline-flex items-center rounded border border-blue-300 bg-blue-50 px-1.5 py-0 font-mono text-xs font-semibold text-blue-800 hover:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="mx-0.5 inline-flex items-center rounded border border-blue-300 bg-blue-50 px-1.5 py-0 font-mono text-xs font-semibold text-blue-800 hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
         >
           [{evId}]
         </button>
@@ -118,6 +151,17 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
   const [selectedSource, setSelectedSource] = useState<Source | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!selectedSource) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedSource(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selectedSource]);
+
   const allSources = useMemo<Source[]>(() => {
     const map = new Map<string, Source>();
     for (const s of analysis?.sources ?? []) {
@@ -154,12 +198,21 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
       if (statusFilter !== 'all' && ev.verification_status !== statusFilter) return false;
       if (kindFilter !== 'all' && ev.kind !== kindFilter) return false;
       if (q) {
-        const hay = `${ev.evidence_id} ${ev.claim} ${ev.quote ?? ''} ${ev.topic} ${ev.source_id}`.toLowerCase();
+        const hay =
+          `${ev.evidence_id} ${ev.claim} ${ev.quote ?? ''} ${ev.topic} ${ev.source_id}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
   }, [evidenceList, topicFilter, statusFilter, kindFilter, searchQuery]);
+
+  const statusCounts = useMemo(() => {
+    const counts = { verified: 0, unverified: 0, failed: 0 };
+    for (const ev of evidenceList) {
+      counts[ev.verification_status] = (counts[ev.verification_status] ?? 0) + 1;
+    }
+    return counts;
+  }, [evidenceList]);
 
   const sourcesByPublisherType = useMemo(() => {
     const groups = new Map<PublisherType, Source[]>();
@@ -181,6 +234,12 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
       setCopiedId((prev) => (prev === idKey ? null : prev));
     }, 1800);
   };
+
+  const hasActiveFilters =
+    topicFilter !== 'all' ||
+    statusFilter !== 'all' ||
+    kindFilter !== 'all' ||
+    searchQuery.trim() !== '';
 
   if (!analysis && isLoading) {
     return (
@@ -223,7 +282,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
             />
           )
         ) : (
-          <ol className="space-y-2.5">
+          <ol className="space-y-2.5" aria-label="Research agent execution trace">
             {timelineSteps.map((step) => {
               const meta = STEP_ICONS[step.kind] ?? STEP_ICONS.reason;
               return (
@@ -264,7 +323,8 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
 
                   {step.query && (
                     <div className="mt-1.5 font-mono text-[11px] text-slate-600">
-                      Query: <code className="rounded bg-slate-200/70 px-1">{step.query}</code>
+                      Query:{' '}
+                      <code className="rounded bg-slate-200/70 px-1">{step.query}</code>
                     </div>
                   )}
 
@@ -273,7 +333,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                       <summary className="cursor-pointer text-[11px] font-medium text-blue-700 hover:underline">
                         Step detail
                       </summary>
-                      <p className="mt-1 whitespace-pre-wrap rounded bg-white p-2 text-xs text-slate-700 border border-slate-200">
+                      <p className="mt-1 rounded border border-slate-200 bg-white p-2 text-xs whitespace-pre-wrap text-slate-700">
                         {step.detail}
                       </p>
                     </details>
@@ -308,7 +368,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
               subtitle="Click any [E#] chip to jump to the underlying verbatim quote"
               className="lg:col-span-2"
             >
-              <div className="text-xs leading-relaxed text-slate-800 whitespace-pre-line">
+              <div className="text-xs leading-relaxed whitespace-pre-line text-slate-800">
                 {renderTextWithEvidenceRefs(research.summary)}
               </div>
             </Card>
@@ -316,8 +376,33 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
 
           {/* 3. Evidence Browser & Filterable List */}
           <Card
-            title={`Extracted Evidence (${filteredEvidence.length} of ${evidenceList.length})`}
+            title={`Evidence Browser (${filteredEvidence.length} of ${evidenceList.length})`}
             subtitle="Every quantitative claim requires a verbatim quote verified against the fetched document"
+            actions={
+              <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                <Badge variant="green">✓ {statusCounts.verified} verified</Badge>
+                {statusCounts.unverified > 0 && (
+                  <Badge variant="amber">• {statusCounts.unverified} unverified</Badge>
+                )}
+                {statusCounts.failed > 0 && (
+                  <Badge variant="red">✕ {statusCounts.failed} failed</Badge>
+                )}
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTopicFilter('all');
+                      setStatusFilter('all');
+                      setKindFilter('all');
+                      setSearchQuery('');
+                    }}
+                    className="ml-1 rounded border border-slate-300 bg-white px-2 py-0.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            }
           >
             <div className="space-y-4">
               {/* Filters & Search */}
@@ -457,7 +542,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                                   formatCitation(ev, source),
                                 )
                               }
-                              className="rounded border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                              className="rounded border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
                             >
                               {copiedId === ev.evidence_id ? '✓ Copied' : 'Copy citation'}
                             </button>
@@ -496,6 +581,58 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
               )}
             </div>
           </Card>
+
+          {/* Parameter Evidence Cross-Reference */}
+          {research.parameter_evidence && research.parameter_evidence.length > 0 && (
+            <Card
+              title="Parameter Evidence Found in Literature"
+              subtitle="Empirical parameter ranges extracted from cited documents for comparison with model assumptions"
+            >
+              <Table>
+                <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase">
+                  <tr>
+                    <th className="px-4 py-2.5">Parameter</th>
+                    <th className="px-4 py-2.5">Central / Point</th>
+                    <th className="px-4 py-2.5">Range [Low, High]</th>
+                    <th className="px-4 py-2.5">Evidence IDs</th>
+                    <th className="px-4 py-2.5">Note</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 text-xs">
+                  {research.parameter_evidence.map((pe, idx) => (
+                    <tr key={`${pe.parameter}-${idx}`}>
+                      <td className="px-4 py-2.5 font-mono font-semibold text-slate-900">
+                        {pe.parameter}
+                      </td>
+                      <td className="px-4 py-2.5 tabular-nums">
+                        {pe.value != null ? pe.value : '—'}
+                      </td>
+                      <td className="px-4 py-2.5 tabular-nums">
+                        {pe.low != null || pe.high != null
+                          ? `[${pe.low ?? '—'}, ${pe.high ?? '—'}]`
+                          : '—'}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <div className="flex flex-wrap gap-1">
+                          {pe.evidence_ids.map((evId) => (
+                            <button
+                              key={evId}
+                              type="button"
+                              onClick={() => scrollToEvidence(evId)}
+                              className="rounded border border-blue-300 bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-blue-800 hover:bg-blue-100"
+                            >
+                              [{evId}]
+                            </button>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-4 py-2.5 text-slate-600">{pe.note || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card>
+          )}
 
           {/* 4. AI Interpretations (Rose-bordered cards) */}
           <Card
@@ -653,7 +790,9 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                                 >
                                   Tier {src.reliability_tier}
                                 </Badge>
-                                {src.is_placeholder && <PlaceholderBadge label="Placeholder" />}
+                                {src.is_placeholder && (
+                                  <PlaceholderBadge label="Placeholder" />
+                                )}
                               </div>
                             </div>
                             <a
@@ -674,7 +813,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                             <button
                               type="button"
                               onClick={() => setSelectedSource(src)}
-                              className="font-semibold text-blue-700 hover:underline focus:outline-none"
+                              className="font-semibold text-blue-700 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded"
                             >
                               View evidence →
                             </button>
@@ -700,7 +839,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
           onClick={() => setSelectedSource(null)}
         >
           <div
-            className="flex h-full w-full max-w-lg flex-col bg-white p-6 shadow-2xl overflow-y-auto"
+            className="flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-3 border-b border-slate-200 pb-4">
@@ -735,7 +874,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                   href={selectedSource.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="truncate font-mono text-blue-700 hover:underline max-w-xs"
+                  className="max-w-xs truncate font-mono text-blue-700 hover:underline"
                 >
                   {selectedSource.url} ↗
                 </a>
@@ -770,7 +909,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     .map((ev) => (
                       <div
                         key={ev.evidence_id}
-                        className="rounded-md border border-slate-200 p-3 space-y-1.5"
+                        className="space-y-1.5 rounded-md border border-slate-200 p-3"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-mono font-bold text-slate-900">
