@@ -51,13 +51,20 @@ class GroundedAnswer:
 
 
 class LLMClient(Protocol):
+    """Appendix B gateway interface. `thinking_level` and `search_grounded` are additive (both implementations have
+    them); the Appendix B call shapes are unchanged."""
     name: str
 
-    def generate_text(self, prompt: str, *, system: str | None = None, model: str | None = None) -> str: ...
+    def generate_text(self, prompt: str, *, system: str | None = None, model: str | None = None,
+                      thinking_level: str | None = None) -> str: ...
 
     def generate_structured(
-        self, prompt: str, schema: type[T], *, system: str | None = None, model: str | None = None
+        self, prompt: str, schema: type[T], *, system: str | None = None, model: str | None = None,
+        thinking_level: str | None = None,
     ) -> T: ...
+
+    def search_grounded(self, prompt: str, *, system: str | None = None, model: str | None = None,
+                        thinking_level: str | None = None) -> GroundedAnswer: ...
 
 
 Factory = Callable[[], Any]
