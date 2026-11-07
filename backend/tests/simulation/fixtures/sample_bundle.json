@@ -2367,7 +2367,7 @@
    }
   ],
   "interval_kind": "assumption_range",
-  "interval_note": "Shaded bands show the spread of outcomes when uncertain assumptions are varied together (Monte Carlo over parameter distributions). They are assumption-driven ranges, not statistical prediction intervals, and exclude model and data uncertainty.",
+  "interval_note": "Shaded bands show the spread of outcomes when uncertain assumptions are varied together (Monte Carlo over parameter distributions). They are assumption-driven ranges, not statistical prediction intervals, and exclude model and data uncertainty. (MC s.e. of the final-year median of behavioural revenue \u00b1\u00a30.02bn at n=2000)",
   "empirical_interval": null,
   "empirical_calibration_note": null
  },
