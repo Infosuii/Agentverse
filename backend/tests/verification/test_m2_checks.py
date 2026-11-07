@@ -351,3 +351,41 @@ def test_scenario_values_round_only_to_written_decimals(token: str, ok: bool) ->
     from jane_avenue.verification.checks.report import _close_to_model
 
     assert _close_to_model(token, 12.006584) == ok
+
+
+def test_report_001_reads_spelled_out_numbers_in_cited_quotes(clean_analysis: Analysis) -> None:
+    assert clean_analysis.research is not None
+    clean_analysis.research.evidence[0].quote = "Around ten per cent of the cost is recovered in receipts over time."
+    ok = "Expansion recovers around 10 per cent of the cost in receipts [E1]."
+    assert report_001(_report_with(clean_analysis, ok)).status == "pass"
+    uncited = "Expansion recovers around 10 per cent of the cost in receipts."
+    assert report_001(_report_with(clean_analysis, uncited)).status == "fail"
+
+
+@pytest.mark.parametrize(("body", "ok"), [
+    ("Three studies and 2 fiscal events support this.", True),
+    ("Research covered 9 official sources.", True),
+    ("Research covered 12 official sources.", False),   # above the small-count limit
+    ("Receipts rose by 9 per cent.", False),             # a quantity, not a count
+])
+def test_report_001_small_counts(clean_analysis: Analysis, body: str, ok: bool) -> None:
+    assert report_001(_report_with(clean_analysis, body)).status == ("pass" if ok else "fail")
+
+
+def test_report_001_scans_the_downloadable_markdown(clean_analysis: Analysis) -> None:
+    a = _report_with(clean_analysis, "No numbers here.")
+    assert a.report is not None
+    x = untraceable_number(clean_analysis)
+    a.report.markdown = (f"# Assessment\n\n## Modelled impacts\n\nReceipts rise by £{x}bn.\n\n"
+                         "## References\n\n[1] OBR, accessed 7 November 2026, https://obr.uk/efo\n")
+    result = report_001(a)
+    assert result.status == "fail" and result.affected_ids == ["markdown:Modelled impacts"]
+    assert "accessed" not in result.detail  # the references section is not checked
+
+
+def test_report_001_does_not_double_report_the_markdown_copy(clean_analysis: Analysis) -> None:
+    x = untraceable_number(clean_analysis)
+    a = _report_with(clean_analysis, f"Receipts rise by £{x}bn.")
+    assert a.report is not None
+    a.report.markdown = f"# Assessment\n\n## Modelled impacts\n\nReceipts rise by £{x}bn.\n"
+    assert report_001(a).affected_ids == ["section.impacts"]

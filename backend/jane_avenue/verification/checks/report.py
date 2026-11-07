@@ -25,6 +25,7 @@ from __future__ import annotations
 import re
 
 from ...contracts import Analysis, PolicyAssessment, fiscal_year_of, fiscal_year_range
+from ...policy.rules import normalise as _words_to_digits
 from ._base import Outcome, check, plural
 
 _FY = re.compile(r"\b((?:19|20)\d\d)\s*[-–/]\s*(\d\d)\b")
@@ -40,6 +41,13 @@ _NUMBERING = re.compile(r"^\s*(?:#{1,6}\s*)?(?:[-*]\s*)?\d+(?:\.\d+)*[.)]\s", re
 _NUMBER = re.compile(r"(?<![A-Za-z_\d.,])\d+(?:,\d{3})*(?:\.\d+)?")
 _SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z£(\[*_\"'])|\n+")
 _EVIDENCE_REF = re.compile(r"\b([ES])(\d+)\b")
+# Small counts are not quantities: "3 studies", "two fiscal events" (digits are written after number-word conversion).
+SMALL_COUNT_MAX = 10
+_COUNT = re.compile(
+    r"(?<![\d.,])(\d{1,2})\s+(?:[a-z-]+\s+)?(?:studies|study|sources?|papers?|reports?|documents?|estimates?|"
+    r"events?|budgets?|years?|months?|quarters?|countries|firms|companies|precedents?|changes|rises|cuts|"
+    r"scenarios?|parameters?|checks?|questions?|items?|steps?|channels?|reasons?|factors?)\b", re.I)
+_HEADING = re.compile(r"^#{1,6}\s+(.*)$", re.M)
 
 
 def _to_float(token: str) -> float:
@@ -136,6 +144,24 @@ def prose(report: PolicyAssessment) -> list[tuple[str, str]]:
     return [(loc, text) for loc, text in blocks if text]
 
 
+def markdown_blocks(report: PolicyAssessment) -> list[tuple[str, str]]:
+    """The downloadable `markdown`, split at headings, without the references section. Headings are kept (their
+    numbering is ignored by the check) because the download shows them too."""
+    text = report.markdown or ""
+    starts = [m.start() for m in _HEADING.finditer(text)]
+    if not starts or starts[0] != 0:
+        starts = [0, *starts]
+    blocks: list[tuple[str, str]] = []
+    for i, start in enumerate(starts):
+        chunk = text[start:starts[i + 1] if i + 1 < len(starts) else len(text)]
+        heading = _HEADING.match(chunk)
+        title = heading.group(1).strip() if heading else ""
+        if any(word in title.lower() for word in UNCHECKED_SECTIONS):
+            continue
+        blocks.append((f"markdown:{title[:40] or 'top'}", chunk.replace("#", " ")))
+    return [(loc, chunk) for loc, chunk in blocks if chunk.strip()]
+
+
 def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tuple[str, str]]:
     """(location, snippet) for every number in the prose that code did not put there."""
     allowed = allowed_numbers(analysis, report)
@@ -144,7 +170,7 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
     by_id = {e.evidence_id: e for e in evidence}
     modelled = scenario_values(analysis)
     found: list[tuple[str, str]] = []
-    for location, text in prose(report):
+    for location, text in [*prose(report), *markdown_blocks(report)]:
         for raw in _SENTENCE.split(text):
             sentence = raw.strip()
             if not sentence:
@@ -154,7 +180,9 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
                 ref = f"{kind}{num}"
                 cited += [by_id[ref]] if kind == "E" and ref in by_id else [e for e in evidence if e.source_id == ref]
             cited_values = {e.value for e in cited if e.value is not None}
-            quoted = set().union(*(_numbers(e.quote or "") for e in cited)) if cited else set()
+            # Quotes may spell numbers out ("around ten per cent"): read them as digits too.
+            quoted = set().union(*(_numbers(e.quote or "") | _numbers(_words_to_digits(e.quote or ""))
+                                   for e in cited)) if cited else set()
 
             for m in _PLACEHOLDER.finditer(sentence):
                 found.append((location, f"unsubstituted {m.group(0)}"))
@@ -166,6 +194,7 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
             body = _PERCENTILE.sub(" ", body)
             body = _LABELS.sub(" ", body)
             body = _NUMBERING.sub(" ", body)
+            body = _COUNT.sub(lambda m: " " if int(m.group(1)) <= SMALL_COUNT_MAX else m.group(0), body)
             for m in _FY.finditer(body):
                 label = f"{m.group(1)}-{m.group(2)}"
                 if label not in years:
@@ -178,7 +207,10 @@ def offending_numbers(analysis: Analysis, report: PolicyAssessment) -> list[tupl
                         or any(_close_to_model(token, v) for v in modelled):
                     continue
                 found.append((location, f"\"{token}\" in \"{sentence[:120]}\""))
-    return found
+    # The markdown repeats the sections: report a number found there only if the structured prose did not.
+    structured = {snippet for loc, snippet in found if not loc.startswith("markdown:")}
+    return [(loc, snippet) for loc, snippet in found
+            if not (loc.startswith("markdown:") and snippet in structured)]
 
 
 @check("REPORT-001", "report", "blocking", "rule", "Every number in the report comes from code")
