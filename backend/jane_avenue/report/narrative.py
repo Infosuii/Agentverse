@@ -393,14 +393,14 @@ def assemble_narrative_report(
     )
 
     section_defs = [
-        ("executive_summary", "1. Executive summary", draft.executive_summary),
-        ("policy", "2. Policy assessed", draft.policy),
-        ("research", "3. Evidence from research", draft.research),
-        ("precedents", "4. Historical precedents", draft.precedents),
-        ("modelled_impacts", "5. Modelled impacts", draft.modelled_impacts),
-        ("uncertainty", "6. Uncertainty and sensitivity", draft.uncertainty),
-        ("verification", "7. Verification findings", draft.verification),
-        ("limitations", "8. Limitations and caveats", draft.limitations),
+        ("executive_summary", "Executive summary", draft.executive_summary),
+        ("policy", "Policy assessed", draft.policy),
+        ("research", "Evidence from research", draft.research),
+        ("precedents", "Historical precedents", draft.precedents),
+        ("modelled_impacts", "Modelled impacts", draft.modelled_impacts),
+        ("uncertainty", "Uncertainty and sensitivity", draft.uncertainty),
+        ("verification", "Verification findings", draft.verification),
+        ("limitations", "Limitations and caveats", draft.limitations),
     ]
 
     sections: list[ReportSection] = []
@@ -441,7 +441,7 @@ def assemble_narrative_report(
     sections.append(
         ReportSection(
             section_id="references",
-            heading="9. References",
+            heading="References",
             body_markdown=ref_body,
             source_ids=all_ref_ids,
             figure_ids=[],
