@@ -164,7 +164,8 @@ def postprocess(findings: ResearchFindings, *, allowed_urls: set[str],
         summary = "No summary could be produced from the verified evidence."
 
     trace = [st.model_copy(update={"detail": clip(st.detail),
-                                   "source_ids": [smap[x] for x in st.source_ids if x in smap],
+                                   "source_ids": [smap.get(x, x) for x in st.source_ids
+                                                  if x in smap or x.startswith("D-")],  # curated IDs stay as-is
                                    "evidence_ids": [emap[x] for x in st.evidence_ids if x in emap]})
              for st in findings.trace]
 
