@@ -19,3 +19,4 @@ Owner: agent-1. One line per cross-cutting decision. Other agents propose entrie
 | 2026-11-07 | `operation_id` is the route function name (e.g. `create_analysis`, `stream_events`). | Readable names in the generated frontend client. | agent-1 |
 | 2026-11-07 | `export_openapi.py` writes `frontend/src/api/openapi.json` with sorted keys. | Stable output for the CI drift check. | agent-1 |
 | 2026-11-07 | Tests run with `--import-mode=importlib` and no `__init__.py` in test folders. | Eleven owners' test files can share basenames without collisions. | agent-1 |
+| 2026-11-07 | `backend/scripts/smoke.py` runs one analysis in the current mode on an in-memory DB and prints stage timings, verification and remaining placeholders; `--json`, `--expect-approved` and `--max-seconds` give CI-friendly exit codes (0 ok, 1 failed, 2 check failed). | One command for agent-11 and the demo rehearsal to confirm the golden path. | agent-1 |
