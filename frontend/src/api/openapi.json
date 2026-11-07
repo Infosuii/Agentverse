@@ -3387,6 +3387,16 @@
               }
             },
             "description": "Unprocessable Content"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Too many analyses (live mode: 6 a minute)"
           }
         },
         "summary": "Create Analysis"

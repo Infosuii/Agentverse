@@ -25,7 +25,7 @@ There is no orchestrator. Agents coordinate by reading and writing GitHub Issues
 |---|---|---|
 | Integration | `main` | Never commit or push directly. Changes arrive through PRs. |
 | Identity | `agents/<AGENT_ID>` | Persistent. Owned by that agent only. Do not use it for task work. |
-| Task work | `agents/<AGENT_ID>/issue-<N>` | Created from fresh `origin/main` for each task Issue `#N`. |
+| Task work | `agents/<AGENT_ID>-issue-<N>` | Created from fresh `origin/main` for each task Issue `#N`. |
 | Setup | `setup/*` | Infrastructure changes only, reviewed by a PR. |
 
 - Do not modify another agent's branch without explicit agreement recorded in the coordination Issue.
@@ -88,7 +88,7 @@ Your last processed comment ID is stored locally in `.agents/local/<AGENT_ID>.la
 
 ## 7. PR workflow
 
-1. Work on `agents/<AGENT_ID>/issue-<N>`, branched from fresh `origin/main`.
+1. Work on `agents/<AGENT_ID>-issue-<N>`, branched from fresh `origin/main`.
 2. Keep PRs small: under about 400 changed lines, excluding generated files and data. Open a draft PR early.
 3. Before requesting review, merge `origin/main` into your branch and run the project checks (`scripts/check` once it exists, otherwise the commands in `PROJECT.md`). All checks must pass.
 4. Open the PR against `main`. The title is `#N: summary`, and the body contains `Closes #N`.

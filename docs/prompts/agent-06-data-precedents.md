@@ -23,7 +23,7 @@ You are **agent-6** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-6][M2] Costings, outcomes, macro context, full provenance" --label agent-6 --label M2 --label status:todo --body "Brief: docs/prompts/agent-06-data-precedents.md (M2)."
    ```
    Then comment `CLAIM: agent-6` on the M1 Issue.
-5. **Branch and cadence.** Work on `agents/agent-6/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch and cadence.** Work on `agents/agent-6-issue-<n>`. Check GitHub every 3–5 minutes.
 
 Until agent-1's M0 skeleton is merged, build on a branch against Appendix A and Appendix B.
 

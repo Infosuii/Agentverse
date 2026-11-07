@@ -24,7 +24,7 @@ You are **agent-9** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-9][M2] Gemini narrative report, citations, print/PDF, precedent charts" --label agent-9 --label M2 --label status:todo --body "Brief: docs/prompts/agent-09-precedents-verification-report.md (M2)."
    ```
    Then comment `CLAIM: agent-9` on the M1 Issue.
-5. **Branch:** work on `agents/agent-9/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch:** work on `agents/agent-9-issue-<n>`. Check GitHub every 3–5 minutes.
 
 ## 1. Mission
 

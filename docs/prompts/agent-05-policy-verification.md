@@ -23,7 +23,7 @@ You are **agent-5** in an eleven-agent build of **Jane Avenue**, an AI-powered U
    gh issue create -R Infosuii/Agentverse --title "TASK: [agent-5][M2] Gemini parser, full catalogue, critic, fault library" --label agent-5 --label M2 --label status:todo --body "Brief: docs/prompts/agent-05-policy-verification.md (M2)."
    ```
    Then comment `CLAIM: agent-5` on the M1 Issue.
-5. **Branch and check-ins.** Work on `agents/agent-5/issue-<n>`. Check GitHub every 3–5 minutes.
+5. **Branch and check-ins.** Work on `agents/agent-5-issue-<n>`. Check GitHub every 3–5 minutes.
 
 Until agent-1's M0 skeleton is merged, build on a branch against Appendix A and Appendix B.
 

@@ -26,6 +26,7 @@ from ..contracts import (
     utcnow,
 )
 from ..store import AnalysisStore
+from .logcontext import analysis_context, stage_context
 
 log = logging.getLogger(__name__)
 
@@ -87,15 +88,18 @@ class _Run:
         self.store.save(self.a)
 
     def stage(self, name: Stage, fn: Callable[[], dict[str, Any] | None]) -> None:
-        self.save(status=name)
-        self.emit("stage_started", f"Started {name}", stage=name)
-        t0 = time.perf_counter()
-        update = fn() or {}
-        elapsed = int((time.perf_counter() - t0) * 1000)
-        self.a = self.a.model_copy(update=update, deep=True)
-        timings = {**self.a.stage_timings_ms, name: elapsed}
-        self.save(stage_timings_ms=timings, sources=collect_sources(self.a))
-        self.emit("stage_completed", f"Completed {name} in {elapsed} ms", stage=name, data={"duration_ms": elapsed})
+        with stage_context(name):
+            self.save(status=name)
+            self.emit("stage_started", f"Started {name}", stage=name)
+            t0 = time.perf_counter()
+            update = fn() or {}
+            elapsed = int((time.perf_counter() - t0) * 1000)
+            self.a = self.a.model_copy(update=update, deep=True)
+            timings = {**self.a.stage_timings_ms, name: elapsed}
+            self.save(stage_timings_ms=timings, sources=collect_sources(self.a))
+            self.emit("stage_completed", f"Completed {name} in {elapsed} ms", stage=name,
+                      data={"duration_ms": elapsed})
+            log.info("stage completed in %d ms", elapsed)
 
 
 def _parsing(run: _Run) -> dict[str, Any]:
@@ -128,7 +132,7 @@ def _researching(run: _Run) -> dict[str, Any]:
     try:
         findings = research.run_research(run.a.policy, on_step=on_step, use_cache=req.options.use_research_cache)
     except Exception as exc:  # research failures must never fail the analysis (MASTER_PROMPT 9.2 failure policy)
-        log.exception("research failed for analysis %s", run.a.analysis_id)
+        log.exception("research failed; continuing without research")
         run.emit("error", f"Research failed and was skipped: {type(exc).__name__}: {exc}", stage="researching")
         return {}
     return {"research": findings}
@@ -180,15 +184,19 @@ def run_analysis(store: AnalysisStore, analysis_id: str) -> Analysis:
     if analysis is None:
         raise KeyError(f"Unknown analysis {analysis_id}")
     run = _Run(store, analysis)
-    try:
-        for name, fn in _STAGES:
-            run.stage(name, lambda fn=fn: fn(run))
-        run.save(status="completed")
-        run.emit("completed", "Analysis completed",
-                 data={"verification_overall": run.a.verification.overall if run.a.verification else None})
-    except Exception as exc:  # any unexpected failure ends the run cleanly; the error is shown in the UI
-        log.exception("analysis %s failed", analysis_id)
-        message = f"{type(exc).__name__}: {exc}"
-        run.save(status="failed", error=message)
-        run.emit("failed", message)
+    with analysis_context(analysis_id):
+        log.info("analysis started (mode=%s): %s", analysis.mode, analysis.request.query[:120])
+        t0 = time.perf_counter()
+        try:
+            for name, fn in _STAGES:
+                run.stage(name, lambda fn=fn: fn(run))
+            run.save(status="completed")
+            overall = run.a.verification.overall if run.a.verification else None
+            run.emit("completed", "Analysis completed", data={"verification_overall": overall})
+            log.info("analysis completed in %d ms (verification=%s)", (time.perf_counter() - t0) * 1000, overall)
+        except Exception as exc:  # any unexpected failure ends the run cleanly; the error is shown in the UI
+            log.exception("analysis failed during %s", run.a.status)
+            message = f"{type(exc).__name__}: {exc}"
+            run.save(status="failed", error=message)
+            run.emit("failed", message)
     return run.a
