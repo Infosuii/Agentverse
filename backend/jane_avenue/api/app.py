@@ -188,6 +188,12 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
                                 f"Try again in {retry_after} s."], headers={"Retry-After": str(retry_after)})
         if body.reuse_research_from and get_store().get(body.reuse_research_from) is None:
             raise ApiError(404, f"Analysis {body.reuse_research_from} (reuse_research_from) not found")
+        if body.parameter_overrides:
+            # Same 422 as /api/simulate, instead of accepting the run and failing it at the modelling stage.
+            try:
+                engine.apply_overrides(engine.default_parameters(body.policy_override), body.parameter_overrides)
+            except ValueError as exc:
+                raise ApiError(422, "Invalid parameter override", [str(exc)]) from exc
         analysis = pipeline.create_analysis(get_store(), body)
         background.add_task(_run, analysis.analysis_id)
         return AnalysisCreated(analysis_id=analysis.analysis_id, status=analysis.status)

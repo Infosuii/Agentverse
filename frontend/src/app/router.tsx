@@ -1,6 +1,7 @@
 import React from 'react';
-import { Navigate, Route, Routes } from 'react-router';
+import { Link, Navigate, Route, Routes } from 'react-router';
 import { Layout } from './Layout';
+import { Card, EmptyState } from '../components/ui';
 import { NewAnalysisPage } from '../features/new-analysis/NewAnalysisPage';
 import { AnalysisShell } from '../features/analysis/AnalysisShell';
 import { OverviewTab } from '../features/analysis/OverviewTab';
@@ -27,6 +28,26 @@ const ReportTab: React.ComponentType =
 const EvaluationPage: React.ComponentType =
   EvaluationModule.EvaluationPage ?? EvaluationModule.default;
 
+/** Unknown URLs used to render a blank page with no header; keep the shell and offer a way back. */
+function NotFoundPage() {
+  return (
+    <Card>
+      <EmptyState
+        title="Page not found"
+        description="There is no page at this address. Start a new analysis or open one from the history."
+        action={
+          <Link
+            to="/"
+            className="inline-flex items-center rounded-md bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-blue-700"
+          >
+            New analysis
+          </Link>
+        }
+      />
+    </Card>
+  );
+}
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -45,6 +66,7 @@ export function AppRoutes() {
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/evaluation" element={<EvaluationPage />} />
         <Route path="/dev/ui" element={<DevUiPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

@@ -66,7 +66,7 @@ Plain-English Policy Query
   - **Business Investment (`business_investment_pct`):** Year 1 **`-0.29%`** (`-£1.00bn`), Year 5 **`-0.56%`** (`-£2.19bn`)
   - **Real GDP Level (`gdp_level_pct`):** Year 1 **`-0.016%`**, Year 5 **`-0.104%`**
   - **User Cost of Capital (`cost_of_capital_pct`):** **`+0.97%`** (`+0.9706%`); **Devereux–Griffith EATR:** **`21.7% -> 24.3%`**
-- Analysts can verify every step live in the **Calculation Inspector** and test `full_expensing_coverage = 1.0` on the **Assumptions & Lab** sliders (`POST /api/v1/simulate` in `< 50 ms`).
+- Analysts can verify every step live in the **Calculation Inspector** and test `full_expensing_coverage = 1.0` on the **Scenarios** tab's **Live Assumption Sliders** (`POST /api/simulate` in `< 50 ms`).
 
 ---
 
@@ -106,7 +106,7 @@ Plain-English Policy Query
 
 | Metric | Target Budget | Measured (`smoke.py` / API) |
 |---|---|---|
-| Fast slider re-simulation (`POST /api/v1/simulate`, 500–2,000 draws + tornado) | `< 1,000 ms` | **`~15–30 ms`** |
+| Fast slider re-simulation (`POST /api/simulate`, 500–2,000 draws + tornado) | `< 1,000 ms` | **`~15–30 ms`** |
 | First SSE research step on screen | `< 3,000 ms` | **`< 200 ms`** |
 | Full golden-path analysis (`cached` mode, 54 sources, 37 evidence items) | `< 20,000 ms` | **`5.38 s`** (`modelling=30ms`, `verifying=8ms`, `reporting=5ms`) |
 | Full golden-path analysis (`mock` mode) | `< 20,000 ms` | **`0.60 s`** |

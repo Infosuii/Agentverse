@@ -243,3 +243,12 @@ def test_reference_endpoints(client, demo_policy):
 def test_operation_ids_are_function_names(client):
     ops = {op["operationId"] for path in client.get("/openapi.json").json()["paths"].values() for op in path.values()}
     assert {"health", "parse_policy", "create_analysis", "get_analysis", "stream_events", "simulate"} <= ops
+
+
+def test_create_analysis_rejects_bad_override_up_front(client):
+    # Was accepted with 202 and then failed at the modelling stage; now the same 422 as /api/simulate.
+    for overrides, word in (({"no_such_param": 1.0}, "Unknown parameter"), ({"trend_real_growth": 0.02}, "fixed")):
+        r = client.post("/api/analyses", json={"query": GOLDEN, "parameter_overrides": overrides})
+        assert r.status_code == 422, r.text
+        assert any(word in reason for reason in r.json()["reasons"])
+    assert client.get("/api/analyses").json() == []  # nothing was created

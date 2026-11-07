@@ -69,6 +69,16 @@ describe('AppRoutes & Shell integration', () => {
     expect(screen.getByText('Open →')).toBeInTheDocument();
   });
 
+  it.each(['/new', '/analyses/an-golden-28/nonexistent-tab', '/no/such/page'])(
+    'renders a not-found page inside the shell for unknown route %s',
+    (route) => {
+      renderAtRoute(route);
+      expect(screen.getByText('Page not found')).toBeInTheDocument();
+      expect(screen.getByText('Jane Avenue')).toBeInTheDocument(); // header still there
+      expect(screen.getAllByRole('link', { name: 'New analysis' }).length).toBeGreaterThan(0);
+    },
+  );
+
   it('renders /dev/ui primitive gallery cleanly', () => {
     renderAtRoute('/dev/ui');
     expect(

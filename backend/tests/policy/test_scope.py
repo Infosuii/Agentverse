@@ -115,3 +115,47 @@ def test_fallback_bounds_when_registry_is_empty_or_broken(monkeypatch: pytest.Mo
         scope_module.FALLBACK_MIN_RATE_PCT, scope_module.FALLBACK_MAX_RATE_PCT, scope_module.FALLBACK_MAX_CHANGE_PP)
     assert d.forecast_allowed and any("fallback" in w for w in d.warnings)
 
+
+
+class _Baseline:  # the only field the coverage rule reads
+    def __init__(self, first: int, last: int) -> None:
+        self.years = [type("Y", (), {"fiscal_year": f"{y}-{(y + 1) % 100:02d}"})() for y in range(first, last + 1)]
+
+
+@pytest.mark.parametrize(("effective", "horizon", "allowed", "words"), [
+    (date(2015, 4, 1), 5, False, "before the baseline data starts (April 2025)"),
+    (date(2025, 3, 31), 5, False, "before the baseline data starts"),  # FY 2024-25
+    (date(2025, 4, 1), 5, True, ""),
+    (date(2037, 4, 1), 5, True, ""),  # 2037-38 .. 2041-42: the last baseline year
+    (date(2037, 4, 1), 6, False, "runs past the end of the baseline data (March 2042)"),
+    (date(2099, 4, 1), 5, False, "runs past the end of the baseline data"),
+])
+def test_modelled_years_must_lie_inside_the_baseline(monkeypatch, effective, horizon, allowed, words) -> None:
+    monkeypatch.setattr(scope_module.registry, "load_baseline", lambda: _Baseline(2025, 2041))
+    d = check_scope(_spec(effective=effective, horizon=horizon))
+    assert d.forecast_allowed is allowed
+    assert all(words in r for r in d.reasons) if allowed else any(words in r for r in d.reasons)
+
+
+def test_baseline_coverage_is_skipped_if_the_baseline_cannot_load(monkeypatch) -> None:
+    def broken():
+        raise RuntimeError("data layer down")
+    monkeypatch.setattr(scope_module.registry, "load_baseline", broken)
+    assert check_scope(_spec(effective=date(2015, 4, 1))).forecast_allowed
+
+
+def test_reversed_announcements_do_not_widen_the_validated_range(registry_changes) -> None:
+    # CT-MAIN-2020-REVERSED (19% -> 17%) was announced but never implemented: the range must stay 19%-52%.
+    registry_changes.append(PolicyChange(
+        change_id="CT-MAIN-2020-REVERSED", tax="corporation_tax", policy_type="corporation_tax_main_rate",
+        effective_date=date(2020, 4, 1), old_rate_pct=19, new_rate_pct=17, source_ids=["D-test"],
+        notes="Announced proposal only; retained at 19 percent by Budget 2020. Reversed."))
+    d = check_scope(_spec(25, 22))
+    assert d.validated_min_rate_pct == 19
+    assert any("outside the historical range" in w for w in check_scope(_spec(19, 18)).warnings)
+
+
+def test_registry_scope_range_excludes_the_reversed_2020_cut(monkeypatch) -> None:
+    monkeypatch.undo()  # drop the autouse fixture: read the real curated data, which has the reversed 2020 row
+    assert any("reversed" in c.change_id.lower() for c in scope_module.registry.load_policy_changes("corporation_tax"))
+    assert check_scope(_spec()).validated_min_rate_pct == 19
