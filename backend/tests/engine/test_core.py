@@ -8,25 +8,39 @@ import pytest
 
 from jane_avenue.contracts import METRIC_NAMES
 from jane_avenue.engine import compute, revenue_static_behavioural
-from jane_avenue.engine.core import allowance_pv_plant_machinery, user_cost
+from jane_avenue.engine.core import allowance_pv_plant_machinery, devereux_griffith, user_cost
 
 # ---- Golden-number regression ----------------------------------------------------------------------------------------
-# Demo policy: CT main rate 25% → 28% from 1 April 2027, 5 years, central parameters, against the frozen baseline in
-# conftest.py. If an intentional model or parameter change moves these, regenerate them and say why here:
+# Demo policy: CT main rate 25% → 28% from 1 April 2027, 5 years, against the frozen baseline in conftest.py and the
+# frozen parameter set below (the M2 sourced central values, with the ONS 2025 investment shares from agent-6's
+# business_investment_by_asset dataset). Both are frozen so data updates do not move these numbers. If an intentional
+# model or parameter change moves them, regenerate them and say why here:
 #   2026-11-07 agent-3: first M1 engine (team-prior parameters, MASTER_PROMPT 9.5 equations).
-GOLDEN = {
-    "revenue_static_gbp_bn": [7.111482, 12.483682, 12.992604, 13.524766, 14.078725],
-    "revenue_behavioural_gbp_bn": [6.841083, 11.536285, 12.006584, 12.49836, 13.010279],
-    "revenue_dynamic_gbp_bn": [6.832082, 11.499235, 11.944971, 12.411585, 12.898701],
-    "business_investment_pct": [-0.267548, -0.401322, -0.468209, -0.501652, -0.518374],
-    "business_investment_gbp_bn": [-0.828556, -1.25821, -1.485171, -1.611113, -1.685594],
-    "gdp_level_pct": [-0.013616, -0.032059, -0.051225, -0.069307, -0.08561],
-    "cost_of_capital_pct": [0.891826, 0.891826, 0.891826, 0.891826, 0.891826],
+#   2026-11-07 agent-3: M2 sourcing. main_rate_profit_share 0.85→0.87 (HMRC CT statistics 2026), capital_share
+#     0.35→0.40 (ONS labour share), investment shares 0.40/0.27/0.33 → ONS 2025 0.267/0.288/0.445.
+FROZEN_PARAMS = {
+    "taxable_profit_elasticity": 0.20, "user_cost_elasticity": 0.60, "profit_gdp_elasticity": 1.0,
+    "behavioural_first_year_share": 0.5, "receipts_first_year_share": 0.6, "investment_adjustment_speed": 0.5,
+    "main_rate_profit_share": 0.87, "real_required_return": 0.05, "full_expensing_coverage": 0.80,
+    "allowance_pv_intangibles": 0.90, "capital_share": 0.40,
+    "share_plant_machinery": 0.26704290684190185, "share_structures": 0.28833088519520683,
+    "share_intangibles": 0.4446262079628914,
+    "depreciation_plant_machinery": 0.175, "depreciation_structures": 0.0361, "depreciation_intangibles": 0.1535,
+    "profit_base_deviation_pct": 0.0, "trend_real_growth": 0.015,
+}
+GOLDEN: dict[str, list[float]] = {
+    "revenue_static_gbp_bn": [7.278811, 12.777416, 13.298312, 13.842996, 14.409989],
+    "revenue_behavioural_gbp_bn": [7.002049, 11.807727, 12.289092, 12.792439, 13.316403],
+    "revenue_dynamic_gbp_bn": [6.990986, 11.762087, 12.213032, 12.685088, 13.17808],
+    "business_investment_pct": [-0.291184, -0.436777, -0.509573, -0.545971, -0.56417],
+    "business_investment_gbp_bn": [-0.901755, -1.369367, -1.616379, -1.753448, -1.834508],
+    "gdp_level_pct": [-0.016352, -0.038584, -0.061783, -0.083769, -0.10369],
+    "cost_of_capital_pct": [0.970615, 0.970615, 0.970615, 0.970615, 0.970615],
 }
 
 
-def test_golden_demo_policy(demo_spec, central, baseline):
-    out = compute(demo_spec, central, baseline)
+def test_golden_demo_policy(demo_spec, baseline):
+    out = compute(demo_spec, FROZEN_PARAMS, baseline)
     assert out.fiscal_years == ["2027-28", "2028-29", "2029-30", "2030-31", "2031-32"]
     for metric, expected in GOLDEN.items():
         np.testing.assert_allclose(out.metrics[metric][0], expected, atol=1e-5, err_msg=metric)
@@ -200,7 +214,8 @@ def test_rejects_unsupported_policy(spec_factory, central, baseline):
 
 
 def test_shares_small_drift_renormalised_with_warning(demo_spec, central, baseline):
-    out = compute(demo_spec, dict(central, share_structures=0.275), baseline)  # sums to 1.005
+    shares = {"share_plant_machinery": 0.40, "share_structures": 0.275, "share_intangibles": 0.33}  # sums to 1.005
+    out = compute(demo_spec, dict(central, **shares), baseline)
     assert any("renormalised" in w for w in out.warnings)
     w = sum(out.intermediates[f"w_{a}"][0, 0] for a in ("plant_machinery", "structures", "intangibles"))
     assert w == pytest.approx(1.0)
@@ -231,3 +246,17 @@ def test_small_profits_rate_partial(spec_factory, central, baseline):
     b0 = out.intermediates["B0"][0, 1]
     R = out.intermediates["R"][0, 1]
     assert b0 == pytest.approx((1 - central["main_rate_profit_share"]) * R / 0.19)
+
+
+# ---- Devereux-Griffith effective tax rates ------------------------------------------------------------------------------
+
+def test_devereux_griffith_properties():
+    p, r = 0.20, 0.05
+    _, emtr, eatr = devereux_griffith(0.25, 1.0, r, 0.175, p)  # full expensing = cash-flow tax
+    assert emtr == pytest.approx(0.0, abs=1e-12)
+    assert eatr == pytest.approx(0.25 * (p - r) / p)
+    _, emtr0, eatr0 = devereux_griffith(0.0, 0.5, r, 0.0361, p)
+    assert emtr0 == pytest.approx(0.0, abs=1e-12) and eatr0 == pytest.approx(0.0, abs=1e-12)
+    lo = devereux_griffith(0.25, 0.5, r, 0.0361, p)
+    hi = devereux_griffith(0.28, 0.5, r, 0.0361, p)
+    assert hi[1] > lo[1] > 0 and hi[2] > lo[2] > 0
