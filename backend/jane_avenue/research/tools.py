@@ -52,7 +52,7 @@ def _resolve(host: str) -> list[str]:
     return [info[4][0] for info in socket.getaddrinfo(host, None)]
 
 
-def _is_public_http_url(url: str) -> str | None:
+def is_public_http_url(url: str) -> str | None:
     """Return an error string when `url` must not be fetched: a non-http scheme, a local name, or a host that is (or
     resolves to) a non-global address. Checked for the first URL and for every redirect hop."""
     parsed = urlparse(url)
@@ -71,6 +71,9 @@ def _is_public_http_url(url: str) -> str | None:
     if any(not ip.is_global for ip in addresses):
         return f"refusing to fetch non-public address {host}"
     return None
+
+
+_is_public_http_url = is_public_http_url  # earlier private name, kept for callers that imported it
 
 
 def _read_capped(resp: httpx.Response) -> bytes:
@@ -124,7 +127,7 @@ def fetch_url(url: str, *, client: httpx.Client | None = None) -> FetchedDoc:
 
     Redirects are followed by hand (at most MAX_REDIRECTS) so that every hop passes the public-address check, and
     the body is streamed with a MAX_BYTES cap."""
-    blocked = _is_public_http_url(url)
+    blocked = is_public_http_url(url)
     if blocked:
         return _failed(url, blocked)
     own = client is None
@@ -135,7 +138,7 @@ def fetch_url(url: str, *, client: httpx.Client | None = None) -> FetchedDoc:
             with http.stream("GET", current, follow_redirects=False) as resp:
                 if resp.is_redirect and resp.headers.get("location"):
                     nxt = str(resp.url.join(resp.headers["location"]))
-                    blocked = _is_public_http_url(nxt)
+                    blocked = is_public_http_url(nxt)
                     if blocked:
                         return _failed(url, f"redirect blocked: {blocked}", resp.status_code, nxt)
                     current = nxt

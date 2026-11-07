@@ -100,6 +100,19 @@ def tool_declarations(dataset_ids: list[str], *, include_data: bool = True) -> l
     return tools
 
 
+def _csv_rows(relative: str) -> list[dict[str, str]]:
+    """Rows of a curated CSV under the data directory (the registry's own file), capped at MAX_DATA_ROWS."""
+    import csv
+
+    from ..config import get_settings
+
+    path = (get_settings().data_dir / relative).resolve()
+    if not path.is_file() or path.suffix.lower() != ".csv":
+        return []
+    with path.open(encoding="utf-8", newline="") as fh:
+        return [dict(row) for _, row in zip(range(MAX_DATA_ROWS), csv.DictReader(fh), strict=False)]
+
+
 def _jsonable_rows(rows: list[Any]) -> list[Any]:
     return [r.model_dump(mode="json", exclude_none=True) if hasattr(r, "model_dump") else r
             for r in rows[:MAX_DATA_ROWS]]
@@ -203,11 +216,10 @@ class ResearchLoop:
             return {"ok": False, "error": f"unknown dataset_id; available: {sorted(metas)}"}
         if "baseline" in dataset_id:
             rows: list[Any] = [registry.load_baseline()]
-        elif "rate" in dataset_id or "change" in dataset_id or "history" in dataset_id:
+        elif "policy_change" in dataset_id or "rate_history" in dataset_id:
             rows = registry.load_policy_changes("corporation_tax")
         else:
-            series = registry.load_series(dataset_id)
-            rows = list(series.points) if series else []
+            rows = _csv_rows(meta.file)
         self.r.tracer.emit("dataset_lookup", f"Looked up dataset: {meta.title}",
                            f"{len(rows)} row(s) from {meta.publisher}" +
                            (" (placeholder data)" if meta.is_placeholder else ""),
