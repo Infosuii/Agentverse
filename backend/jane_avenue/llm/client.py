@@ -70,6 +70,9 @@ class LLMClient(Protocol):
 Factory = Callable[[], Any]
 
 
+Factory = Callable[[], Any]
+
+
 class MockLLM:
     """Deterministic LLM for mock mode and tests. Responses are registered by key; unknown prompts raise LLMUnavailable.
 
