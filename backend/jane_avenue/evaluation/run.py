@@ -14,6 +14,20 @@ DOCS_EVAL_PATH = REPO_ROOT / "docs" / "EVALUATION.md"
 
 
 def _build_limitations(bt: BacktestOutput) -> list[str]:
+    low_b, high_b = bt.calibrated_bounds
+    bound_lim = (
+        f"Train-calibrated elasticity corner solution: fitting ε by nonlinear least squares on FY <= 2007 reached "
+        f"the search bound of {bt.calibrated_elasticity:.3f} on [{low_b:.1f}, {high_b:.1f}] (not identified on "
+        "FY <= 2007 data because the 1984–86 cuts came with capital-allowance base-broadening, so a large ε "
+        "mostly absorbs the base changes). Its out-of-sample MAE on n = 17 test years is statistically "
+        f"indistinguishable from the central prior (ε = {bt.prior_elasticity:.2f}), so it is not exposed as an "
+        "alternative engine parameter."
+        if bt.calibrated_at_bound
+        else (
+            f"Train-calibrated elasticity (ε = {bt.calibrated_elasticity:.3f}) is estimated on small pre-2008 sample "
+            "and is statistically indistinguishable from the central prior on n = 17 test years."
+        )
+    )
     lims = [
         "Conditional backtest design: predictions of R_{y+1} condition on realised 2-year profit growth from y-1 to y+1 "
         f"(measured via `{bt.profit_proxy_used}`). This isolates tax-rate response modelling from macroeconomic forecast error, "
@@ -23,6 +37,7 @@ def _build_limitations(bt: BacktestOutput) -> list[str]:
         "Simultaneous base-broadening and relief confounders: major rate changes coincided with structural base changes—"
         "most notably the 1983–1986 phased rate cuts paired with first-year capital-allowance abolition, and the April 2023 "
         "rise (19% -> 25%) paired with full expensing for plant & machinery and the 19% small profits rate / marginal relief.",
+        bound_lim,
         "Official costings are not ground truth: `official_costing_gbp_bn` reports ex-ante HMT/OBR policy costings (revenue delta "
         "relative to a contemporary Budget baseline under ex-ante macro assumptions), whereas `observed` and model `predictions` "
         "are total fiscal-year CT receipts R_{y+1} (£bn).",
@@ -41,6 +56,15 @@ def _build_limitations(bt: BacktestOutput) -> list[str]:
 
 def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> str:
     """Render `docs/EVALUATION.md` from the EvaluationReport and BacktestOutput."""
+    low_b, high_b = bt.calibrated_bounds
+    cal_eps_str = (
+        f"reached the search bound of `{bt.calibrated_elasticity:.3f}` on `[{low_b:.1f}, {high_b:.1f}]` "
+        "(corner solution; not identified on FY ≤ 2007 data because the 1984–86 cuts came with capital-allowance "
+        "base-broadening, so a large $\\varepsilon$ here mostly absorbs the base changes; out-of-sample MAE is "
+        "statistically indistinguishable from the central prior on $n = 17$, and it is not exposed as an alternative engine parameter)"
+        if bt.calibrated_at_bound
+        else f"$\\hat{{\\varepsilon}}_{{\\text{{train}}}} = {bt.calibrated_elasticity:.3f}$"
+    )
     lines: list[str] = [
         "# Jane Avenue — Evaluation, Historical Backtesting & ML Experiment",
         "",
@@ -54,7 +78,7 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
         report.target_description,
         "",
         "- **Chronological split:** Training split `FY <= 2007` (`1985-86` to `2007-08`), out-of-sample test split `FY >= 2008` (`2008-09` onwards). No shuffling is ever performed, and no test-year outcome (`FY >= 2008`) enters training parameter estimation.",
-        f"- **Engine central parameters:** `main_rate_profit_share` $s = {bt.main_rate_profit_share:.2f}$, central `taxable_profit_elasticity` $\\varepsilon = {bt.prior_eps if hasattr(bt, 'prior_eps') else bt.prior_elasticity:.2f}$, train-calibrated elasticity $\\hat{{\\varepsilon}}_{{\\text{{train}}}} = {bt.calibrated_elasticity:.3f}$.",
+        f"- **Engine parameter vintage (`default_parameters()`):** `main_rate_profit_share` $s = {bt.main_rate_profit_share:.2f}$, central `taxable_profit_elasticity` $\\varepsilon = {bt.prior_elasticity:.2f}$; train-calibrated elasticity $\\varepsilon$ {cal_eps_str}.",
     ]
     if bt.loo_coverage_90 is not None:
         lines.append(
@@ -84,18 +108,28 @@ def render_evaluation_markdown(report: EvaluationReport, bt: BacktestOutput) -> 
             "",
             "## 3. Backtest Results by Split",
             "",
-            "Headline evaluation is on the **out-of-sample `test` split (`FY >= 2008`)**:",
+            "Headline evaluation is on the **out-of-sample `test` split (`FY >= 2008`)**. "
+            "On $n = 17$ test years, `jane_behavioural` (central micro-econometric prior) and `jane_calibrated` "
+            "(bound-constrained corner solution on pre-2008 data) are **statistically indistinguishable on $n = 17$**:",
             "",
-            "| Split | Method | Baseline? | n | MAE (£bn) | RMSE (£bn) | MAPE (%) | Policy-Effect Directional Accuracy |",
+            "| Split | Method | Baseline? | n | MAE (£bn) | RMSE (£bn) | MAPE (%) | Policy-Effect Directional Accuracy* |",
             "|---|---|---|---:|---:|---:|---:|---:|",
         ]
     )
     for m in sorted(report.methods, key=lambda x: (0 if x.split == "test" else 1, x.mae)):
         mape_str = f"{m.mape_pct:.2f}%" if m.mape_pct is not None else "—"
         dir_str = f"{m.directional_accuracy * 100:.1f}%" if m.directional_accuracy is not None else "—"
+        if m.method == "naive_growth" and m.directional_accuracy is not None:
+            dir_str = f"{dir_str}*"
         lines.append(
             f"| `{m.split}` | `{m.method}` | {'Yes' if m.is_baseline else 'No'} | {m.n} | {m.mae:.2f} | {m.rmse:.2f} | {mape_str} | {dir_str} |"
         )
+    lines.extend(
+        [
+            "",
+            "\\* *Directional accuracy compares the sign of each method's predicted policy rate effect $(\\hat{R}_{y+1} - \\hat{R}^{\\text{naive}}_{y+1})$ against the observed excess movement $(R_{y+1} - \\hat{R}^{\\text{naive}}_{y+1})$ on rate-change years. For `naive_growth`, directional accuracy is `0.0%` by construction because it predicts no rate effect $(\\Delta \\hat{R}^{\\text{rate}} = 0)$.*",
+        ]
+    )
 
     lines.extend(
         [

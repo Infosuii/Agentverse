@@ -57,16 +57,14 @@ def empirical_calibration_info(cases: Sequence[BacktestCase] | None = None) -> d
     if len(t_cases) < MIN_RESIDUAL_CASES:
         return None
     residuals = [float((c.predictions["jane_behavioural"] - c.observed) / c.observed) for c in t_cases]
+    # Convert r = (pred - obs)/obs to u = obs/pred - 1 = 1/(1 + r) - 1 so interval = pred * (1 + quantile(u))
     u_arr = np.asarray([1.0 / (1.0 + r) - 1.0 for r in residuals], dtype=float)
     n = len(residuals)
     loo_covered = 0
     for i in range(n):
-        other_u = np.delete(u_arr, i)
-        q5, q95 = np.percentile(other_u, (5, 95))
-        pred_val = t_cases[i].predictions["jane_behavioural"]
-        lo = pred_val * (1.0 + float(q5))
-        hi = pred_val * (1.0 + float(q95))
-        if lo <= t_cases[i].observed <= hi:
+        other = np.delete(u_arr, i)
+        q5, q95 = np.percentile(other, (5, 95))
+        if float(q5) <= float(u_arr[i]) <= float(q95):
             loo_covered += 1
     test_period = f"FY{t_cases[0].fiscal_year}–FY{t_cases[-1].fiscal_year}"
     return {
