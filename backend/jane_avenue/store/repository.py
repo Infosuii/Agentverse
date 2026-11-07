@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import sqlite3
 import threading
+from collections import OrderedDict
 from collections.abc import Callable
 from pathlib import Path
 from typing import TypeVar
@@ -32,13 +33,21 @@ CREATE TABLE IF NOT EXISTS events (
 
 R = TypeVar("R")
 
+CACHE_SIZE = 32
+
 
 class AnalysisStore:
-    def __init__(self, path: str | Path = ":memory:") -> None:
+    """`get` serves recently saved or read analyses from an in-memory LRU (32 entries) so `GET /api/analyses/{id}`
+    stays well under 100 ms as analyses grow. Cached objects are shared: treat what `get` returns as read-only and
+    use `model_copy(deep=True)` to change it (the orchestrator already does)."""
+
+    def __init__(self, path: str | Path = ":memory:", *, cache_size: int = CACHE_SIZE) -> None:
         self.path = str(path)
         if self.path != ":memory:" and not self.path.startswith("file:"):
             Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
+        self._cache: OrderedDict[str, Analysis] = OrderedDict()
+        self._cache_size = cache_size
         self._conn = sqlite3.connect(self.path, check_same_thread=False)
         with self._lock:
             self._conn.executescript(_SCHEMA)
@@ -55,19 +64,36 @@ class AnalysisStore:
         with self._lock:
             self._conn.close()
 
+    def _remember(self, analysis: Analysis) -> None:
+        """Caller holds the lock."""
+        self._cache[analysis.analysis_id] = analysis
+        self._cache.move_to_end(analysis.analysis_id)
+        while len(self._cache) > self._cache_size:
+            self._cache.popitem(last=False)
+
     # ---- analyses ----------------------------------------------------------------------------------------------
     def save(self, analysis: Analysis) -> None:
         row = (analysis.analysis_id, analysis.created_at.isoformat(), analysis.updated_at.isoformat(),
                analysis.status, analysis.model_dump_json())
-        self._locked(lambda c: c.execute(
-            "INSERT INTO analyses (analysis_id, created_at, updated_at, status, body) VALUES (?, ?, ?, ?, ?) "
-            "ON CONFLICT(analysis_id) DO UPDATE SET updated_at=excluded.updated_at, status=excluded.status, "
-            "body=excluded.body", row))
+        with self._lock:
+            self._locked(lambda c: c.execute(
+                "INSERT INTO analyses (analysis_id, created_at, updated_at, status, body) VALUES (?, ?, ?, ?, ?) "
+                "ON CONFLICT(analysis_id) DO UPDATE SET updated_at=excluded.updated_at, status=excluded.status, "
+                "body=excluded.body", row))
+            self._remember(analysis)
 
     def get(self, analysis_id: str) -> Analysis | None:
-        row = self._locked(lambda c: c.execute(
-            "SELECT body FROM analyses WHERE analysis_id = ?", (analysis_id,)).fetchone())
-        return Analysis.model_validate_json(row[0]) if row else None
+        with self._lock:
+            cached = self._cache.get(analysis_id)
+            if cached is not None:
+                self._cache.move_to_end(analysis_id)
+                return cached
+            row = self._conn.execute("SELECT body FROM analyses WHERE analysis_id = ?", (analysis_id,)).fetchone()
+            if row is None:
+                return None
+            analysis = Analysis.model_validate_json(row[0])
+            self._remember(analysis)
+            return analysis
 
     def status(self, analysis_id: str) -> str | None:
         row = self._locked(lambda c: c.execute(

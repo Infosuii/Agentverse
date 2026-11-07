@@ -44,7 +44,9 @@ from ..contracts import (
     Source,
 )
 from ..orchestrator import pipeline
+from ..orchestrator.logcontext import configure_logging
 from ..store import AnalysisStore
+from .ratelimit import TokenBucket
 
 log = logging.getLogger(__name__)
 
@@ -58,14 +60,17 @@ class ErrorBody(BaseModel):
 
 
 class ApiError(Exception):
-    def __init__(self, status_code: int, message: str, reasons: list[str] | None = None) -> None:
+    def __init__(self, status_code: int, message: str, reasons: list[str] | None = None,
+                 headers: dict[str, str] | None = None) -> None:
         super().__init__(message)
         self.status_code = status_code
         self.message = message
         self.reasons = reasons or []
+        self.headers = headers
 
 
 _ERRORS = {404: {"model": ErrorBody}, 409: {"model": ErrorBody}, 422: {"model": ErrorBody}}
+_CREATE_ERRORS = {**_ERRORS, 429: {"model": ErrorBody, "description": "Too many analyses (live mode: 6 a minute)"}}
 
 
 def _operation_id(route: APIRoute) -> str:
@@ -76,18 +81,39 @@ def _sse_frame(event_json: str, seq: int, type_: str) -> str:
     return f"id: {seq}\nevent: {type_}\ndata: {event_json}\n\n"
 
 
-def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None = None) -> FastAPI:
+def placeholder_data_in_use() -> list[str]:
+    """Dataset IDs still marked `is_placeholder`, plus "baseline" if the baseline projection is a placeholder."""
+    found = [d.dataset_id for d in data.registry.list_datasets() if d.is_placeholder]
+    if data.registry.load_baseline().is_placeholder:
+        found.append("baseline")
+    return found
+
+
+def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None = None,
+               rate_limiter: TokenBucket | None = None) -> FastAPI:
     """Build the app. With an explicit `store` (tests), analyses run inline as a background task, which the
-    TestClient completes before returning; otherwise they run on a 2-worker thread pool so two can run at once."""
+    TestClient completes before returning; otherwise they run on a 2-worker thread pool so two can run at once.
+
+    `POST /api/analyses` is rate-limited to 6 a minute per client in live mode; pass `rate_limiter` to override."""
+    configure_logging()
     settings = get_settings()
     if use_executor is None:
         use_executor = store is None
+    if rate_limiter is None and settings.mode == "live":
+        rate_limiter = TokenBucket(per_minute=6)
+    try:
+        placeholders = placeholder_data_in_use()
+        if placeholders:
+            log.warning("placeholder data in use (not real figures): %s", ", ".join(placeholders))
+    except Exception:  # a broken registry must not stop the API from starting; /api/health and tests surface it
+        log.exception("could not check the data registry for placeholders")
     app = FastAPI(title="Jane Avenue API", version=__version__,
                   description="AI-powered UK fiscal policy simulator. Prototype. Not official government analysis.",
                   generate_unique_id_function=_operation_id,
                   responses={422: {"model": ErrorBody, "description": "Invalid request or out-of-scope policy"}})
     app.state.store = store or AnalysisStore(settings.db_path)
     app.state.executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="analysis") if use_executor else None
+    app.state.rate_limiter = rate_limiter
     app.add_middleware(CORSMiddleware, allow_origins=list(settings.cors_origins), allow_credentials=False,
                        allow_methods=["*"], allow_headers=["*"], expose_headers=["Content-Disposition"])
 
@@ -96,7 +122,7 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
 
     @app.exception_handler(ApiError)
     async def _api_error(_: Request, exc: ApiError) -> JSONResponse:
-        return JSONResponse(status_code=exc.status_code,
+        return JSONResponse(status_code=exc.status_code, headers=exc.headers,
                             content=ErrorBody(message=exc.message, reasons=exc.reasons).model_dump())
 
     @app.exception_handler(RequestValidationError)
@@ -144,8 +170,15 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
         else:
             pipeline.run_analysis(get_store(), analysis_id)
 
-    @app.post("/api/analyses", response_model=AnalysisCreated, status_code=202, responses=_ERRORS)
-    def create_analysis(body: AnalysisRequest, background: BackgroundTasks) -> AnalysisCreated:
+    @app.post("/api/analyses", response_model=AnalysisCreated, status_code=202, responses=_CREATE_ERRORS)
+    def create_analysis(body: AnalysisRequest, background: BackgroundTasks, request: Request) -> AnalysisCreated:
+        limiter: TokenBucket | None = app.state.rate_limiter
+        if limiter is not None:
+            allowed, retry_after = limiter.take(request.client.host if request.client else "unknown")
+            if not allowed:
+                raise ApiError(429, "Too many analyses; please wait before starting another",
+                               [f"Live mode allows {round(limiter.rate * 60)} analyses a minute. "
+                                f"Try again in {retry_after} s."], headers={"Retry-After": str(retry_after)})
         if body.reuse_research_from and get_store().get(body.reuse_research_from) is None:
             raise ApiError(404, f"Analysis {body.reuse_research_from} (reuse_research_from) not found")
         analysis = pipeline.create_analysis(get_store(), body)
