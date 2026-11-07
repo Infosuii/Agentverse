@@ -169,6 +169,9 @@ def test_fallback_rates_exclude_reversed_2020_proposal_and_preserve_costing_prov
     report = run_evaluation(live=False, write_files=False)
     assert "N445" in report.target_description
     assert "gross of tax credits" in report.target_description
+    assert "D-ons-pnfc" in report.target_description
+    for sid in ("D-ons-ct-receipts", "D-obr-databank", "D-ons-pnfc", "D-budget2012", "D-budget2015"):
+        assert registry.get_source(sid) is not None, f"Expected source {sid} to resolve in registry"
     cases_by_id = {c.case_id: c for c in report.cases}
     assert "D-budget2012" in cases_by_id["CT-MAIN-2012"].notes
     assert "joint phased package" in cases_by_id["CT-MAIN-2012"].notes.lower()

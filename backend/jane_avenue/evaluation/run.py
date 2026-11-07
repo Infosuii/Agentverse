@@ -46,7 +46,7 @@ def _build_limitations(bt: BacktestOutput) -> list[str]:
         "for FY2018-19, `D-budget2015`) is from the Summer Budget 2015 joint 2017/2020 package—not isolated single-step estimates.",
         "Receipt perimeter and baseline difference (`D-ons-ct-receipts` vs `D-obr-databank`): historical backtest `ct_receipts` "
         "is ONS series N445 central-government Corporation Tax receipts gross of tax credits (and `pnfc_gos` is the ONS "
-        "`D-ons-pnfc-gos` private non-financial corporations gross operating surplus proxy), whereas the forward simulation "
+        "`D-ons-pnfc` private non-financial corporations gross operating surplus proxy), whereas the forward simulation "
         "engine baseline (`D-obr-databank`) uses OBR onshore Corporation Tax receipts. Historical backtest errors on N445 "
         "combine onshore/offshore regimes, Quarterly Instalment Payments (QIPs) timing transitions, bank surcharge, and "
         "tax-credit grossing, and therefore differ in perimeter from the engine's onshore baseline target.",
@@ -277,7 +277,7 @@ def run_evaluation(*, live: bool = False, write_files: bool = True) -> Evaluatio
     target_desc = (
         "Conditional backtest of UK Corporation Tax receipts R_{y+1} (£bn nominal, ONS N445 central-government CT "
         "gross of tax credits, `D-ons-ct-receipts` / `D-obr-databank`) predicted from information at "
-        f"fiscal year y-1, conditioning on realised 2-year profit growth (`{bt.profit_proxy_used}`, `D-ons-pnfc-gos`) "
+        f"fiscal year y-1, conditioning on realised 2-year profit growth (`{bt.profit_proxy_used}`, `D-ons-pnfc`) "
         "from y-1 to y+1 (note: the forward engine baseline uses OBR onshore CT receipts, a different receipt perimeter). "
         "This conditional design isolates tax-policy response modelling from macroeconomic forecast error. "
         f"Chronological split: train on FY <= 2007, out-of-sample test on FY >= 2008 ({bt.test_period})."
