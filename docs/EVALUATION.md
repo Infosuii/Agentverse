@@ -1,6 +1,6 @@
 # Jane Avenue — Evaluation, Historical Backtesting & ML Experiment
 
-- **Generated at:** `2026-11-07T20:17:38.795292+00:00`
+- **Generated at:** `2026-11-07T19:28:46.142740+00:00`
 - **Dataset version:** `62059e64ffca`
 - **Profit growth measure (`g`):** `pnfc_gos`
 - **Placeholder flag (`is_placeholder`):** `False`
