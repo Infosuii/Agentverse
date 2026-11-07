@@ -55,10 +55,30 @@ def test_parse_and_scope(client):
     edited = parsed.policy.model_copy(update={"proposed_rate_pct": 45.0})
     r = client.post("/api/policy/scope", json=edited.model_dump(mode="json"))
     assert c.ParseResponse.model_validate(r.json()).scope.status == "unsupported"
+    vat = c.ParseResponse.model_validate(client.post("/api/policy/parse", json={"query": "Raise VAT to 22%"}).json())
+    assert vat.policy.policy_type == "vat_standard_rate" and vat.policy.baseline_rate_pct is None
+    assert not vat.scope.forecast_allowed
 
 
 def test_parse_rejects_short_query(client):
-    assert client.post("/api/policy/parse", json={"query": "x"}).status_code == 422
+    r = client.post("/api/policy/parse", json={"query": "x"})
+    assert r.status_code == 422
+    body = r.json()
+    assert body["message"] == "Invalid request" and "body.query" in body["reasons"][0]
+
+
+def test_every_error_has_message_body(client):
+    assert client.get("/api/nope").json() == {"message": "Not Found", "reasons": []}
+    assert client.post("/api/analyses", json={"query": GOLDEN, "options": {"monte_carlo_draws": 99999}}).json()["reasons"]
+
+
+def test_openapi_422_is_error_body(client):
+    paths = client.get("/openapi.json").json()["paths"]
+    for path in paths.values():
+        for op in path.values():
+            if "422" in op["responses"]:
+                ref = op["responses"]["422"]["content"]["application/json"]["schema"]["$ref"]
+                assert ref.endswith("/ErrorBody"), op["operationId"]
 
 
 def test_analysis_lifecycle_and_sse(client):

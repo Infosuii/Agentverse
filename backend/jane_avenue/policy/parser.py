@@ -38,22 +38,28 @@ def parse_policy(query: str) -> PolicySpec:
     policy_type = _policy_type(q)
     tax = {"vat_standard_rate": "vat", "unsupported": None}.get(policy_type, "corporation_tax")
 
-    baseline_cfg = registry.load_baseline()
-    current = (baseline_cfg.current_small_profits_rate_pct if policy_type == "corporation_tax_small_profits_rate"
-               else baseline_cfg.current_main_rate_pct)
+    # Only corporation tax has a known current rate (from the baseline); never borrow it for another tax.
+    current: float | None = None
+    if tax == "corporation_tax":
+        baseline_cfg = registry.load_baseline()
+        current = (baseline_cfg.current_small_profits_rate_pct if policy_type == "corporation_tax_small_profits_rate"
+                   else baseline_cfg.current_main_rate_pct)
 
     baseline: float | None = None
     proposed: float | None = None
     if m := _FROM_TO.search(q):
         baseline, proposed = float(m.group(1)), float(m.group(2))
-    elif m := _BY.search(q):
+    elif current is not None and (m := _BY.search(q)):
         baseline = current
         delta = float(m.group(1))
         proposed = baseline - delta if _CUT_WORDS.search(q) else baseline + delta
         ambiguities.append(f"Baseline rate not stated; assumed the current rate of {current:g}%.")
     elif m := _TO.search(q):
         baseline, proposed = current, float(m.group(1))
-        ambiguities.append(f"Baseline rate not stated; assumed the current rate of {current:g}%.")
+        if current is not None:
+            ambiguities.append(f"Baseline rate not stated; assumed the current rate of {current:g}%.")
+        else:
+            ambiguities.append("Baseline rate not stated and no current rate is known for this tax.")
 
     if m := _YEAR.search(q):
         month = _MONTHS.index(m.group(1).lower()) + 1 if m.group(1) else 4

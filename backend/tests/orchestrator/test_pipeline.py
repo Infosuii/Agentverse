@@ -103,6 +103,18 @@ def test_unexpected_error_marks_failed(store, demo_request, monkeypatch):
     assert "Traceback" not in events[-1].message
 
 
+def test_research_failure_does_not_fail_analysis(store, demo_request, monkeypatch):
+    def boom(*_, **__):
+        raise RuntimeError("quota exceeded")
+
+    monkeypatch.setattr(pipeline.research, "run_research", boom)
+    a = _run(store, demo_request)
+    assert a.status == "completed", a.error
+    assert a.research is None and a.simulation is not None
+    errors = [e for e in store.events_after(a.analysis_id) if e.type == "error"]
+    assert errors and "quota exceeded" in errors[0].message and errors[0].stage == "researching"
+
+
 def test_unknown_override_fails_cleanly(store, demo_request):
     a = _run(store, demo_request.model_copy(update={"parameter_overrides": {"nope": 1.0}}))
     assert a.status == "failed" and "nope" in a.error

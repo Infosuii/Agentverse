@@ -12,11 +12,13 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Annotated
 
 from fastapi import BackgroundTasks, FastAPI, Header, Query, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 from fastapi.routing import APIRoute
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .. import __version__, data, engine, evaluation, policy, precedents, simulation
 from ..config import get_settings
@@ -82,7 +84,8 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
         use_executor = store is None
     app = FastAPI(title="Jane Avenue API", version=__version__,
                   description="AI-powered UK fiscal policy simulator. Prototype. Not official government analysis.",
-                  generate_unique_id_function=_operation_id)
+                  generate_unique_id_function=_operation_id,
+                  responses={422: {"model": ErrorBody, "description": "Invalid request or out-of-scope policy"}})
     app.state.store = store or AnalysisStore(settings.db_path)
     app.state.executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="analysis") if use_executor else None
     app.add_middleware(CORSMiddleware, allow_origins=list(settings.cors_origins), allow_credentials=False,
@@ -95,6 +98,16 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
     async def _api_error(_: Request, exc: ApiError) -> JSONResponse:
         return JSONResponse(status_code=exc.status_code,
                             content=ErrorBody(message=exc.message, reasons=exc.reasons).model_dump())
+
+    @app.exception_handler(RequestValidationError)
+    async def _invalid_request(_: Request, exc: RequestValidationError) -> JSONResponse:
+        reasons = [f"{'.'.join(str(p) for p in err.get('loc', ()))}: {err.get('msg', 'invalid')}" for err in exc.errors()]
+        return JSONResponse(status_code=422, content=ErrorBody(message="Invalid request", reasons=reasons).model_dump())
+
+    @app.exception_handler(StarletteHTTPException)
+    async def _http_error(_: Request, exc: StarletteHTTPException) -> JSONResponse:
+        return JSONResponse(status_code=exc.status_code, headers=getattr(exc, "headers", None),
+                            content=ErrorBody(message=str(exc.detail)).model_dump())
 
     @app.exception_handler(Exception)
     async def _unexpected(_: Request, exc: Exception) -> JSONResponse:

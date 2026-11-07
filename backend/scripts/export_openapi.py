@@ -12,6 +12,7 @@ from pathlib import Path
 
 os.environ["JANE_MODE"] = "mock"
 os.environ["JANE_DB_PATH"] = ":memory:"
+os.environ["JANE_LOAD_DOTENV"] = "0"
 os.environ.pop("GEMINI_API_KEY", None)
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]

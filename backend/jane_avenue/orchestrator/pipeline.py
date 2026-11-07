@@ -125,7 +125,12 @@ def _researching(run: _Run) -> dict[str, Any]:
     def on_step(step: ResearchStep) -> None:
         run.emit("research_step", step.title, stage="researching", data=step.model_dump(mode="json"))
 
-    findings = research.run_research(run.a.policy, on_step=on_step, use_cache=req.options.use_research_cache)
+    try:
+        findings = research.run_research(run.a.policy, on_step=on_step, use_cache=req.options.use_research_cache)
+    except Exception as exc:  # research failures must never fail the analysis (MASTER_PROMPT 9.2 failure policy)
+        log.exception("research failed for analysis %s", run.a.analysis_id)
+        run.emit("error", f"Research failed and was skipped: {type(exc).__name__}: {exc}", stage="researching")
+        return {}
     return {"research": findings}
 
 

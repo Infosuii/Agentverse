@@ -7,6 +7,7 @@ import os
 
 os.environ["JANE_MODE"] = "mock"
 os.environ["JANE_DB_PATH"] = ":memory:"
+os.environ["JANE_LOAD_DOTENV"] = "0"  # otherwise load_dotenv() would re-add a key from a developer's .env
 os.environ.pop("GEMINI_API_KEY", None)
 
 from datetime import date  # noqa: E402

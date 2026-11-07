@@ -37,6 +37,9 @@ class Settings:
 
 
 def _load_dotenv() -> None:
+    # Tests and the OpenAPI export set JANE_LOAD_DOTENV=0 so a developer's local .env key can never leak into them.
+    if os.environ.get("JANE_LOAD_DOTENV", "1") == "0":
+        return
     try:
         from dotenv import load_dotenv
 
