@@ -45,6 +45,7 @@ def test_out_of_scope_policy_is_withheld_end_to_end() -> None:
     assert a.scope is not None and a.verification.decline_reasons == [" ".join(a.scope.reasons)]
     statuses = {c.check_id: c.status for c in a.verification.checks}
     assert statuses["SCOPE-001"] == "fail"
+    assert statuses["SCOPE-002"] == "skipped"  # never "within the precedent range" for a refused policy
     assert statuses["CALC-001"] == statuses["EVID-004"] == "skipped"
 
 

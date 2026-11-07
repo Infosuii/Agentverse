@@ -25,6 +25,8 @@ def scope_002(analysis: Analysis) -> Outcome:
     scope = analysis.scope
     if scope is None:
         return Outcome("skipped", "No scope decision to inspect.")
+    if not scope.forecast_allowed:
+        return Outcome("skipped", "The policy is out of scope (see SCOPE-001), so the precedent range does not apply.")
     if scope.warnings:
         return Outcome("issue", " ".join(scope.warnings))
     if scope.validated_min_rate_pct is not None and scope.validated_max_change_pp is not None:
