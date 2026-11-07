@@ -197,11 +197,24 @@ def test_simulate_invalid_parameters_422(client, demo_policy, monkeypatch):
         raise ValueError("investment shares must sum to 1 (got 1.23)")
 
     monkeypatch.setattr(simulation, "simulate", invalid)
+    # an adjustable parameter, so the request reaches simulate (fixed parameters are rejected earlier, see below)
     r = client.post("/api/simulate", json={"policy": demo_policy.model_dump(mode="json"),
-                                           "parameter_overrides": {"share_structures": 0.5}})
+                                           "parameter_overrides": {"capital_share": 0.4}})
     assert r.status_code == 422
     assert r.json() == {"message": "Invalid simulation parameters",
                         "reasons": ["investment shares must sum to 1 (got 1.23)"]}
+
+
+def test_simulate_override_on_fixed_share_is_422(client, demo_policy):
+    """Overriding a fixed investment share is a 422 with a reason, whichever layer rejects it: apply_overrides
+    ("is fixed and cannot be overridden", agent-3 #67) or compute ("shares must sum to 1")."""
+    r = client.post("/api/simulate", json={"policy": demo_policy.model_dump(mode="json"),
+                                           "parameter_overrides": {"share_structures": 0.5},
+                                           "monte_carlo_draws": 100})
+    assert r.status_code == 422
+    body = r.json()
+    assert body["message"] in ("Invalid parameter override", "Invalid simulation parameters")
+    assert any("fixed" in x or "sum to 1" in x for x in body["reasons"]), body
 
 
 def test_simulate_out_of_scope_422(client, demo_policy):
