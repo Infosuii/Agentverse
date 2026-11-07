@@ -265,9 +265,13 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
             params = engine.apply_overrides(engine.default_parameters(body.policy), body.parameter_overrides)
         except ValueError as exc:
             raise ApiError(422, "Invalid parameter override", [str(exc)]) from exc
-        return simulation.simulate(body.policy, params, data.registry.load_baseline(), draws=body.monte_carlo_draws,
-                                   seed=body.seed, include_sensitivity=body.include_sensitivity,
-                                   empirical_residuals=evaluation.revenue_relative_residuals)
+        try:
+            return simulation.simulate(body.policy, params, data.registry.load_baseline(),
+                                       draws=body.monte_carlo_draws, seed=body.seed,
+                                       include_sensitivity=body.include_sensitivity,
+                                       empirical_residuals=evaluation.revenue_relative_residuals)
+        except ValueError as exc:  # simulate/compute validate parameters (agent-4, agent-3), e.g. investment shares
+            raise ApiError(422, "Invalid simulation parameters", [str(exc)]) from exc
 
     # ---- reference data ---------------------------------------------------------------------------------------
     @app.get("/api/parameters", response_model=list[Assumption])
