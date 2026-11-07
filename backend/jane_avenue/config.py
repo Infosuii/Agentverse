@@ -58,6 +58,13 @@ def _resolve_mode(raw: str | None, api_key: str | None) -> Mode:
     return "live" if api_key else "mock"
 
 
+def _repo_path(raw: str | Path) -> Path:
+    """Relative paths in the environment (e.g. `.env.example`'s `JANE_DATA_DIR=data`) are relative to the repo root,
+    so the backend finds the same files whether it is started from the repo root or from `backend/`."""
+    path = Path(raw)
+    return path if path.is_absolute() else REPO_ROOT / path
+
+
 def _env_int(name: str, default: int) -> int:
     raw = os.environ.get(name)
     return int(raw) if raw not in (None, "") else default
@@ -68,8 +75,9 @@ def get_settings() -> Settings:
     _load_dotenv()
     env = os.environ
     api_key = env.get("GEMINI_API_KEY") or None
-    data_dir = Path(env.get("JANE_DATA_DIR") or REPO_ROOT / "data")
-    db_path = env.get("JANE_DB_PATH") or str(BACKEND_DIR / ".data" / "jane.db")
+    data_dir = _repo_path(env.get("JANE_DATA_DIR") or REPO_ROOT / "data")
+    raw_db = env.get("JANE_DB_PATH") or str(BACKEND_DIR / ".data" / "jane.db")
+    db_path = raw_db if raw_db == ":memory:" or raw_db.startswith("file:") else str(_repo_path(raw_db))
     origins = tuple(o.strip() for o in (env.get("JANE_CORS_ORIGINS") or "http://localhost:5173").split(",") if o.strip())
     return Settings(
         mode=_resolve_mode(env.get("JANE_MODE"), api_key),
@@ -77,7 +85,7 @@ def get_settings() -> Settings:
         model_fast=env.get("JANE_MODEL_FAST") or "gemini-3.8-flash",
         model_deep=env.get("JANE_MODEL_DEEP") or "gemini-4-argon",
         data_dir=data_dir,
-        research_cache_dir=Path(env.get("JANE_RESEARCH_CACHE_DIR") or data_dir / "research_cache"),
+        research_cache_dir=_repo_path(env.get("JANE_RESEARCH_CACHE_DIR") or data_dir / "research_cache"),
         db_path=db_path,
         mc_draws=_env_int("JANE_MC_DRAWS", 2000),
         seed=_env_int("JANE_SEED", 42),

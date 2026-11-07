@@ -34,6 +34,21 @@ def test_invalid_mode_rejected(fresh_settings):
         config.get_settings()
 
 
+def test_relative_paths_resolve_from_repo_root(fresh_settings, monkeypatch, tmp_path):
+    # .env.example uses repo-relative paths; dev.sh starts uvicorn from backend/. Both must find the same files.
+    fresh_settings.setenv("JANE_DATA_DIR", "data")
+    fresh_settings.setenv("JANE_DB_PATH", "backend/.data/jane.db")
+    fresh_settings.delenv("JANE_RESEARCH_CACHE_DIR", raising=False)
+    monkeypatch.chdir(tmp_path)
+    s = config.get_settings()
+    assert s.data_dir == config.REPO_ROOT / "data"
+    assert s.research_cache_dir == config.REPO_ROOT / "data" / "research_cache"
+    assert s.db_path == str(config.REPO_ROOT / "backend" / ".data" / "jane.db")
+    config.get_settings.cache_clear()
+    fresh_settings.setenv("JANE_DB_PATH", ":memory:")
+    assert config.get_settings().db_path == ":memory:"
+
+
 def test_defaults_and_overrides(fresh_settings, tmp_path):
     for name in ("JANE_MODEL_FAST", "JANE_MODEL_DEEP", "JANE_MC_DRAWS", "JANE_SEED", "JANE_CORS_ORIGINS",
                  "JANE_RESEARCH_CACHE_DIR"):
