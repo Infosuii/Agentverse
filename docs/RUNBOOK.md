@@ -84,6 +84,7 @@ Runs `ruff check`, `pytest -m "not live"`, frontend `typecheck`, `lint`, `vitest
 .\scripts\check.ps1      # Windows PowerShell
 ./scripts/check.sh       # macOS / Linux
 ```
+> **Working-Tree Hygiene Tip:** Running `pytest` executes `test_evaluation.py` (which refreshes timestamps in `backend/jane_avenue/evaluation/results/latest.json` and `docs/EVALUATION.md`), and running `scripts/check.ps1` on Windows touches CRLF line endings in `frontend/src/api/{openapi.json,schema.d.ts}`. Run `git checkout -- backend/jane_avenue/evaluation/results/latest.json docs/EVALUATION.md frontend/src/api/` after local check runs so your working tree stays clean.
 
 ### Golden-Path Pipeline Smoke Check (`backend/scripts/smoke.py`)
 Runs the golden query (*"What would happen if the UK increased corporation tax from 25% to 28%?"*) through the full 6-stage pipeline against an in-memory SQLite store and prints stage timings, verification status, central projections, and any remaining placeholders:
@@ -157,7 +158,7 @@ See [docs/DATA.md](DATA.md) for dataset-by-dataset provenance, licences (Open Go
 
 ## 7. Rerunning the Historical Backtest & ML Evaluation (`agent-10`)
 
-The offline evaluation runner executes the chronological CT receipts backtest (`FY ≤ 2007` train, `FY ≥ 2008` test), the LightGBM out-of-sample experiment, the research-agent citation benchmark, and the 10-fault verifier injection suite, writing `backend/jane_avenue/evaluation/results/latest.json` and updating `docs/EVALUATION.md`:
+The offline evaluation runner executes the chronological CT receipts backtest (`FY <= 2007` train, `FY >= 2008` test), the LightGBM out-of-sample experiment, the research-agent citation benchmark, and the 18-fault verifier injection suite, writing `backend/jane_avenue/evaluation/results/latest.json` and updating `docs/EVALUATION.md`:
 
 ```powershell
 # Offline evaluation (uses committed research gold runs; deterministic, no live API calls)

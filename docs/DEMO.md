@@ -76,7 +76,7 @@
 ### 2:50 – 3:25 · Independent Verification, Policy Report & Withheld Forecast (`Verification` & `Report`)
 
 1. **Click:** Click the **Verification** tab on the `25% -> 28%` analysis, then click the **Report** tab.
-   - Show the **18-check audit catalogue** (`16 passed, 1 warning, 1 non-blocking citation warning`): independent engine recompute within `1e-9` (`CALC-001`), zero data placeholders (`DATA-001`), causal language audit (`CAUSAL-001`), and `REPORT-001` verifying that every number in the narrative report traces to code, cited evidence, or the policy.
+   - Show the **18-check audit catalogue** (`16 passed, 1 warning (DATA-002), 1 non-blocking citation error (CITE-002 on E19)`): independent engine recompute within `1e-9` (`CALC-001`), zero data placeholders (`DATA-001`), causal language audit (`CAUSAL-001`), and `REPORT-001` verifying that every number in the narrative report traces to code, cited evidence, or the policy.
    - On the **Report** tab, show clickable inline provenance chips and click **Download .md**.
 2. **Click:** Navigate back to **New Analysis** (`/new`), click the third example chip **"Raise CT main rate to 45% (out-of-scope guardrail demo)"**, and click **Run analysis ->**.
    - Show the **`forecast_withheld` banner ("Quantitative forecast withheld")**: because a `+20pp` hike exceeds the validated historical precedent envelope (`SCOPE-001` blocking failure, limit `15pp`), Jane Avenue refuses to fabricate a quantitative forecast while still delivering historical context and research.
