@@ -28,6 +28,26 @@ HISTOGRAM_BINS = 30
 INTERVAL_NOTE = ("Shaded bands show the spread of outcomes when uncertain assumptions are varied together (Monte Carlo "
                  "over parameter distributions). They are assumption-driven ranges, not statistical prediction "
                  "intervals, and exclude model and data uncertainty.")
+SE_METRIC = "revenue_behavioural_gbp_bn"  # the headline metric; its final-year median s.e. goes in the interval note
+
+
+def median_standard_error(x: np.ndarray) -> float:
+    """Distribution-free Monte Carlo standard error of the sample median of `x`.
+
+    The rank of the median is Binomial(n, 0.5), with s.d. sqrt(n)/2 ranks, so one s.e. spans the quantiles at
+    0.5 +/- 0.5/sqrt(n): s.e. ~ (q(0.5 + 0.5/sqrt(n)) - q(0.5 - 0.5/sqrt(n))) / 2.
+    """
+    n = x.shape[0]
+    if n < 2:
+        return 0.0
+    half = 50.0 / np.sqrt(n)
+    lo, hi = np.percentile(x, [50.0 - half, 50.0 + half])
+    return float(hi - lo) / 2.0
+
+
+def _se_clause(se_gbp_bn: float, n: int) -> str:
+    amount = f"±£{se_gbp_bn:.2f}bn" if se_gbp_bn >= 0.005 else "below £0.01bn"
+    return f"(MC s.e. of the final-year median of behavioural revenue {amount} at n={n})"
 
 
 def _unit(metric: str) -> str:
@@ -46,6 +66,7 @@ def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Ba
     out = engine_core.compute(spec, values, baseline)
     years = list(out.fiscal_years)
     distributions, histograms = [], []
+    se_note = ""
     for metric in METRIC_NAMES:
         arr = np.broadcast_to(np.asarray(out.metrics[metric], dtype=float), (draws, len(years)))
         q = np.percentile(arr, PERCENTILES, axis=0).tolist()
@@ -56,5 +77,8 @@ def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Ba
         counts, edges = np.histogram(arr[:, -1], bins=HISTOGRAM_BINS)
         histograms.append(Histogram(metric=metric, fiscal_year=years[-1], bin_edges=edges.tolist(),  # type: ignore[arg-type]
                                     counts=counts.tolist()))
+        if metric == SE_METRIC:
+            se_note = " " + _se_clause(median_standard_error(arr[:, -1]), draws)
     return MonteCarloResult(n_draws=draws, seed=seed, sampled_parameters=sampled, distributions=distributions,
-                            histograms=histograms, interval_kind="assumption_range", interval_note=INTERVAL_NOTE)
+                            histograms=histograms, interval_kind="assumption_range",
+                            interval_note=INTERVAL_NOTE + se_note)

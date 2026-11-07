@@ -87,3 +87,17 @@ def test_endpoints_use_one_compute_call(monkeypatch, demo_policy, params, baseli
     monkeypatch.setattr(engine_core, "compute", lambda *a: calls.append(1) or real(*a))
     sensitivity(demo_policy, params, baseline)
     assert len(calls) == 1
+
+
+def test_scenario_calc_traces_keep_parameter_sources(demo_policy, params, baseline):
+    """Scenarios pass Assumptions (not floats) to run_engine, so parameter source_ids reach every calc trace."""
+    from jane_avenue.engine.parameters import apply_overrides
+    from jane_avenue.simulation import simulate
+
+    sourced = {n: p.model_copy(update={"source_ids": [f"D-test-{n}"]}) for n, p in params.items()}
+    sourced = apply_overrides(sourced, {"taxable_profit_elasticity": 0.3})
+    bundle = simulate(demo_policy, sourced, baseline, draws=0)
+    for s in bundle.scenarios:
+        ids = {sid for step in s.result.calc_trace for sid in step.source_ids}
+        assert "D-test-main_rate_profit_share" in ids, s.scenario.name
+        assert s.result.parameters_used == s.scenario.parameter_values

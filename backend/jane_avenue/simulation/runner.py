@@ -3,7 +3,9 @@
 - Named scenarios (central / optimistic / pessimistic) use the registry defaults for any parameter the analyst
   overrode. When overrides exist, a `custom` scenario carries them, so the UI can overlay custom on central.
 - The Monte Carlo and the tornado use the parameters as given, so overrides recentre them.
-- Every interval is an assumption-driven range. The empirical (backtest-calibrated) interval is M2.
+- The Monte Carlo bands are assumption-driven ranges. A separately labelled empirical interval for behavioural revenue
+  is added only when the backtest justifies it (see `empirical.py`).
+- Parameters are validated first (`validation.py`); a bad parameter raises ValueError.
 """
 from __future__ import annotations
 
@@ -12,12 +14,14 @@ from collections.abc import Callable, Mapping
 from ..contracts import Assumption, BaselineProjection, PolicySpec, ScenarioDefinition, ScenarioResult, SimulationBundle
 from ..engine.model import run_engine
 from ..engine.parameters import central_values, default_parameters
+from .empirical import empirical_interval
 from .endpoints import evaluate_endpoints
 from .montecarlo import monte_carlo
 from .scenarios import build_scenarios
 from .tornado import sensitivity
+from .validation import validate_parameters
 
-MIN_EMPIRICAL_RESIDUALS = 8
+MIN_RELIABLE_DRAWS = 500
 CUSTOM_DESCRIPTION = ("Every assumption at its central value, with the analyst's overrides applied. Compare it with "
                       "the central scenario, which uses the registry defaults. Not a forecast.")
 
@@ -31,29 +35,21 @@ def _registry_base(spec: PolicySpec, params: Mapping[str, Assumption]) -> Mappin
     return {name: (defaults[name] if name in overridden and name in defaults else p) for name, p in params.items()}
 
 
-def _empirical_warning(empirical_residuals: Callable[[], list[float] | None] | None) -> str:
-    residuals = empirical_residuals() if empirical_residuals is not None else None
-    n = len(residuals) if residuals else 0
-    if n < MIN_EMPIRICAL_RESIDUALS:
-        return (f"No empirical prediction interval is shown: the historical backtest supplied {n} out-of-sample "
-                f"residuals, fewer than the {MIN_EMPIRICAL_RESIDUALS} needed to calibrate one. The bands shown are "
-                "assumption-driven ranges only.")
-    return ("No empirical prediction interval is shown yet: the backtest-calibrated interval is not implemented in "
-            "this version. The bands shown are assumption-driven ranges only.")
-
-
 def simulate(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *, draws: int = 2000,
              seed: int = 42, include_sensitivity: bool = True,
              empirical_residuals: Callable[[], list[float] | None] | None = None) -> SimulationBundle:
+    validate_parameters(params)
     warnings: list[str] = []
     base = _registry_base(spec, params)
+    if base is not params:
+        validate_parameters(base)
     base_endpoints = evaluate_endpoints(spec, base, baseline)
     scenarios = build_scenarios(spec, base, baseline, endpoints=base_endpoints)
     if base is not params:
         values = central_values(params)
         definition = ScenarioDefinition(name="custom", label="Custom", description=CUSTOM_DESCRIPTION,
                                         parameter_values=values)
-        scenarios.append(ScenarioResult(scenario=definition, result=run_engine(spec, values, baseline, "custom")))
+        scenarios.append(ScenarioResult(scenario=definition, result=run_engine(spec, params, baseline, "custom")))
 
     mc = monte_carlo(spec, params, baseline, draws=draws, seed=seed) if draws > 0 else None
     sens = []
@@ -61,6 +57,16 @@ def simulate(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Basel
         endpoints = base_endpoints if base is params else evaluate_endpoints(spec, params, baseline)
         sens = sensitivity(spec, params, baseline, endpoints=endpoints)
     if mc is not None:
-        warnings.append(_empirical_warning(empirical_residuals))
+        if draws < MIN_RELIABLE_DRAWS:
+            warnings.append(f"Only {draws} Monte Carlo draws: the percentile bands are noisy. Use at least "
+                            f"{MIN_RELIABLE_DRAWS} draws before relying on them.")
+        residuals = empirical_residuals() if empirical_residuals is not None else None
+        # the scenario whose values match the MC parameters: custom when overrides exist, otherwise central
+        current = scenarios[-1].result if base is not params else scenarios[0].result
+        empirical = empirical_interval(current, residuals)
+        if empirical.bands is not None:
+            mc = mc.model_copy(update={"empirical_interval": empirical.bands,
+                                       "empirical_calibration_note": empirical.note})
+        warnings.extend(empirical.warnings)
     return SimulationBundle(policy=spec, baseline_vintage=baseline.vintage, scenarios=scenarios, monte_carlo=mc,
                             sensitivity=sens, assumptions=list(params.values()), warnings=warnings)
