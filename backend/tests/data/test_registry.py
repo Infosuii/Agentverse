@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from jane_avenue.contracts import DatasetMeta, fiscal_year_range
 from jane_avenue.data import registry
 

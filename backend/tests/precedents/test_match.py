@@ -1,6 +1,7 @@
 import math
 
 import pytest
+
 from jane_avenue.contracts import MacroContext, PolicySpec
 from jane_avenue.data import registry
 from jane_avenue.precedents.match import WEIGHTS, find_precedents
