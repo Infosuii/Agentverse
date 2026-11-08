@@ -49,16 +49,34 @@ _OTHER_FISCAL = re.compile(
     r"apprenticeship[\s-]+levy|air[\s-]+passenger[\s-]+duty|vehicle[\s-]+excise[\s-]+duty|road[\s-]+tax|"
     r"landfill[\s-]+tax|sugar[\s-]+tax|soft[\s-]+drinks[\s-]+(?:industry\s+)?levy|land[\s-]+value[\s-]+tax|"
     r"dividend[\s-]+tax|plastic[\s-]+packaging[\s-]+tax|gambling[\s-]+(?:duty|tax)|tariffs?|"
-    r"(?:public|government)[\s-]+spending|spending|funding|public[\s-]+investment|capital[\s-]+investment|"
+    r"(?:public|government)[\s-]+(?:spending|funding|investment|borrowing)|"
     r"nhs|defen[cs]e[\s-]+(?:spending|budget)|schools?[\s-]+(?:spending|funding|budget)|education[\s-]+(?:spending|"
     r"funding|budget)|welfare|universal[\s-]+credit|state[\s-]+pension|pension[\s-]+(?:credit|triple[\s-]+lock)|"
     r"triple[\s-]+lock|housing[\s-]+benefit|winter[\s-]+fuel|benefits?[\s-]+(?:cap|freeze|uprating)|"
-    r"public[\s-]+sector[\s-]+pay|borrowing|deficit|national[\s-]+debt|fiscal[\s-]+rules?|tax[\s-]+credits?|"
-    r"(?:cut|raise|increase|lower|reduce)\s+(?:all\s+)?taxes|"
+    r"public[\s-]+sector[\s-]+pay|national[\s-]+debt|fiscal[\s-]+rules?|tax[\s-]+credits?|"
     # Policies with direct fiscal effects that are not themselves taxes or spending lines (contract-change #93).
-    r"(?:national[\s-]+)?(?:minimum|living)[\s-]+wage|benefits?|pip|personal[\s-]+independence[\s-]+payment|"
-    r"jobseeker'?s?[\s-]+allowance|carer'?s?[\s-]+allowance|disability[\s-]+(?:benefits?|payments?)|"
-    r"tax(?:es|ation)?|levy|levies|dut(?:y|ies)|subsid(?:y|ies)|tax[\s-]+reliefs?|budget)\b")
+    r"(?:national[\s-]+)?(?:minimum|living)[\s-]+wage|pip|personal[\s-]+independence[\s-]+payment|"
+    r"jobseeker'?s?[\s-]+allowance|carer'?s?[\s-]+allowance|disability[\s-]+(?:benefits?|payments?))\b")
+# Generic words ("tax", "funding", "budget") are fiscal only with a public context or a policy verb, and never in a
+# personal question: "How do I file my tax return?" and "Plan a budget for my wedding" are not fiscal policy (#86).
+_GENERIC_FISCAL = re.compile(r"\b(tax(?:es|ation)?|levy|levies|dut(?:y|ies)|subsid(?:y|ies)|tax[\s-]+reliefs?|"
+                             r"benefits?|spending|funding|investment|borrowing|deficit|budget)\b")
+_PUBLIC_CONTEXT = re.compile(r"\b(government|public|state|national|uk|britain|british|chancellor|treasury|hmrc|obr|"
+                             r"exchequer|fiscal|parliament|ministers?|councils?|local\s+authorit\w*|whitehall|"
+                             r"taxpayers?|households|families|pensioners|workers|employers|businesses|companies|"
+                             r"economy|schools?|hospitals?|police|transport|housing|universit\w*|charit\w*)\b")
+_POLICY_VERB = re.compile(r"\b(introduce|abolish|scrap|impose|cut|raise|increase|reduce|lower|freeze|extend|expand|"
+                          r"reform|replace|double|halve)\b[^.?!]{0,40}\b(tax(?:es|ation)?|levy|dut(?:y|ies)|"
+                          r"subsid(?:y|ies)|benefits?|spending|funding|borrowing)\b")
+_PERSONAL = re.compile(r"\b(i|i'm|im|me|my|mine)\b")  # not "we"/"our": "Should we cut taxes?" is policy
+
+
+def _is_other_fiscal(t: str) -> bool:
+    if _OTHER_FISCAL.search(t):
+        return True
+    if not _GENERIC_FISCAL.search(t) or _PERSONAL.search(t):
+        return False
+    return bool(_PUBLIC_CONTEXT.search(t) or _POLICY_VERB.search(t))
 # Words that name the measure must not count as direction words ("higher rate" is not "raise").
 _NAME_WORDS = re.compile(r"\b(?:basic|higher|additional|top|lower|reduced|standard|main)[\s-]+rates?\b|"
                          r"\bhigher[\s-]+earners?\b|\b\d+p\s+rate\b")
@@ -202,7 +220,7 @@ def parse_measure(raw: str, t: str, today: date) -> PolicySpec | None:
     mid = _measure_id(t, st)
     m = reckoner.get_measure(mid) if mid else None
     if m is None:
-        if not _OTHER_FISCAL.search(t):
+        if not _is_other_fiscal(t):
             return None
         effective = _effective_date(t, today, st)
         horizon = _horizon(t, st)

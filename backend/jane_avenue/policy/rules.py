@@ -96,6 +96,71 @@ def _foreign_jurisdiction(raw: str, t: str) -> tuple[str | None, bool]:
     return None, False
 
 
+_LEVELS_AFTER = re.compile(r"(?:'s)?\s+(?:levels?|style|model)\b")
+_DEVOLVED = re.compile(r"\b(scotland|scottish|wales|welsh|holyrood|senedd)\b")
+DEVOLVED_INCOME_TAX_NOTE = (
+    "Income tax rates for Scotland and Wales are set by the Scottish and Welsh governments, and HMRC's ready "
+    "reckoner does not include changes to those devolved elements, so this request is researched without a forecast.")
+
+
+def _foreign_subject(raw: str, t: str) -> tuple[str | None, bool]:
+    """Any fiscal policy (#93): (the other country, whether it is the subject of the request). Another country is the
+    subject unless it only appears as a comparison ("like France", "as low as Ireland's", "to French levels")."""
+    if _UK.search(t):
+        return None, False
+    hits = [(m.start(), m.end(), _COUNTRY_NAME[m.group(1)], t) for m in _FOREIGN_MENTION.finditer(t)]
+    hits += [(m.start(), m.end(), "the US", raw) for m in _US_MENTION.finditer(raw)]
+    for start, end, name, text in hits:
+        before = text[max(0, start - 30):start].lower()
+        if not (_COMPARISON.search(before) or _LEVELS_AFTER.match(text[end:end + 12].lower())):
+            return name, True
+    return (hits[0][2], False) if hits else (None, False)
+
+
+_UK_PART = re.compile(r"\b(northern ireland|scotland|scottish|wales|welsh|england|english)\b")
+_UK_PART_NAME = {"scottish": "Scotland", "welsh": "Wales", "english": "England"}
+
+
+def _jurisdiction_gate(spec: PolicySpec, raw: str, t: str, today: date) -> PolicySpec:
+    """Measures and other fiscal policies get the jurisdiction rules the corporation tax path has: another country's
+    policy is refused, a comparison adds a "results are for the UK" note, and devolved income tax is research-only.
+
+    When a measure is turned into `unsupported` or `fiscal_other`, its rate notes ("assumed the current rate of 20%")
+    no longer apply and would put unexplained numbers in the report (REPORT-001), so only the date and horizon notes
+    are kept, re-derived from the text (#95 review)."""
+    country, subject = _foreign_subject(raw, t)
+    cleared = {"measure_id": None, "baseline_value": None, "proposed_value": None, "value_unit": None,
+               "baseline_rate_pct": None, "proposed_rate_pct": None}
+
+    def timing_notes() -> list[str]:
+        st = _State()
+        _effective_date(t, today, st)
+        _horizon(t, st)
+        return st.ambiguities
+
+    if country is not None and subject:
+        note = f"The request is about {country}: only UK fiscal policy is analysed."
+        return spec.model_copy(update={**cleared, "policy_type": "unsupported", "tax": None,
+                                       "description": describe("unsupported", None, None, None, raw),
+                                       "parse_confidence": min(spec.parse_confidence, 0.3),
+                                       "ambiguities": [*timing_notes(), note]})
+    notes = list(spec.ambiguities)
+    if country is not None:
+        notes.append(f"The request mentions {country}; only UK fiscal policy is analysed, so the results are for the "
+                     "UK.")
+        spec = spec.model_copy(update={"parse_confidence": round(max(0.05, spec.parse_confidence - 0.1), 2)})
+    if spec.policy_type == "tax_measure" and (spec.measure_id or "").startswith("income_tax_") and _DEVOLVED.search(t):
+        short = raw if len(raw) <= 120 else raw[:117] + "..."
+        return spec.model_copy(update={**cleared, "policy_type": "fiscal_other",
+                                       "description": f"Fiscal policy (research only): \"{short}\"",
+                                       "ambiguities": [*timing_notes(), DEVOLVED_INCOME_TAX_NOTE]})
+    if spec.policy_type == "tax_measure" and (part := _UK_PART.search(t)):
+        name = _UK_PART_NAME.get(part.group(1), part.group(1).title())
+        notes.append(f"This tax is set for the whole UK and cannot be changed for {name} alone, so the costing is "
+                     "UK-wide.")
+    return spec.model_copy(update={"ambiguities": notes})
+
+
 # Rates. Text is normalised first: "per cent" -> "%", "percentage points" / "points" -> "pp", number words -> digits.
 _FROM_TO = (
     re.compile(rf"\bfrom\s+{_NUM}\s*%?\s*{_ARROW}\s*{_NUM}\s*%"),        # from 25(%) to 28%
@@ -363,7 +428,7 @@ def parse_rules(query: str, *, baseline: BaselineProjection | None = None, today
         from .measures import parse_measure
 
         if (measure := parse_measure(raw, t, today)) is not None:
-            return measure
+            return _jurisdiction_gate(measure, raw, t, today)
 
     policy_type = _policy_type(t, st)
     if policy_type in ("corporation_tax_main_rate", "corporation_tax_small_profits_rate"):
