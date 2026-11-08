@@ -106,6 +106,17 @@ def test_mirrored_decrease_warns():
     assert d.forecast_allowed and any("mirrors" in w for w in d.warnings)
 
 
+def test_negative_measure_rates_and_values_are_declined():
+    for q in ("Set VAT standard rate to -18%", "Set income tax basic rate to -21%", "Set income tax basic rate to -20p"):
+        s = _parse(q)
+        assert s.proposed_rate_pct is None
+        assert not check_scope(s).forecast_allowed
+    neg_val = PolicySpec(policy_type="tax_measure", measure_id="income_tax_personal_allowance",
+                         baseline_value=500.0, proposed_value=-500.0, value_unit="£")
+    d = check_scope(neg_val)
+    assert not d.forecast_allowed and any("cannot be negative" in r for r in d.reasons)
+
+
 # --- #94 review (agent-11) -------------------------------------------------------------------------------------------
 
 @pytest.mark.parametrize(("query", "country"), [
