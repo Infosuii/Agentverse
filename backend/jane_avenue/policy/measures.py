@@ -218,8 +218,8 @@ def parse_measure(raw: str, t: str, today: date) -> PolicySpec | None:
     if m.unit == "pp":
         text = _NAME_WORDS.sub(" ", t)  # "higher rate" is not a raise; "the 45p rate" is a name, not a number
         # Pence in the pound: a level after "to/from/at" is a rate ("to 50p" = 50%), any other is a change ("by 1p").
-        text = re.sub(r"\b(to|from|at)\s+(\d+(?:\.\d+)?)\s?p\b", r"\1 \2%", text)
-        text = re.sub(r"(?<![\w.])(\d+(?:\.\d+)?)\s?p\b", r"\1 pp", text)
+        text = re.sub(r"\b(to|from|at)\s+(-?\s*\d+(?:\.\d+)?)\s?p\b", r"\1 \2%", text)
+        text = re.sub(r"(?<![\w.-])(\d+(?:\.\d+)?)\s?p\b", r"\1 pp", text)
         rate_from, rate_to = _rates(text, m.current_value, st)
         values = {"baseline_rate_pct": rate_from, "proposed_rate_pct": rate_to}
     elif m.unit in ("gbp", "gbp_per_week"):

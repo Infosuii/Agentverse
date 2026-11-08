@@ -184,6 +184,17 @@ def test_negative_change_is_read_as_a_cut_with_a_note() -> None:
     assert any("cut of 1 percentage point." in a for a in _notes("Cut corporation tax by minus 1 point"))
 
 
+@pytest.mark.parametrize("query", [
+    "Set corporation tax to -10%",
+    "Set corporation tax to -20%",
+    "Raise corporation tax from 25% to -28%",
+])
+def test_negative_target_rate_is_rejected_not_stripped(query: str) -> None:
+    spec = parse_rules(query, baseline=BASELINE, today=TODAY)
+    assert spec.proposed_rate_pct is None
+    assert any("negative tax rate" in a.lower() for a in spec.ambiguities)
+
+
 @pytest.mark.parametrize(("query", "country"), [
     ("Increase corporation tax in France from 25% to 28%", "France"),
     ("Raise US corporate tax from 21% to 28%", "the US"),

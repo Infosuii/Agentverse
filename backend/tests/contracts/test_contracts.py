@@ -41,6 +41,10 @@ def test_request_limits():
     with pytest.raises(ValidationError):
         c.AnalysisRequest(query="x" * 2001)
     with pytest.raises(ValidationError):
+        c.AnalysisRequest(query="   ")
+    with pytest.raises(ValidationError):
+        c.ParseRequest(query="   ")
+    with pytest.raises(ValidationError):
         c.AnalysisOptions(monte_carlo_draws=20001)
 
 

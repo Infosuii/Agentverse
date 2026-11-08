@@ -108,8 +108,9 @@ _TO_STRONG = re.compile(rf"\b(?:to|reach(?:es|ing)?|becomes?|set\s+at|fixed\s+at
 _TO_WEAK = re.compile(rf"\b(?:at|of|be|were|was|is|stood\s+at)\s+(?:a\s+rate\s+of\s+)?{_NUM}\s*%")
 # Group 1 is a minus sign ("by -2%"), read as a cut.
 _BY = re.compile(rf"\bby\s+(?:an?\s+)?(?:extra\s+|additional\s+|further\s+|another\s+)?(-\s*|minus\s+)?{_NUM}\s*(pp|%)")
-_DELTA_PP = re.compile(rf"(?<![\w.]){_NUM}\s*-?\s*pp\b")
-_ANY_PCT = re.compile(rf"(?<![\w.]){_NUM}\s*%")
+_DELTA_PP = re.compile(rf"(?<![\w.-]){_NUM}\s*-?\s*pp\b")
+_ANY_PCT = re.compile(rf"(?<![\w.-]){_NUM}\s*%")
+_NEG_RATE = re.compile(rf"(?:-\s*|\bminus\s+){_NUM}\s*%")
 # "from April 2027, then to 30% in 2029": a second change, which is not modelled.
 _SEQUENCE = re.compile(r"\b(then|later|thereafter|subsequently|followed\s+by|after\s+that|and\s+again)\b")
 
@@ -212,6 +213,9 @@ def _rates(t: str, current: float | None, st: _State) -> tuple[float | None, flo
     strong = _TO_STRONG.search(t)
     weak = None if strong else _TO_WEAK.search(t)
     by = _BY.search(t)
+    if by is None and (neg := _NEG_RATE.search(t)):
+        st.note(f"A negative tax rate (-{neg.group(1)}%) is not valid.", 0.5)
+        return current, None
     delta_text, delta_unit = (by.group(2), by.group(3)) if by else (None, None)
     negative = bool(by and by.group(1))  # "by -2%": a cut of 2, whatever the verb says
     if delta_text is None and (d := _DELTA_PP.search(t)):

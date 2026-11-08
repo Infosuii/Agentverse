@@ -104,7 +104,17 @@ def _check_measure(spec: PolicySpec) -> ScopeDecision:
         reasons.append(f"The current and proposed values for the {m.label} could not be determined, so there is nothing "
                        "to model.")
     else:
-        if change == 0:
+        if (spec.baseline_value is not None and spec.baseline_value < 0) or (
+            spec.proposed_value is not None and spec.proposed_value < 0
+        ):
+            reasons.append(f"The {m.label} cannot be negative.")
+        elif m.unit == "pp" and (
+            spec.baseline_rate_pct is None
+            or spec.proposed_rate_pct is None
+            or not (0 <= spec.baseline_rate_pct < 100 and 0 <= spec.proposed_rate_pct < 100)
+        ):
+            reasons.append("The model needs rates between 0% and 100%.")
+        elif change == 0:
             reasons.append(f"The proposal leaves the {m.label} unchanged, so there is no change to model.")
         elif abs(change) > m.max_change + 1e-9:
             reasons.append(f"The proposed change ({reckoner.fmt_change(abs(change), m.unit)}) is far larger than the changes HMRC costs "
