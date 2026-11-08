@@ -48,7 +48,9 @@ def test_percentiles_are_ordered_and_histograms_complete(full_engine, demo_polic
 def test_interval_semantics(full_engine, demo_policy, params, baseline):
     mc = monte_carlo(demo_policy, params, baseline, draws=100)
     assert mc.interval_kind == "assumption_range"
-    assert INTERVAL_NOTE == VERBATIM_NOTE and mc.interval_note.startswith(VERBATIM_NOTE + " (MC s.e. of")
+    assert INTERVAL_NOTE == VERBATIM_NOTE and mc.interval_note.startswith(VERBATIM_NOTE + " The profit base deviation "
+                                                                          "also takes an independent yearly shock")
+    assert "(MC s.e. of" in mc.interval_note
     assert mc.empirical_interval is None
     assert mc.sampled_parameters == [n for n, p in params.items() if p.distribution.kind != "fixed"]
 

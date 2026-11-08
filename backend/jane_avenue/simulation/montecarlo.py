@@ -55,6 +55,28 @@ def _unit(metric: str) -> str:
     return "£bn" if metric.endswith("_gbp_bn") else "%"
 
 
+DEVIATION = "profit_base_deviation_pct"
+DRIFT = "profit_base_annual_drift_pct"
+_CT_TYPES = ("corporation_tax_main_rate", "corporation_tax_small_profits_rate")
+_DEVIATION_FLOOR = -90.0  # keeps (1 + dev/100) positive; never reached in practice (over 6 sd at year 5)
+
+
+def yearly_drift(spec: PolicySpec, params: Mapping[str, Assumption]) -> float:
+    """Annual shock sd (pp) for the profit base deviation; 0 when not applicable (non-CT measures, 1-year horizon)."""
+    if spec.policy_type not in _CT_TYPES or spec.horizon_years < 2 or DRIFT not in params:
+        return 0.0
+    return max(0.0, float(params[DRIFT].value))
+
+
+def deviation_paths(first_year: np.ndarray, drift: float, horizon: int, rng: np.random.Generator) -> np.ndarray:
+    """Random walk: year 1 is each draw's sampled deviation; every later year adds an independent N(0, drift) shock.
+    Forecast errors compound, so the spread grows with the horizon (#102)."""
+    shocks = rng.standard_normal((first_year.shape[0], horizon - 1)) * drift
+    paths = first_year[:, None] + np.concatenate([np.zeros((first_year.shape[0], 1)), np.cumsum(shocks, axis=1)],
+                                                 axis=1)
+    return np.maximum(paths, _DEVIATION_FLOOR)
+
+
 @dataclass
 class Draws:
     """Every Monte Carlo draw: `metrics[name]` has shape (draws, years). The single source of the bands, the
@@ -76,6 +98,10 @@ def simulate_draws(spec: PolicySpec, params: Mapping[str, Assumption], baseline:
     values: dict[str, float | np.ndarray] = {name: p.value for name, p in params.items()}
     for name in sampled:
         values[name] = sample(params[name], draws, rng)
+    drift = yearly_drift(spec, params)
+    if drift > 0 and DEVIATION in sampled:
+        # Drawn after every other parameter, so all other draws are unchanged; drift = 0 is the old model exactly.
+        values[DEVIATION] = deviation_paths(np.asarray(values[DEVIATION], dtype=float), drift, spec.horizon_years, rng)
     out = engine_core.compute(spec, values, baseline)
     years = list(out.fiscal_years)
     metrics = {m: np.broadcast_to(np.asarray(out.metrics[m], dtype=float), (draws, len(years)))
@@ -103,6 +129,9 @@ def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Ba
                                     counts=counts.tolist()))
         if metric == SE_METRIC:
             se_note = " " + _se_clause(median_standard_error(arr[:, -1]), draws)
+    drift = yearly_drift(spec, params)
+    drift_note = (f" The profit base deviation also takes an independent yearly shock (sd {drift:g}pp), so "
+                  "uncertainty grows with the horizon." if drift > 0 and DEVIATION in sampled else "")
     return MonteCarloResult(n_draws=draws, seed=seed, sampled_parameters=sampled, distributions=distributions,
                             histograms=histograms, interval_kind="assumption_range",
-                            interval_note=INTERVAL_NOTE + se_note)
+                            interval_note=INTERVAL_NOTE + drift_note + se_note)

@@ -67,6 +67,10 @@ _TABLE: tuple[_Row, ...] = (
     ("profit_base_deviation_pct", "Profit base deviation from baseline", "macro", "%", 0.0, -5.0, 5.0,
      "normal", (-20.0, 20.0, 0.5),
      "Percentage error in the baseline profit base, representing receipts forecast uncertainty."),
+    ("profit_base_annual_drift_pct", "Annual drift in profit base deviation", "macro", "pp", 5.0, 0.0, 10.0,
+     "fixed", (0.0, 10.0, 0.5),
+     "Standard deviation of the yearly change in the profit base deviation (Monte Carlo only): forecast errors "
+     "compound, so uncertainty grows with the horizon. 0 holds each draw's deviation constant over time."),
     ("trend_real_growth", "Trend real growth", "macro", "fraction", 0.015, 0.015, 0.015, "fixed", None,
      "Long-run trend real growth rate (g), used in the capital-stock law of motion."),
 )
@@ -160,6 +164,12 @@ _SOURCING: dict[str, _Sourcing] = {
         "OBR Forecast evaluation report October 2024 (Table 3.1): the March 2023 forecast of 2023-24 onshore CT "
         "was £76.9bn against an outturn of £91.6bn (+19%; £10.9bn from fiscal forecasting differences). The 9.5 "
         "prior of ±5% is too narrow for such errors, so widened to normal(0, 10).", low=-10.0, high=10.0),
+    "profit_base_annual_drift_pct": _Sourcing(
+        "team_judgement", ("D-lit-obr2024",),
+        "Team judgement anchored on the OBR Forecast evaluation report (October 2024): receipts forecast errors grow "
+        "with the forecast horizon, so the year-1 profit base deviation (normal(0, 10)) takes an independent yearly "
+        "shock of 5pp (half the year-1 spread). Calibrating it to the OBR's errors by horizon is a follow-up (#102).",
+        value=5.0, low=0.0, high=10.0),
     "trend_real_growth": _Sourcing(
         "team_judgement", ("D-lit-obr2018",),
         "Team judgement anchored on the OBR: trend productivity growth of 1.2% a year at the end of the November "
