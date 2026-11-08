@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { EvidenceBadge } from '../ui';
+import { useThemeMode, type ThemeMode } from '../../lib/themeMode';
 import type { components } from '../../api/schema';
 
 type SimulateRequest = components['schemas']['SimulateRequest'];
@@ -33,12 +34,14 @@ export function monteCarloChartUrl(
   metric: MonteCarloMetric,
   empirical: boolean,
   paths: number,
+  theme?: ThemeMode,
 ): string {
   const query = new URLSearchParams({
     metric,
     paths: String(paths),
     empirical: String(empirical),
   });
+  if (theme) query.set('theme', theme);
   return source.kind === 'analysis'
     ? `/api/analyses/${encodeURIComponent(source.analysisId)}/charts/montecarlo.png?${query}`
     : `/api/simulate/montecarlo.png?${query}`;
@@ -59,7 +62,8 @@ export function MonteCarloChart({
   footer,
   className,
 }: MonteCarloChartProps) {
-  const url = monteCarloChartUrl(source, metric, empirical, paths);
+  const theme = useThemeMode();
+  const url = monteCarloChartUrl(source, metric, empirical, paths, theme);
   const requestKey = source.kind === 'simulate' ? JSON.stringify(source.request) : '';
   const [src, setSrc] = useState<string | null>(source.kind === 'analysis' ? url : null);
   const [error, setError] = useState<string | null>(null);
@@ -121,7 +125,7 @@ export function MonteCarloChart({
       </div>
 
       <div
-        className="relative w-full overflow-hidden rounded-md bg-white"
+        className="relative w-full overflow-hidden rounded-md bg-card"
         style={{ aspectRatio: '10 / 5.8' }}
       >
         {error ? (
@@ -143,7 +147,7 @@ export function MonteCarloChart({
           )
         )}
         {loading && !error && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-xs text-slate-500">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-xs text-muted-foreground">
             Rendering chart…
           </div>
         )}

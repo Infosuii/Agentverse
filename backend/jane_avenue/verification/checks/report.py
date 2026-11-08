@@ -130,7 +130,7 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
             allowed |= {float(policy.effective_date.day), float(policy.effective_date.year)}
         # The user's own words, which the report repeats in its title, the policy description and the parser notes
         # (e.g. "Read 'by 10%' as 10 percentage points" when no rate could be parsed).
-        allowed |= _numbers(policy.raw_query)
+        allowed |= _numbers(policy.raw_query) | _numbers(policy.description or "")
     allowed |= _numbers(analysis.request.query)
     if analysis.precedents:
         if analysis.precedents.policy_key:  # the summary is fixed text from the matcher (contract 1.2.0)
@@ -144,7 +144,7 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
             elif c.new_rate_pct is not None:
                 allowed.add(c.new_rate_pct)
             if c.policy_key:  # the OBR's own wording and event names, quoted in the precedents section (contract 1.2.0)
-                for text in (c.title, c.fiscal_event, *m.comparability_notes):
+                for text in (c.title, c.fiscal_event, c.value_unit, *m.comparability_notes):
                     allowed |= _numbers(text or "")
             allowed |= {abs(x.value_gbp_bn) for x in c.official_costings}
             if c.announced_date:

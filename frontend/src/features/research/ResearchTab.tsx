@@ -83,20 +83,20 @@ function renderTextWithEvidenceRefs(text: string): React.ReactNode {
 function EvidenceVerificationBadge({ status }: { status: VerificationStatus }) {
   if (status === 'verified') {
     return (
-      <Badge variant="green" dotColor="#16a34a" aria-label="Quote verification: Verified">
+      <Badge variant="green" dotColor="var(--st-pass)" aria-label="Quote verification: Verified">
         ✓ Quote verified
       </Badge>
     );
   }
   if (status === 'failed') {
     return (
-      <Badge variant="red" dotColor="#dc2626" aria-label="Quote verification: Failed">
+      <Badge variant="red" dotColor="var(--st-fail)" aria-label="Quote verification: Failed">
         ✕ Quote verification failed
       </Badge>
     );
   }
   return (
-    <Badge variant="amber" dotColor="#d97706" aria-label="Quote verification: Unverified">
+    <Badge variant="amber" dotColor="var(--ev-assumption)" aria-label="Quote verification: Unverified">
       • Unverified quote
     </Badge>
   );
@@ -313,7 +313,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                       </span>
                       <span className="font-semibold text-foreground">{step.title}</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {typeof step.duration_ms === 'number' && (
                         <span className="font-mono text-[11px] text-muted-foreground">
                           {step.duration_ms}ms

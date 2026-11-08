@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router';
 import clsx from 'clsx';
-import { ErrorBoundary, ModeBadge, SearchIcon, Wordmark, buttonClasses } from '../components/ui';
+import { ErrorBoundary, ModeBadge, SearchIcon, ThemeToggle, Wordmark, buttonClasses } from '../components/ui';
 
 const NAV_LINKS = [
   { to: '/history', label: 'History' },
@@ -67,6 +67,7 @@ export function Layout() {
           </div>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <span className="hidden sm:inline-flex">
               <ModeBadge />
             </span>

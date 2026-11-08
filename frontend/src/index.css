@@ -72,6 +72,91 @@
   --input: oklch(0.32 0.025 160);
   --ring: oklch(0.72 0.16 160);
   --forest: oklch(0.22 0.05 160);
+  --ev-observed: #94a3b8;
+  --ev-costing: #a78bfa;
+  --ev-model: #60a5fa;
+  --ev-model-soft: #93c5fd;
+  --ev-assumption: #fbbf24;
+  --ev-ai: #fb7185;
+  --st-pass: #34d399;
+  --st-fail: #f87171;
+  --chart-neutral: #94a3b8;
+  --chart-neutral-muted: #64748b;
+  --chart-warm: #f59e0b;
+  --chart-up: #22c55e;
+  --chart-up-soft: #4ade80;
+  --chart-down: #ef4444;
+  --chart-teal: #2dd4bf;
+}
+
+/* Light appearance: every surface and text token, and the tinted status shades, swap for dark ink on a light page. */
+:root[data-theme="light"] {
+  --background: #f8faf9;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0f5c45;
+  --primary-foreground: #ffffff;
+  --success: #047857;
+  --warning: #b45309;
+  --warning-foreground: #92400e;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #b91c1c;
+  --border: #cbd5e1;
+  --input: #cbd5e1;
+  --ring: #0f5c45;
+
+  /* Tinted text shades used on dark surfaces become their dark counterparts on paper. */
+  --color-slate-200: #1e293b;
+  --color-slate-300: #334155;
+  --color-slate-400: #475569;
+  --color-blue-200: #1e3a8a;
+  --color-blue-300: #1e40af;
+  --color-blue-400: #1d4ed8;
+  --color-sky-300: #075985;
+  --color-indigo-300: #3730a3;
+  --color-cyan-300: #155e75;
+  --color-teal-200: #134e4a;
+  --color-teal-300: #115e59;
+  --color-emerald-200: #064e3b;
+  --color-emerald-300: #065f46;
+  --color-emerald-400: #065f46;
+  --color-green-300: #166534;
+  --color-amber-100: #78350f;
+  --color-amber-200: #78350f;
+  --color-amber-300: #92400e;
+  --color-amber-400: #92400e;
+  --color-red-200: #7f1d1d;
+  --color-red-300: #991b1b;
+  --color-red-400: #b91c1c;
+  --color-rose-200: #881337;
+  --color-rose-300: #9f1239;
+  --color-violet-200: #4c1d95;
+  --color-violet-300: #5b21b6;
+  --color-violet-400: #6d28d9;
+  --color-purple-300: #6b21a8;
+  --ev-observed: #475569;
+  --ev-costing: #6d28d9;
+  --ev-model: #1d4ed8;
+  --ev-model-soft: #1e40af;
+  --ev-assumption: #b45309;
+  --ev-ai: #be123c;
+  --st-pass: #047857;
+  --st-fail: #b91c1c;
+  --chart-neutral: #475569;
+  --chart-neutral-muted: #64748b;
+  --chart-warm: #b45309;
+  --chart-up: #15803d;
+  --chart-up-soft: #16a34a;
+  --chart-down: #b91c1c;
+  --chart-teal: #0f766e;
 }
 
 @layer base {
@@ -106,6 +191,13 @@
     color-scheme: dark;
   }
 
+  html[data-theme="light"],
+  html[data-theme="light"] input,
+  html[data-theme="light"] select,
+  html[data-theme="light"] textarea {
+    color-scheme: light;
+  }
+
   select option {
     background-color: var(--popover);
     color: var(--popover-foreground);
@@ -129,6 +221,23 @@
     rgba(245, 158, 11, 0.04) 16px
   );
   border-color: rgba(245, 158, 11, 0.65);
+}
+
+:root[data-theme="light"] .withheld-hatch {
+  background-color: #fffbeb;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(180, 83, 9, 0.1),
+    rgba(180, 83, 9, 0.1) 8px,
+    rgba(180, 83, 9, 0.02) 8px,
+    rgba(180, 83, 9, 0.02) 16px
+  );
+  border-color: #b45309;
+}
+
+/* Chart legends: the swatch carries the series colour, so the words stay readable in either theme. */
+.recharts-legend-item-text {
+  color: var(--foreground) !important;
 }
 
 /* End-of-text cursor while a live analysis stage is still running. */
@@ -196,7 +305,7 @@
 
 /*
  * Print stylesheet (M2 requirement + report printing).
- * The screen UI is dark; printed pages switch every token to a light, ink-friendly palette
+ * Printed pages always use the light palette, whichever theme is on screen: switch every token to a light, ink-friendly palette
  * and darken the tinted status colours so badges stay legible on paper.
  */
 @media print {
@@ -257,6 +366,21 @@
     --color-violet-300: #5b21b6;
     --color-violet-400: #6d28d9;
     --color-purple-300: #6b21a8;
+    --ev-observed: #475569;
+    --ev-costing: #6d28d9;
+    --ev-model: #1d4ed8;
+    --ev-model-soft: #1e40af;
+    --ev-assumption: #b45309;
+    --ev-ai: #be123c;
+    --st-pass: #047857;
+    --st-fail: #b91c1c;
+    --chart-neutral: #475569;
+    --chart-neutral-muted: #64748b;
+    --chart-warm: #b45309;
+    --chart-up: #15803d;
+    --chart-up-soft: #16a34a;
+    --chart-down: #b91c1c;
+    --chart-teal: #0f766e;
   }
 
   html,

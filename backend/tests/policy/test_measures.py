@@ -131,6 +131,25 @@ def test_another_countrys_tax_is_refused(query, country):
     assert not check_scope(s).forecast_allowed
 
 
+@pytest.mark.parametrize("query", ["Cut income tax by 2p and raise VAT by 1%", "Raise National Insurance and income tax by 1p"])
+def test_several_taxes_in_one_request_get_no_forecast(query):
+    s = _parse(query)
+    assert s.policy_type == "fiscal_other"
+    assert s.baseline_rate_pct is None and s.proposed_rate_pct is None
+    assert any("more than one tax" in a for a in s.ambiguities)
+
+
+@pytest.mark.parametrize(("query", "measure"), [("Raise the basic rate of income tax to 21%", "income_tax_basic_rate"),
+                                                ("Raise the personal allowance for income tax to £13,000", "income_tax_personal_allowance"),
+                                                ("Raise the higher rate of capital gains tax to 26%", "cgt_higher_rate")])
+def test_one_tax_named_twice_is_still_modelled(query, measure):
+    assert _parse(query).measure_id == measure
+
+
+def test_reduce_the_deficit_is_fiscal_policy():
+    assert _parse("Should we reduce the deficit?").policy_type == "fiscal_other"
+
+
 @pytest.mark.parametrize("query", ["Raise VAT to 25% like France", "Introduce a wealth tax like France"])
 def test_a_comparison_with_another_country_is_still_uk_policy(query):
     s = _parse(query)

@@ -185,5 +185,7 @@ files refuse scripted downloads, so save them by browser into `data/raw/` under 
   states a rate change that the official rate table does not show, the row is marked as not having taken effect.
 - `fiscal_costings` keeps original Treasury scorecard years only; years the OBR extrapolated with nominal GDP are excluded.
   A costing is linked to a rate change only when one measure matches its event, first year, sign and product.
-- Gaps: announcement dates are blank (the OBR gives event names only); OBR receipts start in 1999-00 and PESA function
-  spending in 2003-04; benefit and wage up-ratings have no linked costing; alcohol history covers beer and spirits, not wine.
+- Outturns use one unbroken ONS series where it reaches further back: Income Tax from 1967-68, VAT from 1973-74, NICs from
+  1978-79 (all cash basis), and fuel, alcohol and tobacco duty from 1997-98. Other taxes use the OBR databank from 1999-00.
+- Gaps: announcement dates are blank (the OBR gives event names only); PESA function spending starts in 2003-04; benefit
+  and wage up-ratings have no linked costing; alcohol history covers beer and spirits, not wine.

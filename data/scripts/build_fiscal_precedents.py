@@ -17,6 +17,7 @@ fiscal_sources.SOURCES in data/raw/. The build stops if a figure cannot be trace
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import re
 import warnings
@@ -113,10 +114,10 @@ TOPICS: tuple[Topic, ...] = (
     T("carers_allowance", "Carer's Allowance", "other", "spending", r"carer", (), r"carer", "", "carers", -1, True),
     T("disability_benefits", "Disability benefits", "other", "spending", r"disability", (), r"disab|incapacity|employment and support", "", "disability", -1, True),
     T("welfare", "Welfare spending", "other", "spending", r"welfare|\bbenefits?\b", WELFARE, "", "", "welfare", -1),
-    T("minimum_wage", "National Minimum and Living Wage", "other", "spending", r"(?:minimum|living)[\s-]+wage", (), r"minimum wage|living wage", "", "", 1, True),
+    T("minimum_wage", "National Minimum and Living Wage", "other", "spending", r"(?:minimum|living)[\s-]+wage", (), r"^(?:national )?(?:minimum|living) wage", "", "", 1, True),
     T("public_sector_pay", "Public sector pay", "other", "spending", r"public[\s-]+sector[\s-]+pay", (), r"public sector pay|pay award|pay freeze", "", "", -1, True),
     T("nhs", "NHS and health spending", "other", "spending", r"\bnhs\b|health", (), r"\bNHS\b|health and social care|health service", r"levy", "health", -1, True),
-    T("defence", "Defence spending", "other", "spending", r"defen[cs]e", (), r"defen[cs]e|armed forces", "", "defence", -1, True),
+    T("defence", "Defence spending", "other", "spending", r"defen[cs]e", (), r"defen[cs]e|armed forces", r"flood|export finance", "defence", -1, True),
     T("education", "Schools and education spending", "other", "spending", r"school|education", (), r"school|education|pupil premium|tuition", "", "education", -1, True),
     T("public_spending", "Public spending", "other", "spending", r"spending|funding|public[\s-]+investment", ("psce in rdel", "psgi in cdel"),
       r"spending review|spending round|capital spending|spending assumption|spending decisions|special reserve", "", "tme", -1),
@@ -397,7 +398,8 @@ def _event_year(event: str) -> int | None:
 _NAMED_TAXES = (("income_tax", r"income tax|dividend|property income|savings income"), ("nics", r"national insurance|\bnics?\b"), ("cgt", r"capital gains|\bcgt\b"),
                 ("iht", r"inheritance tax"), ("vat", r"\bvat\b"), ("stamp", r"stamp duty|\bsdlt\b"), ("fuel", r"fuel dut"),
                 ("alcohol", r"alcohol|beer|cider|wine|spirits dut"), ("tobacco", r"tobacco"), ("ct", r"corporation tax"),
-                ("ved", r"vehicle excise|\bved\b"), ("ipt", r"insurance premium"), ("apd", r"air passenger"))
+                ("ved", r"vehicle excise|\bved\b"), ("ipt", r"insurance premium"), ("apd", r"air passenger"),
+                ("business_rates", r"business rates"), ("soft_drinks", r"soft drinks"), ("company_car", r"van benefit|company car"))
 _TOPIC_FAMILY = {"dividend_tax": "income_tax", "devolved_income_tax": "income_tax", "stamp_duty": "stamp"}
 
 
@@ -417,7 +419,7 @@ def _topic_rows(topic: Topic, rows: list[ObrRow]) -> dict[tuple[str, str], ObrRo
             continue
         if pattern and not pattern.search(r.description) or exclude and exclude.search(r.description):
             continue
-        if not any(abs(v) > 0 for v in r.costed.values()) or (not topic.any_head and _named_other_tax(topic, r.description)):
+        if not any(abs(v) > 0 for v in r.costed.values()) or _named_other_tax(topic, r.description):
             continue
         k = (r.event, r.description)
         if k in found:
@@ -627,6 +629,10 @@ def main() -> None:
     outturns, gdp = _databank()
     outturns.update(_dwp())
     outturns.update(_pesa())
+    # One unbroken ONS series per tax where it goes further back than the databank's 1999-00 start.
+    for key, name in (("income_tax", "ons_income_tax_cash.csv"), ("vat", "ons_vat_cash.csv"), ("nics", "ons_nics_cash.csv"),
+                      ("fuel", "ons_fuel_duty.csv"), ("tobacco", "ons_tobacco_duty.csv"), ("alcohol", "ons_alcohol_duty.csv")):
+        outturns[key] = {fy: v for fy, v in fs.ons_fiscal_years(name).items() if fy <= LAST_OUTTURN}
     outturns.setdefault("welfare", {})
     wb = fs.workbook("dwp_expenditure_2026.xlsx")
     rows = list(wb["UK welfare "].iter_rows(values_only=True))
@@ -696,7 +702,8 @@ def main() -> None:
             m = _FROM_TO.search(row.description)
             first = _first_year(row)
             digest = re.sub(r"[^A-Z0-9]+", "-", f"{row.event}-{row.description[:40]}".upper()).strip("-")
-            cid = f"OBR-{topic.key.upper().replace('_', '-')}-{digest}"
+            unique = hashlib.sha256(f"{row.event}|{row.description}".encode()).hexdigest()[:8].upper()
+            cid = f"OBR-{topic.key.upper().replace('_', '-')}-{digest}-{unique}"
             note = ("Announced at this fiscal event. The OBR database records the original costing; it does not show whether "
                     "the measure was later changed or reversed. The date shown is the start of the first costed fiscal year, "
                     "not the legal start date.")
@@ -732,11 +739,12 @@ def main() -> None:
 
     # outturn rows
     outturn_meta = {
-        "income_tax": ("Income Tax receipts", "receipts", DATABANK), "nics": ("National Insurance receipts", "receipts", DATABANK),
+        "income_tax": ("Income Tax receipts (cash)", "receipts", "D-ons-income-tax-cash"),
+        "nics": ("National Insurance receipts (cash)", "receipts", "D-ons-nics-cash"),
         "cgt": ("Capital Gains Tax receipts", "receipts", DATABANK), "iht": ("Inheritance Tax receipts", "receipts", DATABANK),
-        "vat": ("VAT receipts (net of refunds)", "receipts", DATABANK), "ipt": ("Insurance Premium Tax receipts", "receipts", DATABANK),
-        "fuel": ("Fuel duty receipts", "receipts", DATABANK), "alcohol": ("Alcohol duty receipts", "receipts", DATABANK),
-        "tobacco": ("Tobacco duty receipts", "receipts", DATABANK), "stamp": ("Stamp duty receipts (land and shares)", "receipts", DATABANK),
+        "vat": ("VAT receipts (cash)", "receipts", "D-ons-vat-cash"), "ipt": ("Insurance Premium Tax receipts", "receipts", DATABANK),
+        "fuel": ("Fuel duty receipts", "receipts", "D-ons-fuel-duty"), "alcohol": ("Alcohol duty receipts", "receipts", "D-ons-alcohol-duty"),
+        "tobacco": ("Tobacco duty receipts", "receipts", "D-ons-tobacco-duty"), "stamp": ("Stamp duty receipts (land and shares)", "receipts", DATABANK),
         "ved": ("Vehicle Excise Duty receipts", "receipts", DATABANK), "apd": ("Air Passenger Duty receipts", "receipts", DATABANK),
         "carbon": ("Climate change levy and carbon price floor receipts", "receipts", DATABANK), "epl": ("Energy Profits Levy receipts", "receipts", DATABANK),
         "bank_levy": ("Bank levy receipts", "receipts", DATABANK), "council_tax": ("Council Tax receipts", "receipts", DATABANK),
@@ -782,7 +790,9 @@ def main() -> None:
                             "A costing is linked to a rate change only when exactly one measure matches its event, first year and sign. "
                             "Whether a costing includes behaviour is not stated, so it is blank, not guessed."),
         "fiscal_outturns": ("Fiscal outturns", "Observed receipts, spending and borrowing by fiscal year.",
-                            f"Outturn only, to {LAST_OUTTURN}. OBR databank receipts start in 1999-00; PESA function spending starts in 2003-04. "
+                            f"Outturn only, to {LAST_OUTTURN}. ONS cash series start in 1967-68 for Income Tax, 1973-74 for VAT and 1978-79 for NICs; "
+                            "fuel, alcohol and tobacco ONS series start in 1997-98; other OBR databank receipts start in 1999-00; "
+                            "PESA function spending starts in 2003-04. "
                             "Observed totals include every cause, not only the policy they sit beside."),
     }
     obr_meta = fs.SOURCES[OBR]

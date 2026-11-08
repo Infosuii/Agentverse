@@ -9,7 +9,9 @@ Raw files go to data/raw/ (git-ignored); their SHA-256 is recorded in provenance
 from __future__ import annotations
 
 import hashlib
+import csv
 import re
+import time
 import zipfile
 from datetime import date, datetime
 from pathlib import Path
@@ -25,6 +27,7 @@ RAW = ROOT / "raw"
 UA = {"User-Agent": "JaneAvenue-data/0.1"}  # the client name fetch_official.py already uses
 GOV = "https://www.gov.uk/government/statistics"
 ASSETS = "https://assets.publishing.service.gov.uk/media"
+ONS = "https://www.ons.gov.uk/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries"
 
 # source_id -> (title, landing or file url, publisher, publisher_type, raw file, download url)
 SOURCES: dict[str, tuple[str, str, str, str, str, str]] = {
@@ -84,6 +87,15 @@ SOURCES: dict[str, tuple[str, str, str, str, str, str]] = {
         "HM Treasury Public Expenditure Statistical Analyses 2026, Chapter 4 tables",
         f"{GOV}/public-expenditure-statistical-analyses-2026", "HM Treasury", "hmt", "hmt_pesa_2026_ch4.xlsx",
         f"{ASSETS}/6a5772e09e63154454413700/PESA_2026_CP_Chapter_4_tables.xlsx"),
+    **{sid: (title, f"{ONS}/{code}/pusf", "Office for National Statistics", "ons", name,
+             f"https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/{code}/pusf")
+       for sid, title, code, name in (
+           ("D-ons-income-tax-cash", "ONS RURC: central government cash receipts, Income Tax", "rurc", "ons_income_tax_cash.csv"),
+           ("D-ons-vat-cash", "ONS EYOO: central government cash receipts, VAT", "eyoo", "ons_vat_cash.csv"),
+           ("D-ons-nics-cash", "ONS ABLP: central government cash receipts, social security contributions", "ablp", "ons_nics_cash.csv"),
+           ("D-ons-fuel-duty", "ONS CUDG: central government receipts, fuel duty", "cudg", "ons_fuel_duty.csv"),
+           ("D-ons-tobacco-duty", "ONS GTAO: central government receipts, tobacco duty", "gtao", "ons_tobacco_duty.csv"),
+           ("D-ons-alcohol-duty", "ONS MF6V: central government receipts, alcohol duty", "mf6v", "ons_alcohol_duty.csv"))},
     "D-commons-vat-sn00701": (
         "House of Commons Library SN00701: VAT, the temporary cut in the standard rate",
         "https://commonslibrary.parliament.uk/research-briefings/sn00701/", "House of Commons Library", "parliament",
@@ -99,6 +111,8 @@ def fetch_all() -> dict[str, str]:
         for _title, _page, _pub, _kind, name, url in SOURCES.values():
             path = RAW / name
             if not path.exists():
+                if "ons.gov.uk" in url:
+                    time.sleep(8)  # the ONS site rate-limits quick repeated requests
                 response = client.get(url)
                 response.raise_for_status()
                 path.write_bytes(response.content)
@@ -150,6 +164,19 @@ def pdf_text(name: str) -> str:
 
 def workbook(name: str, *, read_only: bool = True):
     return openpyxl.load_workbook(RAW / name, read_only=read_only, data_only=True)
+
+
+def ons_fiscal_years(name: str) -> dict[str, float]:
+    """A quarterly ONS series as April-to-March fiscal years in £bn; only years with all four quarters."""
+    with (RAW / name).open(encoding="utf-8-sig") as handle:
+        rows = list(csv.reader(handle))
+    quarters = {r[0].replace(" ", ""): float(r[1]) for r in rows if re.fullmatch(r"\d{4} Q[1-4]", r[0]) and len(r) > 1 and r[1]}
+    out: dict[str, float] = {}
+    for year in range(1946, date.today().year):
+        needed = (f"{year}Q2", f"{year}Q3", f"{year}Q4", f"{year + 1}Q1")
+        if all(q in quarters for q in needed):
+            out[f"{year}-{str(year + 1)[-2:]}"] = sum(quarters[q] for q in needed) / 1000.0
+    return out
 
 
 def number(text: object) -> float | None:

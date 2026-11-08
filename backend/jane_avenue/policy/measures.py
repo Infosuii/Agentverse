@@ -40,7 +40,7 @@ _MEASURES: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("income_tax", re.compile(r"\bincome[\s-]+tax\b|\b(?:basic|higher|additional|top)[\s-]+rate\s+of\s+tax\b"
                               r"|\b(?:basic|higher|additional)[\s-]+rate(?:\s+of)?\s+income\b")),
     # Bare band names ("raise the additional rate to 50%") are income tax; checked last, after VAT, CGT and NICs.
-    ("income_tax_band", re.compile(r"\b(?:basic|higher|additional|top)[\s-]+rate\b|\b45p\s+rate\b")),
+    ("income_tax_band", re.compile(r"\b(?:basic|higher|additional|top)[\s-]+rate\b|\b(?:45|50)p\s+(?:tax\s+)?rate\b")),
 )
 # Other taxes and spending: fiscal, but with no validated model. Researched and reported only.
 _OTHER_FISCAL = re.compile(
@@ -60,14 +60,14 @@ _OTHER_FISCAL = re.compile(
 # Generic words ("tax", "funding", "budget") are fiscal only with a public context or a policy verb, and never in a
 # personal question: "How do I file my tax return?" and "Plan a budget for my wedding" are not fiscal policy (#86).
 _GENERIC_FISCAL = re.compile(r"\b(tax(?:es|ation)?|levy|levies|dut(?:y|ies)|subsid(?:y|ies)|tax[\s-]+reliefs?|"
-                             r"benefits?|spending|funding|investment|borrowing|deficit|budget)\b")
+                             r"benefits?|spending|funding|investment|borrowing|deficit|debt|budget)\b")
 _PUBLIC_CONTEXT = re.compile(r"\b(government|public|state|national|uk|britain|british|chancellor|treasury|hmrc|obr|"
                              r"exchequer|fiscal|parliament|ministers?|councils?|local\s+authorit\w*|whitehall|"
                              r"taxpayers?|households|families|pensioners|workers|employers|businesses|companies|"
                              r"economy|schools?|hospitals?|police|transport|housing|universit\w*|charit\w*)\b")
 _POLICY_VERB = re.compile(r"\b(introduce|abolish|scrap|impose|cut|raise|increase|reduce|lower|freeze|extend|expand|"
                           r"reform|replace|double|halve)\b[^.?!]{0,40}\b(tax(?:es|ation)?|levy|dut(?:y|ies)|"
-                          r"subsid(?:y|ies)|benefits?|spending|funding|borrowing)\b")
+                          r"subsid(?:y|ies)|benefits?|spending|funding|borrowing|deficit|debt)\b")
 _PERSONAL = re.compile(r"\b(i|i'm|im|me|my|mine)\b")  # not "we"/"our": "Should we cut taxes?" is policy
 
 
@@ -79,10 +79,34 @@ def _is_other_fiscal(t: str) -> bool:
     return bool(_PUBLIC_CONTEXT.search(t) or _POLICY_VERB.search(t))
 # Words that name the measure must not count as direction words ("higher rate" is not "raise").
 _NAME_WORDS = re.compile(r"\b(?:basic|higher|additional|top|lower|reduced|standard|main)[\s-]+rates?\b|"
-                         r"\bhigher[\s-]+earners?\b|\b\d+p\s+rate\b")
+                         r"\bhigher[\s-]+earners?\b|\b\d+p\s+(?:tax\s+)?rate\b")
 
 _AMOUNT = r"£\s?(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)\s?(k\b|bn\b|billion\b|m\b|million\b)?"
 _PENCE = r"(\d+(?:\.\d+)?)\s?(?:p\b|pence\b)"
+
+
+_TAX_FAMILY = {"child_benefit": "child_benefit", "income_tax_personal_allowance": "income_tax", "ipt_standard_rate": "ipt",
+               "inheritance_tax_rate": "iht", "fuel_duty": "fuel", "alcohol_duty": "alcohol", "tobacco_duty": "tobacco",
+               "vat": "vat", "cgt": "cgt", "nics": "nics", "income_tax": "income_tax"}  # bare band names are not a tax of their own
+MULTIPLE_TAXES_NOTE = ("This request changes more than one tax. Each needs its own analysis, so no forecast is made for the "
+                       "combination.")
+
+
+def named_taxes(t: str) -> set[str]:
+    """The distinct modelled taxes a request names."""
+    return {_TAX_FAMILY[mid] for mid, pattern in _MEASURES if mid in _TAX_FAMILY and pattern.search(t)}
+
+
+def research_only(raw: str, t: str, today: date, st: _State, note: str) -> PolicySpec:
+    """A fiscal policy that is researched and reported, with no quantitative forecast."""
+    effective = _effective_date(t, today, st)
+    horizon = _horizon(t, st)
+    st.note(note, 0.0)
+    short = raw if len(raw) <= 120 else raw[:117] + "..."
+    return PolicySpec(policy_type="fiscal_other", effective_date=effective, horizon_years=horizon,
+                      description=f"Fiscal policy (research only): \"{short}\"", raw_query=raw,
+                      parse_method="rules", parse_confidence=round(max(0.05, min(0.6, 1.0 - st.penalty)), 2),
+                      ambiguities=st.ambiguities)
 
 
 def _measure_id(t: str, st: _State) -> str | None:
@@ -107,7 +131,7 @@ def _measure_id(t: str, st: _State) -> str | None:
         st.note("The tax was not named; read the rate band as Income Tax.", 0.1)
         found = "income_tax"
     if found == "income_tax":
-        if re.search(r"\b(additional|top)[\s-]+rate\b|\b45p\b", t):
+        if re.search(r"\b(additional|top)[\s-]+rate\b|\b(?:45|50)p\b", t):
             return "income_tax_additional_rate"
         if re.search(r"\bhigher[\s-]+rate\b", t):
             return "income_tax_higher_rate"
@@ -217,20 +241,15 @@ def describe_measure(m: reckoner.Measure, spec_values: dict, effective: date | N
 def parse_measure(raw: str, t: str, today: date) -> PolicySpec | None:
     """Parse a non-corporation-tax fiscal policy, or return None if `t` names no fiscal policy."""
     st = _State()
+    if len(named_taxes(t)) > 1:
+        return research_only(raw, t, today, st, MULTIPLE_TAXES_NOTE)
     mid = _measure_id(t, st)
     m = reckoner.get_measure(mid) if mid else None
     if m is None:
         if not _is_other_fiscal(t):
             return None
-        effective = _effective_date(t, today, st)
-        horizon = _horizon(t, st)
-        st.note("No validated model exists for this policy yet: it is researched and reported, but no quantitative "
-                "forecast is made.", 0.0)
-        short = raw if len(raw) <= 120 else raw[:117] + "..."
-        return PolicySpec(policy_type="fiscal_other", effective_date=effective, horizon_years=horizon,
-                          description=f"Fiscal policy (research only): \"{short}\"", raw_query=raw,
-                          parse_method="rules", parse_confidence=round(max(0.05, min(0.6, 1.0 - st.penalty)), 2),
-                          ambiguities=st.ambiguities)
+        return research_only(raw, t, today, st, "No validated model exists for this policy yet: it is researched and reported, "
+                                                "but no quantitative forecast is made.")
 
     values: dict = {}
     if m.unit == "pp":

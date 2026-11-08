@@ -132,7 +132,7 @@ export function HistoryPage() {
                   {item.verification_overall ? (
                     <VerificationBadge overall={item.verification_overall} />
                   ) : (
-                    <span className="text-muted-foreground/70">—</span>
+                    <span className="text-muted-foreground">—</span>
                   )}
                 </td>
                 <td className="px-3 py-3.5 text-right align-top whitespace-nowrap">

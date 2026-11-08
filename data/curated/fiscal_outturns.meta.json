@@ -10,5 +10,5 @@
   "file": "curated/fiscal_outturns.csv",
   "source_id": "D-obr-policy-measures",
   "is_placeholder": false,
-  "notes": "Outturn only, to 2025-26. OBR databank receipts start in 1999-00; PESA function spending starts in 2003-04. Observed totals include every cause, not only the policy they sit beside."
+  "notes": "Outturn only, to 2025-26. ONS cash series start in 1967-68 for Income Tax, 1973-74 for VAT and 1978-79 for NICs; fuel, alcohol and tobacco ONS series start in 1997-98; other OBR databank receipts start in 1999-00; PESA function spending starts in 2003-04. Observed totals include every cause, not only the policy they sit beside."
 }

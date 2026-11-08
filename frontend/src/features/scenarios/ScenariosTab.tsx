@@ -841,7 +841,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                     'flex w-full items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition-colors focus:ring-2 focus:ring-violet-400 focus:outline-none',
                     hasAnyOverride
                       ? 'bg-violet-600 text-white hover:bg-violet-700'
-                      : 'cursor-not-allowed bg-secondary text-muted-foreground/70',
+                      : 'cursor-not-allowed bg-secondary text-muted-foreground',
                   )}
                 >
                   {createAnalysisMutation.isPending && <Spinner size="xs" />}

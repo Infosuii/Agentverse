@@ -110,7 +110,7 @@ export function StageProgress({
                 status === 'complete' && 'border-primary bg-primary text-primary-foreground',
                 status === 'generating' && 'border-primary text-primary',
                 status === 'waiting' && 'border-border text-muted-foreground',
-                status === 'not_run' && 'border-border text-muted-foreground/60',
+                status === 'not_run' && 'border-border text-muted-foreground',
               )}
             >
               {status === 'complete' ? (

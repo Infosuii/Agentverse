@@ -44,6 +44,7 @@ from ..contracts import (
 MODEL_VERSION = "reckoner-1.0.0"
 PARAMETER = "rr_costing_scale"
 RR_SOURCE_ID = "D-hmrc-ready-reckoner-2025"
+CT_ONLY_SOURCES = ("D-hmrc-rates", "D-hmrc-history")
 UNIT_LABEL = {"pp": "percentage points", "gbp": "£", "gbp_per_week": "£ a week", "pct_of_rate": "% of the duty rate"}
 METRICS = ("revenue_static_gbp_bn", "revenue_behavioural_gbp_bn", "revenue_dynamic_gbp_bn")
 
@@ -275,7 +276,8 @@ def run_engine(spec: PolicySpec, params: Mapping[str, Assumption | float], basel
     m, change = _validate(spec)
     scale = values[PARAMETER]
     rr_sources = [s for s in m.source_ids]
-    base_sources = list(baseline.source_ids)
+    # The baseline also lists the corporation tax rate tables it reads; they are not sources for this measure.
+    base_sources = [s for s in baseline.source_ids if s not in CT_ONLY_SOURCES]
     metrics = [MetricProjection(metric=name, label=label, unit="£bn", confidence=conf,  # type: ignore[arg-type]
                                 values=[YearValue(fiscal_year=fy, value=float(out.metrics[name][0, i]))
                                         for i, fy in enumerate(out.fiscal_years)], note=note)

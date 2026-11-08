@@ -129,11 +129,11 @@ export function DistributionSparkline({
         aria-label={`${distribution.kind} distribution`}
         className="inline-block overflow-visible"
       >
-        <polygon points={areaPts} fill="#fbbf24" fillOpacity={0.2} />
+        <polygon points={areaPts} fill="var(--ev-assumption)" fillOpacity={0.2} />
         <polyline
           points={pts.join(' ')}
           fill="none"
-          stroke="#fbbf24"
+          stroke="var(--ev-assumption)"
           strokeWidth={1.5}
         />
       </svg>
@@ -153,9 +153,9 @@ export function DistributionSparkline({
           y={pad + 3}
           width={w}
           height={h - 3}
-          fill="#60a5fa"
+          fill="var(--ev-model)"
           fillOpacity={0.18}
-          stroke="#60a5fa"
+          stroke="var(--ev-model)"
           strokeWidth={1.2}
         />
       </svg>
@@ -173,9 +173,9 @@ export function DistributionSparkline({
     >
       <polygon
         points={triPts}
-        fill="#60a5fa"
+        fill="var(--ev-model)"
         fillOpacity={0.18}
-        stroke="#60a5fa"
+        stroke="var(--ev-model)"
         strokeWidth={1.5}
       />
       <line
@@ -183,7 +183,7 @@ export function DistributionSparkline({
         y1={pad}
         x2={modeX}
         y2={height - pad}
-        stroke="#93c5fd"
+        stroke="var(--ev-model-soft)"
         strokeWidth={1}
         strokeDasharray="2 1"
       />
@@ -545,7 +545,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                 </td>
                                 <td className="px-3 py-2.5 font-mono text-foreground/85 tabular-nums">
                                   {a.distribution.kind === 'fixed' ? (
-                                    <span className="text-muted-foreground/70">Fixed</span>
+                                    <span className="text-muted-foreground">Fixed</span>
                                   ) : (
                                     `${formatChartValue(a.low, a.unit)} – ${formatChartValue(a.high, a.unit)}`
                                   )}
@@ -580,7 +580,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       ))}
                                     </div>
                                   ) : (
-                                    <span className="text-[11px] text-muted-foreground/70">
+                                    <span className="text-[11px] text-muted-foreground">
                                       None cited
                                     </span>
                                   )}
@@ -628,7 +628,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       ))}
                                     </div>
                                   ) : (
-                                    <span className="text-[11px] text-muted-foreground/70">
+                                    <span className="text-[11px] text-muted-foreground">
                                       No direct research match
                                     </span>
                                   )}
@@ -743,7 +743,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-1 text-muted-foreground/70">
+                    <p className="mt-1 text-muted-foreground">
                       No curated or research sources linked yet.
                     </p>
                   )}
@@ -768,7 +768,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-1 text-muted-foreground/70">
+                    <p className="mt-1 text-muted-foreground">
                       No specific evidence IDs attached.
                     </p>
                   )}
@@ -813,7 +813,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       )}
                     </div>
                   ) : (
-                    <p className="mt-1 text-muted-foreground/70">
+                    <p className="mt-1 text-muted-foreground">
                       No parameter evidence extracted for{' '}
                       <code>{selectedAssumption.name}</code> in this research run.
                     </p>
@@ -1000,7 +1000,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                         {matchingParam.name} ({matchingParam.label})
                                       </button>
                                     ) : (
-                                      <span className="text-[11px] text-muted-foreground/70">
+                                      <span className="text-[11px] text-muted-foreground">
                                         —
                                       </span>
                                     )}

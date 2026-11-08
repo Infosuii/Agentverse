@@ -243,7 +243,7 @@ export function FanChart({
                 type="monotone"
                 dataKey="empP95"
                 name={`${empiricalLabel} (upper)`}
-                stroke="#2dd4bf"
+                stroke="var(--chart-teal)"
                 strokeWidth={1.75}
                 strokeDasharray="5 4"
                 dot={false}
@@ -253,7 +253,7 @@ export function FanChart({
                 type="monotone"
                 dataKey="empP5"
                 name={`${empiricalLabel} (lower)`}
-                stroke="#2dd4bf"
+                stroke="var(--chart-teal)"
                 strokeWidth={1.75}
                 strokeDasharray="5 4"
                 dot={false}

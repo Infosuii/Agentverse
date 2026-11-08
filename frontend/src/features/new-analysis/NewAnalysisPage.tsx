@@ -88,7 +88,7 @@ const LABEL_CLASS = 'block text-xs font-medium text-muted-foreground';
 function ScopeStatusBadge({ scope }: { scope: ScopeDecision }) {
   if (scope.status === 'supported') {
     return (
-      <Badge variant="green" dotColor="#34d399" aria-label="Scope status: Supported">
+      <Badge variant="green" dotColor="var(--st-pass)" aria-label="Scope status: Supported">
         ✓ Supported scope
       </Badge>
     );
@@ -97,7 +97,7 @@ function ScopeStatusBadge({ scope }: { scope: ScopeDecision }) {
     return (
       <Badge
         variant="amber"
-        dotColor="#fbbf24"
+        dotColor="var(--ev-assumption)"
         aria-label="Scope status: Partially supported"
       >
         ! Partially supported
@@ -105,7 +105,7 @@ function ScopeStatusBadge({ scope }: { scope: ScopeDecision }) {
     );
   }
   return (
-    <Badge variant="red" dotColor="#f87171" aria-label="Scope status: Unsupported">
+    <Badge variant="red" dotColor="var(--st-fail)" aria-label="Scope status: Unsupported">
       ✕ Unsupported (forecast will be withheld)
     </Badge>
   );

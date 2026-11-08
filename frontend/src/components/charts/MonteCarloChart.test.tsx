@@ -17,6 +17,14 @@ describe('MonteCarloChart', () => {
     ).toBe('/api/simulate/montecarlo.png?metric=revenue_behavioural_gbp_bn&paths=40&empirical=false');
   });
 
+  it('asks the server for a chart in the current theme', () => {
+    expect(monteCarloChartUrl({ kind: 'analysis', analysisId: 'a' }, 'gdp_level_pct', false, 60, 'light')).toContain('theme=light');
+    document.documentElement.dataset.theme = 'light';
+    render(<MonteCarloChart source={{ kind: 'analysis', analysisId: 'ana-2' }} />);
+    expect(screen.getByRole('img').getAttribute('src')).toContain('theme=light');
+    delete document.documentElement.dataset.theme;
+  });
+
   it('shows the server-rendered chart for an analysis', () => {
     render(<MonteCarloChart source={{ kind: 'analysis', analysisId: 'ana-1' }} title="Trajectories" />);
     const img = screen.getByRole('img');

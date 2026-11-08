@@ -408,7 +408,8 @@ function PrecedentCard({
   const macro = change.macro_context;
 
   const confounders = [
-    ...(comparability_notes ?? []),
+    // Other policies list each simultaneous measure below; the joined note would only repeat them.
+    ...(comparability_notes ?? []).filter((n) => isCt || !n.startsWith('Simultaneous measures:')),
     ...(change.other_measures ?? []).map((m) => `Simultaneous measure: ${m}`),
   ];
 
@@ -485,7 +486,7 @@ function PrecedentCard({
             </div>
             <div className="flex flex-wrap gap-1.5">
               {confounders.map((note, idx) => (
-                <Badge key={idx} variant="amber" dotColor="#fbbf24">
+                <Badge key={idx} variant="amber" dotColor="var(--ev-assumption)" className="max-w-full !whitespace-normal">
                   {note}
                 </Badge>
               ))}
@@ -686,7 +687,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
                     ? `${pt.changeId}: ${pt.oldRatePct}% → ${pt.newRatePct}%`
                     : `${pt.year}: ${pt.oldRatePct} → ${pt.newRatePct} ${seriesUnit}`,
                   detail: pt.fiscalEvent ?? undefined,
-                  color: pt.isMatched ? '#60a5fa' : '#64748b',
+                  color: pt.isMatched ? 'var(--ev-model)' : 'var(--chart-neutral-muted)',
                 }))}
               unit={ct ? '%' : seriesUnit}
               seriesLabel={ct ? 'Implemented CT main rate (%)' : `${seriesTitle} (${seriesUnit})`}
