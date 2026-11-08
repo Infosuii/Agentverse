@@ -135,10 +135,16 @@ def _check_rates(t0: float, t1: float) -> None:
         raise ValueError(f"Proposed rate must be at least 0% and below 100% (got {t1 * 100:g}%)")
 
 
+# Parameters that may vary by year within a draw: a (draws, years) matrix (Monte Carlo yearly shocks, #102).
+PATH_PARAMETERS = ("profit_base_deviation_pct",)
+
+
 def _n_draws(params: Mapping[str, float | np.ndarray]) -> int:
     n = 1
     for name, v in params.items():
         arr = np.asarray(v)
+        if arr.ndim == 2 and name in PATH_PARAMETERS:
+            arr = arr[:, 0]
         if arr.ndim > 1:
             raise ValueError(f"Parameter {name!r} must be a scalar or a 1-D array, got shape {arr.shape}")
         if arr.ndim == 1 and arr.shape[0] != 1:
@@ -150,6 +156,16 @@ def _n_draws(params: Mapping[str, float | np.ndarray]) -> int:
 
 def _col(params: Mapping[str, float | np.ndarray], name: str) -> np.ndarray:
     return np.asarray(params[name], dtype=float).reshape(-1, 1)
+
+
+def _path(params: Mapping[str, float | np.ndarray], name: str, horizon: int) -> np.ndarray:
+    """A PATH_PARAMETERS value: (draws, horizon) when given per year, else a (draws, 1) column like `_col`."""
+    arr = np.asarray(params[name], dtype=float)
+    if arr.ndim != 2:
+        return arr.reshape(-1, 1)
+    if arr.shape[1] != horizon:
+        raise ValueError(f"Parameter {name!r} has {arr.shape[1]} years; the horizon is {horizon}")
+    return arr
 
 
 def _baseline_series(baseline: BaselineProjection, years: list[str], attr: str,
@@ -236,7 +252,7 @@ def compute(spec: PolicySpec, params: Mapping[str, float | np.ndarray], baseline
     # ---- Revenue ---------------------------------------------------------------------------------------------------
     share = _col(params, "main_rate_profit_share")
     base_share = (1.0 - share) if small_profits else share
-    dev = _col(params, "profit_base_deviation_pct")
+    dev = _path(params, "profit_base_deviation_pct", H)
     timing = np.where(first_year, _col(params, "receipts_first_year_share"), 1.0)
     eps = _col(params, "taxable_profit_elasticity") * np.where(first_year, _col(params, "behavioural_first_year_share"),
                                                                1.0)

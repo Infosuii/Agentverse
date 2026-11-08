@@ -102,7 +102,10 @@ def test_small_profits_trace_has_no_investment_steps(spec_factory, baseline):
 def test_registry_matches_spec_table():
     params = default_parameters()
     assert tuple(params) == PARAMETER_NAMES
-    assert len(PARAMETER_NAMES) == 19
+    assert len(PARAMETER_NAMES) == 20
+    drift = params["profit_base_annual_drift_pct"]  # Monte Carlo yearly shocks (#102)
+    assert (drift.value, drift.distribution.kind, drift.adjustable, drift.basis) == (5.0, "fixed", True,
+                                                                                    "team_judgement")
     p = params["taxable_profit_elasticity"]
     assert (p.value, p.low, p.high, p.slider_min, p.slider_max) == (0.20, 0.05, 0.50, 0.0, 1.0)
     assert p.distribution.kind == "triangular"
