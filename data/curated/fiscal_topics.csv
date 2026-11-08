@@ -18,7 +18,7 @@ tobacco_duty,Tobacco duties,measure,tax,1,,tobacco,50,40,0
 child_benefit,Child Benefit,measure,spending,-1,child benefit,child_benefit,35,10,0
 devolved_income_tax,Scottish and Welsh income tax,other,tax,1,(?:scot|wales|welsh|holyrood|senedd).*income tax|income tax.*(?:scot|wales|welsh),income_tax,0,1,0
 council_tax,Council Tax,other,tax,1,council[\s-]+tax,council_tax,0,20,0
-business_rates,Business rates,other,tax,1,business[\s-]+rates,,0,80,0
+business_rates,Business rates,other,tax,1,business[\s-]+rates,,0,25,0
 stamp_duty,Stamp duty,other,tax,1,stamp[\s-]+duty|\bsdlt\b,stamp,0,81,0
 wealth_tax,Wealth tax,other,tax,1,wealth[\s-]+tax,,0,0,0
 carbon_tax,Carbon pricing,other,tax,1,carbon[\s-]+(?:tax|price|border)|climate change levy,carbon,0,44,0
@@ -29,7 +29,7 @@ apprenticeship_levy,Apprenticeship levy,other,tax,1,apprenticeship[\s-]+levy,,0,
 air_passenger_duty,Air Passenger Duty,other,tax,1,air[\s-]+passenger[\s-]+duty|\bapd\b,apd,8,20,0
 vehicle_excise_duty,Vehicle Excise Duty,other,tax,1,vehicle[\s-]+excise[\s-]+duty|road[\s-]+tax|\bved\b,ved,0,57,0
 landfill_tax,Landfill Tax,other,tax,1,landfill[\s-]+tax,,0,24,0
-soft_drinks_levy,Soft Drinks Industry Levy,other,tax,1,sugar[\s-]+tax|soft[\s-]+drinks,,0,4,0
+soft_drinks_levy,Soft Drinks Industry Levy,other,tax,1,sugar[\s-]+tax|soft[\s-]+drinks,,0,3,0
 land_value_tax,Land value tax,other,tax,1,land[\s-]+value[\s-]+tax,,0,0,0
 dividend_tax,Dividend taxation,other,tax,1,dividend[\s-]+tax,income_tax,0,5,0
 plastic_packaging_tax,Plastic Packaging Tax,other,tax,1,plastic[\s-]+packaging,,0,2,0
@@ -41,16 +41,16 @@ pension_credit,Pension Credit,other,spending,-1,pension[\s-]+credit,pension_cred
 state_pension,State Pension and the triple lock,other,spending,-1,state[\s-]+pension|triple[\s-]+lock,state_pension,73,6,0
 housing_benefit,Housing Benefit,other,spending,-1,housing[\s-]+benefit,housing_benefit,0,29,0
 winter_fuel,Winter Fuel Payment,other,spending,-1,winter[\s-]+fuel,winter_fuel,0,4,0
-benefit_uprating,"Benefit cap, freeze and uprating",other,spending,-1,benefits?[\s-]+(?:cap|freeze|uprating),welfare,0,23,0
-pip,Personal Independence Payment,other,spending,-1,\bpip\b|personal[\s-]+independence,disability,0,22,0
+benefit_uprating,"Benefit cap, freeze and uprating",other,spending,-1,benefits?[\s-]+(?:cap|freeze|uprating),welfare,0,15,0
+pip,Personal Independence Payment,other,spending,-1,\bpip\b|personal[\s-]+independence,disability,0,21,0
 jobseekers_allowance,Jobseeker's Allowance,other,spending,-1,jobseeker,unemployment,59,4,0
 carers_allowance,Carer's Allowance,other,spending,-1,carer,carers,0,8,0
-disability_benefits,Disability benefits,other,spending,-1,disability,disability,0,32,0
+disability_benefits,Disability benefits,other,spending,-1,disability,disability,0,31,0
 welfare,Welfare spending,other,spending,-1,welfare|\bbenefits?\b,welfare,0,258,0
-minimum_wage,National Minimum and Living Wage,other,spending,1,(?:minimum|living)[\s-]+wage,,7,4,0
+minimum_wage,National Minimum and Living Wage,other,spending,1,(?:minimum|living)[\s-]+wage,,7,1,0
 public_sector_pay,Public sector pay,other,spending,-1,public[\s-]+sector[\s-]+pay,,0,2,0
 nhs,NHS and health spending,other,spending,-1,\bnhs\b|health,health,0,22,0
-defence,Defence spending,other,spending,-1,defen[cs]e,defence,0,8,0
-education,Schools and education spending,other,spending,-1,school|education,education,0,36,0
+defence,Defence spending,other,spending,-1,defen[cs]e,defence,0,4,0
+education,Schools and education spending,other,spending,-1,school|education,education,0,34,0
 public_spending,Public spending,other,spending,-1,spending|funding|public[\s-]+investment,tme,0,27,0
 overall_fiscal,"Overall tax, spending and borrowing",other,overall,1,.,borrowing,0,0,33

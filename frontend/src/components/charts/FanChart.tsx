@@ -457,7 +457,7 @@ export function FanChart({
                                 backgroundColor:
                                   entry.color === '#090d16'
                                     ? '#090d16'
-                                    : (entry.color ?? '#22c55e'),
+                                    : (entry.color ?? 'var(--chart-up)'),
                                 border:
                                   entry.color === '#090d16'
                                     ? '1px solid #f8fafc'
@@ -489,7 +489,7 @@ export function FanChart({
             dataKey={(d: InternalFanRow) => [d.p5, d.p95]}
             name="p5–p95 range"
             stroke="none"
-            fill="#4ade80"
+            fill="var(--chart-up-soft)"
             fillOpacity={0.18}
             isAnimationActive={false}
           />
@@ -498,7 +498,7 @@ export function FanChart({
             dataKey={(d: InternalFanRow) => [d.p25, d.p75]}
             name="p25–p75 range"
             stroke="none"
-            fill="#22c55e"
+            fill="var(--chart-up)"
             fillOpacity={0.28}
             isAnimationActive={false}
           />
@@ -511,7 +511,7 @@ export function FanChart({
               dataKey={`path_${p}`}
               name={p === 0 ? 'Simulated paths (2,000 draws)' : `path_${p}`}
               legendType={p === 0 ? 'plainline' : 'none'}
-              stroke="#94a3b8"
+              stroke="var(--chart-neutral)"
               strokeOpacity={0.28}
               strokeWidth={1}
               dot={false}
@@ -525,7 +525,7 @@ export function FanChart({
             type="monotone"
             dataKey="p95"
             name="Upper 95% bound (p95)"
-            stroke="#22c55e"
+            stroke="var(--chart-up)"
             strokeWidth={2.5}
             strokeDasharray="6 3"
             dot={(props: { cx?: number; cy?: number; payload?: InternalFanRow }) => {
@@ -538,7 +538,7 @@ export function FanChart({
                   cx={props.cx}
                   cy={props.cy}
                   r={2.5}
-                  fill="#22c55e"
+                  fill="var(--chart-up)"
                 />
               );
             }}
@@ -550,7 +550,7 @@ export function FanChart({
             type="monotone"
             dataKey="p5"
             name="Lower 5% bound (p5)"
-            stroke="#ef4444"
+            stroke="var(--chart-down)"
             strokeWidth={2.5}
             strokeDasharray="6 3"
             dot={(props: { cx?: number; cy?: number; payload?: InternalFanRow }) => {
@@ -563,7 +563,7 @@ export function FanChart({
                   cx={props.cx}
                   cy={props.cy}
                   r={2.5}
-                  fill="#ef4444"
+                  fill="var(--chart-down)"
                 />
               );
             }}
@@ -620,7 +620,7 @@ export function FanChart({
                 type="monotone"
                 dataKey="empP95"
                 name={`${empiricalLabel} (upper)`}
-                stroke="#2dd4bf"
+                stroke="var(--chart-teal)"
                 strokeWidth={1.75}
                 strokeDasharray="5 4"
                 dot={false}
@@ -631,7 +631,7 @@ export function FanChart({
                 type="monotone"
                 dataKey="empP5"
                 name={`${empiricalLabel} (lower)`}
-                stroke="#2dd4bf"
+                stroke="var(--chart-teal)"
                 strokeWidth={1.75}
                 strokeDasharray="5 4"
                 dot={false}

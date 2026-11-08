@@ -34,9 +34,9 @@ const METHOD_COLORS: Record<string, string> = {
   observed: EVIDENCE_CLASS_COLORS.observed_outcome,
   jane_behavioural: SCENARIO_COLORS.central,
   jane_calibrated: SCENARIO_COLORS.optimistic,
-  static: '#94a3b8',
-  naive_growth: '#64748b',
-  linear_regression: '#f59e0b',
+  static: 'var(--chart-neutral)',
+  naive_growth: 'var(--chart-neutral-muted)',
+  linear_regression: 'var(--chart-warm)',
   lightgbm: SCENARIO_COLORS.custom,
 };
 
@@ -373,20 +373,20 @@ export function EvaluationPage() {
                   <ReferenceArea
                     x1={firstTestYear}
                     x2={lastTestYear}
-                    fill="#60a5fa"
+                    fill="var(--ev-model)"
                     fillOpacity={0.08}
                     label={{
                       value: 'Out-of-sample test split (FY ≥ 2008)',
                       position: 'insideTopRight',
                       fontSize: 11,
-                      fill: '#93c5fd',
+                      fill: 'var(--ev-model-soft)',
                     }}
                   />
                 )}
                 {firstTestYear && (
                   <ReferenceLine
                     x={firstTestYear}
-                    stroke="#60a5fa"
+                    stroke="var(--ev-model)"
                     strokeWidth={1.5}
                     strokeDasharray="4 4"
                   />
@@ -772,7 +772,7 @@ export function EvaluationPage() {
                         </span>
                       </Tooltip>
                     ) : (
-                      <span className="text-muted-foreground/70">—</span>
+                      <span className="text-muted-foreground">—</span>
                     )}
                   </td>
                   <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">

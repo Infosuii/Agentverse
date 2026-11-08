@@ -3,12 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#0d1411" />
     <meta
       name="description"
       content="Jane Avenue is an AI-powered UK fiscal policy simulator: grounded research, historical precedents, a transparent econometric engine and independent verification."
     />
+    <script>
+      // Apply the saved theme before the page paints, so light mode never flashes dark.
+      try {
+        if (localStorage.getItem('jane-avenue-theme') === 'light') {
+          document.documentElement.dataset.theme = 'light';
+          document.querySelector('meta[name="theme-color"]').content = '#f8faf9';
+        }
+      } catch {
+        // Storage can be refused; dark is the default.
+      }
+    </script>
     <title>Jane Avenue — UK Fiscal Policy Simulator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

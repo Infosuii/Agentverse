@@ -15,6 +15,13 @@ contracts in `src/api/schema.d.ts`. No dependencies were added.
 | Domain colours | `src/lib/theme.ts` | Scenario colours keep the contract hex values. Evidence-class and verification colours keep their hue families, in lighter shades so they stay legible on dark surfaces. `CHART_THEME` drives Recharts grid, axis and tooltip chrome from the CSS variables. |
 | Primitives | `src/components/ui/` | `Card`, `Badge`, `Stat`, `Tabs`, `Tooltip`, etc. keep their props, roles and labels. New: `buttonClasses()`, `Eyebrow`, `Wordmark`, inline SVG icons (`icons.tsx`). `Tabs` adds `number`, `status` and a `responsive` orientation (horizontal rail on small screens, vertical contents list from `lg`). |
 
+## Light and dark
+
+The header toggle (`components/ui/ThemeToggle.tsx`) sets `data-theme` on `<html>` and saves the choice in `localStorage`. Dark
+is the default. `:root[data-theme="light"]` in `src/index.css` swaps every token, the tinted status shades and the chart
+colours; an inline script in `index.html` applies a saved choice before first paint. Colours that depend on the theme must be
+CSS variables, never hex values: `src/lib/theme.ts` holds only variables, except the scenario colours fixed by the contract.
+
 ## Screens
 
 - **New analysis (`/`)**: a search-first landing page with the wordmark hero, a typing-indicator

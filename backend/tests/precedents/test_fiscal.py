@@ -89,6 +89,18 @@ def test_an_announced_cut_that_never_happened_is_flagged_and_has_no_outcomes():
     assert row.observed_outcomes == []
 
 
+def test_income_tax_changes_have_a_full_window_of_receipts():
+    for change in registry.load_fiscal_changes("income_tax_basic_rate"):
+        if change.kind == "rate_series":
+            years = {o.fiscal_year for o in change.observed_outcomes if o.metric == "receipts_gbp_bn"}
+            assert len(years) == 4, (change.effective_date, years)
+
+
+def test_change_ids_are_unique():
+    ids = pd.read_csv(CURATED / "fiscal_policy_changes.csv", keep_default_na=False)["change_id"]
+    assert ids.is_unique
+
+
 def test_no_history_says_so():
     result = find_precedents(_spec("Introduce a wealth tax"))
     assert result.policy_key == "wealth_tax" and result.matches == []

@@ -629,7 +629,7 @@ export function Tabs({
               isActive
                 ? 'border-primary text-foreground'
                 : item.disabled
-                  ? 'cursor-not-allowed border-transparent text-muted-foreground/50'
+                  ? 'cursor-not-allowed border-transparent text-muted-foreground'
                   : 'border-transparent text-muted-foreground hover:text-foreground',
             )}
           >
@@ -639,7 +639,7 @@ export function Tabs({
                   aria-hidden="true"
                   className={clsx(
                     'font-mono text-[11px]',
-                    item.disabled ? 'text-muted-foreground/50' : 'text-primary/80',
+                    item.disabled ? 'text-muted-foreground' : 'text-primary/80',
                   )}
                 >
                   {item.number}
@@ -817,19 +817,19 @@ const MODE_STYLES: Record<
   live: {
     label: 'Mode: Live Gemini',
     variant: 'green',
-    dot: '#34d399',
+    dot: 'var(--st-pass)',
     description: 'Live Gemini API + Google Search grounding enabled',
   },
   cached: {
     label: 'Mode: Cached Research',
     variant: 'blue',
-    dot: '#60a5fa',
+    dot: 'var(--ev-model)',
     description: 'Replaying verified research trace from cache with deterministic engine',
   },
   mock: {
     label: 'Mode: Mock',
     variant: 'amber',
-    dot: '#fbbf24',
+    dot: 'var(--ev-assumption)',
     description: 'Deterministic offline mock fixtures (no external network calls)',
   },
 };
@@ -896,7 +896,7 @@ export function VerificationBadge({
 
   const key = overall as VerificationOverallKey;
   const token = VERIFICATION_OVERALL_TOKENS[key] ?? {
-    color: '#94a3b8',
+    color: 'var(--chart-neutral)',
     label: String(overall),
     bgClass: 'bg-secondary',
     textClass: 'text-secondary-foreground',

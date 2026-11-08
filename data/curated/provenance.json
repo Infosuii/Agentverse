@@ -268,5 +268,35 @@
     "url": "https://researchbriefings.files.parliament.uk/documents/SN00701/SN00701.pdf",
     "sha256": "a08762d127ae8ddeebdc2aa832cc3d584241f4c74384ed96a3226adda6576f43",
     "retrieved_at": "2026-11-08"
+  },
+  "ons_income_tax_cash.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/rurc/pusf",
+    "sha256": "40d5b3763fa4eb8c0339643b5bc208828904957b389bb11dd81e2da62be82bc4",
+    "retrieved_at": "2026-11-08"
+  },
+  "ons_vat_cash.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/eyoo/pusf",
+    "sha256": "a6bd69dd35e607aa4776d6a0f910e5a79321daeccf3cb0d8ca323f52a65d08f2",
+    "retrieved_at": "2026-11-08"
+  },
+  "ons_nics_cash.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/ablp/pusf",
+    "sha256": "1f62982bce5dcfc00fd4fe930c346e44b55a282f10fa2d857b57003239a5c3ac",
+    "retrieved_at": "2026-11-08"
+  },
+  "ons_fuel_duty.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/cudg/pusf",
+    "sha256": "221ae628581f2d796c5911c656d1f4263befd1a078bc5a687d0d9d1cf02f5b56",
+    "retrieved_at": "2026-11-08"
+  },
+  "ons_tobacco_duty.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/gtao/pusf",
+    "sha256": "6f1d9aad26037f41d271543f5ab62e0fa72e66c9786449db7b9d65203d17d060",
+    "retrieved_at": "2026-11-08"
+  },
+  "ons_alcohol_duty.csv": {
+    "url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/mf6v/pusf",
+    "sha256": "71702ac0e8b1f3321ae9e263f0d54f76ed65e6efdb2092b7d551e107a8b967ed",
+    "retrieved_at": "2026-11-08"
   }
 }

@@ -1,31 +1,33 @@
 outturn_id,label,kind,fiscal_year,value_gbp_bn,pct_gdp,source_id
-alcohol,Alcohol duty receipts,receipts,1999-00,6.5,0.612645,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2000-01,6.612,0.591607,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2001-02,6.975,0.601508,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2002-03,7.382,0.610009,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2003-04,7.61,0.595651,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2004-05,7.889,0.585925,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2005-06,7.876,0.553262,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2006-07,7.914,0.529915,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2007-08,8.215,0.522607,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2008-09,8.598,0.539646,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2009-10,9.246,0.590018,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2010-11,9.434,0.577736,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2011-12,10.18,0.605615,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2012-13,10.139,0.584882,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2013-14,10.308,0.568778,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2014-15,10.449,0.553409,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2015-16,10.697,0.550303,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2016-17,11.117,0.548414,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2017-18,11.585,0.547853,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2018-19,12.097,0.552415,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2019-20,12.024,0.531246,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2020-21,12.156,0.576115,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2021-22,13.179,0.549034,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2022-23,12.384,0.470099,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2023-24,12.515,0.448646,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2024-25,12.545,0.42758,D-obr-databank-2026
-alcohol,Alcohol duty receipts,receipts,2025-26,12.432,0.404978,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,1997-98,5.756,0.593165,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,1998-99,6.034,0.595012,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,1999-00,6.5,0.612645,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2000-01,6.612,0.591607,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2001-02,6.975,0.601508,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2002-03,7.382,0.610009,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2003-04,7.61,0.595651,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2004-05,7.889,0.585925,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2005-06,7.876,0.553262,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2006-07,7.914,0.529915,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2007-08,8.215,0.522607,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2008-09,8.598,0.539646,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2009-10,9.246,0.590018,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2010-11,9.434,0.577736,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2011-12,10.18,0.605615,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2012-13,10.139,0.584882,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2013-14,10.308,0.568778,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2014-15,10.449,0.553409,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2015-16,10.697,0.550303,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2016-17,11.117,0.548414,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2017-18,11.585,0.547853,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2018-19,12.097,0.552415,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2019-20,12.024,0.531246,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2020-21,12.156,0.576115,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2021-22,13.179,0.549034,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2022-23,12.384,0.470099,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2023-24,12.515,0.448646,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2024-25,12.545,0.42758,D-ons-alcohol-duty
+alcohol,Alcohol duty receipts,receipts,2025-26,12.432,0.404978,D-ons-alcohol-duty
 apd,Air Passenger Duty receipts,receipts,1999-00,0.882,0.083131,D-obr-databank-2026
 apd,Air Passenger Duty receipts,receipts,2000-01,0.956,0.085538,D-obr-databank-2026
 apd,Air Passenger Duty receipts,receipts,2001-02,0.802,0.069163,D-obr-databank-2026
@@ -403,33 +405,35 @@ epl,Energy Profits Levy receipts,receipts,2022-23,4.256,0.161559,D-obr-databank-
 epl,Energy Profits Levy receipts,receipts,2023-24,3.169,0.113604,D-obr-databank-2026
 epl,Energy Profits Levy receipts,receipts,2024-25,2.548,0.086845,D-obr-databank-2026
 epl,Energy Profits Levy receipts,receipts,2025-26,2.756,0.089778,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,1999-00,22.515,2.122109,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2000-01,22.63,2.024815,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2001-02,21.916,1.889987,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2002-03,22.147,1.83011,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2003-04,22.786,1.783509,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2004-05,23.313,1.731484,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2005-06,23.438,1.646439,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2006-07,23.585,1.579231,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2007-08,24.905,1.584361,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2008-09,24.615,1.544939,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2009-10,26.197,1.671719,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2010-11,27.256,1.669151,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2011-12,26.798,1.59423,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2012-13,26.571,1.532784,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2013-14,26.882,1.483304,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2014-15,27.156,1.438261,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2015-16,27.622,1.421004,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2016-17,27.937,1.378163,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2017-18,27.878,1.318347,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2018-19,28.146,1.2853,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2019-20,27.502,1.215098,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2020-21,21.175,1.003556,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2021-22,25.972,1.081987,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2022-23,25.105,0.952992,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2023-24,24.922,0.89342,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2024-25,24.359,0.830245,D-obr-databank-2026
-fuel,Fuel duty receipts,receipts,2025-26,24.559,0.80002,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,1997-98,19.454,2.004765,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,1998-99,21.553,2.125337,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,1999-00,22.515,2.122109,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2000-01,22.63,2.024815,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2001-02,21.916,1.889987,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2002-03,22.147,1.83011,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2003-04,22.786,1.783509,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2004-05,23.313,1.731484,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2005-06,23.438,1.646439,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2006-07,23.585,1.579231,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2007-08,24.905,1.584361,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2008-09,24.615,1.544939,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2009-10,26.197,1.671719,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2010-11,27.256,1.669151,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2011-12,26.798,1.59423,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2012-13,26.571,1.532784,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2013-14,26.882,1.483304,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2014-15,27.156,1.438261,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2015-16,27.622,1.421004,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2016-17,27.937,1.378163,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2017-18,27.878,1.318347,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2018-19,28.146,1.2853,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2019-20,27.502,1.215098,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2020-21,21.175,1.003556,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2021-22,25.972,1.081987,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2022-23,25.105,0.952992,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2023-24,24.922,0.89342,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2024-25,24.359,0.830245,D-ons-fuel-duty
+fuel,Fuel duty receipts,receipts,2025-26,24.559,0.80002,D-ons-fuel-duty
 health,Health spending,spending,2003-04,74.9,5.862582,D-hmt-pesa-2026-ch4
 health,Health spending,spending,2004-05,82.9,6.157082,D-hmt-pesa-2026-ch4
 health,Health spending,spending,2005-06,89.8,6.308142,D-hmt-pesa-2026-ch4
@@ -535,33 +539,65 @@ iht,Inheritance Tax receipts,receipts,2022-23,7.086,0.268986,D-obr-databank-2026
 iht,Inheritance Tax receipts,receipts,2023-24,7.499,0.268829,D-obr-databank-2026
 iht,Inheritance Tax receipts,receipts,2024-25,8.25,0.281191,D-obr-databank-2026
 iht,Inheritance Tax receipts,receipts,2025-26,8.466,0.275784,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,1999-00,96.696,9.113898,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2000-01,107.088,9.581678,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2001-02,108.654,9.370076,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2002-03,110.777,9.154019,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2003-04,116.921,9.151655,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2004-05,126.432,9.390256,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2005-06,136.074,9.558732,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2006-07,146.495,9.80918,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2007-08,157.092,9.993594,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2008-09,150.839,9.467277,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2009-10,147.148,9.390008,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2010-11,153.246,9.384749,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2011-12,152.702,9.084338,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2012-13,152.291,8.785114,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2013-14,157.618,8.697096,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2014-15,163.619,8.665737,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2015-16,168.874,8.687663,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2016-17,176.951,8.729191,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2017-18,180.609,8.540979,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2018-19,192.505,8.790829,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2019-20,192.537,8.5067,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2020-21,195.263,9.254188,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2021-22,224.779,9.364239,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2022-23,251.987,9.565484,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2023-24,276.998,9.930006,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2024-25,305.905,10.426373,D-obr-databank-2026
-income_tax,Income Tax receipts,receipts,2025-26,329.338,10.728325,D-obr-databank-2026
+income_tax,Income Tax receipts (cash),receipts,1967-68,3.836,9.021637,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1968-69,4.399,9.403792,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1969-70,5.036,9.90247,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1970-71,5.869,10.164707,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1971-72,6.588,10.199563,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1972-73,6.687,9.043575,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1973-74,7.456,8.997116,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1974-75,10.648,10.844061,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1975-76,15.404,12.747013,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1976-77,17.333,12.200152,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1977-78,17.761,10.693793,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1978-79,19.101,9.9308,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1979-80,21.03,9.042944,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1980-81,24.803,9.270486,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1981-82,29.246,9.789817,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1982-83,30.993,9.451679,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1983-84,31.779,8.860876,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1984-85,33.237,8.594635,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1985-86,36.261,8.540862,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1986-87,39.563,8.672198,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1987-88,42.781,8.342108,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1988-89,45.756,7.998867,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1989-90,50.655,8.020019,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1990-91,57.148,8.386063,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1991-92,58.633,8.182293,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1992-93,57.779,7.795269,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1993-94,59.152,7.552412,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1994-95,64.026,7.773259,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1995-96,68.844,7.947038,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1996-97,70.202,7.576677,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1997-98,78.291,8.06801,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1998-99,88.509,8.727855,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,1999-00,96.032,9.051314,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2000-01,108.414,9.700322,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2001-02,111.028,9.574805,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2002-03,111.102,9.180876,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2003-04,120.144,9.403926,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2004-05,129.575,9.62369,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2005-06,137.956,9.690936,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2006-07,151.533,10.14652,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2007-08,157.006,9.988123,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2008-09,161.291,10.123288,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2009-10,147.374,9.40443,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2010-11,157.09,9.620154,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2011-12,155.279,9.237645,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2012-13,155.955,8.996477,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2013-14,160.804,8.872895,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2014-15,168.667,8.933094,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2015-16,175.51,9.029049,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2016-17,185.626,9.157138,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2017-18,187.843,8.883074,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2018-19,200.221,9.143184,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2019-20,203.068,8.971983,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2020-21,204.874,9.709687,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2021-22,235.874,9.826454,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2022-23,265.287,10.070355,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2023-24,289.75,10.387148,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2024-25,316.486,10.787013,D-ons-income-tax-cash
+income_tax,Income Tax receipts (cash),receipts,2025-26,351.241,11.441824,D-ons-income-tax-cash
 ipt,Insurance Premium Tax receipts,receipts,1999-00,1.511,0.142416,D-obr-databank-2026
 ipt,Insurance Premium Tax receipts,receipts,2000-01,1.751,0.15667,D-obr-databank-2026
 ipt,Insurance Premium Tax receipts,receipts,2001-02,1.921,0.165663,D-obr-databank-2026
@@ -589,33 +625,54 @@ ipt,Insurance Premium Tax receipts,receipts,2022-23,7.455,0.282994,D-obr-databan
 ipt,Insurance Premium Tax receipts,receipts,2023-24,8.382,0.300483,D-obr-databank-2026
 ipt,Insurance Premium Tax receipts,receipts,2024-25,8.94,0.304708,D-obr-databank-2026
 ipt,Insurance Premium Tax receipts,receipts,2025-26,9.039,0.294449,D-obr-databank-2026
-nics,National Insurance receipts,receipts,1999-00,56.935,5.366301,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2000-01,62.068,5.553522,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2001-02,63.162,5.446949,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2002-03,63.529,5.249697,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2003-04,75.148,5.881994,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2004-05,80.923,6.010248,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2005-06,85.559,6.010226,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2006-07,90.916,6.087658,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2007-08,95.437,6.071338,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2008-09,96.613,6.06383,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2009-10,96.638,6.166795,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2010-11,97.747,5.986003,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2011-12,101.597,6.044069,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2012-13,104.483,6.027244,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2013-14,107.306,5.920965,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2014-15,110.26,5.83969,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2015-16,114.061,5.867827,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2016-17,125.784,6.205066,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2017-18,131.547,6.220843,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2018-19,137.461,6.277219,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2019-20,143.674,6.347828,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2020-21,144.213,6.834752,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2021-22,160.846,6.700805,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2022-23,179.368,6.808851,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2023-24,179.081,6.419813,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2024-25,171.402,5.842014,D-obr-databank-2026
-nics,National Insurance receipts,receipts,2025-26,204.429,6.659361,D-obr-databank-2026
+nics,National Insurance receipts (cash),receipts,1978-79,10.139,5.271367,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1979-80,11.753,5.053815,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1980-81,14.057,5.25401,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1981-82,15.922,5.329736,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1982-83,18.907,5.765911,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1983-84,20.984,5.850927,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1984-85,22.331,5.774492,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1985-86,24.465,5.76245,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1986-87,26.509,5.810765,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1987-88,29.135,5.681198,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1988-89,32.356,5.656337,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1989-90,32.883,5.206244,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1990-91,35.453,5.202476,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1991-92,36.306,5.066538,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1992-93,37.317,5.034633,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1993-94,38.758,4.948546,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1994-95,42.062,5.106657,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1995-96,44.575,5.145535,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1996-97,46.863,5.057773,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1997-98,51.006,5.256248,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1998-99,55.102,5.433597,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,1999-00,56.354,5.31154,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2000-01,60.614,5.423426,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2001-02,63.168,5.447466,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2002-03,64.553,5.334315,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2003-04,72.457,5.671364,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2004-05,78.098,5.800432,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2005-06,85.522,6.007627,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2006-07,87.274,5.843792,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2007-08,100.411,6.387765,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2008-09,96.884,6.080839,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2009-10,95.516,6.095197,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2010-11,96.548,5.912577,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2011-12,101.617,6.045259,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2012-13,102.037,5.886143,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2013-14,107.691,5.942208,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2014-15,110.408,5.847528,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2015-16,113.703,5.84941,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2016-17,124.468,6.140146,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2017-18,130.93,6.191665,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2018-19,136.85,6.249318,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2019-20,142.87,6.312305,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2020-21,143.458,6.79897,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2021-22,158.043,6.584033,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2022-23,177.445,6.735853,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2023-24,179.189,6.423684,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2024-25,172.518,5.880051,D-ons-nics-cash
+nics,National Insurance receipts (cash),receipts,2025-26,200.829,6.54209,D-ons-nics-cash
 pension_credit,Pension Credit spending,spending,1978-79,0.561,0.291669,D-dwp-expenditure-2026
 pension_credit,Pension Credit spending,spending,1979-80,0.624,0.268321,D-dwp-expenditure-2026
 pension_credit,Pension Credit spending,spending,1980-81,0.729,0.272474,D-dwp-expenditure-2026
@@ -873,33 +930,35 @@ tme,Total managed expenditure,spending,2022-23,1158.392,43.972827,D-obr-databank
 tme,Total managed expenditure,spending,2023-24,1231.793,44.158121,D-obr-databank-2026
 tme,Total managed expenditure,spending,2024-25,1290.348,43.979831,D-obr-databank-2026
 tme,Total managed expenditure,spending,2025-26,1365.598,44.484932,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,1999-00,7.796,0.734797,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2000-01,7.638,0.683409,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2001-02,7.639,0.65877,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2002-03,8.02,0.66273,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2003-04,8.595,0.672749,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2004-05,8.071,0.599443,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2005-06,8.438,0.592741,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2006-07,7.641,0.511635,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2007-08,7.982,0.507784,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2008-09,7.896,0.495585,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2009-10,9.462,0.603802,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2010-11,9.305,0.569836,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2011-12,9.878,0.587648,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2012-13,9.59,0.553212,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2013-14,9.556,0.527284,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2014-15,9.251,0.48996,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2015-16,9.106,0.468455,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2016-17,8.681,0.428243,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2017-18,8.766,0.414543,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2018-19,9.152,0.41793,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2019-20,9.693,0.428258,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2020-21,9.788,0.463887,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2021-22,10.191,0.424555,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2022-23,9.375,0.355877,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2023-24,8.969,0.321527,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2024-25,7.909,0.269568,D-obr-databank-2026
-tobacco,Tobacco duty receipts,receipts,2025-26,7.468,0.243273,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,1997-98,7.622,0.785459,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,1998-99,7.551,0.744603,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,1999-00,7.796,0.734797,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2000-01,7.638,0.683409,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2001-02,7.639,0.65877,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2002-03,8.02,0.66273,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2003-04,8.595,0.672749,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2004-05,8.071,0.599443,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2005-06,8.438,0.592741,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2006-07,7.641,0.511635,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2007-08,7.982,0.507784,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2008-09,7.896,0.495585,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2009-10,9.462,0.603802,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2010-11,9.305,0.569836,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2011-12,9.878,0.587648,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2012-13,9.59,0.553212,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2013-14,9.556,0.527284,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2014-15,9.251,0.48996,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2015-16,9.106,0.468455,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2016-17,8.681,0.428243,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2017-18,8.766,0.414543,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2018-19,9.152,0.41793,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2019-20,9.693,0.428258,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2020-21,9.788,0.463887,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2021-22,10.191,0.424555,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2022-23,9.375,0.355877,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2023-24,8.969,0.321527,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2024-25,7.909,0.269568,D-ons-tobacco-duty
+tobacco,Tobacco duty receipts,receipts,2025-26,7.468,0.243273,D-ons-tobacco-duty
 unemployment,Unemployment benefit spending,spending,1948-49,0.0152,0.133042,D-dwp-expenditure-2026
 unemployment,Unemployment benefit spending,spending,1949-50,0.0192,0.157778,D-dwp-expenditure-2026
 unemployment,Unemployment benefit spending,spending,1950-51,0.017,0.133438,D-dwp-expenditure-2026
@@ -983,33 +1042,59 @@ universal_credit,Universal Credit and equivalents spending,spending,2021-22,75.2
 universal_credit,Universal Credit and equivalents spending,spending,2022-23,73.403838,2.786427,D-dwp-expenditure-2026
 universal_credit,Universal Credit and equivalents spending,spending,2023-24,81.994441,2.93939,D-dwp-expenditure-2026
 universal_credit,Universal Credit and equivalents spending,spending,2024-25,90.0416,3.068951,D-dwp-expenditure-2026
-vat,VAT receipts (net of refunds),receipts,1999-00,56.923,5.36517,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2000-01,59.04,5.282593,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2001-02,61.738,5.324146,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2002-03,63.988,5.287626,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2003-04,70.46,5.515054,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2004-05,72.311,5.370624,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2005-06,73.303,5.149285,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2006-07,78.903,5.283277,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2007-08,80.853,5.143559,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2008-09,75.817,4.758587,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2009-10,73.544,4.69309,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2010-11,86.291,5.28444,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2011-12,98.098,5.835912,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2012-13,100.694,5.80867,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2013-14,106.455,5.874008,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2014-15,111.176,5.888204,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2015-16,116.152,5.975398,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2016-17,121.973,6.017065,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2017-18,126.291,5.972287,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2018-19,133.497,6.096202,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2019-20,134.743,5.953237,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2020-21,117.411,5.564513,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2021-22,143.394,5.973759,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2022-23,160.126,6.07842,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2023-24,168.305,6.033508,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2024-25,173.14,5.901251,D-obr-databank-2026
-vat,VAT receipts (net of refunds),receipts,2025-26,180.326,5.874196,D-obr-databank-2026
+vat,VAT receipts (cash),receipts,1973-74,1.47,1.773841,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1974-75,2.509,2.555198,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1975-76,3.457,2.860713,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1976-77,3.771,2.654288,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1977-78,4.272,2.572146,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1978-79,4.903,2.549118,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1979-80,7.979,3.430987,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1980-81,11.102,4.149536,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1981-82,11.882,3.977385,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1982-83,13.776,4.201153,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1983-84,15.283,4.261329,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1984-85,18.558,4.798846,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1985-86,19.363,4.560732,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1986-87,21.332,4.675968,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1987-88,24.238,4.726304,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1988-89,27.217,4.757959,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1989-90,29.553,4.679017,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1990-91,30.931,4.538904,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1991-92,35.258,4.920288,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1992-93,37.215,5.020871,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1993-94,39.211,5.006384,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1994-95,41.722,5.065378,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1995-96,43.054,4.969958,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1996-97,46.644,5.034137,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1997-98,50.585,5.212863,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1998-99,52.304,5.157687,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,1999-00,56.395,5.315404,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2000-01,58.501,5.234366,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2001-02,61.026,5.262745,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2002-03,63.451,5.243252,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2003-04,69.075,5.406647,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2004-05,73.026,5.423728,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2005-06,72.856,5.117884,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2006-07,77.36,5.179959,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2007-08,80.601,5.127528,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2008-09,78.439,4.923155,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2009-10,70.16,4.477145,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2010-11,83.499,5.113459,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2011-12,98.292,5.847453,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2012-13,100.57,5.801517,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2013-14,104.685,5.776342,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2014-15,111.359,5.897896,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2015-16,114.75,5.903273,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2016-17,119.593,5.899657,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2017-18,126.18,5.967038,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2018-19,132.31,6.041997,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2019-20,129.435,5.718718,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2020-21,101.011,4.78726,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2021-22,157.48,6.560579,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2022-23,158.046,5.999462,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2023-24,168.375,6.036017,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2024-25,170.986,5.827835,D-ons-vat-cash
+vat,VAT receipts (cash),receipts,2025-26,180.261,5.872078,D-ons-vat-cash
 ved,Vehicle Excise Duty receipts,receipts,1999-00,4.855,0.457599,D-obr-databank-2026
 ved,Vehicle Excise Duty receipts,receipts,2000-01,4.269,0.381968,D-obr-databank-2026
 ved,Vehicle Excise Duty receipts,receipts,2001-02,4.291,0.370046,D-obr-databank-2026

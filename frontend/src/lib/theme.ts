@@ -1,5 +1,5 @@
 /**
- * Design tokens for Jane Avenue (MASTER_PROMPT §9.10), tuned for the dark
+ * Design tokens for Jane Avenue (MASTER_PROMPT §9.10), tuned for the
  * Forecast Confidence Studio palette defined in `src/index.css`.
  *
  * - Scenario colours keep the exact contract hex values (charts and tests rely on them).
@@ -40,7 +40,7 @@ export const SCENARIO_LABELS: Record<ScenarioColorKey, string> = {
 } as const;
 
 export const MC_BAND_STYLE = {
-  color: '#60a5fa',
+  color: 'var(--ev-model)',
   p5_p95_opacity: 0.16,
   p25_p75_opacity: 0.3,
   // Aliases for convenience across chart wrappers
@@ -55,8 +55,8 @@ export const CHART_THEME = {
   axisLabel: 'var(--muted-foreground)',
   reference: 'var(--muted-foreground)',
   cursor: 'var(--muted)',
-  neutral: '#94a3b8',
-  neutralMuted: '#64748b',
+  neutral: 'var(--chart-neutral)',
+  neutralMuted: 'var(--chart-neutral-muted)',
   tooltip: {
     backgroundColor: 'var(--popover)',
     color: 'var(--popover-foreground)',
@@ -86,7 +86,7 @@ export const EVIDENCE_CLASS_TOKENS: Record<
   }
 > = {
   observed_outcome: {
-    color: '#94a3b8',
+    color: 'var(--ev-observed)',
     label: 'Observed outcome',
     shortLabel: 'Observed',
     bgClass: 'bg-slate-400/10',
@@ -94,7 +94,7 @@ export const EVIDENCE_CLASS_TOKENS: Record<
     borderClass: 'border-slate-400/35',
   },
   official_costing: {
-    color: '#a78bfa',
+    color: 'var(--ev-costing)',
     label: 'Official costing',
     shortLabel: 'Official costing',
     bgClass: 'bg-violet-500/10',
@@ -102,7 +102,7 @@ export const EVIDENCE_CLASS_TOKENS: Record<
     borderClass: 'border-violet-400/35',
   },
   model_scenario: {
-    color: '#60a5fa',
+    color: 'var(--ev-model)',
     label: 'Model scenario',
     shortLabel: 'Model scenario',
     bgClass: 'bg-blue-500/10',
@@ -110,7 +110,7 @@ export const EVIDENCE_CLASS_TOKENS: Record<
     borderClass: 'border-blue-400/35',
   },
   assumption: {
-    color: '#fbbf24',
+    color: 'var(--ev-assumption)',
     label: 'Assumption',
     shortLabel: 'Assumption',
     bgClass: 'bg-amber-500/10',
@@ -118,7 +118,7 @@ export const EVIDENCE_CLASS_TOKENS: Record<
     borderClass: 'border-amber-400/35',
   },
   ai_interpretation: {
-    color: '#fb7185',
+    color: 'var(--ev-ai)',
     label: 'AI interpretation',
     shortLabel: 'AI interpretation',
     bgClass: 'bg-rose-500/10',
@@ -155,7 +155,7 @@ export const VERIFICATION_STATUS_TOKENS: Record<
   }
 > = {
   pass: {
-    color: '#34d399',
+    color: 'var(--st-pass)',
     label: 'Pass',
     symbol: '✓',
     bgClass: 'bg-emerald-500/10',
@@ -163,7 +163,7 @@ export const VERIFICATION_STATUS_TOKENS: Record<
     borderClass: 'border-emerald-400/35',
   },
   warn: {
-    color: '#fbbf24',
+    color: 'var(--ev-assumption)',
     label: 'Warning',
     symbol: '!',
     bgClass: 'bg-amber-500/10',
@@ -171,7 +171,7 @@ export const VERIFICATION_STATUS_TOKENS: Record<
     borderClass: 'border-amber-400/35',
   },
   fail: {
-    color: '#f87171',
+    color: 'var(--st-fail)',
     label: 'Failed',
     symbol: '✕',
     bgClass: 'bg-red-500/10',
@@ -179,7 +179,7 @@ export const VERIFICATION_STATUS_TOKENS: Record<
     borderClass: 'border-red-400/35',
   },
   skipped: {
-    color: '#94a3b8',
+    color: 'var(--chart-neutral)',
     label: 'Skipped',
     symbol: '–',
     bgClass: 'bg-slate-400/10',
@@ -206,21 +206,21 @@ export const VERIFICATION_OVERALL_TOKENS: Record<
   }
 > = {
   approved: {
-    color: '#34d399',
+    color: 'var(--st-pass)',
     label: 'Approved',
     bgClass: 'bg-emerald-500/10',
     textClass: 'text-emerald-300',
     borderClass: 'border-emerald-400/35',
   },
   approved_with_warnings: {
-    color: '#fbbf24',
+    color: 'var(--ev-assumption)',
     label: 'Approved with warnings',
     bgClass: 'bg-amber-500/10',
     textClass: 'text-amber-300',
     borderClass: 'border-amber-400/35',
   },
   forecast_withheld: {
-    color: '#f87171',
+    color: 'var(--st-fail)',
     label: 'Quantitative forecast withheld',
     bgClass: 'bg-red-500/10',
     textClass: 'text-red-300',
