@@ -8,7 +8,7 @@
 
 ## Pre-Demo Checklist (T-10 minutes)
 
-1. Ensure `.env` has `GEMINI_API_KEY` set and `JANE_RESEARCH_CACHE_DIR=data/research_cache` populated with the 3 bundled cached research runs (`25% -> 28%`, `25% -> 23%`, and `25% -> 26%`). There is no cached run for the `25% -> 45%` guardrail demo: in `cached` mode its Research tab shows the labelled mock fixture ("No cached research for this policy") and a **Placeholder (unverified)** badge. Record one with a live key before the demo, or present that step as a scope-gate demo only.
+1. Ensure `.env` has `GEMINI_API_KEY` set and `JANE_RESEARCH_CACHE_DIR=data/research_cache` populated with the 4 bundled cached research runs (`25% -> 28%`, `25% -> 23%`, `25% -> 26%`, and the `25% -> 45%` guardrail demo). Any other query has no cached run: in `cached` mode it shows the labelled mock fixture ("No cached research for this policy") and a **Placeholder (unverified)** badge, so stick to the scripted queries.
 2. Start backend and frontend via `.\scripts\dev.ps1` (Windows) or `./scripts/dev.sh` (macOS/Linux).
 3. Run the smoke check to confirm sub-second simulation and verified golden path:
    ```powershell
