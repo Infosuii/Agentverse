@@ -423,6 +423,61 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
           ))}
         </div>
       )}
+
+      {/* Governance, Risk Controls & Execution Boundaries Card */}
+      <Card
+        title="Governance, Risk Controls & Execution Boundaries"
+        subtitle="Explicit human-in-the-loop oversight, model execution boundaries, anti-prompt-injection isolation, and data privacy controls."
+      >
+        <div className="grid grid-cols-1 gap-4 text-xs leading-relaxed text-slate-700 sm:grid-cols-2">
+          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3.5">
+            <h4 className="font-semibold text-slate-900">
+              1. What the Agent May Do Alone vs. Human Approval
+            </h4>
+            <p className="mt-1">
+              <strong>Autonomous (read-only &amp; bounded):</strong> Parse plain-English queries into a
+              candidate <code className="font-mono text-[11px]">PolicySpec</code>, retrieve grounded
+              official sources (OBR, HMRC, ONS, IFS), verify verbatim quotes against SHA-256
+              snapshots, and execute the deterministic NumPy simulation and 18-check audit.
+            </p>
+            <p className="mt-1.5">
+              <strong>Requires Human Approval:</strong> Confirming or editing the parsed policy
+              specification before running (<code className="font-mono text-[11px]">New Analysis</code>{' '}
+              Stage 2), overriding structural or market-regime parameters (
+              <code className="font-mono text-[11px]">Assumptions &amp; Lab</code>), and any downstream
+              policy briefing use. Forecasts are automatically withheld (
+              <code className="font-mono text-[11px]">forecast_withheld</code>) if any blocking check
+              fails.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3.5">
+            <h4 className="font-semibold text-slate-900">
+              2. Where Each Model Runs &amp; What Data Leaves the Device
+            </h4>
+            <p className="mt-1">
+              <strong>100% On-Device (Local Python / NumPy / SQLite):</strong> Deterministic rules
+              parser, historical Scope Gate (<code className="font-mono text-[11px]">15pp</code> hard
+              limit), Hall–Jorgenson / King–Fullerton econometric engine (
+              <code className="font-mono text-[11px]">engine-1.0.0</code>), 2,000-draw Monte Carlo,
+              independent recompute verifier (<code className="font-mono text-[11px]">CALC-001</code>{' '}
+              to <code className="font-mono text-[11px]">1e-9</code>), and{' '}
+              <code className="font-mono text-[11px]">{'{{fig:id}}'}</code> report number substitution.
+            </p>
+            <p className="mt-1.5">
+              <strong>External Network Calls:</strong> In{' '}
+              <code className="font-mono text-[11px]">cached</code> and{' '}
+              <code className="font-mono text-[11px]">mock</code> modes,{' '}
+              <strong>zero bytes leave the device</strong>. In{' '}
+              <code className="font-mono text-[11px]">live</code> mode, only the public tax policy query
+              and search queries are sent to Google Gemini (<code className="font-mono text-[11px]">store=False</code>{' '}
+              enforced — zero prompt retention) and official <code className="font-mono text-[11px]">.gov.uk</code> /{' '}
+              <code className="font-mono text-[11px]">.org.uk</code> URLs. Untrusted prompt text never
+              executes code or injects numbers.
+            </p>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

@@ -79,6 +79,9 @@ describe('VerificationTab', () => {
     expect(screen.getByText(/Critic model: gemini-3-flash-preview/i)).toBeInTheDocument();
     expect(screen.getByText('ARITH-001')).toBeInTheDocument();
     expect(screen.getByText('CITATION-002')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Governance, Risk Controls & Execution Boundaries/i),
+    ).toBeInTheDocument();
 
     // Check deep links for affected_ids
     const sourceLink = screen.getByRole('link', { name: /source:S2/i });
