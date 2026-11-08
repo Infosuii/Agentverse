@@ -36,3 +36,19 @@ D-govuk-inheritance-tax,Inheritance Tax,https://www.gov.uk/inheritance-tax,HMRC,
 D-govuk-ipt,Insurance Premium Tax,https://www.gov.uk/guidance/insurance-premium-tax,HMRC,hmrc,,1
 D-hmrc-fuel-duty,Excise duty hydrocarbon oils rates,https://www.gov.uk/government/publications/rates-and-allowances-excise-duty-hydrocarbon-oils/excise-duty-hydrocarbon-oils-rates,HMRC,hmrc,,1
 D-govuk-child-benefit,Child Benefit: what you'll get,https://www.gov.uk/child-benefit/what-youll-get,HMRC,hmrc,,1
+D-obr-policy-measures,OBR policy measures database,https://obr.uk/data/,Office for Budget Responsibility,obr,,1
+D-obr-databank-2026,"OBR public finances databank, October 2026",https://obr.uk/data/,Office for Budget Responsibility,obr,,1
+D-hmrc-table-a1,HMRC Table A.1: Income Tax personal allowances and reliefs,https://www.gov.uk/government/statistics/income-tax-personal-allowances-and-reliefs,HMRC,hmrc,,1
+D-hmrc-table-a2,HMRC Table A.2: Rates of Income Tax,https://www.gov.uk/government/statistics/rates-of-income-statistics,HMRC,hmrc,,1
+D-hmrc-table-a4,HMRC Table A.4: National Insurance contributions rates and allowances,https://www.gov.uk/government/statistics/main-features-of-national-insurance-contributions,HMRC,hmrc,,1
+D-hmrc-oil-duty-history,HMRC Hydrocarbon Oils Bulletin: historical duty rates,https://www.gov.uk/government/statistics/hydrocarbon-oils-bulletin/historical-hydrocarbon-oils-duty-rates--2,HMRC,hmrc,,1
+D-hmrc-alcohol-duty-history,HMRC Alcohol Bulletin: historic duty rates,https://www.gov.uk/government/statistics/alcohol-bulletin/alcohol-bulletin-historic-duty-rates,HMRC,hmrc,,1
+D-hmrc-tobacco-duty-history,HMRC Tobacco Bulletin: historical duty rates,https://www.gov.uk/government/statistics/tobacco-bulletin/historical-tobacco-duty-rates,HMRC,hmrc,,1
+D-hmrc-ipt-history,HMRC Insurance Premium Tax Bulletin: historical rates,https://www.gov.uk/government/statistics/insurance-premium-tax-ipt-bulletin/historical-insurance-premium-tax-rates--2,HMRC,hmrc,,1
+D-hmrc-apd-history,HMRC Air Passenger Duty Bulletin: historical rates,https://www.gov.uk/government/statistics/air-passenger-duty-bulletin/air-passenger-duty-rates,HMRC,hmrc,,1
+D-hmrc-iht-thresholds,HMRC Inheritance Tax thresholds and interest rates,https://www.gov.uk/government/publications/rates-and-allowances-inheritance-tax-thresholds-and-interest-rates/inheritance-tax-thresholds-and-interest-rates,HMRC,hmrc,,1
+D-govuk-minimum-wage,National Minimum Wage and National Living Wage rates,https://www.gov.uk/national-minimum-wage-rates,HM Government,other,,1
+D-dwp-abstract-2025,Abstract of DWP benefit rate statistics 2025,https://www.gov.uk/government/statistics/abstract-of-dwp-benefit-rate-statistics-2025,Department for Work and Pensions,other,,1
+D-dwp-expenditure-2026,"DWP benefit expenditure and caseload tables, Spring Forecast 2026",https://www.gov.uk/government/publications/benefit-expenditure-and-caseload-tables-2026,Department for Work and Pensions,other,,1
+D-hmt-pesa-2026-ch4,"HM Treasury Public Expenditure Statistical Analyses 2026, Chapter 4 tables",https://www.gov.uk/government/statistics/public-expenditure-statistical-analyses-2026,HM Treasury,hmt,,1
+D-commons-vat-sn00701,"House of Commons Library SN00701: VAT, the temporary cut in the standard rate",https://commonslibrary.parliament.uk/research-briefings/sn00701/,House of Commons Library,parliament,,1

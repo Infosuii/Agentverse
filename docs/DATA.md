@@ -172,3 +172,18 @@ phased-package, reversed-proposal and pre-change recession caveats are surfaced.
 - D-budget2021: [Budget 3 March 2021: Table 2.1 row 22](https://www.gov.uk/government/publications/budget-2021-documents/budget-2021-html)
 - D-reversal2020: [HMRC March 2020: reversal of 2016-announced 17 percent rate](https://www.gov.uk/government/publications/changes-to-corporation-tax-rates-from-1-april-2020/corporation-tax-main-rate-at-19-in-2020-and-charge-and-main-rate-for-2021)
 - D-full_expensing: [HMRC 15 March 2023: introduction of full expensing](https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026)
+
+## Precedents for every other fiscal policy
+
+`data/scripts/build_fiscal_precedents.py` builds `fiscal_topics`, `fiscal_policy_changes`, `fiscal_costings` and
+`fiscal_outturns`; `fiscal_sources.py` lists every source. No figure is typed by hand. OBR and House of Commons Library
+files refuse scripted downloads, so save them by browser into `data/raw/` under the names in `fiscal_sources.SOURCES`.
+
+- `rate_series` rows are implemented changes from official rate tables (HMRC, DWP, GOV.UK). VAT standard-rate rows have no
+  official table: each is checked against an exact quote from Commons Library SN00701, and the build stops if one is missing.
+- `announced_measure` rows come from the OBR policy measures database and may later have been changed. If the database
+  states a rate change that the official rate table does not show, the row is marked as not having taken effect.
+- `fiscal_costings` keeps original Treasury scorecard years only; years the OBR extrapolated with nominal GDP are excluded.
+  A costing is linked to a rate change only when one measure matches its event, first year, sign and product.
+- Gaps: announcement dates are blank (the OBR gives event names only); OBR receipts start in 1999-00 and PESA function
+  spending in 2003-04; benefit and wage up-ratings have no linked costing; alcohol history covers beer and spirits, not wine.

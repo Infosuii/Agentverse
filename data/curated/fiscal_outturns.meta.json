@@ -1,0 +1,14 @@
+{
+  "dataset_id": "fiscal_outturns",
+  "title": "Fiscal outturns",
+  "description": "Observed receipts, spending and borrowing by fiscal year.",
+  "publisher": "OBR, HMRC, DWP, HM Treasury",
+  "source_url": "https://obr.uk/data/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-08",
+  "vintage": "Sources current at build date",
+  "file": "curated/fiscal_outturns.csv",
+  "source_id": "D-obr-policy-measures",
+  "is_placeholder": false,
+  "notes": "Outturn only, to 2025-26. OBR databank receipts start in 1999-00; PESA function spending starts in 2003-04. Observed totals include every cause, not only the policy they sit beside."
+}

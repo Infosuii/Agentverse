@@ -60,12 +60,31 @@ interface TimelinePoint {
   isMatched?: boolean;
 }
 
+/** The change in words, using the unit of the rate: "20% → 21% (+1.0pp)", "£11,850 → £12,500"; empty if not stated. */
+export function changeText(change: PolicyChange): string {
+  const { old_rate_pct: oldValue, new_rate_pct: newValue, value_unit: unit } = change;
+  if (oldValue == null || newValue == null) return '';
+  if (!unit || unit === '%') {
+    return `${oldValue}% → ${newValue}% (${fmtPp(Number((newValue - oldValue).toFixed(2)))})`;
+  }
+  if (unit === '£') return `£${oldValue.toLocaleString('en-GB')} → £${newValue.toLocaleString('en-GB')}`;
+  return `${oldValue} → ${newValue} ${unit}`;
+}
+
+/** The one rate series a timeline can show: the best match's series, or the first series with recorded rates. */
+export function timelineSeries(changes: PolicyChange[], matches: PrecedentMatch[]): PolicyChange[] {
+  const rates = changes.filter((c) => c.kind === 'rate_series' && c.old_rate_pct != null && c.new_rate_pct != null);
+  const title = matches.find((m) => m.change.kind === 'rate_series')?.change.title ?? rates[0]?.title;
+  return rates.filter((c) => c.title === title);
+}
+
 export function buildRateTimeline(
   changes: PolicyChange[],
   matchedIds: Set<string>,
+  fixedStartYear: number | null = 1982,
 ): { points: TimelinePoint[]; reversed: PolicyChange[] } {
   const implemented = changes
-    .filter((c) => !isReversedChange(c))
+    .filter((c) => !isReversedChange(c) && c.old_rate_pct != null && c.new_rate_pct != null)
     .slice()
     .sort((a, b) => a.effective_date.localeCompare(b.effective_date));
   const reversed = changes.filter((c) => isReversedChange(c));
@@ -82,23 +101,23 @@ export function buildRateTimeline(
     }
   }
 
-  const startYear = 1982;
+  const startYear = fixedStartYear ?? Math.min(...Array.from(byYear.keys()));
   const currentYear = Math.max(2026, ...Array.from(byYear.keys()));
-  let activeRate = implemented[0].old_rate_pct;
+  let activeRate = implemented[0].old_rate_pct as number;
 
   const points: TimelinePoint[] = [];
   for (let yr = startYear; yr <= currentYear; yr += 1) {
     const chg = byYear.get(yr);
     if (chg) {
-      activeRate = chg.new_rate_pct;
+      activeRate = chg.new_rate_pct as number;
     }
     points.push({
       year: yr,
       fiscalYear: `${yr}-${String(yr + 1).slice(-2)}`,
       ratePct: activeRate,
       changeId: chg?.change_id,
-      oldRatePct: chg?.old_rate_pct,
-      newRatePct: chg?.new_rate_pct,
+      oldRatePct: chg?.old_rate_pct ?? undefined,
+      newRatePct: chg?.new_rate_pct ?? undefined,
       fiscalEvent: chg?.fiscal_event,
       isMatched: chg ? matchedIds.has(chg.change_id) : false,
     });
@@ -126,10 +145,11 @@ function PrecedentComparisonCharts({
   const costings = useMemo(() => change.official_costings ?? [], [change.official_costings]);
   const outcomes = useMemo(() => change.observed_outcomes ?? [], [change.observed_outcomes]);
 
+  const isCt = !change.policy_key;
   const receiptsLevels = useMemo(
     () =>
       outcomes
-        .filter((o) => o.metric === 'ct_receipts_gbp_bn')
+        .filter((o) => o.metric.endsWith('_gbp_bn') && o.metric !== 'business_investment_gbp_bn')
         .slice()
         .sort((a, b) => a.fiscal_year.localeCompare(b.fiscal_year)),
     [outcomes],
@@ -138,7 +158,7 @@ function PrecedentComparisonCharts({
   const pctGdpOutcomes = useMemo(
     () =>
       outcomes
-        .filter((o) => o.metric === 'ct_receipts_pct_gdp')
+        .filter((o) => o.metric.endsWith('_pct_gdp'))
         .slice()
         .sort((a, b) => a.fiscal_year.localeCompare(b.fiscal_year)),
     [outcomes],
@@ -172,6 +192,8 @@ function PrecedentComparisonCharts({
     });
   }, [costings, derivedChangesByFy, modelY1Rev]);
 
+  const outturnLabel = isCt ? 'CT receipts' : (receiptsLevels[0]?.label ?? 'Outturn');
+
   const barSeries = useMemo<BarCompareSeries[]>(() => {
     const list: BarCompareSeries[] = [
       {
@@ -181,7 +203,7 @@ function PrecedentComparisonCharts({
       },
       {
         id: 'observedChange',
-        label: 'Observed receipts YoY Δ (derived £bn)',
+        label: isCt ? 'Observed receipts YoY Δ (derived £bn)' : 'Observed YoY Δ (derived £bn)',
         evidenceClass: 'observed_outcome',
       },
     ];
@@ -193,7 +215,7 @@ function PrecedentComparisonCharts({
       });
     }
     return list;
-  }, [modelY1Rev]);
+  }, [modelY1Rev, isCt]);
 
   if (barRows.length === 0 && pctGdpOutcomes.length === 0 && receiptsLevels.length === 0) {
     return null;
@@ -211,9 +233,11 @@ function PrecedentComparisonCharts({
         </div>
         <p className="mt-1 leading-relaxed text-muted-foreground">
           <strong>Ex-ante official costings</strong> (violet) are original HMT/OBR policy-table estimates for the
-          package scope. <strong>Observed outcomes</strong> (slate) are ONS outturn CT receipts levels and derived
-          year-on-year changes, which include macroeconomic cycles, profit growth, and simultaneous base/allowance
-          measures (confounders) — they are observations, not isolated causal policy effects.
+          package scope. <strong>Observed outcomes</strong> (slate) are{' '}
+          {isCt
+            ? 'ONS outturn CT receipts levels and derived year-on-year changes, which include macroeconomic cycles, profit growth, and simultaneous base/allowance measures (confounders)'
+            : 'official outturn totals and derived year-on-year changes, which include macroeconomic cycles and every other policy change'}{' '}
+          — they are observations, not isolated causal policy effects.
         </p>
       </div>
 
@@ -223,8 +247,8 @@ function PrecedentComparisonCharts({
             data={barRows}
             series={barSeries}
             unit="£bn"
-            title="Official Costing vs Derived Outturn Receipts Change (£bn)"
-            caption="Ex-ante HMT/OBR policy costing (violet) vs derived ONS outturn receipts YoY Δ (slate) vs current model scenario (blue)."
+            title={isCt ? 'Official Costing vs Derived Outturn Receipts Change (£bn)' : 'Official Costing vs Derived Outturn Change (£bn)'}
+            caption={`Ex-ante HMT/OBR policy costing (violet) vs derived ${isCt ? 'ONS outturn receipts' : 'outturn'} YoY Δ (slate) vs current model scenario (blue).`}
             evidenceClass="official_costing"
             xLabel="Fiscal year"
             height={220}
@@ -236,7 +260,7 @@ function PrecedentComparisonCharts({
           <div className="rounded-lg border border-border bg-card p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
               <h5 className="text-xs font-semibold text-foreground">
-                Observed CT Receipts (% of GDP, t−1 to t+2)
+                {isCt ? 'Observed CT Receipts' : `Observed ${outturnLabel}`} (% of GDP, t−1 to t+2)
               </h5>
               <EvidenceBadge evidenceClass="observed_outcome" short />
             </div>
@@ -260,7 +284,7 @@ function PrecedentComparisonCharts({
                     cursor={{ stroke: CHART_THEME.reference, strokeDasharray: '3 3' }}
                     formatter={(val: unknown) => [
                       fmtPct(typeof val === 'number' ? val : Number(val), 2),
-                      'Observed CT receipts (% GDP)',
+                      `Observed ${outturnLabel} (% GDP)`,
                     ]}
                     contentStyle={CHART_THEME.tooltip}
                     labelStyle={CHART_THEME.tooltipLabel}
@@ -268,7 +292,7 @@ function PrecedentComparisonCharts({
                   <Line
                     type="monotone"
                     dataKey="pctGdp"
-                    name="Observed CT receipts (% GDP)"
+                    name={`Observed ${outturnLabel} (% GDP)`}
                     stroke={EVIDENCE_CLASS_COLORS.observed_outcome}
                     strokeWidth={2}
                     dot={{ r: 3.5, fill: EVIDENCE_CLASS_COLORS.observed_outcome }}
@@ -329,7 +353,7 @@ function PrecedentComparisonCharts({
             <div>
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="text-xs font-semibold text-foreground">
-                  Observed CT Receipts Outturn (Levels)
+                  {isCt ? 'Observed CT Receipts Outturn (Levels)' : `Observed ${outturnLabel} (Levels)`}
                 </span>
                 <EvidenceBadge evidenceClass="observed_outcome" short />
               </div>
@@ -337,7 +361,7 @@ function PrecedentComparisonCharts({
                 <thead className="bg-secondary text-[11px] font-semibold text-foreground uppercase">
                   <tr>
                     <th className="px-2.5 py-1.5">Fiscal year</th>
-                    <th className="px-2.5 py-1.5">Receipts level (£bn)</th>
+                    <th className="px-2.5 py-1.5">{isCt ? 'Receipts level (£bn)' : 'Level (£bn)'}</th>
                     <th className="px-2.5 py-1.5">Derived YoY Δ (£bn)</th>
                   </tr>
                 </thead>
@@ -378,7 +402,8 @@ function PrecedentCard({
   modelY1Rev: number | null;
 }) {
   const { change, similarity, similarity_breakdown, comparability_notes } = match;
-  const deltaPp = Number((change.new_rate_pct - change.old_rate_pct).toFixed(2));
+  const isCt = !change.policy_key;
+  const headline = changeText(change);
   const simPct = Math.round(similarity * 100);
   const macro = change.macro_context;
 
@@ -413,10 +438,12 @@ function PrecedentCard({
       title={
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="blue">#{rank}</Badge>
-          <span className="font-mono text-xs text-muted-foreground">{change.change_id}</span>
-          <span>
-            {change.old_rate_pct}% → {change.new_rate_pct}% ({fmtPp(deltaPp)})
-          </span>
+          {isCt ? (
+            <span className="font-mono text-xs text-muted-foreground">{change.change_id}</span>
+          ) : (
+            <span>{change.title}</span>
+          )}
+          {headline && <span>{headline}</span>}
           {change.fiscal_event && (
             <span className="text-xs font-normal text-muted-foreground">· {change.fiscal_event}</span>
           )}
@@ -534,10 +561,12 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
   const { data: fetchedAnalysis, isLoading: isLoadingAnalysis } = useAnalysis(
     propAnalysis ? undefined : id,
   );
-  const { data: allPrecedents, isLoading: isLoadingPrecedents } = usePrecedents('corporation_tax');
   const analysis = propAnalysis ?? fetchedAnalysis;
-
   const precedentsSlice = analysis?.precedents;
+  const { data: allPrecedents, isLoading: isLoadingPrecedents } = usePrecedents(
+    'corporation_tax',
+    precedentsSlice?.policy_key,
+  );
   const matches = useMemo(() => precedentsSlice?.matches ?? [], [precedentsSlice]);
   const matchedIds = useMemo(
     () => new Set(matches.map((m) => m.change.change_id)),
@@ -551,9 +580,14 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
     return matches.map((m) => m.change);
   }, [allPrecedents, matches]);
 
+  const fiscalKey = precedentsSlice?.policy_key ?? null;
+  const shownSeries = useMemo(
+    () => (fiscalKey ? timelineSeries(historyChanges, matches) : historyChanges),
+    [fiscalKey, historyChanges, matches],
+  );
   const { points: timelinePoints, reversed: reversedChanges } = useMemo(
-    () => buildRateTimeline(historyChanges, matchedIds),
-    [historyChanges, matchedIds],
+    () => buildRateTimeline(shownSeries, matchedIds, fiscalKey ? null : 1982),
+    [shownSeries, matchedIds, fiscalKey],
   );
 
   const mergedSources = useMemo(() => {
@@ -585,9 +619,10 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
     );
   }
 
-  // The curated precedent library covers UK corporation tax; other policies get their history from research (#93).
   const ct = !analysis?.policy || isCorporationTax(analysis.policy);
-  const area = policyArea(analysis?.policy);
+  const area = precedentsSlice?.policy_label ?? policyArea(analysis?.policy);
+  const seriesTitle = shownSeries[0]?.title;
+  const seriesUnit = shownSeries[0]?.value_unit ?? '%';
 
   const anyPlaceholder = Boolean(
     historyChanges.some((c) => c.is_placeholder) ||
@@ -598,10 +633,10 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
     <div className="space-y-6">
       {/* Summary Header Card */}
       <Card
-        title={ct ? 'Historical UK Corporation Tax Precedents' : 'Historical Precedents'}
+        title={ct ? 'Historical UK Corporation Tax Precedents' : `Historical Precedents: ${area}`}
         subtitle={
-          !ct
-            ? 'The curated precedent library covers UK corporation tax rate changes'
+          !ct && !precedentsSlice
+            ? 'Official UK rate tables and policy costings'
             : precedentsSlice
             ? `Matcher: ${precedentsSlice.method} · Dataset version: ${precedentsSlice.dataset_version}`
             : 'Historical UK Corporation Tax main rate changes (1982–present)'
@@ -615,18 +650,18 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
         }
       >
         <p className="text-sm leading-relaxed text-foreground">
-          {!ct
-            ? `No curated historical precedents exist yet for ${area}, so none are matched. Evidence on past changes to this policy comes from the research stage (see the Research tab), with every quote checked against its source.`
+          {!ct && !precedentsSlice
+            ? `Historical precedents for ${area} appear here once the analysis has finished.`
             : precedentsSlice?.summary ||
               'Comparable historical UK corporation tax changes ranked by direction, magnitude, statutory rate level, macroeconomic context, and recency.'}
         </p>
       </Card>
 
-      {/* Main Rate Step-Line Timeline (1982 -> today); corporation tax only */}
-      {ct && (
+      {/* Rate step-line timeline; policies with no recorded rate series have no timeline */}
+      {(ct || timelinePoints.length > 0) && (
       <Card
-        title="UK Corporation Tax Main Rate Timeline (1982–Present)"
-        subtitle="Implemented statutory main rate step-line; blue markers highlight changes matched to this proposal"
+        title={ct ? 'UK Corporation Tax Main Rate Timeline (1982–Present)' : `${seriesTitle} Timeline`}
+        subtitle={ct ? 'Implemented statutory main rate step-line; blue markers highlight changes matched to this proposal' : 'Implemented changes from the official rate table; blue markers highlight changes matched to this proposal'}
         actions={<EvidenceBadge evidenceClass="observed_outcome" short />}
       >
         {timelinePoints.length === 0 ? (
@@ -647,17 +682,19 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
                 .map((pt) => ({
                   x: pt.year,
                   y: pt.ratePct,
-                  label: `${pt.changeId}: ${pt.oldRatePct}% → ${pt.newRatePct}%`,
+                  label: ct
+                    ? `${pt.changeId}: ${pt.oldRatePct}% → ${pt.newRatePct}%`
+                    : `${pt.year}: ${pt.oldRatePct} → ${pt.newRatePct} ${seriesUnit}`,
                   detail: pt.fiscalEvent ?? undefined,
                   color: pt.isMatched ? '#60a5fa' : '#64748b',
                 }))}
-              unit="%"
-              seriesLabel="Implemented CT main rate (%)"
+              unit={ct ? '%' : seriesUnit}
+              seriesLabel={ct ? 'Implemented CT main rate (%)' : `${seriesTitle} (${seriesUnit})`}
               evidenceClass="observed_outcome"
               xLabel="Year"
-              yLabel="Main rate (%)"
+              yLabel={ct ? 'Main rate (%)' : seriesUnit}
               height={280}
-              caption="Historical UK statutory corporation tax main rate step-line (1982–present)."
+              caption={ct ? 'Historical UK statutory corporation tax main rate step-line (1982–present).' : `${area}: implemented changes from the official rate table.`}
             />
 
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -676,7 +713,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
                   <Badge variant="amber">
                     Excluded from implemented timeline:{' '}
                     {reversedChanges
-                      .map((r) => `${r.change_id} (${r.old_rate_pct}%→${r.new_rate_pct}%, reversed)`)
+                      .map((r) => `${r.title ?? r.change_id} (${r.old_rate_pct}%→${r.new_rate_pct}%, reversed)`)
                       .join('; ')}
                   </Badge>
                 </div>
@@ -701,7 +738,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
         {matches.length === 0 ? (
           <EmptyState
             title="No comparable historical precedents matched"
-            description={`No historical changes to ${area} matched the proposed policy.`}
+            description={precedentsSlice?.summary ?? `No historical changes to ${area} matched the proposed policy.`}
           />
         ) : (
           <div className="space-y-4">

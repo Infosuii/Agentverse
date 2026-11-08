@@ -476,12 +476,12 @@ export function useParameters() {
 /**
  * GET /api/precedents?tax=...
  */
-export function usePrecedents(tax = 'corporation_tax') {
+export function usePrecedents(tax = 'corporation_tax', policyKey?: string | null) {
   return useQuery({
-    queryKey: ['precedents', tax],
+    queryKey: ['precedents', tax, policyKey ?? null],
     queryFn: async () => {
       const { data, error } = await apiClient.GET('/api/precedents', {
-        params: { query: { tax } },
+        params: { query: policyKey ? { tax, policy_key: policyKey } : { tax } },
       });
       if (error || !data) {
         throw extractApiError(error, 'Failed to fetch historical precedents');

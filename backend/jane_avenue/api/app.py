@@ -288,8 +288,8 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
         return list(engine.default_parameters().values())
 
     @app.get("/api/precedents", response_model=list[PolicyChange])
-    def list_precedents(tax: str = "corporation_tax") -> list[PolicyChange]:
-        return data.registry.load_policy_changes(tax)
+    def list_precedents(tax: str = "corporation_tax", policy_key: str | None = None) -> list[PolicyChange]:
+        return data.registry.load_fiscal_changes(policy_key) if policy_key else data.registry.load_policy_changes(tax)
 
     @app.post("/api/precedents/match", response_model=PrecedentAnalysis)
     def match_precedents(spec: PolicySpec, k: Annotated[int, Query(ge=1, le=50)] = 5) -> PrecedentAnalysis:

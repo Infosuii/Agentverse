@@ -190,7 +190,8 @@ def build_narrative_input(analysis: Analysis, figures: list[KeyFigure] | None = 
                 {
                     "change_id": c.change_id,
                     "fiscal_event": _strip_raw_numbers(c.fiscal_event or "UK Corporation Tax reform"),
-                    "direction": _classify_direction(c.new_rate_pct - c.old_rate_pct),
+                    "direction": ("unknown" if c.old_rate_pct is None or c.new_rate_pct is None
+                                  else _classify_direction(c.new_rate_pct - c.old_rate_pct)),
                     "source_ids": [sid for sid in c.source_ids if sid in source_map],
                     "comparability_notes": [_strip_raw_numbers(n) for n in m.comparability_notes],
                 }

@@ -10,7 +10,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-CONTRACT_VERSION = "1.1.0"
+CONTRACT_VERSION = "1.2.0"
 
 
 class Contract(BaseModel):
@@ -19,7 +19,7 @@ class Contract(BaseModel):
 
 
 Mode = Literal["mock", "live", "cached"]
-TaxName = Literal["corporation_tax", "vat"]
+TaxName = Literal["corporation_tax", "vat", "other"]
 Confidence = Literal["high", "medium", "low"]
 EvidenceClass = Literal["observed_outcome", "official_costing", "model_scenario", "assumption", "ai_interpretation"]
 
