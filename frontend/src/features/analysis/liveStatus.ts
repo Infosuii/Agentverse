@@ -29,7 +29,7 @@ export const STAGE_META: Record<Stage, { title: string; description: string; act
     },
     precedents: {
       title: 'Precedents',
-      description: 'Comparable UK corporation tax changes',
+      description: 'Comparable historical policy changes',
       active: 'Matching historical precedents',
     },
     modelling: {

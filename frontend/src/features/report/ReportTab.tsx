@@ -28,6 +28,7 @@ import { ReportMarkdown } from '../../components/report/ReportMarkdown';
 import { TableOfContents, type TocEntry } from '../../components/report/TableOfContents';
 import { useShellSidebar } from '../analysis/LiveAnalysis';
 import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct } from '../../lib/format';
+import { withheldReasons } from '../../lib/reasons';
 
 export interface ReportTabProps {
   analysis?: Analysis;
@@ -139,11 +140,7 @@ export function ReportTab({ analysis: propAnalysis }: ReportTabProps) {
       analysis.simulation?.assumptions?.some((a) => a.is_placeholder),
   );
 
-  const declineReasons = [
-    ...(analysis.verification?.decline_reasons ?? []),
-    ...(analysis.scope?.forecast_allowed === false ? (analysis.scope.reasons ?? []) : []),
-  ];
-  const uniqueReasons = Array.from(new Set(declineReasons));
+  const uniqueReasons = withheldReasons(analysis);
 
   const scenarios = analysis.simulation?.scenarios ?? [];
   const fiscalYears = scenarios[0]?.result.fiscal_years ?? [];

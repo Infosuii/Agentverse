@@ -17,6 +17,8 @@ Historical evaluation shows how well the methods work against simple baselines.
 
 **Hackathon scope:** UK corporation tax main rate, fully working end to end. VAT and FTSE 100 are post-M3 stretch goals only.
 
+**Scope since #93 (contract 1.1.0):** every UK fiscal policy is researched and reported. Corporation tax keeps its econometric model. 17 tax and benefit measures in HMRC's ready reckoner (income tax rates and personal allowance, NICs, VAT, CGT, inheritance tax, IPT, fuel, alcohol and tobacco duties, Child Benefit) get revenue estimates scaled from HMRC's official costings, with uncertainty. Any other fiscal policy (spending, the minimum wage, other taxes) is researched with the forecast withheld. Numbers never come from Gemini.
+
 ## Stack
 
 - **Backend:** Python 3.13, FastAPI, Pydantic v2, numpy/pandas/scipy/statsmodels/lightgbm, SQLite, `google-genai>=2.30.1` (Interactions API).

@@ -11,6 +11,7 @@ import type {
   SimulationBundle,
 } from '../../api/hooks';
 import { SCENARIO_COLORS, SCENARIO_LABELS, type ScenarioColorKey } from '../../lib/theme';
+import { isCorporationTax, policyArea } from '../../lib/policy';
 import type { EmpiricalBandPoint, FanBandPoint, LineChartSeries, TornadoInputItem } from '../../components/charts';
 
 export interface MetricDescriptor {
@@ -288,6 +289,6 @@ export function buildPolicyWithRateOverride(
   return {
     ...policy,
     proposed_rate_pct: proposedRatePct,
-    description: `${directionWord} the CT main rate from ${baseRate}% to ${proposedRatePct}%`,
+    description: `${directionWord} ${isCorporationTax(policy) ? 'the CT main rate' : policyArea(policy)} from ${baseRate}% to ${proposedRatePct}%`,
   };
 }

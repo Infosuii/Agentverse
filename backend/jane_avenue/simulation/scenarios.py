@@ -25,6 +25,15 @@ DESCRIPTIONS: dict[str, str] = {
     "pessimistic": "Pessimistic: " + _RULE.format(better="lower", end="low", adj="unfavourable"),
 }
 LABELS = {"central": "Central", "optimistic": "Optimistic", "pessimistic": "Pessimistic"}
+_MACRO_SENTENCE = "The profit base deviation is a macro assumption and is set by rule to its {end} value. "
+
+
+def describe(name: str, params: Mapping[str, Assumption]) -> str:
+    """The scenario description; the macro-rule sentence only when the model has that assumption (#93)."""
+    text = DESCRIPTIONS[name]
+    if MACRO_RULE_PARAMETER not in params and name != "central":
+        text = text.replace(_MACRO_SENTENCE.format(end="high" if name == "optimistic" else "low"), "")
+    return text
 
 
 def scenario_values(params: Mapping[str, Assumption], endpoints: Endpoints) -> dict[str, dict[str, float]]:
@@ -56,7 +65,7 @@ def build_scenarios(spec: PolicySpec, params: Mapping[str, Assumption], baseline
     ep = endpoints if endpoints is not None else evaluate_endpoints(spec, params, baseline)
     out = []
     for name, values in scenario_values(params, ep).items():
-        definition = ScenarioDefinition(name=name, label=LABELS[name], description=DESCRIPTIONS[name],  # type: ignore[arg-type]
+        definition = ScenarioDefinition(name=name, label=LABELS[name], description=describe(name, params),  # type: ignore[arg-type]
                                         parameter_values=values)
         out.append(ScenarioResult(scenario=definition, result=run_engine(spec, with_values(params, values),
                                                                              baseline, name)))

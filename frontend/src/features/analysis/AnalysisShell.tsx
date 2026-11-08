@@ -28,6 +28,7 @@ import {
   type TabItem,
 } from '../../components/ui';
 import { fmtDate } from '../../lib/format';
+import { policyTypeLabel as policyTypeLabel_ } from '../../lib/policy';
 import {
   GenerationStatusMark,
   LiveStatusLine,
@@ -61,12 +62,6 @@ const TAB_DEFS: { id: AnalysisTabId; label: string }[] = [
   { id: 'report', label: 'Report' },
 ];
 
-const POLICY_TYPE_LABELS: Record<string, string> = {
-  corporation_tax_main_rate: 'Corporation tax · main rate',
-  corporation_tax_small_profits_rate: 'Corporation tax · small profits rate',
-  vat_standard_rate: 'VAT · standard rate',
-  unsupported: 'Outside validated scope',
-};
 
 export function AnalysisShell() {
   const { id } = useParams<{ id: string }>();
@@ -171,9 +166,7 @@ export function AnalysisShell() {
     Boolean(analysis?.request?.query) &&
     Boolean(analysis?.policy?.description) &&
     analysis?.policy?.description !== analysis?.request?.query;
-  const policyTypeLabel = analysis?.policy?.policy_type
-    ? POLICY_TYPE_LABELS[analysis.policy.policy_type] ?? analysis.policy.policy_type
-    : undefined;
+  const policyTypeLabel = policyTypeLabel_(analysis?.policy);
   const sourceCount = analysis?.sources?.length ?? 0;
   const showReady =
     analysis?.status === 'completed' && sawRunning && !readyDismissed;
