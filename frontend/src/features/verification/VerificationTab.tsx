@@ -438,9 +438,9 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
         title="Governance, Risk Controls & Execution Boundaries"
         subtitle="Explicit human-in-the-loop oversight, model execution boundaries, anti-prompt-injection isolation, and data privacy controls."
       >
-        <div className="grid grid-cols-1 gap-4 text-xs leading-relaxed text-slate-700 sm:grid-cols-2">
-          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3.5">
-            <h4 className="font-semibold text-slate-900">
+        <div className="grid grid-cols-1 gap-4 text-xs leading-relaxed text-foreground/85 sm:grid-cols-2">
+          <div className="rounded-lg border border-border bg-muted/40 p-3.5">
+            <h4 className="font-semibold text-foreground">
               1. What the Agent May Do Alone vs. Human Approval
             </h4>
             <p className="mt-1">
@@ -451,17 +451,17 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
             </p>
             <p className="mt-1.5">
               <strong>Requires Human Approval:</strong> Confirming or editing the parsed policy
-              specification before running (<code className="font-mono text-[11px]">New Analysis</code>{' '}
-              Stage 2), overriding structural or market-regime parameters (
-              <code className="font-mono text-[11px]">Assumptions &amp; Lab</code>), and any downstream
-              policy briefing use. Forecasts are automatically withheld (
+              specification before running (the parsed-policy card on{' '}
+              <code className="font-mono text-[11px]">New Analysis</code>), overriding adjustable model
+              assumptions (<code className="font-mono text-[11px]">Live Assumption Sliders</code> on the
+              Scenarios tab), and any downstream policy briefing use. Forecasts are automatically withheld (
               <code className="font-mono text-[11px]">forecast_withheld</code>) if any blocking check
               fails.
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3.5">
-            <h4 className="font-semibold text-slate-900">
+          <div className="rounded-lg border border-border bg-muted/40 p-3.5">
+            <h4 className="font-semibold text-foreground">
               2. Where Each Model Runs &amp; What Data Leaves the Device
             </h4>
             <p className="mt-1">
@@ -477,12 +477,13 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
               <strong>External Network Calls:</strong> In{' '}
               <code className="font-mono text-[11px]">cached</code> and{' '}
               <code className="font-mono text-[11px]">mock</code> modes,{' '}
-              <strong>zero bytes leave the device</strong>. In{' '}
+              <strong>the backend makes no network calls</strong>; the browser only loads the IBM Plex
+              web fonts from Google Fonts (system fonts are used offline). In{' '}
               <code className="font-mono text-[11px]">live</code> mode, only the public tax policy query
               and search queries are sent to Google Gemini (<code className="font-mono text-[11px]">store=False</code>{' '}
-              enforced — zero prompt retention) and official <code className="font-mono text-[11px]">.gov.uk</code> /{' '}
-              <code className="font-mono text-[11px]">.org.uk</code> URLs. Untrusted prompt text never
-              executes code or injects numbers.
+              enforced — zero prompt retention), and only URLs returned by Gemini&apos;s Google Search
+              grounding (e.g. OBR, HMRC, GOV.UK, Parliament, IFS) are fetched. Untrusted prompt text
+              never executes code or injects numbers.
             </p>
           </div>
         </div>
