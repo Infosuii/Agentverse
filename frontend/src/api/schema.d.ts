@@ -1029,7 +1029,7 @@ export interface components {
              * Policy Type
              * @enum {string}
              */
-            policy_type: "corporation_tax_main_rate" | "corporation_tax_small_profits_rate" | "vat_standard_rate" | "unsupported";
+            policy_type: "corporation_tax_main_rate" | "corporation_tax_small_profits_rate" | "vat_standard_rate" | "tax_measure" | "fiscal_other" | "unsupported";
             /** Source Ids */
             source_ids: string[];
             /**
@@ -1044,6 +1044,8 @@ export interface components {
             ambiguities?: string[];
             /** Baseline Rate Pct */
             baseline_rate_pct?: number | null;
+            /** Baseline Value */
+            baseline_value?: number | null;
             /**
              * Description
              * @default
@@ -1062,6 +1064,8 @@ export interface components {
              * @constant
              */
             jurisdiction: "UK";
+            /** Measure Id */
+            measure_id?: string | null;
             /**
              * Parse Confidence
              * @default 1
@@ -1077,9 +1081,11 @@ export interface components {
              * Policy Type
              * @enum {string}
              */
-            policy_type: "corporation_tax_main_rate" | "corporation_tax_small_profits_rate" | "vat_standard_rate" | "unsupported";
+            policy_type: "corporation_tax_main_rate" | "corporation_tax_small_profits_rate" | "vat_standard_rate" | "tax_measure" | "fiscal_other" | "unsupported";
             /** Proposed Rate Pct */
             proposed_rate_pct?: number | null;
+            /** Proposed Value */
+            proposed_value?: number | null;
             /**
              * Raw Query
              * @default
@@ -1087,6 +1093,8 @@ export interface components {
             raw_query: string;
             /** Tax */
             tax?: ("corporation_tax" | "vat") | null;
+            /** Value Unit */
+            value_unit?: string | null;
         };
         /** PrecedentAnalysis */
         PrecedentAnalysis: {

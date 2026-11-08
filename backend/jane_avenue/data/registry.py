@@ -170,3 +170,17 @@ def load_series(series_id: str) -> TimeSeries | None:
     points = [TimeSeriesPoint(period=r['fiscal_year'], value=r[field]) for r in _rows(dataset) if r.get(field, '') != '']
     return TimeSeries(series_id=series_id, title=series_id.replace('_', ' ').title(), unit=unit,
                       frequency='fiscal_year', dataset_id=dataset, points=points) if points else None
+
+
+# ---- Tax and benefit measures (contract-change #93, agent-2 with owner sign-off) -------------------------------------
+
+def load_ready_reckoner() -> list[dict]:
+    """HMRC 'Direct effects of illustrative tax changes' (June 2025): one dict per (section, label, fiscal_year), £m as
+    published. Copies, so callers cannot change the cache."""
+    return [dict(r) for r in _rows('hmrc_ready_reckoner')]
+
+
+def load_tax_measures() -> list[dict]:
+    """Modelled tax and benefit measures (data/curated/tax_measures.csv): the ready-reckoner rows that cost each
+    measure, its unit of change, sign convention, scope limit and the current rate verified on gov.uk."""
+    return [dict(r) for r in _rows('tax_measures')]

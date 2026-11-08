@@ -62,13 +62,16 @@ def simulate(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Basel
         if draws < MIN_RELIABLE_DRAWS:
             warnings.append(f"Only {draws} Monte Carlo draws: the percentile bands are noisy. Use at least "
                             f"{MIN_RELIABLE_DRAWS} draws before relying on them.")
-        residuals = empirical_residuals() if empirical_residuals is not None else None
+        # The empirical interval is calibrated on the corporation-tax backtest, so it applies to CT policies only.
+        ct = spec.policy_type in ("corporation_tax_main_rate", "corporation_tax_small_profits_rate")
+        residuals = empirical_residuals() if empirical_residuals is not None and ct else None
         # the scenario whose values match the MC parameters: custom when overrides exist, otherwise central
         current = scenarios[-1].result if base is not params else scenarios[0].result
-        empirical = empirical_interval(current, residuals)
-        if empirical.bands is not None:
-            mc = mc.model_copy(update={"empirical_interval": empirical.bands,
-                                       "empirical_calibration_note": empirical.note})
-        warnings.extend(empirical.warnings)
+        if ct:
+            empirical = empirical_interval(current, residuals)
+            if empirical.bands is not None:
+                mc = mc.model_copy(update={"empirical_interval": empirical.bands,
+                                           "empirical_calibration_note": empirical.note})
+            warnings.extend(empirical.warnings)
     return SimulationBundle(policy=spec, baseline_vintage=baseline.vintage, scenarios=scenarios, monte_carlo=mc,
                             sensitivity=sens, assumptions=list(params.values()), warnings=warnings)

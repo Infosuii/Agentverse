@@ -78,8 +78,12 @@ def test_parse_and_scope(client):
     r = client.post("/api/policy/scope", json=edited.model_dump(mode="json"))
     assert c.ParseResponse.model_validate(r.json()).scope.status == "unsupported"
     vat = c.ParseResponse.model_validate(client.post("/api/policy/parse", json={"query": "Raise VAT to 22%"}).json())
-    assert vat.policy.policy_type == "vat_standard_rate" and vat.policy.baseline_rate_pct is None
-    assert not vat.scope.forecast_allowed
+    assert vat.policy.policy_type == "tax_measure" and vat.policy.measure_id == "vat_standard_rate"
+    assert vat.policy.baseline_rate_pct == 20 and vat.policy.proposed_rate_pct == 22
+    assert vat.scope.forecast_allowed  # modelled from the HMRC ready reckoner (#93)
+    spend = c.ParseResponse.model_validate(client.post("/api/policy/parse",
+                                                       json={"query": "Increase NHS spending by £10bn"}).json())
+    assert spend.policy.policy_type == "fiscal_other" and not spend.scope.forecast_allowed
 
 
 def test_parse_rejects_short_query(client):

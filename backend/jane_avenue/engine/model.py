@@ -66,6 +66,10 @@ def _notes(small_profits: bool, coverage: float) -> dict[str, str]:
 
 def run_engine(spec: PolicySpec, params: Mapping[str, Assumption | float], baseline: BaselineProjection,
                scenario: str = "central") -> EngineResult:
+    if spec.policy_type == "tax_measure":  # HMRC ready-reckoner measures (engine/reckoner.py, contract-change #93)
+        from .reckoner import run_engine as reckoner_run_engine
+
+        return reckoner_run_engine(spec, params, baseline, scenario)
     values = {k: (v.value if isinstance(v, Assumption) else float(v)) for k, v in params.items()}
     param_sources = {k: list(v.source_ids) for k, v in params.items() if isinstance(v, Assumption)}
     out = compute(spec, values, baseline)

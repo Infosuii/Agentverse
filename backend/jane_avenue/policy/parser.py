@@ -34,6 +34,9 @@ def parse_policy(query: str, *, today: date | None = None, use_llm: bool | None 
     """`use_llm` defaults to live mode only."""
     baseline = _baseline()
     rules = parse_rules(query, baseline=baseline, today=today)
+    if rules.policy_type in ("tax_measure", "fiscal_other"):
+        # The Gemini path reads corporation-tax fields only; measure values come from the text parser alone.
+        return rules
     if use_llm is None:
         use_llm = get_settings().mode == "live"
     if not use_llm:

@@ -84,16 +84,64 @@ def _baseline_coverage_reasons(spec: PolicySpec) -> list[str]:
     return []
 
 
+FISCAL_OTHER_REASON = ("No validated model exists for this policy yet, so no quantitative forecast is made. The research "
+                       "and the report still cover it.")
+
+
+def _check_measure(spec: PolicySpec) -> ScopeDecision:
+    """Scope gate for HMRC ready-reckoner measures (contract-change #93): the measure must exist, the change must be
+    stated and non-zero, and it must lie within the measure's hard limit. Changes beyond HMRC's largest costed change
+    and years beyond the ready reckoner's three are allowed with warnings."""
+    from ..engine import reckoner
+
+    reasons: list[str] = []
+    warnings: list[str] = []
+    m = reckoner.get_measure(spec.measure_id)
+    change = reckoner.change_units(spec, m) if m is not None else None
+    if m is None:
+        reasons.append(f"No costing basis exists for the measure {spec.measure_id!r}.")
+    elif change is None:
+        reasons.append(f"The current and proposed values for the {m.label} could not be determined, so there is nothing "
+                       "to model.")
+    else:
+        if change == 0:
+            reasons.append(f"The proposal leaves the {m.label} unchanged, so there is no change to model.")
+        elif abs(change) > m.max_change + 1e-9:
+            reasons.append(f"The proposed change ({reckoner.fmt_change(abs(change), m.unit)}) is far larger than the changes HMRC costs "
+                           f"for the {m.label} (limit {reckoner.fmt_change(m.max_change, m.unit)}).")
+        else:
+            if abs(change) > m.largest_costed + 1e-9:
+                warnings.append(f"The change ({reckoner.fmt_change(abs(change), m.unit)}) is larger than HMRC's largest costed "
+                                f"illustrative change ({reckoner.fmt_change(m.largest_costed, m.unit)}), so the costing is extrapolated "
+                                "and less reliable.")
+            if change < 0 and m.down is None:
+                warnings.append("HMRC costs this measure for an increase only; the decrease mirrors that costing.")
+    if spec.effective_date is None:
+        reasons.append("An effective date is needed.")
+    else:
+        reasons.extend(_baseline_coverage_reasons(spec))
+    if m is not None and spec.horizon_years > len(m.years):
+        warnings.append(f"HMRC costs the first {len(m.years)} years; later years repeat the third-year effect grown "
+                        "with nominal GDP.")
+    status = "unsupported" if reasons else "partially_supported" if warnings else "supported"
+    return ScopeDecision(status=status, forecast_allowed=status != "unsupported", reasons=reasons, warnings=warnings)
+
+
 def check_scope(spec: PolicySpec) -> ScopeDecision:
+    if spec.policy_type == "tax_measure":
+        return _check_measure(spec)
+    if spec.policy_type == "fiscal_other":
+        return ScopeDecision(status="unsupported", forecast_allowed=False, reasons=[FISCAL_OTHER_REASON])
     bounds = validated_bounds()
     reasons: list[str] = []
     warnings: list[str] = []
 
     if spec.policy_type == "vat_standard_rate":
-        reasons.append("VAT is not supported yet: this version models the UK corporation tax main rate only.")
+        reasons.append("Use policy_type 'tax_measure' with measure_id 'vat_standard_rate' to model the VAT standard "
+                       "rate.")
     elif spec.policy_type == "unsupported":
-        reasons.append("This request is not a UK corporation tax rate change, which is the only policy this version "
-                       "can model.")
+        reasons.append("This request is not a UK fiscal policy (a tax, benefit or public spending change), which is "
+                       "what this version analyses.")
     elif spec.policy_type == "corporation_tax_small_profits_rate":
         warnings.append("The small profits rate is only partially supported: results apply main-rate behaviour to "
                         "small-company profits.")

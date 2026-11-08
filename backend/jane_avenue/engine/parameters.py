@@ -186,6 +186,10 @@ def _investment_shares() -> tuple[dict[str, float], str] | None:
 
 
 def default_parameters(spec: PolicySpec | None = None) -> dict[str, Assumption]:
+    if spec is not None and spec.policy_type == "tax_measure":  # ready-reckoner measures (contract-change #93)
+        from .reckoner import default_parameters as reckoner_parameters
+
+        return reckoner_parameters(spec)
     out: dict[str, Assumption] = {}
     for name, label, cat, unit, value, low, high, kind, slider, description in _TABLE:
         s = _SOURCING.get(name)

@@ -138,5 +138,55 @@
     "url": "https://www.gov.uk/government/publications/capital-allowances-full-expensing/capital-allowances-full-expensing-for-companies-investing-in-plant-and-machinery-from-1-april-2023-until-31-march-2026",
     "sha256": "b9047932683eec7400675ff84034f01b3c5d97db8fd2ad641a04dbfa08f0018a",
     "retrieved_at": "2026-11-07"
+  },
+  "hmrc_ready_reckoner_june_2025.ods": {
+    "url": "https://assets.publishing.service.gov.uk/media/68552862b46781eacfd71d71/June_2025_TRR_ODS__1_.ods",
+    "sha256": "1201953391d6201d1df8df4d60288c9094b43e0679ebf285e82ad3c912d476c1",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_income_tax_rates.html": {
+    "url": "https://www.gov.uk/income-tax-rates",
+    "sha256": "4f37f48cbd8fec67c35ed63f926e7bde7653bad6d4a5f0323d3c25871839bfaa",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_ni_rates.html": {
+    "url": "https://www.gov.uk/national-insurance-rates-letters",
+    "sha256": "89b95e7d127fa625ab93afc65be520718c6e71f1b763a7d032479e21b899715e",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_ni_self_employed.html": {
+    "url": "https://www.gov.uk/self-employed-national-insurance-rates",
+    "sha256": "8535724bd5f818a4de142ab504785f25b96425f726069c8e680fff4edba36c92",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_vat_rates.html": {
+    "url": "https://www.gov.uk/vat-rates",
+    "sha256": "fb70855e03a8f67f0a88524cfa832a6d163d4305206bd0e3fd38edeff7fd4b0b",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_cgt_rates.html": {
+    "url": "https://www.gov.uk/capital-gains-tax/rates",
+    "sha256": "4f011616c413399123f17f36cec31a453a9dcb176593714ca808bd13ce66fbcd",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_inheritance_tax.html": {
+    "url": "https://www.gov.uk/inheritance-tax",
+    "sha256": "30cad75f34d36b3cd831cb0fd8b0caffa4665179dab55519ce038964da008af8",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_ipt.html": {
+    "url": "https://www.gov.uk/guidance/insurance-premium-tax",
+    "sha256": "4fd420a42e491fa8e4c62a75a1b7a082ed7bbd3e58172abcb08b5dfbce0a20be",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_fuel_duty.html": {
+    "url": "https://www.gov.uk/government/publications/rates-and-allowances-excise-duty-hydrocarbon-oils/excise-duty-hydrocarbon-oils-rates",
+    "sha256": "a76518c945da4fdf5c1b034b95e8ff9aa03f65de9907a4d5242cce97dba8b804",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_child_benefit.html": {
+    "url": "https://www.gov.uk/child-benefit/what-youll-get",
+    "sha256": "28526902be4b543ca03b087ed0ed2d33d4aa1e20f4b071d0ec9887b4413a5dd4",
+    "retrieved_at": "2026-11-08"
   }
 }

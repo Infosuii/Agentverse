@@ -389,6 +389,40 @@ def _format_references_section(
     return "\n".join(lines), valid_ids
 
 
+_CT_TYPES = ("corporation_tax_main_rate", "corporation_tax_small_profits_rate")
+
+
+def _is_ct(policy) -> bool:
+    return policy is None or policy.policy_type in _CT_TYPES
+
+
+def _policy_label(policy) -> str:
+    """'UK corporation tax', 'the VAT standard rate', or 'this fiscal policy' (contract-change #93)."""
+    if _is_ct(policy):
+        return "UK corporation tax"
+    if policy.policy_type == "tax_measure":
+        from ..engine import reckoner
+
+        if (m := reckoner.get_measure(policy.measure_id)) is not None:
+            return m.label if m.label.lower().startswith(("the ", "child")) else f"the {m.label}"
+    return "this fiscal policy"
+
+
+def _revenue_subject(policy) -> str:
+    """What the headline revenue figure measures, in words."""
+    if _is_ct(policy):
+        return "Exchequer corporation tax revenue (behavioural)"
+    if policy.policy_type == "tax_measure":
+        from ..engine import reckoner
+
+        m = reckoner.get_measure(policy.measure_id)
+        if m is not None and m.policy_area == "spending":
+            return (f"the Exchequer position from {_policy_label(policy)} (HMRC ready-reckoner costing; a cost "
+                    "shows as a negative)")
+        return f"Exchequer receipts from {_policy_label(policy)} (HMRC ready-reckoner costing)"
+    return "Exchequer revenue (behavioural)"
+
+
 def build_template_report(
     analysis: Analysis,
     figures: list[KeyFigure] | None = None,
@@ -445,8 +479,11 @@ def build_template_report(
         reasons_str = "; ".join(r.rstrip(". ") for r in decline_reasons)
         executive_summary = f"Quantitative model projections are withheld for this request: {reasons_str}."
         if (analysis.research and analysis.research.evidence) or (analysis.precedents and analysis.precedents.matches):
-            executive_summary += (" Empirical evidence from research and historical UK corporation tax precedents are "
-                                  "summarised below.")
+            has_prec = bool(analysis.precedents and analysis.precedents.matches)
+            has_res = bool(analysis.research and analysis.research.evidence)
+            what = ("research and historical precedents" if has_prec and has_res
+                    else "historical precedents" if has_prec else "research")
+            executive_summary += f" Empirical evidence from {what} on {_policy_label(policy)} is summarised below."
         exec_section_body = executive_summary
     elif f_y1 and f_fin:
         exec_fig_ids.extend([f_y1.figure_id, f_fin.figure_id])
@@ -461,8 +498,8 @@ def build_template_report(
                 f"and indicative GDP level by {f_gdp.display} in {f_fin.fiscal_year}."
             )
         executive_summary = (
-            f"Under the central scenario assumptions, the proposed policy is estimated to change Exchequer "
-            f"corporation tax revenue (behavioural) by {f_y1.display} in {f_y1.fiscal_year} and by "
+            f"Under the central scenario assumptions, the proposed policy is estimated to change "
+            f"{_revenue_subject(policy)} by {f_y1.display} in {f_y1.fiscal_year} and by "
             f"{f_fin.display} in {f_fin.fiscal_year} (with p5–p95 Monte Carlo bands reported in key figures)."
             f"{inv_gdp_clause}"
         )
@@ -608,7 +645,8 @@ def build_template_report(
             )
         prec_body = "\n".join(p_lines)
     else:
-        prec_body = "No matching historical UK corporation tax precedents were identified. No causal conclusion is drawn."
+        prec_body = (f"No matching historical precedents for {_policy_label(policy)} were identified in the curated "
+                     "precedent library. No causal conclusion is drawn.")
 
     precedents_section = ReportSection(
         section_id="precedents",
@@ -658,10 +696,14 @@ def build_template_report(
             model_fig_ids.append(f_gdp.figure_id)
             model_src_ids.extend(f_gdp.source_ids)
 
-        model_body = (
-            "Under the central econometric specification, static revenue changes are adjusted for taxable-profit "
-            "elasticity and user-cost-of-capital investment channels:\n\n" + "\n".join(table_rows)
-        )
+        if _is_ct(policy):
+            model_intro = ("Under the central econometric specification, static revenue changes are adjusted for "
+                           "taxable-profit elasticity and user-cost-of-capital investment channels:")
+        else:
+            model_intro = ("Revenue effects are interpolated from HMRC's published ready-reckoner costings of "
+                           "illustrative tax changes, uprated with OBR nominal GDP and scaled by an explicit costing "
+                           "uncertainty assumption. Investment and GDP effects are not modelled for this measure:")
+        model_body = model_intro + "\n\n" + "\n".join(table_rows)
     else:
         model_body = "No econometric simulation output was generated for this analysis."
 
@@ -760,9 +802,21 @@ def build_template_report(
     caveats: list[str] = [
         "Prototype. Not official government analysis.",
         "Projections are conditional on the OBR baseline forecast and explicit model assumptions; they are not unconditional macroeconomic predictions.",
-        "GDP and dynamic revenue estimates rely on a partial-equilibrium user-cost-of-capital channel with fixed labour supply and carry low confidence.",
-        "Historical UK corporation tax changes frequently coincided with base-broadening or capital-allowance reforms (such as full expensing), which confound simple outturn comparisons.",
     ]
+    if _is_ct(policy):
+        caveats += [
+            "GDP and dynamic revenue estimates rely on a partial-equilibrium user-cost-of-capital channel with fixed labour supply and carry low confidence.",
+            "Historical UK corporation tax changes frequently coincided with base-broadening or capital-allowance reforms (such as full expensing), which confound simple outturn comparisons.",
+        ]
+    elif policy.policy_type == "tax_measure":
+        caveats += [
+            "Revenue estimates scale HMRC's published ready-reckoner costings; they include HMRC's standard behavioural response but no wider macroeconomic feedback, and ready-reckoner costings are not policy costings.",
+            "Investment, GDP and distributional effects are not modelled for this measure; research evidence on them is reported qualitatively.",
+        ]
+    else:
+        caveats.append(
+            "No quantitative model covers this policy in this version; findings are evidence-only and no revenue or spending forecast is produced."
+        )
     if analysis.scope and analysis.scope.warnings:
         for w in analysis.scope.warnings:
             if w not in caveats:

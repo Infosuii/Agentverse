@@ -199,22 +199,31 @@ def test_store_file_path_creates_parent(tmp_path, demo_request):
     s.close()
 
 
-def test_non_tax_request_skips_research_and_lists_each_reason_once(store):
-    # #86: a non-tax request used to get corporation tax research, every scope reason twice in the report, and a
-    # REPORT-001 failure for the numbers in the user's own query ("by 10%").
+def test_minimum_wage_is_researched_and_lists_each_reason_once(store):
+    # #86 fixed the doubled reasons; #93 researches every fiscal policy (the minimum wage used to be declined).
     a = _run(store, c.AnalysisRequest(query="What happens if the UK raises the minimum wage by 10%?",
                                       options=c.AnalysisOptions(monte_carlo_draws=100)))
     assert a.status == "completed", a.error
-    assert a.policy.policy_type == "unsupported" and a.research is None
-    assert any("Research skipped" in e.message for e in store.events_after(a.analysis_id))
-    assert "summarised below" not in a.report.executive_summary  # no research or precedent to point to
-    assert len(a.scope.reasons) >= 2
+    assert a.policy.policy_type == "fiscal_other" and a.research is not None
+    assert a.simulation is None and a.report.forecast_withheld
+    assert len(a.scope.reasons) >= 1
     for reason in a.scope.reasons:
         assert a.report.executive_summary.count(reason.rstrip(".")) == 1
         assert a.report.markdown.count(f"- {reason}\n") == 1  # "Reasons for withholding" bullets
     report_check = next(ck for ck in a.verification.checks if ck.check_id == "REPORT-001")
     assert report_check.status != "fail", report_check.detail
     assert not any("REPORT-001" in r for r in a.verification.decline_reasons)
+
+
+def test_off_topic_request_skips_research(store):
+    a = _run(store, c.AnalysisRequest(query="What is the best football team in London?",
+                                      options=c.AnalysisOptions(monte_carlo_draws=100)))
+    assert a.status == "completed", a.error
+    assert a.policy.policy_type == "unsupported" and a.research is None
+    assert any("Research skipped" in e.message for e in store.events_after(a.analysis_id))
+    assert "summarised below" not in a.report.executive_summary  # no research or precedent to point to
+    for reason in a.scope.reasons:
+        assert a.report.executive_summary.count(reason.rstrip(".")) == 1
 
 
 def test_out_of_scope_summary_has_no_doubled_punctuation(store):

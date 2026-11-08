@@ -182,7 +182,7 @@ def _policy_type(t: str, st: _State) -> PolicyType:
     if other := _OTHER_TAX.search(t):
         st.note(f"{other.group(1).capitalize()} is not supported: only UK corporation tax is modelled.", 0.0)
     else:
-        st.note("Could not identify a supported tax policy (UK corporation tax main rate).", 0.0)
+        st.note("Could not identify a UK fiscal policy (a tax or public spending change).", 0.0)
     return "unsupported"
 
 
@@ -353,6 +353,13 @@ def parse_rules(query: str, *, baseline: BaselineProjection | None = None, today
     t = normalise(raw)
     today = today or date.today()
     st = _State()
+
+    # Every other UK fiscal policy (contract-change #93): ready-reckoner measures and research-only policies.
+    if not (_CT.search(t) or _SMALL_PROFITS.search(t)):
+        from .measures import parse_measure
+
+        if (measure := parse_measure(raw, t, today)) is not None:
+            return measure
 
     policy_type = _policy_type(t, st)
     if policy_type in ("corporation_tax_main_rate", "corporation_tax_small_profits_rate"):

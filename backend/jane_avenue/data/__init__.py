@@ -7,7 +7,9 @@ from .registry import (
     load_baseline,
     load_macro_context,
     load_policy_changes,
+    load_ready_reckoner,
     load_series,
+    load_tax_measures,
 )
 
 __all__ = [
@@ -18,5 +20,7 @@ __all__ = [
     "load_baseline",
     "load_macro_context",
     "load_policy_changes",
+    "load_ready_reckoner",
     "load_series",
+    "load_tax_measures",
 ]

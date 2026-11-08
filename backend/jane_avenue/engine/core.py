@@ -198,6 +198,10 @@ def _investment_weights(params: Mapping[str, float | np.ndarray], warnings: list
 # ----------------------------------------------------------------------------------------------------------------------
 
 def compute(spec: PolicySpec, params: Mapping[str, float | np.ndarray], baseline: BaselineProjection) -> CoreOutputs:
+    if spec.policy_type == "tax_measure":  # HMRC ready-reckoner measures (engine/reckoner.py, contract-change #93)
+        from .reckoner import compute as reckoner_compute
+
+        return reckoner_compute(spec, params, baseline)
     if spec.policy_type not in SUPPORTED_POLICY_TYPES:
         raise ValueError(f"The engine does not model policy_type={spec.policy_type!r}")
     if spec.baseline_rate_pct is None or spec.proposed_rate_pct is None:

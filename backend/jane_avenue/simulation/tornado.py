@@ -16,6 +16,8 @@ def sensitivity(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Ba
     fiscal_year = ep.fiscal_years[-1]
     results = []
     for metric in TORNADO_METRICS:
+        if metric not in ep.central:  # metrics the policy's model does not produce (contract-change #93)
+            continue
         lows, highs = ep.low[metric][:, -1], ep.high[metric][:, -1]
         items = [
             TornadoItem(parameter=name, label=params[name].label, low_input=params[name].low,
