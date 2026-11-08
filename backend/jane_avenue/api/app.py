@@ -9,7 +9,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import BackgroundTasks, FastAPI, Header, Query, Request
 from fastapi.exceptions import RequestValidationError
@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from .. import __version__, data, engine, evaluation, policy, precedents, simulation
+from .. import __version__, charts, data, engine, evaluation, policy, precedents, simulation
 from ..config import get_settings
 from ..contracts import (
     CONTRACT_VERSION,
@@ -33,6 +33,7 @@ from ..contracts import (
     DatasetMeta,
     EvaluationReport,
     HealthResponse,
+    MetricName,
     ParseRequest,
     ParseResponse,
     PolicyAssessment,
@@ -45,6 +46,7 @@ from ..contracts import (
 )
 from ..orchestrator import pipeline
 from ..orchestrator.logcontext import configure_logging
+from ..simulation.montecarlo import simulate_draws
 from ..store import AnalysisStore
 from .ratelimit import TokenBucket
 
@@ -70,6 +72,7 @@ class ApiError(Exception):
 
 
 _ERRORS = {404: {"model": ErrorBody}, 409: {"model": ErrorBody}, 422: {"model": ErrorBody}}
+_PNG = {200: {"content": {"image/png": {}}, "description": "PNG chart rendered with matplotlib"}}
 _CREATE_ERRORS = {**_ERRORS, 429: {"model": ErrorBody, "description": "Too many analyses (live mode: 6 a minute)"}}
 
 
@@ -281,6 +284,76 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
                                        empirical_residuals=evaluation.revenue_relative_residuals)
         except ValueError as exc:  # simulate/compute validate parameters (agent-4, agent-3), e.g. investment shares
             raise ApiError(422, "Invalid simulation parameters", [str(exc)]) from exc
+
+    # ---- Monte Carlo trajectory chart (matplotlib, real draws; issue #98) --------------------------------------
+    def _monte_carlo_png(spec: PolicySpec, params: dict, *, draws: int, seed: int, metric: str, theme: str,
+                         paths: int, empirical: list | None = None, expected: list | None = None) -> Response:
+        """Re-run the draws (deterministic for a seed) and plot them. `expected` (stored bands) is compared with the
+        re-run so a chart can never silently disagree with the numbers shown elsewhere."""
+        try:
+            d = simulate_draws(spec, params, data.registry.load_baseline(), draws=draws, seed=seed)
+        except ValueError as exc:
+            raise ApiError(422, "Invalid simulation parameters", [str(exc)]) from exc
+        if metric not in d.metrics:
+            raise ApiError(422, f"{metric} is not modelled for this policy", [f"Modelled: {', '.join(d.metrics)}"])
+        note = None
+        if expected:
+            p50 = charts.summarise(d.metrics[metric])["p50"]
+            stored = {b.fiscal_year: b.p50 for b in expected}
+            if any(abs(stored.get(fy, float("nan")) - float(v)) > 1e-6 for fy, v in zip(d.fiscal_years, p50,
+                                                                                      strict=True)):
+                note = ("The model or data changed since this analysis ran: this chart re-runs the draws with the "
+                        "current model, so it may differ from the stored figures.")
+        png = charts.render_monte_carlo(d, metric, n_paths=paths, theme=theme, empirical=empirical,  # type: ignore[arg-type]
+                                        note=note)
+        return Response(content=png, media_type="image/png", headers={"Cache-Control": "private, max-age=300"})
+
+    @app.get("/api/analyses/{analysis_id}/charts/montecarlo.png", response_class=Response,
+             responses={**_PNG, **_ERRORS})
+    def analysis_monte_carlo_png(analysis_id: str, metric: MetricName = "revenue_behavioural_gbp_bn",
+                                 theme: Literal["light", "dark"] = "light",
+                                 paths: Annotated[int, Query(ge=0, le=charts.MAX_PATHS)] = charts.DEFAULT_PATHS,
+                                 empirical: bool = False) -> Response:
+        """Monte Carlo trajectories of this analysis: a sample of its real draws, with bands from all draws."""
+        analysis = _require(analysis_id)
+        mc = analysis.simulation.monte_carlo if analysis.simulation else None
+        if analysis.policy is None or mc is None:
+            raise ApiError(409, "This analysis has no Monte Carlo results", [f"Analysis status is {analysis.status}"])
+        if analysis.verification is not None and not analysis.verification.forecast_allowed:
+            raise ApiError(409, "The quantitative forecast was withheld", analysis.verification.decline_reasons)
+        params = engine.apply_overrides(engine.default_parameters(analysis.policy),
+                                        analysis.request.parameter_overrides)
+        expected = next((dist.bands for dist in mc.distributions if dist.metric == metric), None)
+        band = mc.empirical_interval if empirical and metric == "revenue_behavioural_gbp_bn" else None
+        return _monte_carlo_png(analysis.policy, params, draws=mc.n_draws, seed=mc.seed, metric=metric,
+                                theme=theme, paths=paths, empirical=band, expected=expected)
+
+    @app.post("/api/simulate/montecarlo.png", response_class=Response, responses={**_PNG, **_ERRORS})
+    def simulate_monte_carlo_png(body: SimulateRequest, metric: MetricName = "revenue_behavioural_gbp_bn",
+                                 theme: Literal["light", "dark"] = "light",
+                                 paths: Annotated[int, Query(ge=0, le=charts.MAX_PATHS)] = charts.DEFAULT_PATHS,
+                                 empirical: bool = False) -> Response:
+        """Monte Carlo trajectories for the slider view: the same draws `/api/simulate` summarises."""
+        if body.monte_carlo_draws < 1:
+            raise ApiError(422, "A Monte Carlo chart needs at least one draw", ["monte_carlo_draws must be >= 1"])
+        scope = policy.check_scope(body.policy)
+        if not scope.forecast_allowed:
+            raise ApiError(422, "Policy is out of scope; no forecast is produced", scope.reasons)
+        try:
+            params = engine.apply_overrides(engine.default_parameters(body.policy), body.parameter_overrides)
+        except ValueError as exc:
+            raise ApiError(422, "Invalid parameter override", [str(exc)]) from exc
+        band = None
+        if empirical and metric == "revenue_behavioural_gbp_bn":
+            try:
+                bundle = simulation.simulate(body.policy, params, data.registry.load_baseline(),
+                                             draws=body.monte_carlo_draws, seed=body.seed, include_sensitivity=False,
+                                             empirical_residuals=evaluation.revenue_relative_residuals)
+            except ValueError as exc:
+                raise ApiError(422, "Invalid simulation parameters", [str(exc)]) from exc
+            band = bundle.monte_carlo.empirical_interval if bundle.monte_carlo else None
+        return _monte_carlo_png(body.policy, params, draws=body.monte_carlo_draws, seed=body.seed, metric=metric,
+                                theme=theme, paths=paths, empirical=band)
 
     # ---- reference data ---------------------------------------------------------------------------------------
     @app.get("/api/parameters", response_model=list[Assumption])

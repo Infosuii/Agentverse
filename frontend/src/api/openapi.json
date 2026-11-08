@@ -3642,6 +3642,117 @@
         "summary": "Get Analysis"
       }
     },
+    "/api/analyses/{analysis_id}/charts/montecarlo.png": {
+      "get": {
+        "description": "Monte Carlo trajectories of this analysis: a sample of its real draws, with bands from all draws.",
+        "operationId": "analysis_monte_carlo_png",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "default": "revenue_behavioural_gbp_bn",
+              "enum": [
+                "revenue_static_gbp_bn",
+                "revenue_behavioural_gbp_bn",
+                "revenue_dynamic_gbp_bn",
+                "business_investment_pct",
+                "business_investment_gbp_bn",
+                "gdp_level_pct",
+                "cost_of_capital_pct"
+              ],
+              "title": "Metric",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "theme",
+            "required": false,
+            "schema": {
+              "default": "light",
+              "enum": [
+                "light",
+                "dark"
+              ],
+              "title": "Theme",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "paths",
+            "required": false,
+            "schema": {
+              "default": 60,
+              "maximum": 300,
+              "minimum": 0,
+              "title": "Paths",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "empirical",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Empirical",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {}
+            },
+            "description": "PNG chart rendered with matplotlib"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Analysis Monte Carlo Png"
+      }
+    },
     "/api/analyses/{analysis_id}/events": {
       "get": {
         "operationId": "stream_events",
@@ -4202,6 +4313,118 @@
           }
         },
         "summary": "Simulate"
+      }
+    },
+    "/api/simulate/montecarlo.png": {
+      "post": {
+        "description": "Monte Carlo trajectories for the slider view: the same draws `/api/simulate` summarises.",
+        "operationId": "simulate_monte_carlo_png",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "default": "revenue_behavioural_gbp_bn",
+              "enum": [
+                "revenue_static_gbp_bn",
+                "revenue_behavioural_gbp_bn",
+                "revenue_dynamic_gbp_bn",
+                "business_investment_pct",
+                "business_investment_gbp_bn",
+                "gdp_level_pct",
+                "cost_of_capital_pct"
+              ],
+              "title": "Metric",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "theme",
+            "required": false,
+            "schema": {
+              "default": "light",
+              "enum": [
+                "light",
+                "dark"
+              ],
+              "title": "Theme",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "paths",
+            "required": false,
+            "schema": {
+              "default": 60,
+              "maximum": 300,
+              "minimum": 0,
+              "title": "Paths",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "empirical",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Empirical",
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {}
+            },
+            "description": "PNG chart rendered with matplotlib"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Simulate Monte Carlo Png"
       }
     },
     "/api/sources": {
