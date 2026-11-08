@@ -97,3 +97,18 @@ def test_cache_keys_separate_measures_but_keep_ct_keys():
     n2 = c.PolicySpec(policy_type="fiscal_other", raw_query="Cut  defence spending")
     assert cache.cache_key(n1) != cache.cache_key(n2)
     assert cache.cache_key(n1) == cache.cache_key(n1.model_copy(update={"raw_query": "increase   NHS spending"}))
+
+
+@pytest.mark.parametrize(("query", "policy_type"), [
+    ("Raise income tax in Scotland by 1p", "fiscal_other"),
+    ("Raise income tax in Wales by 2p", "fiscal_other"),
+    ("Should Ireland raise income tax to 50%?", "unsupported"),
+])
+def test_jurisdiction_gate_leaves_one_reason_and_passes_report_001(store, query, policy_type):
+    # #95 review: stale rate notes ("assumed the current rate of 20%") used to fail REPORT-001.
+    a = _run(store, query)
+    assert a.status == "completed", a.error
+    assert a.policy.policy_type == policy_type
+    assert not any("20%" in n for n in a.policy.ambiguities)
+    assert _check(a, "REPORT-001").status != "fail", _check(a, "REPORT-001").detail
+    assert len(a.verification.decline_reasons) == 1 and len(a.scope.reasons) == 1

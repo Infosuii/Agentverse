@@ -161,3 +161,11 @@ def test_personal_questions_are_not_fiscal_policy(query):
                                    "Introduce a tax on sugary drinks"])
 def test_generic_fiscal_words_count_with_a_public_object_or_policy_verb(query):
     assert _parse(query).policy_type == "fiscal_other"
+
+
+@pytest.mark.parametrize(("query", "part"), [("Raise income tax in Northern Ireland by 1p", "Northern Ireland"),
+                                             ("Raise fuel duty by 5p for Welsh drivers", "Wales")])
+def test_uk_wide_tax_for_one_part_of_the_uk_gets_a_note(query, part):
+    s = _parse(query)
+    assert s.policy_type == "tax_measure"
+    assert any(f"cannot be changed for {part} alone" in a for a in s.ambiguities)

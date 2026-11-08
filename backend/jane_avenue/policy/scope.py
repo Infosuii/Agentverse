@@ -164,7 +164,8 @@ def check_scope(spec: PolicySpec) -> ScopeDecision:
         warnings.append("The small profits rate is only partially supported: results apply main-rate behaviour to "
                         "small-company profits.")
 
-    if spec.baseline_rate_pct is None or spec.proposed_rate_pct is None:
+    # A request outside scope has nothing to model, so a missing rate is not a second reason (#95 review).
+    if spec.policy_type != "unsupported" and (spec.baseline_rate_pct is None or spec.proposed_rate_pct is None):
         missing = " and ".join(name for name, value in (("current", spec.baseline_rate_pct),
                                                         ("proposed", spec.proposed_rate_pct)) if value is None)
         reasons.append(f"The {missing} rate could not be determined, so there is nothing to model.")
