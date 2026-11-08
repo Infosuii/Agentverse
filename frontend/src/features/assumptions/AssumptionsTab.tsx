@@ -26,6 +26,7 @@ import {
 } from '../../components/ui';
 import { ProvenanceNumber, formatChartValue } from '../../components/charts';
 import { fmtFiscalYear } from '../../lib/format';
+import { withheldReasons } from '../../lib/reasons';
 import { METRIC_DESCRIPTORS } from '../scenarios/transforms';
 
 export interface AssumptionsTabProps {
@@ -447,14 +448,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
     analysis.verification?.forecast_allowed !== false &&
     analysis.scope?.forecast_allowed !== false;
 
-  const declineReasons = Array.from(
-    new Set([
-      ...(analysis.verification?.decline_reasons ?? []),
-      ...(analysis.scope?.forecast_allowed === false
-        ? (analysis.scope.reasons ?? [])
-        : []),
-    ]),
-  );
+  const declineReasons = withheldReasons(analysis);
 
   const handleMetricYearChange = (newMetric: MetricName, newYear: string) => {
     setInspectorMetric(newMetric);

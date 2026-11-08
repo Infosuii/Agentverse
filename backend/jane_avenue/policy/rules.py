@@ -108,8 +108,9 @@ _TO_STRONG = re.compile(rf"\b(?:to|reach(?:es|ing)?|becomes?|set\s+at|fixed\s+at
 _TO_WEAK = re.compile(rf"\b(?:at|of|be|were|was|is|stood\s+at)\s+(?:a\s+rate\s+of\s+)?{_NUM}\s*%")
 # Group 1 is a minus sign ("by -2%"), read as a cut.
 _BY = re.compile(rf"\bby\s+(?:an?\s+)?(?:extra\s+|additional\s+|further\s+|another\s+)?(-\s*|minus\s+)?{_NUM}\s*(pp|%)")
-_DELTA_PP = re.compile(rf"(?<![\w.]){_NUM}\s*-?\s*pp\b")
-_ANY_PCT = re.compile(rf"(?<![\w.]){_NUM}\s*%")
+_DELTA_PP = re.compile(rf"(?<![\w.-]){_NUM}\s*-?\s*pp\b")
+_ANY_PCT = re.compile(rf"(?<![\w.-]){_NUM}\s*%")
+_NEG_RATE = re.compile(rf"(?:-\s*|\bminus\s+){_NUM}\s*%")
 # "from April 2027, then to 30% in 2029": a second change, which is not modelled.
 _SEQUENCE = re.compile(r"\b(then|later|thereafter|subsequently|followed\s+by|after\s+that|and\s+again)\b")
 
@@ -182,7 +183,7 @@ def _policy_type(t: str, st: _State) -> PolicyType:
     if other := _OTHER_TAX.search(t):
         st.note(f"{other.group(1).capitalize()} is not supported: only UK corporation tax is modelled.", 0.0)
     else:
-        st.note("Could not identify a supported tax policy (UK corporation tax main rate).", 0.0)
+        st.note("Could not identify a UK fiscal policy (a tax or public spending change).", 0.0)
     return "unsupported"
 
 
@@ -212,6 +213,9 @@ def _rates(t: str, current: float | None, st: _State) -> tuple[float | None, flo
     strong = _TO_STRONG.search(t)
     weak = None if strong else _TO_WEAK.search(t)
     by = _BY.search(t)
+    if by is None and (neg := _NEG_RATE.search(t)):
+        st.note(f"A negative tax rate (-{neg.group(1)}%) is not valid.", 0.5)
+        return current, None
     delta_text, delta_unit = (by.group(2), by.group(3)) if by else (None, None)
     negative = bool(by and by.group(1))  # "by -2%": a cut of 2, whatever the verb says
     if delta_text is None and (d := _DELTA_PP.search(t)):
@@ -353,6 +357,13 @@ def parse_rules(query: str, *, baseline: BaselineProjection | None = None, today
     t = normalise(raw)
     today = today or date.today()
     st = _State()
+
+    # Every other UK fiscal policy (contract-change #93): ready-reckoner measures and research-only policies.
+    if not (_CT.search(t) or _SMALL_PROFITS.search(t)):
+        from .measures import parse_measure
+
+        if (measure := parse_measure(raw, t, today)) is not None:
+            return measure
 
     policy_type = _policy_type(t, st)
     if policy_type in ("corporation_tax_main_rate", "corporation_tax_small_profits_rate"):

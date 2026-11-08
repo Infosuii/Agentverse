@@ -122,8 +122,13 @@ def calc_002(analysis: Analysis) -> Outcome:
     if (skip := _no_forecast(analysis)) is not None:
         return skip
     policy = analysis.policy
-    change = policy.change_pp() if policy else None
-    direction = 0 if not change else (1 if change > 0 else -1)
+    if policy is not None and policy.policy_type == "tax_measure":
+        # The sign of the official costing, not of the rate change: raising an allowance or a CGT rate can lose
+        # revenue. 0 (no sign check) when HMRC's own costing changes sign across years (contract-change #93).
+        direction = engine.reckoner.expected_revenue_sign(policy)
+    else:
+        change = policy.change_pp() if policy else None
+        direction = 0 if not change else (1 if change > 0 else -1)
     problems = [p for s in analysis.simulation.scenarios for p in _identity_problems(s, direction)]  # type: ignore[union-attr]
     if problems:
         shown = "; ".join(text for _, text in problems[:4]) + ("; ..." if len(problems) > 4 else "")
@@ -156,6 +161,9 @@ def calc_003(analysis: Analysis) -> Outcome:
     if (skip := _no_forecast(analysis)) is not None:
         return skip
     policy = analysis.policy
+    if policy is not None and policy.policy_type == "tax_measure":
+        return Outcome("skipped", "The corporation-tax receipts bound does not apply: this measure is costed directly "
+                                  "from HMRC's ready reckoner, which CALC-001 reproduces.")
     if policy is None or policy.baseline_rate_pct is None or policy.proposed_rate_pct is None:
         return Outcome("skipped", "The policy has no rates to bound against.")
     t0, t1 = policy.baseline_rate_pct / 100, policy.proposed_rate_pct / 100

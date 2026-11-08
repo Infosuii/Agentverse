@@ -337,7 +337,8 @@ class ResearchLoop:
         start = time.monotonic()
         task = self.task or prompts.LOOP_PROMPT.format(
             description=r.description, questions="\n".join(f"{i}. {q}" for i, q in enumerate(self.questions, 1)),
-            max_calls=self.max_calls, seconds=int(self.budget_s), max_docs=r.max_docs)
+            max_calls=self.max_calls, seconds=int(self.budget_s), max_docs=r.max_docs,
+            topics=prompts.CT_TOPICS if r.area == "UK corporation tax" else prompts.GENERIC_TOPICS)
         history: list[dict[str, Any]] = [user_input(task)]
         tools = tool_declarations(r.dataset_ids() if self.include_data else [], include_data=self.include_data)
         for _ in range(MAX_TURNS):

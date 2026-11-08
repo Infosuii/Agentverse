@@ -1,0 +1,14 @@
+{
+  "dataset_id": "hmrc_ready_reckoner",
+  "title": "HMRC ready reckoner: direct effects of illustrative tax changes",
+  "description": "Every row of HMRC's June 2025 'Direct effects of illustrative tax changes' table, \u00a3m by fiscal year.",
+  "publisher": "HMRC",
+  "source_url": "https://www.gov.uk/government/statistics/direct-effects-of-illustrative-tax-changes",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-08",
+  "vintage": "June 2025 (Spring Statement 2025)",
+  "file": "curated/hmrc_ready_reckoner.csv",
+  "source_id": "D-hmrc-ready-reckoner-2025",
+  "is_placeholder": false,
+  "notes": "Verbatim labels and values from the ODS table (Spring Statement 2025 basis). 'Neg' (negligible: above zero but rounding to zero) is stored as 0 with is_negligible=True. HMRC: direct effects of small illustrative changes, including some behavioural responses but no wider macroeconomic effects; larger changes need not scale linearly. Sign conventions differ by row (see tax_measures.csv).\nRaw SHA256: 1201953391d6201d1df8df4d60288c9094b43e0679ebf285e82ad3c912d476c1"
+}

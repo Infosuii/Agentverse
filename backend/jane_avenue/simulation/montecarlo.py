@@ -68,6 +68,8 @@ def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Ba
     distributions, histograms = [], []
     se_note = ""
     for metric in METRIC_NAMES:
+        if metric not in out.metrics:  # e.g. ready-reckoner measures model revenue only (contract-change #93)
+            continue
         arr = np.broadcast_to(np.asarray(out.metrics[metric], dtype=float), (draws, len(years)))
         q = np.percentile(arr, PERCENTILES, axis=0).tolist()
         mean = arr.mean(axis=0).tolist()

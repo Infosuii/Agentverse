@@ -1,0 +1,14 @@
+{
+  "dataset_id": "tax_measures",
+  "title": "Modelled tax and benefit measures",
+  "description": "Measures modelled from the HMRC ready reckoner: rows used, unit of change, sign convention, scope limit and the current rate verified by an exact quote on gov.uk.",
+  "publisher": "HMRC",
+  "source_url": "https://www.gov.uk/government/statistics/direct-effects-of-illustrative-tax-changes",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-08",
+  "vintage": "June 2025 (Spring Statement 2025)",
+  "file": "curated/tax_measures.csv",
+  "source_id": "D-hmrc-ready-reckoner-2025",
+  "is_placeholder": false,
+  "notes": "points_up/points_down list 'size=section::label(+...)' ready-reckoner rows (values summed) costed for a change of that size; sign_up/sign_down turn those \u00a3m into Exchequer revenue (+ = more revenue); an empty points_down mirrors the increase. max_change is the scope gate's hard limit in the measure's unit. current_value was verified on 2026-11-08 by the quotes in current_quote.\nRaw SHA256: govuk_cgt_rates.html=4f011616c413399123f17f36cec31a453a9dcb176593714ca808bd13ce66fbcd; govuk_child_benefit.html=28526902be4b543ca03b087ed0ed2d33d4aa1e20f4b071d0ec9887b4413a5dd4; govuk_income_tax_rates.html=4f37f48cbd8fec67c35ed63f926e7bde7653bad6d4a5f0323d3c25871839bfaa; govuk_inheritance_tax.html=30cad75f34d36b3cd831cb0fd8b0caffa4665179dab55519ce038964da008af8; govuk_ipt.html=4fd420a42e491fa8e4c62a75a1b7a082ed7bbd3e58172abcb08b5dfbce0a20be; govuk_ni_rates.html=89b95e7d127fa625ab93afc65be520718c6e71f1b763a7d032479e21b899715e; govuk_ni_self_employed.html=8535724bd5f818a4de142ab504785f25b96425f726069c8e680fff4edba36c92; govuk_vat_rates.html=fb70855e03a8f67f0a88524cfa832a6d163d4305206bd0e3fd38edeff7fd4b0b; hmrc_fuel_duty.html=a76518c945da4fdf5c1b034b95e8ff9aa03f65de9907a4d5242cce97dba8b804; hmrc_ready_reckoner_june_2025.ods=1201953391d6201d1df8df4d60288c9094b43e0679ebf285e82ad3c912d476c1"
+}

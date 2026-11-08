@@ -33,7 +33,7 @@ export function SearchBar({
   onSubmit,
   onBlur,
   suggestions = [],
-  placeholder = 'Propose a UK corporation tax policy…',
+  placeholder = 'Propose a UK fiscal policy…',
   submitLabel = 'Start policy analysis',
   busy = false,
   minLength = 3,

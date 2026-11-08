@@ -19,7 +19,9 @@ import {
   Stat,
   WithheldBanner,
 } from '../../components/ui';
-import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct, fmtPp } from '../../lib/format';
+import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct } from '../../lib/format';
+import { isResearchOnly, policyArea, policyChangeLabel, policyChangeText, policyTypeLabel } from '../../lib/policy';
+import { withheldReasons } from '../../lib/reasons';
 
 export interface OverviewTabProps {
   analysis?: Analysis;
@@ -85,11 +87,7 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
     analysis.verification?.forecast_allowed !== false &&
     analysis.scope?.forecast_allowed !== false;
 
-  const declineReasons = [
-    ...(analysis.verification?.decline_reasons ?? []),
-    ...(analysis.scope?.forecast_allowed === false ? (analysis.scope.reasons ?? []) : []),
-  ];
-  const uniqueReasons = Array.from(new Set(declineReasons));
+  const uniqueReasons = withheldReasons(analysis);
 
   const centralScenario =
     analysis.simulation?.scenarios?.find((s) => s.scenario.name === 'central') ??
@@ -118,6 +116,8 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
     analysis.simulation?.assumptions?.some((a) => a.is_placeholder),
   );
 
+  const researchOnly = isResearchOnly(analysis.policy);
+
   const withheldReasonText =
     uniqueReasons[0] ?? 'Policy outside validated scope or failed blocking check';
 
@@ -130,7 +130,7 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
     {
       tab: 'precedents',
       title: 'Historical Precedents',
-      description: `${analysis.precedents?.matches?.length ?? 0} matched UK corporation tax rate changes`,
+      description: `${analysis.precedents?.matches?.length ?? 0} matched historical changes to ${policyArea(analysis.policy)}`,
     },
     {
       tab: 'scenarios',
@@ -154,15 +154,6 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
     },
   ];
 
-  const changePp =
-    analysis.policy?.baseline_rate_pct != null &&
-    analysis.policy?.proposed_rate_pct != null
-      ? Number(
-          (
-            analysis.policy.proposed_rate_pct - analysis.policy.baseline_rate_pct
-          ).toFixed(2),
-        )
-      : null;
 
   return (
     <div className="space-y-6">
@@ -221,6 +212,7 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
             }
           />
 
+          {(invPct || !forecastAllowed) && !researchOnly && (
           <Stat
             label={`Business Investment (${fmtFiscalYear(finalYear || 'Year 5')})`}
             value={fmtPct(invFinal)}
@@ -236,7 +228,9 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
                 : undefined
             }
           />
+          )}
 
+          {(gdpPct || !forecastAllowed) && !researchOnly && (
           <Stat
             label={`GDP Level (${fmtFiscalYear(finalYear || 'Year 5')})`}
             value={fmtPct(gdpFinal)}
@@ -252,6 +246,7 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
                 : undefined
             }
           />
+          )}
         </div>
       </section>
 
@@ -266,14 +261,13 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
               <div className="flex justify-between gap-2">
                 <dt className="text-muted-foreground">Policy type:</dt>
                 <dd className="font-medium text-foreground">
-                  {analysis.policy.policy_type}
+                  {policyTypeLabel(analysis.policy)}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-muted-foreground">Rate change:</dt>
+                <dt className="text-muted-foreground">{policyChangeLabel(analysis.policy)}:</dt>
                 <dd className="font-semibold text-foreground tabular-nums">
-                  {analysis.policy.baseline_rate_pct ?? '—'}% →{' '}
-                  {analysis.policy.proposed_rate_pct ?? '—'}% ({fmtPp(changePp)})
+                  {policyChangeText(analysis.policy)}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">

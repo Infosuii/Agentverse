@@ -35,6 +35,7 @@ import {
   Tooltip,
 } from '../../components/ui';
 import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct, fmtPp } from '../../lib/format';
+import { isCorporationTax, policyArea } from '../../lib/policy';
 import { CHART_THEME, EVIDENCE_CLASS_COLORS } from '../../lib/theme';
 
 export interface PrecedentsTabProps {
@@ -584,6 +585,10 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
     );
   }
 
+  // The curated precedent library covers UK corporation tax; other policies get their history from research (#93).
+  const ct = !analysis?.policy || isCorporationTax(analysis.policy);
+  const area = policyArea(analysis?.policy);
+
   const anyPlaceholder = Boolean(
     historyChanges.some((c) => c.is_placeholder) ||
       matches.some((m) => m.change.is_placeholder),
@@ -593,9 +598,11 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
     <div className="space-y-6">
       {/* Summary Header Card */}
       <Card
-        title="Historical UK Corporation Tax Precedents"
+        title={ct ? 'Historical UK Corporation Tax Precedents' : 'Historical Precedents'}
         subtitle={
-          precedentsSlice
+          !ct
+            ? 'The curated precedent library covers UK corporation tax rate changes'
+            : precedentsSlice
             ? `Matcher: ${precedentsSlice.method} · Dataset version: ${precedentsSlice.dataset_version}`
             : 'Historical UK Corporation Tax main rate changes (1982–present)'
         }
@@ -608,12 +615,15 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
         }
       >
         <p className="text-sm leading-relaxed text-foreground">
-          {precedentsSlice?.summary ||
-            'Comparable historical UK corporation tax changes ranked by direction, magnitude, statutory rate level, macroeconomic context, and recency.'}
+          {!ct
+            ? `No curated historical precedents exist yet for ${area}, so none are matched. Evidence on past changes to this policy comes from the research stage (see the Research tab), with every quote checked against its source.`
+            : precedentsSlice?.summary ||
+              'Comparable historical UK corporation tax changes ranked by direction, magnitude, statutory rate level, macroeconomic context, and recency.'}
         </p>
       </Card>
 
-      {/* Main Rate Step-Line Timeline (1982 -> today) */}
+      {/* Main Rate Step-Line Timeline (1982 -> today); corporation tax only */}
+      {ct && (
       <Card
         title="UK Corporation Tax Main Rate Timeline (1982–Present)"
         subtitle="Implemented statutory main rate step-line; blue markers highlight changes matched to this proposal"
@@ -675,6 +685,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
           </div>
         )}
       </Card>
+      )}
 
       {/* Ranked Precedent Cards */}
       <section aria-label="Ranked precedent matches" className="space-y-4">
@@ -690,7 +701,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
         {matches.length === 0 ? (
           <EmptyState
             title="No comparable historical precedents matched"
-            description="No historical UK corporation tax changes matched the proposed policy type."
+            description={`No historical changes to ${area} matched the proposed policy.`}
           />
         ) : (
           <div className="space-y-4">

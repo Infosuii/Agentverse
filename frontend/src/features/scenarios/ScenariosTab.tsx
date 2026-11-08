@@ -31,6 +31,8 @@ import {
   formatChartValue,
 } from '../../components/charts';
 import { fmtFiscalYear, fmtPp } from '../../lib/format';
+import { isCorporationTax, policyTypeLabel } from '../../lib/policy';
+import { withheldReasons } from '../../lib/reasons';
 import { SCENARIO_COLORS, type ScenarioColorKey } from '../../lib/theme';
 import {
   METRIC_DESCRIPTORS,
@@ -185,6 +187,11 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
     [simulation?.scenarios],
   );
 
+  // Only the metrics this policy's model produces (the ready-reckoner model has no investment or GDP outputs, #93).
+  const availableMetrics = METRIC_DESCRIPTORS.filter(
+    (m) => !centralScenario || centralScenario.result.metrics.some((p) => p.metric === m.metric),
+  );
+
   const selectedProjection = useMemo(
     () =>
       centralScenario?.result.metrics.find((m) => m.metric === selectedMetric),
@@ -241,14 +248,14 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
     analysis.verification?.forecast_allowed !== false &&
     analysis.scope?.forecast_allowed !== false;
 
-  const declineReasons = Array.from(
-    new Set([
-      ...(analysis.verification?.decline_reasons ?? []),
-      ...(analysis.scope?.forecast_allowed === false
-        ? (analysis.scope.reasons ?? [])
-        : []),
-    ]),
-  );
+  const declineReasons = withheldReasons(analysis);
+
+  // Corporation tax keeps its 10-40% range; other rates move up to 10pp either side of today's rate (the scope gate
+  // declines a rerun that goes beyond what HMRC's ready reckoner can cost).
+  const ctPolicy = isCorporationTax(analysis.policy);
+  const rateBase = analysis.policy?.baseline_rate_pct ?? 25;
+  const rateMin = ctPolicy ? 10 : Math.max(0, Math.floor(rateBase - 10));
+  const rateMax = ctPolicy ? 40 : Math.ceil(rateBase + 10);
 
   if (!forecastAllowed) {
     return (
@@ -333,7 +340,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
       {/* 1. Metric Selector Bar */}
       <Card
         title="Metric Selector & Confidence"
-        subtitle="Select any of the 7 modelled outputs to inspect scenario paths, Monte Carlo uncertainty, and sensitivity."
+        subtitle={`Select any of the ${availableMetrics.length} modelled outputs to inspect scenario paths, Monte Carlo uncertainty, and sensitivity.`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <EvidenceBadge evidenceClass="model_scenario" />
@@ -347,7 +354,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             aria-label="Select modelled metric"
             className="flex flex-wrap gap-2"
           >
-            {METRIC_DESCRIPTORS.map((m) => {
+            {availableMetrics.map((m) => {
               const proj = centralScenario?.result.metrics.find(
                 (p) => p.metric === m.metric,
               );
@@ -680,7 +687,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                       htmlFor="slider-proposed-rate"
                       className="font-semibold text-foreground"
                     >
-                      Proposed CT main rate
+                      Proposed {isCorporationTax(policy) ? 'CT main rate' : policyTypeLabel(policy)}
                     </label>
                     <div className="flex items-center gap-1.5">
                       <span className="font-mono font-bold text-primary tabular-nums">
@@ -713,17 +720,17 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                   <input
                     id="slider-proposed-rate"
                     type="range"
-                    min={10}
-                    max={40}
-                    step={0.5}
+                    min={rateMin}
+                    max={rateMax}
+                    step={isCorporationTax(policy) ? 0.5 : 0.1}
                     value={proposedRateOverride ?? policy.proposed_rate_pct}
                     onChange={(e) => setProposedRateOverride(Number(e.target.value))}
                     className="mt-2 w-full accent-primary"
                   />
                   <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
-                    <span>10%</span>
+                    <span>{rateMin}%</span>
                     <span>Default: {policy.proposed_rate_pct}%</span>
-                    <span>40%</span>
+                    <span>{rateMax}%</span>
                   </div>
                 </div>
               )}

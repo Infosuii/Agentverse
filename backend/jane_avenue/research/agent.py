@@ -69,6 +69,32 @@ DEFAULT_QUESTIONS = (
     "What does the evidence say about the elasticity of UK taxable profits to the corporation tax rate?",
     "How does the corporation tax rate affect business investment through the user cost of capital?",
 )
+CT_TYPES = ("corporation_tax_main_rate", "corporation_tax_small_profits_rate")
+
+
+def policy_area(spec: PolicySpec) -> str:
+    """What the research is about, in words: "UK corporation tax", "UK VAT standard rate", "UK fiscal policy"."""
+    if spec.policy_type in CT_TYPES:
+        return "UK corporation tax"
+    if spec.policy_type == "tax_measure":
+        from ..engine import reckoner
+
+        if (m := reckoner.get_measure(spec.measure_id)) is not None:
+            return f"UK {m.label}"
+    return "UK fiscal policy"
+
+
+def default_questions(spec: PolicySpec) -> tuple[str, ...]:
+    """The standard question set used when planning fails: the tuned CT set, or a generic set for any other policy."""
+    if spec.policy_type in CT_TYPES:
+        return DEFAULT_QUESTIONS
+    area = policy_area(spec)
+    return (
+        f"What revenue or spending effects did official costings and observed outturns show for past changes to {area}?",
+        f"What assumptions do the OBR and HMRC use when costing changes to {area}?",
+        f"What does the evidence say about behavioural responses to changes in {area}?",
+        f"What are the wider economic and distributional effects of changes to {area}?",
+    )
 
 
 class ResearchFailed(RuntimeError):
@@ -103,10 +129,61 @@ def _ms(t0: float) -> int:
 
 # ------------------------------------------------------------------------------------------------- mock fixture
 
+def _generic_fixture(spec: PolicySpec) -> ResearchFindings:
+    """A clearly labelled placeholder for any policy other than corporation tax (mock mode; no network, no numbers)."""
+    from ..contracts import Evidence as Ev
+    from ..contracts import ParameterEvidence as PE
+    from ..contracts import ResearchStep as Step
+    from ..contracts import Source as Src
+
+    area = policy_area(spec)
+    ts = utcnow()
+    p = "Placeholder (mock mode, not real research): "
+    srcs = [Src(source_id=sid, title=f"{title} (placeholder)", url=url, publisher=title, publisher_type=kind,
+                access_method="fixture", reliability_tier=tier, is_placeholder=True)  # type: ignore[arg-type]
+            for sid, title, url, kind, tier in (
+                ("S1", "Office for Budget Responsibility", "https://obr.uk/", "obr", 1),
+                ("S2", "HM Revenue & Customs", "https://www.gov.uk/government/organisations/hm-revenue-customs",
+                 "hmrc", 1),
+                ("S3", "Institute for Fiscal Studies", "https://ifs.org.uk/", "ifs", 2))]
+    ev = [Ev(evidence_id=eid, source_id=sid, kind="qualitative", topic=topic, claim=p + claim,  # type: ignore[arg-type]
+             verification_status="unverified", verification_note="mock fixture: no document was fetched",
+             confidence="low")
+          for eid, sid, topic, claim in (
+              ("E1", "S1", "revenue", f"official costings of changes to {area} allow for behavioural responses."),
+              ("E2", "S2", "elasticity", "the tax base or spending need responds to the change; the size of the "
+                                         "response is uncertain."),
+              ("E3", "S3", "distribution", "who gains and who pays depends on the design of the change."),
+              ("E4", "S3", "macro_context", "receipts and spending move with the economic cycle."))]
+    trace = [Step(step_id=i, ts=ts, kind=kind, title=title, detail=detail, source_ids=s_ids,  # type: ignore[arg-type]
+                  evidence_ids=e_ids)
+             for i, (kind, title, detail, s_ids, e_ids) in enumerate((
+                 ("plan", "Planned 4 research questions", "Mock plan (no network in mock mode).", [], []),
+                 ("search", f"Searched: {area}", "Mock search: placeholder sources only.", ["S1", "S2", "S3"], []),
+                 ("extract", "Recorded 4 evidence items", "Mock evidence: unverified placeholders.",
+                  ["S1", "S2", "S3"], ["E1", "E2", "E3", "E4"]),
+                 ("synthesis", "Synthesised findings", "Mock synthesis: no numbers are produced here.", [],
+                  ["E1", "E2", "E3", "E4"]),
+                 ("reason", "Research complete", "Mock mode: 3 placeholder sources, 4 unverified evidence items.", [],
+                  [])), start=1)]
+    params = [PE(parameter="rr_costing_scale", evidence_ids=["E1"], note=p + "link only; no value.")] \
+        if spec.policy_type == "tax_measure" else []
+    return ResearchFindings(
+        policy=spec, mode="mock", summary=(f"Placeholder research summary (mock mode) for {spec.description or area}: "
+                                           "no live sources were consulted. Official costings allow for behavioural "
+                                           "responses [E1], the base responds to the change [E2], the distributional "
+                                           "effects depend on design [E3], and the economic cycle complicates "
+                                           "comparisons [E4]."),
+        research_questions=list(default_questions(spec)), sources=srcs, evidence=ev, parameter_evidence=params,
+        open_questions=["Placeholder: run live research to replace this fixture with verified, cited evidence."],
+        trace=trace, started_at=ts, completed_at=ts)
+
+
 def _mock_findings(spec: PolicySpec, tracer: Tracer) -> ResearchFindings:
     """Replay the placeholder fixture through `on_step` (MOCK_STEP_DELAY_S apart) for `spec`."""
     started = utcnow()
-    fixture = ResearchFindings.model_validate_json(FIXTURE.read_text(encoding="utf-8"))
+    fixture = (ResearchFindings.model_validate_json(FIXTURE.read_text(encoding="utf-8"))
+               if spec.policy_type in CT_TYPES else _generic_fixture(spec))
     for st in fixture.trace:
         tracer.emit(st.kind, st.title, st.detail, tool=st.tool, query=st.query, source_ids=st.source_ids,
                     evidence_ids=st.evidence_ids, duration_ms=st.duration_ms)
@@ -176,8 +253,10 @@ class LiveResearch:
         self.fast = settings.model_fast
         self.deep = settings.model_deep
         self.models_used = [self.fast]
+        self.area = policy_area(spec)
         self.description = spec.description or (
-            f"Change the UK corporation tax main rate from {spec.baseline_rate_pct}% to {spec.proposed_rate_pct}%")
+            f"Change the UK corporation tax main rate from {spec.baseline_rate_pct}% to {spec.proposed_rate_pct}%"
+            if spec.policy_type in CT_TYPES else spec.raw_query or self.area)
         self.sources: dict[str, Source] = {}       # source_id -> Source
         self.by_url: dict[str, str] = {}           # grounding URL -> source_id
         self.question_of: dict[str, str] = {}      # source_id -> question that surfaced it
@@ -207,17 +286,24 @@ class LiveResearch:
     def plan(self) -> list[str]:
         t0 = time.monotonic()
         s = self.spec
-        prompt = prompts.PLAN_PROMPT.format(description=self.description, baseline=s.baseline_rate_pct,
-                                            proposed=s.proposed_rate_pct, effective=s.effective_date or "unknown",
-                                            horizon=s.horizon_years)
+        if s.policy_type in CT_TYPES:
+            prompt = prompts.PLAN_PROMPT.format(description=self.description, baseline=s.baseline_rate_pct,
+                                                proposed=s.proposed_rate_pct, effective=s.effective_date or "unknown",
+                                                horizon=s.horizon_years)
+            system = prompts.PLAN_SYSTEM
+        else:
+            prompt = prompts.PLAN_PROMPT_GENERIC.format(description=self.description, area=self.area,
+                                                        effective=s.effective_date or "unknown",
+                                                        horizon=s.horizon_years)
+            system = prompts.PLAN_SYSTEM_GENERIC
         questions: list[str] = []
         try:
-            plan = self.llm.generate_structured(prompt, ResearchPlan, system=prompts.PLAN_SYSTEM, model=self.fast,
+            plan = self.llm.generate_structured(prompt, ResearchPlan, system=system, model=self.fast,
                                                 thinking_level="low")
             questions = [q.strip() for q in plan.questions if q.strip()][:7]
         except LLMUnavailable as exc:
             self.tracer.emit("warning", "Planning failed; using the standard question set", str(exc))
-        for q in DEFAULT_QUESTIONS:
+        for q in default_questions(s):
             if len(questions) >= 4:
                 break
             if q not in questions:
@@ -342,7 +428,7 @@ class LiveResearch:
 
     def search_one(self, query: str) -> GroundedAnswer:
         """One grounded Google Search (the loop's `search` tool and the fixed sequence share it)."""
-        prompt = prompts.SEARCH_PROMPT.format(question=query, description=self.description)
+        prompt = prompts.SEARCH_PROMPT.format(area=self.area, question=query, description=self.description)
         return self.llm.search_grounded(prompt, system=prompts.SEARCH_SYSTEM, model=self.fast)
 
     # -- the fixed search sequence (M1); now the fallback for the autonomous loop
@@ -497,7 +583,7 @@ class LiveResearch:
         return None
 
     def findings(self, questions: list[str], synth: Synthesis | None, started: datetime) -> ResearchFindings:
-        from ..engine import PARAMETER_NAMES
+        from ..engine import default_parameters
 
         if synth is None:
             n = sum(e.verification_status == "verified" for e in self.evidence)
@@ -518,7 +604,7 @@ class LiveResearch:
                                 for p in synth.parameter_evidence],
             open_questions=synth.open_questions, trace=list(self.tracer.steps), started_at=started,
             cache_key=cache_key(self.spec))
-        clean, notes = postprocess(draft, allowed_urls=self.allowed_urls, parameter_names=PARAMETER_NAMES)
+        clean, notes = postprocess(draft, allowed_urls=self.allowed_urls, parameter_names=list(default_parameters(self.spec)))
         if notes:
             self.tracer.emit("warning", f"Post-processing removed {len(notes)} unsupported item(s)", " ".join(notes))
         verified = sum(e.verification_status == "verified" for e in clean.evidence)

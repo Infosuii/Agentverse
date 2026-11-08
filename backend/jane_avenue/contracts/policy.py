@@ -7,7 +7,12 @@ from pydantic import Field
 
 from .common import Contract, TaxName
 
-PolicyType = Literal["corporation_tax_main_rate", "corporation_tax_small_profits_rate", "vat_standard_rate", "unsupported"]
+# tax_measure: a tax or benefit change costed from the HMRC ready reckoner (`measure_id` names the measure in
+# data/curated/tax_measures.csv). fiscal_other: any other fiscal policy (a tax or spending change with no validated
+# model): researched and reported, but no quantitative forecast. unsupported: not a UK fiscal policy at all.
+# vat_standard_rate is kept for compatibility; parsers now produce tax_measure with measure_id="vat_standard_rate".
+PolicyType = Literal["corporation_tax_main_rate", "corporation_tax_small_profits_rate", "vat_standard_rate",
+                     "tax_measure", "fiscal_other", "unsupported"]
 
 
 class PolicySpec(Contract):
@@ -23,6 +28,14 @@ class PolicySpec(Contract):
     parse_method: Literal["gemini", "rules", "manual", "fixture"] = "manual"
     parse_confidence: float = Field(default=1.0, ge=0, le=1)
     ambiguities: list[str] = Field(default_factory=list)
+    # contract-change #93 (additive, optional): measures that are not rates in percent. For tax_measure policies,
+    # `measure_id` names the measure; percentage-rate measures use baseline_rate_pct / proposed_rate_pct, and every
+    # other measure (an allowance in £, a duty in p/litre or as an index, a benefit in £/week) uses
+    # baseline_value / proposed_value in `value_unit`.
+    measure_id: str | None = None
+    baseline_value: float | None = None
+    proposed_value: float | None = None
+    value_unit: str | None = None
 
     def change_pp(self) -> float | None:
         if self.baseline_rate_pct is None or self.proposed_rate_pct is None:

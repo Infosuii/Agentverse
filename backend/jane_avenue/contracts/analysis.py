@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from .common import Contract, Mode
 from .policy import PolicySpec, ScopeDecision
@@ -33,6 +33,13 @@ class AnalysisRequest(Contract):
     parameter_overrides: dict[str, float] = Field(default_factory=dict)
     reuse_research_from: str | None = None
     options: AnalysisOptions = Field(default_factory=AnalysisOptions)
+
+    @field_validator("query")
+    @classmethod
+    def _non_blank_query(cls, v: str) -> str:
+        if len(v.strip()) < 3:
+            raise ValueError("Query must contain at least 3 non-whitespace characters.")
+        return v
 
 
 EventType = Literal["stage_started", "stage_completed", "research_step", "log", "warning", "error", "completed", "failed"]
@@ -83,6 +90,13 @@ class AnalysisCreated(Contract):
 
 class ParseRequest(Contract):
     query: str = Field(min_length=3, max_length=2000)
+
+    @field_validator("query")
+    @classmethod
+    def _non_blank_query(cls, v: str) -> str:
+        if len(v.strip()) < 3:
+            raise ValueError("Query must contain at least 3 non-whitespace characters.")
+        return v
 
 
 class ParseResponse(Contract):

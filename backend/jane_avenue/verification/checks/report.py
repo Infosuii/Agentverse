@@ -112,9 +112,20 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
         allowed |= _numbers(f.display)
     policy = analysis.policy
     if policy:
-        for x in (policy.baseline_rate_pct, policy.proposed_rate_pct, policy.change_pp(), policy.horizon_years):
+        for x in (policy.baseline_rate_pct, policy.proposed_rate_pct, policy.change_pp(), policy.horizon_years,
+                  policy.baseline_value, policy.proposed_value):
             if x is not None:
                 allowed |= {float(x), abs(float(x))}
+        if policy.policy_type == "tax_measure":  # contract-change #93: the measure's own change and current rate
+            from ...engine import reckoner
+
+            if (m := reckoner.get_measure(policy.measure_id)) is not None:
+                if (change := reckoner.change_units(policy, m)) is not None:
+                    allowed |= {float(change), abs(float(change)), round(abs(float(change)), 2)}
+                if m.current_value is not None:
+                    allowed.add(float(m.current_value))
+            if policy.baseline_value is not None and policy.proposed_value is not None:
+                allowed.add(round(abs(policy.proposed_value - policy.baseline_value), 2))
         if policy.effective_date:
             allowed |= {float(policy.effective_date.day), float(policy.effective_date.year)}
         # The user's own words, which the report repeats in its title, the policy description and the parser notes

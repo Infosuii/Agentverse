@@ -1,0 +1,226 @@
+section,label,fiscal_year,value_gbp_m,is_negligible,source_id
+Income Tax rates,Change starting rate for savings income by 1p,2026-27,0.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change starting rate for savings income by 1p,2027-28,10.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change starting rate for savings income by 1p,2028-29,5.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change basic rate by 1p,2026-27,6900.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change basic rate by 1p,2027-28,8250.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change basic rate by 1p,2028-29,8200.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change higher rate by 1p,2026-27,1600.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change higher rate by 1p,2027-28,2150.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Change higher rate by 1p,2028-29,2100.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Increase additional rate by 1p (yield),2026-27,145.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Increase additional rate by 1p (yield),2027-28,265.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Increase additional rate by 1p (yield),2028-29,230.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Decrease additional rate by 1p (cost),2026-27,175.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Decrease additional rate by 1p (cost),2027-28,335.0,False,D-hmrc-ready-reckoner-2025
+Income Tax rates,Decrease additional rate by 1p (cost),2028-29,300.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by £100,2026-27,810.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by £100,2027-28,1050.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by £100,2028-29,1000.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by 1%,2026-27,1000.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by 1%,2027-28,1200.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by 1%,2028-29,1100.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by 10%,2026-27,10000.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by 10%,2027-28,11650.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change personal allowance by 10%,2028-29,11500.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change Savings allowance by £100 for BR and £50 for HR taxpayers,2026-27,0.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change Savings allowance by £100 for BR and £50 for HR taxpayers,2027-28,30.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change Savings allowance by £100 for BR and £50 for HR taxpayers,2028-29,25.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change dividend allowance by £100,2026-27,0.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change dividend allowance by £100,2027-28,70.0,False,D-hmrc-ready-reckoner-2025
+Income Tax allowances and reliefs,Change dividend allowance by £100,2028-29,65.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Change starting rate limit for savings income by £100,2026-27,0.0,True,D-hmrc-ready-reckoner-2025
+Income Tax limits,Change starting rate limit for savings income by £100,2027-28,5.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Change starting rate limit for savings income by £100,2028-29,5.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Change basic rate limit by 1%,2026-27,495.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Change basic rate limit by 1%,2027-28,665.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Change basic rate limit by 1%,2028-29,670.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Increase basic rate limit by 10% (cost),2026-27,4600.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Increase basic rate limit by 10% (cost),2027-28,6250.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Increase basic rate limit by 10% (cost),2028-29,6000.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Decrease basic rate limit by 10% (yield),2026-27,5400.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Decrease basic rate limit by 10% (yield),2027-28,7200.0,False,D-hmrc-ready-reckoner-2025
+Income Tax limits,Decrease basic rate limit by 10% (yield),2028-29,6950.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Change all main allowances, starting and basic rate limits by 1%",2026-27,1450.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Change all main allowances, starting and basic rate limits by 1%",2027-28,1850.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Change all main allowances, starting and basic rate limits by 1%",2028-29,1800.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Increase all main allowances, starting and basic rate limits by 10% (cost)",2026-27,14400.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Increase all main allowances, starting and basic rate limits by 10% (cost)",2027-28,17700.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Increase all main allowances, starting and basic rate limits by 10% (cost)",2028-29,17300.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Decrease all main allowances, starting and basic rate limits by 10% (yield)",2026-27,16100.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Decrease all main allowances, starting and basic rate limits by 10% (yield)",2027-28,19700.0,False,D-hmrc-ready-reckoner-2025
+"Income Tax allowances, starting and basic rate limits","Decrease all main allowances, starting and basic rate limits by 10% (yield)",2028-29,19350.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employee main rate by 1 percentage point,2026-27,5350.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employee main rate by 1 percentage point,2027-28,5300.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employee main rate by 1 percentage point,2028-29,5400.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employee additional rate by 1 percentage point,2026-27,2000.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employee additional rate by 1 percentage point,2027-28,2000.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employee additional rate by 1 percentage point,2028-29,2050.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employer rate by 1 percentage point,2026-27,11150.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employer rate by 1 percentage point,2027-28,11250.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 1 employer rate by 1 percentage point,2028-29,11550.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 4 main rate by 1 percentage point,2026-27,440.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 4 main rate by 1 percentage point,2027-28,525.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 4 main rate by 1 percentage point,2028-29,445.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 4 additional rate by 1 percentage point,2026-27,295.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 4 additional rate by 1 percentage point,2027-28,355.0,False,D-hmrc-ready-reckoner-2025
+National Insurance contributions rates,Change Class 4 additional rate by 1 percentage point,2028-29,320.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change employee entry threshold by £2 per week,2026-27,210.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change employee entry threshold by £2 per week,2027-28,230.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change employee entry threshold by £2 per week,2028-29,250.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change employer threshold by £2 per week,2026-27,420.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change employer threshold by £2 per week,2027-28,430.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change employer threshold by £2 per week,2028-29,470.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change lower profits limit by £104 per year,2026-27,15.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change lower profits limit by £104 per year,2027-28,15.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change lower profits limit by £104 per year,2028-29,20.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change upper profits limit by £520 per year,2026-27,10.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change upper profits limit by £520 per year,2027-28,10.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change upper profits limit by £520 per year,2028-29,10.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change upper earnings limit by £10 per week,2026-27,220.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change upper earnings limit by £10 per week,2027-28,220.0,False,D-hmrc-ready-reckoner-2025
+National Insurance Contribution Limits,Change upper earnings limit by £10 per week,2028-29,200.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Increase first child rate by £1 per week (cost),2026-27,335.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Increase first child rate by £1 per week (cost),2027-28,335.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Increase first child rate by £1 per week (cost),2028-29,330.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Decrease first child rate by £1 per week (yield),2026-27,335.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Decrease first child rate by £1 per week (yield),2027-28,355.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Decrease first child rate by £1 per week (yield),2028-29,345.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Increase subsequent child rate by £1 per week (cost),2026-27,230.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Increase subsequent child rate by £1 per week (cost),2027-28,240.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Increase subsequent child rate by £1 per week (cost),2028-29,245.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Decrease subsequent child rate by £1 per week (yield),2026-27,230.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Decrease subsequent child rate by £1 per week (yield),2027-28,225.0,False,D-hmrc-ready-reckoner-2025
+Child Benefit,Decrease subsequent child rate by £1 per week (yield),2028-29,220.0,False,D-hmrc-ready-reckoner-2025
+Corporation tax,Increase Corporation tax by 1 percentage point,2026-27,3600.0,False,D-hmrc-ready-reckoner-2025
+Corporation tax,Increase Corporation tax by 1 percentage point,2027-28,3900.0,False,D-hmrc-ready-reckoner-2025
+Corporation tax,Increase Corporation tax by 1 percentage point,2028-29,4000.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Business Asset Disposal Relief rate by 1 percentage point,2026-27,10.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Business Asset Disposal Relief rate by 1 percentage point,2027-28,135.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Business Asset Disposal Relief rate by 1 percentage point,2028-29,180.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Business Asset Disposal Relief rate by 5 percentage points,2026-27,40.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Business Asset Disposal Relief rate by 5 percentage points,2027-28,635.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Business Asset Disposal Relief rate by 5 percentage points,2028-29,840.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 1 percentage point,2026-27,-5.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 1 percentage point,2027-28,10.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 1 percentage point,2028-29,5.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 5 percentage points,2026-27,-40.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 5 percentage points,2027-28,20.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 5 percentage points,2028-29,-10.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 10 percentage points,2026-27,-130.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 10 percentage points,2027-28,-55.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase lower Capital Gains Tax rate by 10 percentage points,2028-29,-135.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 1 percentage point,2026-27,-15.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 1 percentage point,2027-28,80.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 1 percentage point,2028-29,-30.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 5 percentage points,2026-27,-170.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 5 percentage points,2027-28,-235.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 5 percentage points,2028-29,-870.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 10 percentage points,2026-27,-540.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 10 percentage points,2027-28,-2060.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase higher Capital Gains Tax rate by 10 percentage points,2028-29,-3565.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Annual Exempt Amount by £500 for individuals and £250 for trusts,2026-27,0.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Annual Exempt Amount by £500 for individuals and £250 for trusts,2027-28,-35.0,False,D-hmrc-ready-reckoner-2025
+Capital Gains Tax,Increase Annual Exempt Amount by £500 for individuals and £250 for trusts,2028-29,-30.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,Increase standard rate for estates left on death by 1 percentage point,2026-27,105.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,Increase standard rate for estates left on death by 1 percentage point,2027-28,240.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,Increase standard rate for estates left on death by 1 percentage point,2028-29,290.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,"Increase Nil Rate Band by £5,000 (cost)",2026-27,60.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,"Increase Nil Rate Band by £5,000 (cost)",2027-28,140.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,"Increase Nil Rate Band by £5,000 (cost)",2028-29,165.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,"Increase Residence Nil Rate Band by £5,000 (cost)",2026-27,25.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,"Increase Residence Nil Rate Band by £5,000 (cost)",2027-28,55.0,False,D-hmrc-ready-reckoner-2025
+Inheritance tax,"Increase Residence Nil Rate Band by £5,000 (cost)",2028-29,65.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Beer and cider duties,2026-27,25.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Beer and cider duties,2027-28,30.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Beer and cider duties,2028-29,30.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Wine and other fermented product duties,2026-27,40.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Wine and other fermented product duties,2027-28,40.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Wine and other fermented product duties,2028-29,40.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Spirits duties,2026-27,40.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Spirits duties,2027-28,40.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Spirits duties,2028-29,45.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Tobacco Duties,2026-27,5.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Tobacco Duties,2027-28,10.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Tobacco Duties,2028-29,15.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Petrol,2026-27,100.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Petrol,2027-28,100.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Petrol,2028-29,100.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Diesel,2026-27,140.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Diesel,2027-28,135.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Diesel,2028-29,130.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Rebated oil,2026-27,0.0,True,D-hmrc-ready-reckoner-2025
+1% change in various duties,Rebated oil,2027-28,0.0,True,D-hmrc-ready-reckoner-2025
+1% change in various duties,Rebated oil,2028-29,0.0,True,D-hmrc-ready-reckoner-2025
+1% change in various duties,Climate change levy,2026-27,15.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Climate change levy,2027-28,15.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Climate change levy,2028-29,15.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Carbon price support,2026-27,5.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Carbon price support,2027-28,5.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Carbon price support,2028-29,0.0,True,D-hmrc-ready-reckoner-2025
+1% change in various duties,Aggregates levy,2026-27,5.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Aggregates levy,2027-28,5.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Aggregates levy,2028-29,5.0,False,D-hmrc-ready-reckoner-2025
+1% change in various duties,Landfill tax,2026-27,0.0,True,D-hmrc-ready-reckoner-2025
+1% change in various duties,Landfill tax,2027-28,0.0,True,D-hmrc-ready-reckoner-2025
+1% change in various duties,Landfill tax,2028-29,0.0,True,D-hmrc-ready-reckoner-2025
+Vehicle excise duty,Increase rates by £1 for motorbikes and £5 for all other vehicles,2026-27,205.0,False,D-hmrc-ready-reckoner-2025
+Vehicle excise duty,Increase rates by £1 for motorbikes and £5 for all other vehicles,2027-28,210.0,False,D-hmrc-ready-reckoner-2025
+Vehicle excise duty,Increase rates by £1 for motorbikes and £5 for all other vehicles,2028-29,215.0,False,D-hmrc-ready-reckoner-2025
+Air passenger duty,Increase reduced rate by £1,2026-27,115.0,False,D-hmrc-ready-reckoner-2025
+Air passenger duty,Increase reduced rate by £1,2027-28,125.0,False,D-hmrc-ready-reckoner-2025
+Air passenger duty,Increase reduced rate by £1,2028-29,130.0,False,D-hmrc-ready-reckoner-2025
+VAT,Change reduced rate by 1 percentage point,2026-27,490.0,False,D-hmrc-ready-reckoner-2025
+VAT,Change reduced rate by 1 percentage point,2027-28,480.0,False,D-hmrc-ready-reckoner-2025
+VAT,Change reduced rate by 1 percentage point,2028-29,480.0,False,D-hmrc-ready-reckoner-2025
+VAT,Change standard rate by 1 percentage point,2026-27,8800.0,False,D-hmrc-ready-reckoner-2025
+VAT,Change standard rate by 1 percentage point,2027-28,9200.0,False,D-hmrc-ready-reckoner-2025
+VAT,Change standard rate by 1 percentage point,2028-29,9550.0,False,D-hmrc-ready-reckoner-2025
+Insurance premium tax,Change standard rate by 1 percentage point,2026-27,630.0,False,D-hmrc-ready-reckoner-2025
+Insurance premium tax,Change standard rate by 1 percentage point,2027-28,640.0,False,D-hmrc-ready-reckoner-2025
+Insurance premium tax,Change standard rate by 1 percentage point,2028-29,660.0,False,D-hmrc-ready-reckoner-2025
+Insurance premium tax,Change higher rate by 1 percentage point,2026-27,20.0,False,D-hmrc-ready-reckoner-2025
+Insurance premium tax,Change higher rate by 1 percentage point,2027-28,20.0,False,D-hmrc-ready-reckoner-2025
+Insurance premium tax,Change higher rate by 1 percentage point,2028-29,20.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 2% marginal rate by 1 percentage point (Cost),2026-27,450.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 2% marginal rate by 1 percentage point (Cost),2027-28,460.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 2% marginal rate by 1 percentage point (Cost),2028-29,525.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 2% marginal rate by 1 percentage point (Yield),2026-27,420.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 2% marginal rate by 1 percentage point (Yield),2027-28,425.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 2% marginal rate by 1 percentage point (Yield),2028-29,490.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 5% marginal rate by 1 percentage point (Cost),2026-27,775.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 5% marginal rate by 1 percentage point (Cost),2027-28,795.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 5% marginal rate by 1 percentage point (Cost),2028-29,940.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 5% marginal rate by 1 percentage point (Yield),2026-27,685.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 5% marginal rate by 1 percentage point (Yield),2027-28,680.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 5% marginal rate by 1 percentage point (Yield),2028-29,815.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 10% marginal rate by 1 percentage point (Cost),2026-27,40.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 10% marginal rate by 1 percentage point (Cost),2027-28,25.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 10% marginal rate by 1 percentage point (Cost),2028-29,35.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 10% marginal rate by 1 percentage point (Yield),2026-27,35.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 10% marginal rate by 1 percentage point (Yield),2027-28,15.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 10% marginal rate by 1 percentage point (Yield),2028-29,25.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 12% marginal rate by 1 percentage point (Cost),2026-27,-10.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 12% marginal rate by 1 percentage point (Cost),2027-28,-40.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Cut residential 12% marginal rate by 1 percentage point (Cost),2028-29,-35.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 12% marginal rate by 1 percentage point (Yield),2026-27,-25.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 12% marginal rate by 1 percentage point (Yield),2027-28,-60.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Raise residential 12% marginal rate by 1 percentage point (Yield),2028-29,-60.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease Higher Rates of Duty on Additional Dwellings by 1 percentage point (Cost),2026-27,90.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease Higher Rates of Duty on Additional Dwellings by 1 percentage point (Cost),2027-28,5.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease Higher Rates of Duty on Additional Dwellings by 1 percentage point (Cost),2028-29,100.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase Higher Rates of Duty on Additional Dwellings by 1 percentage point (Yield),2026-27,-45.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase Higher Rates of Duty on Additional Dwellings by 1 percentage point (Yield),2027-28,-130.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase Higher Rates of Duty on Additional Dwellings by 1 percentage point (Yield),2028-29,-50.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease NRSDLT by 1 percentage point (Cost),2026-27,10.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease NRSDLT by 1 percentage point (Cost),2027-28,-5.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease NRSDLT by 1 percentage point (Cost),2028-29,25.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase NRSDLT by 1 percentage point (Yield),2026-27,-10.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase NRSDLT by 1 percentage point (Yield),2027-28,-25.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase NRSDLT by 1 percentage point (Yield),2028-29,0.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease non-residential 5% marginal rate by 1 percentage point (Cost),2026-27,305.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease non-residential 5% marginal rate by 1 percentage point (Cost),2027-28,355.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Decrease non-residential 5% marginal rate by 1 percentage point (Cost),2028-29,410.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase non-residential 5% marginal rate by 1 percentage point (Yield),2026-27,150.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase non-residential 5% marginal rate by 1 percentage point (Yield),2027-28,185.0,False,D-hmrc-ready-reckoner-2025
+Stamp duty land tax,Increase non-residential 5% marginal rate by 1 percentage point (Yield),2028-29,230.0,False,D-hmrc-ready-reckoner-2025

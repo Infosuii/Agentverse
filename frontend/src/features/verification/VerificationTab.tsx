@@ -20,6 +20,7 @@ import {
   type BadgeVariant,
 } from '../../components/ui';
 import { fmtDate } from '../../lib/format';
+import { withheldReasons } from '../../lib/reasons';
 
 export interface VerificationTabProps {
   analysis?: Analysis;
@@ -226,11 +227,9 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
   }
 
   const analysisId = analysis?.analysis_id ?? id;
-  const declineReasons = [
-    ...(verification.decline_reasons ?? []),
-    ...(analysis?.scope?.forecast_allowed === false ? (analysis.scope.reasons ?? []) : []),
-  ];
-  const uniqueDeclineReasons = Array.from(new Set(declineReasons));
+  const uniqueDeclineReasons = analysis
+    ? withheldReasons(analysis)
+    : Array.from(new Set(verification.decline_reasons ?? []));
 
   const statusOrder: { key: CheckStatus; label: string; colorClass: string }[] = [
     { key: 'pass', label: 'Passed', colorClass: 'border-emerald-400/25 bg-emerald-500/10 text-emerald-200' },

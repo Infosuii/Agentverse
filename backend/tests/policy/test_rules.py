@@ -19,8 +19,8 @@ BASELINE = BaselineProjection(
     source_ids=["D-test"],
 )
 
-MAIN, SPR, VAT, UNSUP = ("corporation_tax_main_rate", "corporation_tax_small_profits_rate", "vat_standard_rate",
-                         "unsupported")
+MAIN, SPR, MEASURE, UNSUP = ("corporation_tax_main_rate", "corporation_tax_small_profits_rate", "tax_measure",
+                             "unsupported")
 
 # query, policy_type, baseline %, proposed %, effective date, horizon years
 TABLE: list[tuple[str, str, float | None, float | None, date, int]] = [
@@ -46,9 +46,11 @@ TABLE: list[tuple[str, str, float | None, float | None, date, int]] = [
     ("Increase corporation tax and VAT by 2 points", MAIN, 25, 27, NEXT_APRIL, 5),
     ("Raise the small profits rate to 21%", SPR, 19, 21, NEXT_APRIL, 5),
     ("Cut the corporation tax small profits rate by one point from April 2028", SPR, 19, 18, date(2028, 4, 1), 5),
-    ("Raise VAT from 20% to 22%", VAT, 20, 22, NEXT_APRIL, 5),
-    ("Increase value added tax to 22%", VAT, None, 22, NEXT_APRIL, 5),
-    ("Raise income tax to 45%", UNSUP, None, 45, NEXT_APRIL, 5),
+    # Other taxes are ready-reckoner measures (#93) with their own sourced current rate; the scope gate refuses
+    # changes beyond each measure's limit (income tax 20% -> 45% is parsed, then refused).
+    ("Raise VAT from 20% to 22%", MEASURE, 20, 22, NEXT_APRIL, 5),
+    ("Increase value added tax to 22%", MEASURE, 20, 22, NEXT_APRIL, 5),
+    ("Raise income tax to 45%", MEASURE, 20, 45, NEXT_APRIL, 5),
     ("Build more houses in the north", UNSUP, None, None, NEXT_APRIL, 5),
     ("Raise corporation tax from 25% to 45%", MAIN, 25, 45, NEXT_APRIL, 5),             # parsed; the scope gate refuses
     ("Raise corporation tax by 3% from 2027-04-01", MAIN, 25, 28, date(2027, 4, 1), 5),
@@ -150,7 +152,9 @@ def test_impossible_rate_is_left_empty_not_invented() -> None:
 
 def test_non_ct_taxes_never_borrow_the_ct_rate() -> None:
     spec = parse_rules("Raise VAT by 2 points", baseline=BASELINE, today=TODAY)
-    assert spec.baseline_rate_pct is None and spec.proposed_rate_pct is None
+    # VAT's own current rate (20%, verified on gov.uk; data/curated/tax_measures.csv), never the CT rate (25%).
+    assert spec.measure_id == "vat_standard_rate"
+    assert spec.baseline_rate_pct == 20 and spec.proposed_rate_pct == 22
 
 
 def test_unsupported_policy_has_low_confidence_and_readable_description() -> None:
@@ -178,6 +182,17 @@ def _notes(query: str) -> list[str]:
 def test_negative_change_is_read_as_a_cut_with_a_note() -> None:
     assert any("negative change (-2) as a cut of 2 percentage points" in a for a in _notes("Raise CT by -2%"))
     assert any("cut of 1 percentage point." in a for a in _notes("Cut corporation tax by minus 1 point"))
+
+
+@pytest.mark.parametrize("query", [
+    "Set corporation tax to -10%",
+    "Set corporation tax to -20%",
+    "Raise corporation tax from 25% to -28%",
+])
+def test_negative_target_rate_is_rejected_not_stripped(query: str) -> None:
+    spec = parse_rules(query, baseline=BASELINE, today=TODAY)
+    assert spec.proposed_rate_pct is None
+    assert any("negative tax rate" in a.lower() for a in spec.ambiguities)
 
 
 @pytest.mark.parametrize(("query", "country"), [

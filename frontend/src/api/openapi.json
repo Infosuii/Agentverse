@@ -2113,6 +2113,8 @@
               "corporation_tax_main_rate",
               "corporation_tax_small_profits_rate",
               "vat_standard_rate",
+              "tax_measure",
+              "fiscal_other",
               "unsupported"
             ],
             "title": "Policy Type",
@@ -2169,6 +2171,17 @@
             ],
             "title": "Baseline Rate Pct"
           },
+          "baseline_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Value"
+          },
           "description": {
             "default": "",
             "title": "Description",
@@ -2199,6 +2212,17 @@
             "title": "Jurisdiction",
             "type": "string"
           },
+          "measure_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Measure Id"
+          },
           "parse_confidence": {
             "default": 1.0,
             "maximum": 1.0,
@@ -2222,6 +2246,8 @@
               "corporation_tax_main_rate",
               "corporation_tax_small_profits_rate",
               "vat_standard_rate",
+              "tax_measure",
+              "fiscal_other",
               "unsupported"
             ],
             "title": "Policy Type",
@@ -2239,6 +2265,17 @@
               }
             ],
             "title": "Proposed Rate Pct"
+          },
+          "proposed_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proposed Value"
           },
           "raw_query": {
             "default": "",
@@ -2259,6 +2296,17 @@
               }
             ],
             "title": "Tax"
+          },
+          "value_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Unit"
           }
         },
         "required": [

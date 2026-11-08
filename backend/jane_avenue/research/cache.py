@@ -26,6 +26,11 @@ def cache_key(spec: PolicySpec) -> str:
     """SHA-256 of the canonical JSON of the four fields that determine the research question."""
     payload = {"policy_type": spec.policy_type, "baseline_rate_pct": spec.baseline_rate_pct,
                "proposed_rate_pct": spec.proposed_rate_pct, "horizon_years": spec.horizon_years}
+    if spec.policy_type in ("tax_measure", "fiscal_other"):  # contract-change #93; CT keys (golden runs) unchanged
+        payload |= {"measure_id": spec.measure_id, "baseline_value": spec.baseline_value,
+                    "proposed_value": spec.proposed_value}
+        if spec.policy_type == "fiscal_other":  # no structured fields: the question itself identifies the research
+            payload["raw_query"] = " ".join(spec.raw_query.lower().split())
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 

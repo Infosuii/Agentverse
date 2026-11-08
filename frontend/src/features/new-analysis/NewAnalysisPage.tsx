@@ -25,6 +25,7 @@ import {
 import { SearchBar } from '../../components/search/SearchBar';
 import { ExamplePrompts } from '../../components/search/ExamplePrompts';
 import { fmtPp } from '../../lib/format';
+import { isResearchOnly, policyChangeText, policyTypeLabel } from '../../lib/policy';
 import backdrop from '../../assets/landing-data-backdrop.jpg';
 
 export const EXAMPLE_QUERIES = [
@@ -40,6 +41,18 @@ export const EXAMPLE_QUERIES = [
     label: 'Raise CT to 45% (Scope gate)',
     query: 'Raise corporation tax to 45%',
   },
+  {
+    label: 'VAT 20% → 21%',
+    query: 'Raise VAT from 20% to 21% from April 2027',
+  },
+  {
+    label: 'Personal allowance +£1,000',
+    query: 'Raise the personal allowance to £13,570',
+  },
+  {
+    label: 'NHS spending (research only)',
+    query: 'Increase NHS spending by £10bn a year',
+  },
 ] as const;
 
 /** Short, single-line prompts cycled by the search bar's typing indicator. */
@@ -48,6 +61,10 @@ export const SEARCH_BAR_SUGGESTIONS = [
   'Cut corporation tax from 25% to 23% from April 2027',
   'Raise the corporation tax main rate to 27% from April 2028',
   'What would a 26% main rate raise over five years?',
+  'Raise VAT from 20% to 21% from April 2027',
+  'Cut fuel duty by 5p a litre',
+  'Increase child benefit by £1 a week',
+  'Raise the minimum wage to £15 an hour',
 ] as const;
 
 const POLICY_TYPE_OPTIONS: { value: PolicyType; label: string }[] = [
@@ -56,8 +73,9 @@ const POLICY_TYPE_OPTIONS: { value: PolicyType; label: string }[] = [
     value: 'corporation_tax_small_profits_rate',
     label: 'UK Corporation Tax — Small Profits Rate',
   },
-  { value: 'vat_standard_rate', label: 'UK VAT — Standard Rate' },
-  { value: 'unsupported', label: 'Unsupported / Other Policy' },
+  { value: 'tax_measure', label: 'UK tax or benefit measure (HMRC ready reckoner)' },
+  { value: 'fiscal_other', label: 'Other fiscal policy (research only)' },
+  { value: 'unsupported', label: 'Unsupported / Not a fiscal policy' },
 ];
 
 const MC_DRAW_OPTIONS = [500, 2000, 5000] as const;
@@ -220,6 +238,10 @@ export function NewAnalysisPage() {
       ? Number((policySpec.proposed_rate_pct - policySpec.baseline_rate_pct).toFixed(2))
       : null;
 
+  const isValueMeasure =
+    policySpec?.policy_type === 'tax_measure' &&
+    (policySpec.baseline_value != null || policySpec.proposed_value != null);
+
   const showReview =
     trimmedQuery.length >= MIN_QUERY_LENGTH ||
     Boolean(policySpec) ||
@@ -251,8 +273,8 @@ export function NewAnalysisPage() {
           <Wordmark />
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-base text-muted-foreground">
-          An AI-powered UK fiscal policy simulator. Propose a corporation tax change to
-          explore its researched evidence, modelled impact and independent verification.
+          An AI-powered UK fiscal policy simulator. Propose a tax, benefit or spending change
+          to explore its researched evidence, modelled impact and independent verification.
         </p>
 
         <div className="mt-8">
@@ -358,62 +380,127 @@ export function NewAnalysisPage() {
                         </option>
                       ))}
                     </select>
+                    {policySpec.policy_type === 'tax_measure' && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Measure: <span className="font-medium text-foreground">{policyTypeLabel(policySpec)}</span>
+                      </p>
+                    )}
                   </div>
 
-                  <div>
-                    <label htmlFor="spec-baseline-rate" className={LABEL_CLASS}>
-                      Baseline Rate (%)
-                    </label>
-                    <input
-                      id="spec-baseline-rate"
-                      type="number"
-                      step="0.5"
-                      min={0}
-                      max={100}
-                      value={policySpec.baseline_rate_pct ?? ''}
-                      onChange={(e) =>
-                        updatePolicyField(
-                          'baseline_rate_pct',
-                          e.target.value === '' ? null : Number(e.target.value),
-                        )
-                      }
-                      className={clsx(FIELD_CLASS, 'font-mono')}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="spec-proposed-rate" className={LABEL_CLASS}>
-                      Proposed Rate (%)
-                    </label>
-                    <input
-                      id="spec-proposed-rate"
-                      type="number"
-                      step="0.5"
-                      min={0}
-                      max={100}
-                      value={policySpec.proposed_rate_pct ?? ''}
-                      onChange={(e) =>
-                        updatePolicyField(
-                          'proposed_rate_pct',
-                          e.target.value === '' ? null : Number(e.target.value),
-                        )
-                      }
-                      className={clsx(FIELD_CLASS, 'font-mono')}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="spec-change-pp" className={LABEL_CLASS}>
-                      Rate Change
-                    </label>
-                    <div
-                      id="spec-change-pp"
-                      aria-live="polite"
-                      className="mt-1 flex h-[34px] items-center rounded-md border border-border bg-muted/40 px-2.5 font-mono text-sm font-medium text-primary tabular-nums"
-                    >
-                      {fmtPp(changePp)}
+                  {isResearchOnly(policySpec) ? (
+                    <div className="sm:col-span-2 lg:col-span-3">
+                      <span className={LABEL_CLASS}>Model</span>
+                      <p className="mt-1 rounded-md border border-border bg-muted/40 px-2.5 py-1.5 text-sm text-foreground">
+                        No validated model for this policy yet: it is researched and reported, and the forecast is
+                        withheld.
+                      </p>
                     </div>
-                  </div>
+                  ) : isValueMeasure ? (
+                    <>
+                      <div>
+                        <label htmlFor="spec-baseline-value" className={LABEL_CLASS}>
+                          Current Value ({policySpec.value_unit ?? 'value'})
+                        </label>
+                        <input
+                          id="spec-baseline-value"
+                          type="number"
+                          step="any"
+                          value={policySpec.baseline_value ?? ''}
+                          onChange={(e) =>
+                            updatePolicyField(
+                              'baseline_value',
+                              e.target.value === '' ? null : Number(e.target.value),
+                            )
+                          }
+                          className={clsx(FIELD_CLASS, 'font-mono')}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="spec-proposed-value" className={LABEL_CLASS}>
+                          Proposed Value ({policySpec.value_unit ?? 'value'})
+                        </label>
+                        <input
+                          id="spec-proposed-value"
+                          type="number"
+                          step="any"
+                          value={policySpec.proposed_value ?? ''}
+                          onChange={(e) =>
+                            updatePolicyField(
+                              'proposed_value',
+                              e.target.value === '' ? null : Number(e.target.value),
+                            )
+                          }
+                          className={clsx(FIELD_CLASS, 'font-mono')}
+                        />
+                      </div>
+                      <div>
+                        <span className={LABEL_CLASS}>Change</span>
+                        <div
+                          aria-live="polite"
+                          className="mt-1 flex min-h-[34px] items-center rounded-md border border-border bg-muted/40 px-2.5 font-mono text-xs font-medium text-primary tabular-nums"
+                        >
+                          {policyChangeText(policySpec)}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                    <div>
+                      <label htmlFor="spec-baseline-rate" className={LABEL_CLASS}>
+                        Baseline Rate (%)
+                      </label>
+                      <input
+                        id="spec-baseline-rate"
+                        type="number"
+                        step="0.5"
+                        min={0}
+                        max={100}
+                        value={policySpec.baseline_rate_pct ?? ''}
+                        onChange={(e) =>
+                          updatePolicyField(
+                            'baseline_rate_pct',
+                            e.target.value === '' ? null : Number(e.target.value),
+                          )
+                        }
+                        className={clsx(FIELD_CLASS, 'font-mono')}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="spec-proposed-rate" className={LABEL_CLASS}>
+                        Proposed Rate (%)
+                      </label>
+                      <input
+                        id="spec-proposed-rate"
+                        type="number"
+                        step="0.5"
+                        min={0}
+                        max={100}
+                        value={policySpec.proposed_rate_pct ?? ''}
+                        onChange={(e) =>
+                          updatePolicyField(
+                            'proposed_rate_pct',
+                            e.target.value === '' ? null : Number(e.target.value),
+                          )
+                        }
+                        className={clsx(FIELD_CLASS, 'font-mono')}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="spec-change-pp" className={LABEL_CLASS}>
+                        Rate Change
+                      </label>
+                      <div
+                        id="spec-change-pp"
+                        aria-live="polite"
+                        className="mt-1 flex h-[34px] items-center rounded-md border border-border bg-muted/40 px-2.5 font-mono text-sm font-medium text-primary tabular-nums"
+                      >
+                        {fmtPp(changePp)}
+                      </div>
+                    </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
