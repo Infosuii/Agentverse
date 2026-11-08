@@ -7,3 +7,4 @@ export * from './BarCompare';
 export * from './TimelineChart';
 export * from './ProvenanceNumber';
 export * from './ChartsGallery';
+export * from './MonteCarloChart';

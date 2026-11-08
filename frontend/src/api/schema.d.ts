@@ -39,6 +39,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/analyses/{analysis_id}/charts/montecarlo.png": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Analysis Monte Carlo Png
+         * @description Monte Carlo trajectories of this analysis: a sample of its real draws, with bands from all draws.
+         */
+        get: operations["analysis_monte_carlo_png"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/analyses/{analysis_id}/events": {
         parameters: {
             query?: never;
@@ -237,6 +257,26 @@ export interface paths {
         put?: never;
         /** Simulate */
         post: operations["simulate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/simulate/montecarlo.png": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Simulate Monte Carlo Png
+         * @description Monte Carlo trajectories for the slider view: the same draws `/api/simulate` summarises.
+         */
+        post: operations["simulate_monte_carlo_png"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1637,6 +1677,60 @@ export interface operations {
             };
         };
     };
+    analysis_monte_carlo_png: {
+        parameters: {
+            query?: {
+                metric?: "revenue_static_gbp_bn" | "revenue_behavioural_gbp_bn" | "revenue_dynamic_gbp_bn" | "business_investment_pct" | "business_investment_gbp_bn" | "gdp_level_pct" | "cost_of_capital_pct";
+                theme?: "light" | "dark";
+                paths?: number;
+                empirical?: boolean;
+            };
+            header?: never;
+            path: {
+                analysis_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PNG chart rendered with matplotlib */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/png": unknown;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorBody"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorBody"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorBody"];
+                };
+            };
+        };
+    };
     stream_events: {
         parameters: {
             query?: {
@@ -2057,6 +2151,62 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SimulationBundle"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorBody"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorBody"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorBody"];
+                };
+            };
+        };
+    };
+    simulate_monte_carlo_png: {
+        parameters: {
+            query?: {
+                metric?: "revenue_static_gbp_bn" | "revenue_behavioural_gbp_bn" | "revenue_dynamic_gbp_bn" | "business_investment_pct" | "business_investment_gbp_bn" | "gdp_level_pct" | "cost_of_capital_pct";
+                theme?: "light" | "dark";
+                paths?: number;
+                empirical?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulateRequest"];
+            };
+        };
+        responses: {
+            /** @description PNG chart rendered with matplotlib */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/png": unknown;
                 };
             };
             /** @description Not Found */
