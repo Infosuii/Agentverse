@@ -27,6 +27,7 @@
    - Policy Type: `corporation_tax_main_rate`
    - Baseline Rate: `25%` -> Proposed Rate: `28%` (`+3pp`)
    - Effective Date: `2027-04-01`, Horizon: `5 years` (`2027-28` to `2031-32`)
+   - **If presenting on or after 1 January 2027:** a query with no date defaults to 1 April of the *next* year (2028), which shifts every figure in this script by a year. Type *"What would happen if the UK increased corporation tax from 25% to 28% from April 2027?"* instead (the cached research is still used: its key does not include the date).
    - Badge: **Supported scope** (validated against historical UK CT changes `1983–2023`, rate bounds `19%–52%`, single-reform step limit `15pp`).
    - Ambiguities & Defaults panel explicitly lists defaults assumed by the parser.
 3. **Talking Point (Judging Criterion — Guardrails & Scope):**
