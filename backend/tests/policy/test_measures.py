@@ -104,3 +104,49 @@ def test_unknown_measure_is_declined():
 def test_mirrored_decrease_warns():
     d = check_scope(_parse("Cut VAT to 19%"))
     assert d.forecast_allowed and any("mirrors" in w for w in d.warnings)
+
+
+# --- #94 review (agent-11) -------------------------------------------------------------------------------------------
+
+@pytest.mark.parametrize(("query", "country"), [
+    ("Raise VAT in France from 20% to 25%", "France"),
+    ("Cut the US income tax top rate to 35%", "the US"),
+    ("Should Ireland raise income tax to 50%?", "Ireland"),
+])
+def test_another_countrys_tax_is_refused(query, country):
+    s = _parse(query)
+    assert s.policy_type == "unsupported" and s.measure_id is None
+    assert any(f"about {country}" in a for a in s.ambiguities)
+    assert not check_scope(s).forecast_allowed
+
+
+@pytest.mark.parametrize("query", ["Raise VAT to 25% like France", "Introduce a wealth tax like France"])
+def test_a_comparison_with_another_country_is_still_uk_policy(query):
+    s = _parse(query)
+    assert s.policy_type in ("tax_measure", "fiscal_other")
+    assert any("results are for the UK" in a for a in s.ambiguities)
+
+
+def test_devolved_income_tax_is_research_only():
+    s = _parse("Raise income tax in Scotland by 1p")
+    assert s.policy_type == "fiscal_other" and s.measure_id is None
+    assert any("devolved" in a for a in s.ambiguities)
+
+
+def test_uk_income_tax_costing_states_its_coverage():
+    d = check_scope(_parse("Cut the basic rate of income tax by 1p"))
+    assert d.forecast_allowed
+    assert any("England and Northern Ireland" in w for w in d.warnings)
+    assert not any("England and Northern Ireland" in w for w in check_scope(_parse("Raise VAT to 21%")).warnings)
+
+
+@pytest.mark.parametrize("query", ["How do I file my tax return?", "Increase funding for my startup",
+                                   "Plan a budget for my wedding"])
+def test_personal_questions_are_not_fiscal_policy(query):
+    assert _parse(query).policy_type == "unsupported"
+
+
+@pytest.mark.parametrize("query", ["Should we cut taxes?", "Increase funding for schools by £2bn",
+                                   "Introduce a tax on sugary drinks"])
+def test_generic_fiscal_words_count_with_a_public_object_or_policy_verb(query):
+    assert _parse(query).policy_type == "fiscal_other"

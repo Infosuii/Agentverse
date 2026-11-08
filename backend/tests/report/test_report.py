@@ -24,6 +24,8 @@ def test_formatting_helpers_match_frontend_rules():
     assert fmt_gbp_bn(3.1) == "£3.1bn"
     assert fmt_gbp_bn(-0.4) == "−£0.4bn"
     assert fmt_gbp_bn(0.0) == "£0.0bn"
+    assert fmt_gbp_bn(-0.02) == "−£20m" and fmt_gbp_bn(0.0491) == "£49m"  # not "£0.0bn" (#94 review)
+    assert fmt_gbp_bn(0.0001) == "£0.0bn" and fmt_gbp_bn(0.05) == "£0.1bn"
     assert fmt_pct(-0.05, 2) == "−0.05%"
     assert fmt_pct(25.0, 1) == "25.0%"
     assert fmt_pp(3) == "+3pp"

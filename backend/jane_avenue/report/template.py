@@ -42,7 +42,11 @@ def compose_full_markdown(title: str, sections: list[ReportSection]) -> str:
 
 
 def fmt_gbp_bn(value: float, dp: int = 1) -> str:
-    """Format £ billions matching frontend fmtGbpBn: fmt_gbp_bn(3.1) -> '£3.1bn', fmt_gbp_bn(-0.4) -> '−£0.4bn'."""
+    """Format £ billions matching frontend fmtGbpBn: fmt_gbp_bn(3.1) -> '£3.1bn', fmt_gbp_bn(-0.4) -> '−£0.4bn'.
+    Effects that would read as "£0.0bn" are shown in £ millions: fmt_gbp_bn(-0.02) -> '−£20m'."""
+    if 0.0005 <= abs(float(value)) < 0.05:  # #94 review: a small CGT effect read as zero
+        millions = round(abs(float(value)) * 1000)
+        return f"{MINUS if value < 0 else ''}£{millions:,}m"
     rounded = round(float(value), dp)
     abs_str = f"{abs(rounded):.{dp}f}"
     if rounded < 0:

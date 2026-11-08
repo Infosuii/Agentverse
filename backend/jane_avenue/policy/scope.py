@@ -84,6 +84,10 @@ def _baseline_coverage_reasons(spec: PolicySpec) -> list[str]:
     return []
 
 
+INCOME_TAX_COVERAGE_WARNING = (
+    "HMRC's income tax costing is the UK Government's Exchequer effect: income tax from England and Northern Ireland "
+    "plus the resulting changes to the Scottish and Welsh block grants. It does not cover changes to the income tax "
+    "rates devolved to Scotland and Wales.")
 FISCAL_OTHER_REASON = ("No validated model exists for this policy yet, so no quantitative forecast is made. The research "
                        "and the report still cover it.")
 
@@ -120,6 +124,10 @@ def _check_measure(spec: PolicySpec) -> ScopeDecision:
         reasons.append("An effective date is needed.")
     else:
         reasons.extend(_baseline_coverage_reasons(spec))
+    if m is not None and m.measure_id.startswith("income_tax_"):
+        # HMRC's ready-reckoner note (1): the UK Government's Exchequer impact, i.e. income tax from England and
+        # Northern Ireland plus block-grant effects; the devolved Scottish and Welsh elements are not included.
+        warnings.append(INCOME_TAX_COVERAGE_WARNING)
     if m is not None and spec.horizon_years > len(m.years):
         warnings.append(f"HMRC costs the first {len(m.years)} years; later years repeat the third-year effect grown "
                         "with nominal GDP.")
