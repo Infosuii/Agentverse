@@ -1,0 +1,1389 @@
+{
+  "policy": {
+    "policy_type": "corporation_tax_main_rate",
+    "tax": "corporation_tax",
+    "baseline_rate_pct": 25.0,
+    "proposed_rate_pct": 45.0,
+    "effective_date": "2027-04-01",
+    "horizon_years": 5,
+    "jurisdiction": "UK",
+    "description": "Raise the CT main rate from 25% to 45% from 1 April 2027",
+    "raw_query": "Raise corporation tax to 45%",
+    "parse_method": "gemini",
+    "parse_confidence": 0.9,
+    "ambiguities": [
+      "Baseline rate not stated; assumed the current rate of 25%.",
+      "Effective date not stated; assumed 1 April 2027.",
+      "Horizon not stated; assumed 5 years.",
+      "It is unclear whether the change applies to the main rate or small profits rate, assumed main rate.",
+      "No effective date was specified."
+    ]
+  },
+  "mode": "live",
+  "model": "gemini-3.8-flash + gemini-4-argon",
+  "summary": "Previously, an increase in the main corporation tax rate from 19 per cent to 25 per cent in April 2023, combined with resilient profits in higher tax-paying sectors, drove a rise in onshore corporation tax receipts [E9]. Official costings of Corporation Tax changes, which are certified by the OBR, incorporate behavioural responses to account for multinational companies shifting profits in and out of the UK [E20, E22]. Furthermore, the disincentive effects of taxation increase much more than proportionally with the tax rate, meaning the starting tax rate is a crucial determinant of revenue impacts, with the Laffer curve much more likely to peak below the 52% rate of the 1970s and early 1980s than below 25% [E17]. Regarding business investment, higher effective marginal tax rates increase the required pre-tax rate of return and weaken incentives to invest [E15], with CGE modelling applying a long-run domestic investment semi-elasticity of around -0.68 and an off-model foreign direct investment semi-elasticity of -4.2 with respect to the average Corporation Tax rate [E24, E25]. Finally, greater deductibility of costs reduces the elasticity of taxable income [E14], while increasing capital allowances reduces tax on marginal equity-financed investment but increases subsidies for marginal debt-financed investment [E19].",
+  "research_questions": [
+    "What do HMRC and OBR evaluation studies show regarding the revenue effects and observed receipts following past UK corporation tax main rate changes?",
+    "What are the specific behavioural response assumptions, including the elasticity of taxable profits to the tax rate, used by HMRC and the OBR when costing corporation tax rate adjustments?",
+    "What is the latest OBR baseline forecast for UK corporation tax receipts over the medium-term economic horizon?",
+    "How does increasing the corporation tax main rate affect the user cost of capital and domestic business investment according to academic literature and IFS research?",
+    "How do capital allowance policies, such as permanent full expensing, interact with corporation tax rate changes to influence effective marginal tax rates and revenue yield?",
+    "To what extent do multinational profit shifting, international tax differentials, and economic cycle fluctuations confound the ex-post estimation of corporate tax rate changes in the UK?"
+  ],
+  "sources": [
+    {
+      "source_id": "S1",
+      "title": "service.gov.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH_7jTdC42eEDIS4Ov0Ky9aUiPjWkLjviV-9cqFOp7RcxWub298rLwNoxMgcKhV1KTxc5DpTZV4vaJas1ej1m621IwY7Hn1r0HHRe6_H-987hwbcZpFyQS-AWlURit92eB8nwJ2Jy-udcIoZeR7Kvj2B19yfE1UJejolhmg9dHHrT8xQWxZUQpPfj62QoMH6D7hk27UmXjbJ6zRg_OoSjnHmduqTehQWp-8XWY6yxTVZ4ai9reTuTUBYErRQ0spIrL_WuxiRYXhf3z5IW1Dlg==",
+      "publisher": "GOV.UK",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S2",
+      "title": "cps.org.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGM2s2CnCNhh3DyS6x4ZE6j1v7GFlVpvA9SC1pnSUObHw95K99L8efDr2mo3eX5wwruSOYPf9kSHJXLY4Yd9wRpJHN9Oaw5uVTItmNadKKrwDRfc95InO8UOtKhcLLbOJWgP_cSxcLkwI0YO_Arfx9k",
+      "publisher": "cps.org.uk",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S3",
+      "title": "obr.uk",
+      "url": "https://obr.uk/fiscal_categories/corporation-tax/",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S4",
+      "title": "obr.uk",
+      "url": "https://obr.uk/box/the-impact-of-corporation-tax-changes-on-business-investment/",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S5",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGh3f5oDjwpTQLRYF_o5FxGmDRMBiepFDzxI12St2RWTVKuhACR6FgsBIX124L1J5cS8TgjAWr73qTpP1Pm2ukoaNZrf-Facg0WLgatUpwT6pJyfi5EmL2Mfxuv_INNpjw5S5pzbTweqkBabDj2Td2bEMU_d9TL0Q==",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S6",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG6m3qZD3VmxC7TKusDHRs7wPRWwzSdXPVEy0ZM1htylhF6hL1EClbFNxh9utoq2dYOXvbDNWVbBIm9xdqW-Sivz_c2p0q4Rjt-r6ITh8WkMwruRyTeUAT5q9xdLw9zEkoids9P8vDpMxItzseS4ic8t4gl84lnMfMZ_LU_fKXksvqMnqJ3hIeLXDcVDQ==",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S7",
+      "title": "svdcdn.com",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEMDoDSJIZ5q6bqVgJcPEib-LgN56EQXnFLjtfWLMpoHY5rJ54SUnlozkhULD74o4P1sYVwXVKb6SxEfKsaDYyI7AH7WCWdNlvJJhInnFOZZy3UVC_uv1fkYT_YfzIDZmocn8Lr_wtJ_cbEyoq9Eax5HcDKtabDFOEKGf_Hn-7hb47cU-hGxj9MPRb3dUJERq_9wCsDDkVZJryNOgPuDg==",
+      "publisher": "svdcdn.com",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S8",
+      "title": "4069_CT_Dynamic_effects_paper_20130312_IW_v2",
+      "url": "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/263560/4069_CT_Dynamic_effects_paper_20130312_IW_v2.pdf",
+      "publisher": "GOV.UK",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": "2026-11-08T00:16:06.074476Z",
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": true,
+      "content_sha256": "4260e70ddd589c81ebfa348c68ec58f7a294a1e69d9743c6bbb20d826bb80248",
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S9",
+      "title": "ox.ac.uk",
+      "url": "https://oxfordtax.sbs.ox.ac.uk/sites/g/files/vzsiac2436/files/oxfordtax/documents/media/wp1223a.pdf",
+      "publisher": "Oxford University Centre for Business Taxation",
+      "publisher_type": "academic",
+      "published_date": null,
+      "retrieved_at": "2026-11-08T00:16:16.291100Z",
+      "access_method": "google_search",
+      "reliability_tier": 2,
+      "url_verified": true,
+      "content_sha256": "361f1bc6af86463e8f00ee0237fe5a77ccc7fd26e28b6752020508255bcffcf5",
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S10",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEkWx5F4M63o_3UYTEC6KdHP3QVpbp-reqbdEsUiwfz2oRTRi_cSdkarz5vo4EjKQIhQQ5tcgBlgffHGwz9OHCYXDq5tjOHMFLb84LqFMmnGqwV3sLdleH9ahgCeJ2RCDHW_UVnCAy2uWJmkgmzHR3YFA==",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S11",
+      "title": "Economic and fiscal outlook – October 2026 - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/october-2026-economic-and-fiscal-outlook/economic-and-fiscal-outlook-october-2026",
+      "publisher": "GOV.UK",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": "2026-11-08T00:16:02.784418Z",
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": true,
+      "content_sha256": "1ac246be5f3b0284a8cb27a50ff4e3ea445ab11b7f121e323b660d5d0011b433",
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S12",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFzxhX2NzebJaHoHVCZnKDuxcJ9fMw4KWdfK8Cn0hkctZgMKeQybbIwXYXXsePXbjWDgNx_PZ8bOE-UrGFFLX3yhyHc46oKc8Er3fWLYIfKiS5nwYMuULf86qjK3QfMZOApGY8Qptw5wc9nHy69CD8f",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S13",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH0p2Im0-9Azz45wqXz363JiDZcI_4i0QhbKeZWjcRn1sWO-htdY96s42onHnwEwl6DL8oj43OcvlE7CcuQQqTMZSnUvELss2Vc4R95b-ckk00lnxSLyHxoyxdbgXU6lzk=",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S14",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEFI_xwsm84dgpmlr0xnIFcoS2pIC5b91JIAWGM9Utl315ywVg3vdSzQCQX1QaaD9jCTt3_DQUYEEp-jGXWOKs59fWhMnKGbhz6G2zipIFh4xWZtxXfAxQU0gWoF_iHWZZ2Tgw8kzdU3A==",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S15",
+      "title": "obr.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG1BjzfAMVz6Gon_eST2ySMPTC6IafQ1V6dBuOr6O88xSorUg61o2owOMNVOdar0-bTpRV2GXZrVpekjXxbumgv50tvJ4jELDuqJZgLIzVBSSo7qU9xQItOD5AXyI0Mc82B",
+      "publisher": "Office for Budget Responsibility",
+      "publisher_type": "obr",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S16",
+      "title": "ifs.org.uk",
+      "url": "https://ifs.org.uk/publications/full-expensing-and-corporation-tax-base",
+      "publisher": "Institute for Fiscal Studies",
+      "publisher_type": "ifs",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 2,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S17",
+      "title": "parliament.uk",
+      "url": "https://researchbriefings.files.parliament.uk/documents/CBP-9178/CBP-9178.pdf",
+      "publisher": "UK Parliament",
+      "publisher_type": "parliament",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S18",
+      "title": "Corporation tax and investment",
+      "url": "https://ifs.org.uk/sites/default/files/2022-10/Green-Budget-2022-Corporation-tax-and-investment_0.pdf",
+      "publisher": "Institute for Fiscal Studies",
+      "publisher_type": "ifs",
+      "published_date": null,
+      "retrieved_at": "2026-11-08T00:16:05.702951Z",
+      "access_method": "google_search",
+      "reliability_tier": 2,
+      "url_verified": true,
+      "content_sha256": "c15410f751199063676438fb516b285c87c872e1cf74022375a93ed89854b5ae",
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S19",
+      "title": "ifs.org.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGmdfZ1Np6K455g_0uLgUFCGdUJoWA2Yz75eMmXRr_Ss37XUoyzEvhw6xBZYkgIwDKujNZtZEssVJFYoNDDRuw8tSM3G-yDNRHRD6-E5U9r_pKkkE1HqcXoo4DKTVp8NbWNnWnbVudYAveS8vdZoadvkzb81A==",
+      "publisher": "Institute for Fiscal Studies",
+      "publisher_type": "ifs",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 2,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S20",
+      "title": "ifs.org.uk",
+      "url": "https://ifs.org.uk/publications/full-expensing-and-corporation-tax-base",
+      "publisher": "Institute for Fiscal Studies",
+      "publisher_type": "ifs",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 2,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S21",
+      "title": "econstor.eu",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHVBWazr0g_atWYAvSb6a-cLzlyunpm165PmdlCqTFZoaiCH1PvQHtzx_pNgS4KKSc2tFTemLu3riXOF-qBiekZIY3PK_nPpLMKron4ObcE73YQlTFnSAKn3jfTU8SBJIIeONKD1_ipA35n1cT2JEu7XllbUfw=",
+      "publisher": "econstor.eu",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S22",
+      "title": "katesmith.me",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFTQ6m2IUOUSXC8gHsJNU8m2AuyWEC66T1sJ5IqCbp3RZEl3_vIpZ7rG2u_Maf8sZg2lWdS_9upGS3sz_8i5EoFa-Ldacw4vtFushGIsZfpWv0oJubbAe2nOiASKovGHBAl6XgtQYuzhhWva3QCoLJGdsRct2D29QqiM9B-ORQ=",
+      "publisher": "katesmith.me",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S23",
+      "title": "institute.global",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH2YGayGEEP68HHSkYFMWUTJil0M67pKDgI-PuzYPDTac6rJgiPGy9Pt8vHhBhzUMvOfspQdzA1B5vcOxzq-rXSwlekhPfJ4nXTdl-U1-hexaBL1hG_royUd18cdTOQyMkmb4jApe3pHT_OoICR9_6wMqao7zW0ZlYc-9KojqR423EZ6aJFJo_KIbO6s_Kp4IyOLPWarL4R5w==",
+      "publisher": "institute.global",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S24",
+      "title": "taxpolicy.org.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF8TKgJCzVqDnMzi1Qz8n9BWgM2tmGZy3MhJjXwtfDPs0z2OfWUhgeAvIcd381bGpbkdodBfMjbJtts5gSoNzJ6fzSUN--53RLLNX-rfRsvyclC5EKXtNgGUobTacH85xq7j8SqjD9_2-cAG4RoxiAT5cKTfrA=",
+      "publisher": "taxpolicy.org.uk",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S25",
+      "title": "service.gov.uk",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEbGeQeIxXvAot5-4YvqAmvNqYwG2RKqC3RRMkRtk1j1pqumZtR5PLaaZ2NoV1AwNbLLxOO3U-pdhj9ESFL2ZZq3wMYIEjJ2-a5HpElAuT3eVPMX3eYWcxabDdc4MEwMPXIsjElPTyl8c1KHnJSGgAGTyaD95eiyfKwU4XJkf3baL5xwFrr4bn-0GPg1JIns-O5UvSGmUTLUw4VVl-yK88GC_zR1AoFu8lUNvz3sMsOKiAlEUG_fHzTogxOzhjpmzdQ61jCKl0__ICJlA4LWw==",
+      "publisher": "GOV.UK",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S26",
+      "title": "taxfoundation.org",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFg6myd2Vut6HqsoU5B6lp_kZoMI55grvZuWPAP7Xsn_G5VsjdArPzhMtcIn_2nTZ5BIcjA4oqdVnBlunW4TLtFMWJX25BZbf8JLWYSEdSuOjXps39ofzP3GNPaEv0ibR70eQLQa6ReBAd9e5UCXG0j",
+      "publisher": "taxfoundation.org",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S27",
+      "title": "Fiscal sustainability report",
+      "url": "https://assets.publishing.service.gov.uk/media/5a7cc072ed915d682236254f/9780108511844.pdf",
+      "publisher": "GOV.UK",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": "2026-11-08T00:16:18.654233Z",
+      "access_method": "google_search",
+      "reliability_tier": 1,
+      "url_verified": true,
+      "content_sha256": "70a0bc3b17bb74a588ee0919fc59ca63d4f3822af4b8636a3860984501c5409f",
+      "is_placeholder": false
+    },
+    {
+      "source_id": "S28",
+      "title": "arxiv.org",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFAJ0R17D76ABpXj4to_LD2jdRrj97tyDBjlU5AzaakdP1noVzikAwIG06lZ4Bb6rj2YRF0bwL6JDSs9Ip8kyykkZp0ZU-lHL66oSw43CfVjrr0v2uAKaDweQ==",
+      "publisher": "arxiv.org",
+      "publisher_type": "other",
+      "published_date": null,
+      "retrieved_at": null,
+      "access_method": "google_search",
+      "reliability_tier": 3,
+      "url_verified": false,
+      "content_sha256": null,
+      "is_placeholder": false
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E1",
+      "source_id": "S8",
+      "kind": "quantitative",
+      "topic": "profit_shifting",
+      "claim": "HMRC estimates that a one percentage point change in the Corporation Tax rate leads to a 0.83 per cent change in the size of the tax base due to profit shifting assumptions.",
+      "quote": "HMRC estimates that a one percentage point decrease in the Corporation Tax rate would lead to an increase in the size of the tax base of 0.8 3 per cent. The underlying methodology includes two key assumptions about (a) the proportion of profits that are mobile, and could therefore be shifted, and (b) the semi-elasticity of mobile profits, that is the extent to which mobile profits will shift.",
+      "value": null,
+      "unit": "%",
+      "period": "2013",
+      "location": "Section 2.8, page 9",
+      "verification_status": "verified",
+      "verification_note": "value dropped: not found in the quote; claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E2",
+      "source_id": "S11",
+      "kind": "quantitative",
+      "topic": "revenue",
+      "claim": "Onshore corporation tax receipts are projected to reach 3.6 per cent of GDP over the medium term.",
+      "quote": "Onshore corporation tax contributes a further 0.4 per cent of GDP to the increase mainly due to strong expected near-term profits growth.",
+      "value": 0.4,
+      "unit": "% of GDP",
+      "period": "2029-30 to 2031-32",
+      "location": "Table 4.1, page 76",
+      "verification_status": "verified",
+      "verification_note": "claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E3",
+      "source_id": "S27",
+      "kind": "qualitative",
+      "topic": "profit_shifting",
+      "claim": "Incentives to shift profits abroad would lower UK corporation tax receipts over time, and reducing UK rates to match declining global averages would cause direct revenue falls.",
+      "quote": "incentive to draw profits away from the UK would reduce corporation tax receipts over time. If UK rates were to move in line with a declining global average there would be a direct fall in UK corporation tax receipts. But lower corporation tax rates could increase the level of GDP by reducing the cost of capital; we have not included this effect in our modelling; and",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "Executive summary, page 9",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E4",
+      "source_id": "S27",
+      "kind": "qualitative",
+      "topic": "revenue",
+      "claim": "The analysis of corporation tax and VAT is stylised without central impact estimates, indicating future governments may need alternative revenues to maintain the tax burden.",
+      "quote": "Our analysis of corporation tax and VAT is highly stylised and we do not produce a central estimate of the likely impact on UK tax receipts in the future. But coupled with the analysis of other revenue streams, it does suggest that future governments are likely to need to find replacement streams of revenue merely to hold the tax burden constant, let alone to meet upward pressures on spending.",
+      "value": null,
+      "unit": null,
+      "period": "future",
+      "location": "paragraph 34, page 10",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E5",
+      "source_id": "S11",
+      "kind": "quantitative",
+      "topic": "revenue",
+      "claim": "Onshore corporation tax contributes 0.4 per cent of GDP to the increase in the tax take from 2025-26 to 2031-32.",
+      "quote": "Onshore corporation tax contributes a further 0.4 per cent of GDP to the increase mainly due to strong expected near-term profits growth.",
+      "value": 0.4,
+      "unit": "per cent of GDP",
+      "period": "2025-26 to 2031-32",
+      "location": "paragraph 4.2",
+      "verification_status": "verified",
+      "verification_note": "claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E6",
+      "source_id": "S11",
+      "kind": "quantitative",
+      "topic": "revenue",
+      "claim": "Budget changes to corporation and bank taxes are projected to increase receipts by £2.3 billion in 2031-32.",
+      "quote": "The Budget includes several changes to corporation and bank taxes , which increase receipts by £2.3 billion in 2031-32.",
+      "value": 2.3,
+      "unit": "£ billion",
+      "period": "2031-32",
+      "location": "paragraph 3.16",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E7",
+      "source_id": "S11",
+      "kind": "quantitative",
+      "topic": "revenue",
+      "claim": "A temporary three percentage point increase in the bank surcharge is estimated to yield £1.5 billion over 15 months.",
+      "quote": "A temporary 3 percentage point increase to the bank surcharge , from 3 to 6 per cent, effective from 1 January 2027 to 31 March 2028. Over the 15 months this is in effect, it is estimated to yield a total of £1.5 billion.",
+      "value": 1.5,
+      "unit": "£ billion",
+      "period": "1 January 2027 to 31 March 2028",
+      "location": "paragraph 3.16",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E8",
+      "source_id": "S11",
+      "kind": "quantitative",
+      "topic": "profit_shifting",
+      "claim": "The bank surcharge yield is net of an estimated £190 million reduction from banks moving profits out of the UK.",
+      "quote": "This is net of an estimated £190 million reduction in receipts [footnote 24] as some banks are assumed to move profits out of the UK in response to the higher tax rate.",
+      "value": 190.0,
+      "unit": "£ million",
+      "period": "1 January 2027 to 31 March 2028",
+      "location": "paragraph 3.16",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E9",
+      "source_id": "S11",
+      "kind": "historical_event",
+      "topic": "policy_history",
+      "claim": "The increase in the main corporation tax rate to 25 per cent in April 2023 drove the earlier rise in onshore corporation tax.",
+      "quote": "The rise in onshore corporation tax was driven by the increase in the main rate from 19 per cent to 25 per cent in April 2023 and resilient profits in higher tax-paying sectors.",
+      "value": null,
+      "unit": null,
+      "period": "2019-20 to 2025-26",
+      "location": "paragraph 4.4",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E10",
+      "source_id": "S9",
+      "kind": "quantitative",
+      "topic": "elasticity",
+      "claim": "Analysis of UK corporation tax returns finds an elasticity of corporate taxable income between 0.13 and 0.17 for companies with profits around the £300,000 kink.",
+      "quote": "We … nd an elasticity of between 0.13 and 0.17 for companies with pro… ts around the £ 300k kink, implying a marginal deadweight cost of 6% of marginal revenue.",
+      "value": null,
+      "unit": null,
+      "period": "2001-2008",
+      "location": "Abstract",
+      "verification_status": "verified",
+      "verification_note": "elided quote; all parts exact; claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E11",
+      "source_id": "S9",
+      "kind": "quantitative",
+      "topic": "elasticity",
+      "claim": "The elasticity of corporate taxable income is estimated to be between 0.53 and 0.56 for companies around the £10,000 kink.",
+      "quote": "We … nd a much higher elasticity of between 0.53 and 0.56 for companies around the £ 10k kink.",
+      "value": null,
+      "unit": null,
+      "period": "2001-2008",
+      "location": "Abstract",
+      "verification_status": "verified",
+      "verification_note": "elided quote; all parts exact; claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E12",
+      "source_id": "S9",
+      "kind": "quantitative",
+      "topic": "elasticity",
+      "claim": "The elasticity of total taxable income for companies with profits between £10,000 and £50,000 is estimated to be around 0.20 to 0.31.",
+      "quote": "F or com- panies with taxable pro… ts between £ 10k and £ 50k, we estimate their elasticity of total taxable income to be around 0.20-0.31.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "Section 6.1, page 25",
+      "verification_status": "verified",
+      "verification_note": "elided quote; all parts exact; claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E13",
+      "source_id": "S9",
+      "kind": "quantitative",
+      "topic": "profit_shifting",
+      "claim": "The estimated elasticity of taxable profit arising from intertemporal profit shifting between 2004 and 2005 is -0.066 and statistically insignificant.",
+      "quote": "The estimated elasticity of taxable pro… t due to intertemporal pro… t shifting is -0.066, with a standard error 0.110.",
+      "value": -0.066,
+      "unit": null,
+      "period": "2004-2005",
+      "location": "Section 6.2, pages 26-27",
+      "verification_status": "verified",
+      "verification_note": "elided quote; fuzzy match 0.94; claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E14",
+      "source_id": "S9",
+      "kind": "qualitative",
+      "topic": "elasticity",
+      "claim": "Greater deductibility of costs reduces the elasticity of taxable income with respect to the tax rate.",
+      "quote": "Greater deductibility of costs reduces the elasticity of taxable income with respect to the tax rate.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "Section 1, page 2",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "medium"
+    },
+    {
+      "evidence_id": "E15",
+      "source_id": "S18",
+      "kind": "qualitative",
+      "topic": "investment",
+      "claim": "The effective marginal tax rate measures how much lower the cost of capital would be without taxation, with higher rates weakening investment incentives.",
+      "quote": "The effective marginal tax rate (EMTR) is the proportion by which tax reduces the rate of return on a marginal investment: that is, one that is only just worthwhile. It measures how much lower the cost of capital (the rate of return investors require) would be in the absence of taxation.9 The higher the EMTR, the greater the required pre-tax rate of return, and hence the weaker is the incentive to invest.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "page 11",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "medium"
+    },
+    {
+      "evidence_id": "E16",
+      "source_id": "S18",
+      "kind": "qualitative",
+      "topic": "investment",
+      "claim": "A 1 percentage point rise in market interest rates increases the cost of capital by more than raising the corporation tax rate from 19% to 25%.",
+      "quote": "More narrowly, it is important to emphasise that, while tax can affect investment incentives, even a 1 percentage point rise in market interest rates would increase firms’ cost of capital by more than a rise in the corporation tax rate from 19% to 25%.",
+      "value": 1.0,
+      "unit": "percentage point",
+      "period": null,
+      "location": "page 16",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "medium"
+    },
+    {
+      "evidence_id": "E17",
+      "source_id": "S18",
+      "kind": "qualitative",
+      "topic": "revenue",
+      "claim": "Taxation disincentive effects increase more than proportionally with the tax rate, making tax cuts far more likely to be self-financing from a 52% starting rate than a 25% starting rate.",
+      "quote": "The disincentive effects of taxation are much more than proportional to the tax rate, so the tax rate we are starting from is a crucial determinant of how far cutting the tax rate ‘pays for itself’: it would be much more plausible that a tax cut would be self-financing if we were starting from the 52% rate of the 1970s and early 1980s. In other words, it is much more plausible that the Laffer curve peaks somewhere below 52% than that it peaks somewhere below 25%.",
+      "value": 52.0,
+      "unit": "%",
+      "period": "1970s and early 1980s",
+      "location": "page 16",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "medium"
+    },
+    {
+      "evidence_id": "E18",
+      "source_id": "S18",
+      "kind": "qualitative",
+      "topic": "investment",
+      "claim": "Reducing corporation tax rates reduces tax on equity-financed investment and lessens financing distortions, but is less effective at lowering tax on marginal investments.",
+      "quote": "Cutting the rate of corporation tax would reduce the tax on equity-financed investment and lessen the distortions between debt and equity finance and between different assets. However, the tax reduction would be largest for more profitable investments and would be less effective at reducing the tax on marginal investments. While reducing the rate reduces the distortions to the level, allocation and financing of investment, unless it is reduced to zero, it cannot fully eliminate those distortions.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "pages 29-30",
+      "verification_status": "failed",
+      "verification_note": "quote not found in source text (best fuzzy match 0.85)",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E19",
+      "source_id": "S18",
+      "kind": "qualitative",
+      "topic": "investment",
+      "claim": "Increasing capital allowances reduces tax on marginal equity-financed investments but increases subsidies for marginal debt-financed investments.",
+      "quote": "Increasing capital allowances would reduce the tax on marginal equity-financed investment, but would increase the subsidy to marginal debt-financed investment – alleviating one distortion at the cost of exacerbating another. It is more cost-effective than reducing the rate as a way to encourage investment domestically, though not necessarily as a way to increase the UK’s international competitiveness.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "page 30",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "medium"
+    },
+    {
+      "evidence_id": "E20",
+      "source_id": "S8",
+      "kind": "qualitative",
+      "topic": "profit_shifting",
+      "claim": "Costings include a behavioural response because changes in the Corporation Tax rate alter multinational firms' incentives to shift profits into and out of the UK.",
+      "quote": "The costings assume a behavioural response to account for changes in the incentives for multinational companies to shift profits in and out of the UK. A reduction in the Corporation Tax rate reduces the incentives to shift profits out, protecting the Corporation Tax base. So the Exchequer cost of a reduction in the rate of Corporation Tax is less than if there had been no behavioural response.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "paragraph 2.8",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E21",
+      "source_id": "S8",
+      "kind": "quantitative",
+      "topic": "elasticity",
+      "claim": "HMRC estimates that each one percentage point reduction in the Corporation Tax rate expands the tax base by 0.83 per cent via mobile profit responses.",
+      "quote": "HMRC estimates that a one percentage point decrease in the Corporation Tax rate would lead to an increase in the size of the tax base of 0.8 3 per cent. The underlying methodology includes two key assumptions about (a) the proportion of profits that are mobile, and could therefore be shifted, and (b) the semi-elasticity of mobile profits, that is the extent to which mobile profits will shift.",
+      "value": null,
+      "unit": "per cent",
+      "period": null,
+      "location": "paragraph 2.8",
+      "verification_status": "verified",
+      "verification_note": "value dropped: not found in the quote; claim states a number not found in the quote",
+      "confidence": "low"
+    },
+    {
+      "evidence_id": "E22",
+      "source_id": "S8",
+      "kind": "qualitative",
+      "topic": "other",
+      "claim": "Formal direct effect costings and related behavioural adjustments for Corporation Tax changes are certified by the OBR.",
+      "quote": "As with all Government costings, it is the OBR ’s responsibility to certify formal costings of the direct effects of Corporation Tax reductions for inclusion in their forecasts. These direct effects are accompanied by behavioural effects where appropriate, and the OBR are responsible for deciding whether to adjust their economic forecast for the indirect effects of policies. 7",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "paragraph 2.9",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E23",
+      "source_id": "S8",
+      "kind": "qualitative",
+      "topic": "profit_shifting",
+      "claim": "The CGE model's estimated revenue recovery excludes gains from reduced outward profit shifting.",
+      "quote": "Also, the CGE modelling does not include increased revenue from reduced profit shifting away from the UK, unlike Varney (2007). Profit shifting occurs when m ultinational or global companies direct their profits through locations with lower tax rates.",
+      "value": null,
+      "unit": null,
+      "period": null,
+      "location": "paragraph 4.28",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E24",
+      "source_id": "S8",
+      "kind": "quantitative",
+      "topic": "elasticity",
+      "claim": "The long-run investment semi-elasticity with respect to the average Corporation Tax rate in the CGE model is approximately -0.68.",
+      "quote": "In the CGE model, the investment semi- elasticity with respect to the average Corporation Tax rate is around -0.68 in the long run. The model treats all investment as domestically sourced.",
+      "value": -0.68,
+      "unit": null,
+      "period": "long run",
+      "location": "paragraph 4.32",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    },
+    {
+      "evidence_id": "E25",
+      "source_id": "S8",
+      "kind": "quantitative",
+      "topic": "elasticity",
+      "claim": "An off-model adjustment applies a semi-elasticity of -4.2 to foreign direct investment with respect to the average Corporation Tax rate.",
+      "quote": "The empirical evidence suggests that FDI has a higher semi-elasticity than domestic investment. Therefore, to make the off-model adjustment for FDI, a semi-elasticity with respect to the average Corporation Tax rate of -4.2 is applied. This elasticity is in line with estimates used in previous academic literature.40",
+      "value": -4.2,
+      "unit": null,
+      "period": null,
+      "location": "paragraph 4.33",
+      "verification_status": "verified",
+      "verification_note": null,
+      "confidence": "high"
+    }
+  ],
+  "interpretations": [
+    {
+      "interpretation_id": "I1",
+      "statement": "Interpretation: The negative impact of a higher corporation tax rate on aggregate UK investment is likely to be disproportionately driven by reductions in foreign direct investment rather than domestic investment, given that the semi-elasticity with respect to the average Corporation Tax rate for FDI (-4.2) is much larger in magnitude than for domestically sourced investment (-0.68) and higher effective marginal tax rates weaken investment incentives.",
+      "supporting_evidence_ids": [
+        "E15",
+        "E24",
+        "E25"
+      ],
+      "confidence": "high"
+    },
+    {
+      "interpretation_id": "I2",
+      "statement": "Interpretation: Generous capital allowances and cost deductibility provisions can partially mitigate the erosion of the domestic corporate tax base when the headline rate rises by reducing the elasticity of taxable income and lowering the tax burden on marginal equity-financed investments, although this simultaneously increases the tax subsidy for debt-financed investments.",
+      "supporting_evidence_ids": [
+        "E14",
+        "E15",
+        "E19"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "confounders": [
+    {
+      "name": "Multinational outward profit shifting and global tax differentials",
+      "description": "Changes in the UK Corporation Tax rate alter incentives for multinational companies and banks to shift mobile profits into or out of the UK toward locations with lower tax rates, directly affecting the size of the UK tax base.",
+      "evidence_ids": [
+        "E1",
+        "E3",
+        "E8",
+        "E20",
+        "E21",
+        "E23"
+      ],
+      "likely_direction": "lowers_revenue"
+    },
+    {
+      "name": "Sectoral and near-term profit growth",
+      "description": "Resilient profits in higher tax-paying sectors and strong expected near-term profits growth independently drive increases in onshore corporation tax receipts, confounding ex-post evaluations of rate increases.",
+      "evidence_ids": [
+        "E2",
+        "E5",
+        "E9"
+      ],
+      "likely_direction": "raises_revenue"
+    },
+    {
+      "name": "Market interest rate fluctuations",
+      "description": "Movements in market interest rates strongly impact firms' cost of capital; a 1 percentage point rise in market interest rates increases the cost of capital by more than raising the corporation tax rate from 19% to 25%.",
+      "evidence_ids": [
+        "E16"
+      ],
+      "likely_direction": "ambiguous"
+    },
+    {
+      "name": "Capital allowances and cost deductibility regimes",
+      "description": "Greater deductibility of costs reduces the elasticity of taxable income with respect to the tax rate, and increasing capital allowances alters investment incentives differently for equity-financed versus debt-financed marginal investments.",
+      "evidence_ids": [
+        "E14",
+        "E19"
+      ],
+      "likely_direction": "ambiguous"
+    }
+  ],
+  "parameter_evidence": [
+    {
+      "parameter": "taxable_profit_elasticity",
+      "value": null,
+      "low": 0.13,
+      "high": 0.56,
+      "evidence_ids": [
+        "E1",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E21"
+      ],
+      "note": ""
+    }
+  ],
+  "open_questions": [
+    "What is the exact elasticity of taxable profits for large corporations paying the main rate, given that the provided academic elasticity estimates (0.13 to 0.56) focus on lower profit thresholds between £10,000 and £300,000, while HMRC's 0.83% figure is a semi-elasticity rather than a standard elasticity?",
+    "Where precisely does the UK corporation tax Laffer curve peak between 25% and 52%, and would HMRC's linear assumption of a 0.83% tax base change per percentage point hold for a 20 percentage point increase to 45%?",
+    "How specifically does permanent full expensing interact with a 45% main rate, and what is the current coverage of full expensing for plant and machinery?",
+    "What are the exact values for the user cost elasticity of investment (as distinct from the CGE semi-elasticities of -0.68 and -4.2 with respect to the average tax rate), the profit-GDP elasticity, and the timing shares of receipts and behavioural responses in year 1?"
+  ],
+  "trace": [
+    {
+      "step_id": 1,
+      "ts": "2026-11-08T00:15:46.716698Z",
+      "kind": "plan",
+      "title": "Planned 6 research questions",
+      "detail": "1. What do HMRC and OBR evaluation studies show regarding the revenue effects and observed receipts following past UK corporation tax main rate changes?\n2. What are the specific behavioural response assumptions, including the elasticity of taxable profits to the tax rate, used by HMRC and the OBR when costing corporation tax rate adjustments?\n3. What is the latest OBR baseline forecast for UK corporation tax receipts over the medium-term economic horizon?\n4. How does increasing the corporation…",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": 3114
+    },
+    {
+      "step_id": 2,
+      "ts": "2026-11-08T00:15:55.387346Z",
+      "kind": "search",
+      "title": "Searched: HMRC OBR evaluation revenue effects past UK corporation tax main rate changes",
+      "detail": "Queries: HMRC corporation tax cuts evaluate revenue effects; HMRC OBR evaluation revenue effects corporation tax rate changes; OBR working paper corporation tax rate elasticity. 4 grounded sources: cps.org.uk, obr.uk, service.gov.uk.",
+      "tool": "google_search",
+      "query": "HMRC corporation tax cuts evaluate revenue effects",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 5647
+    },
+    {
+      "step_id": 3,
+      "ts": "2026-11-08T00:15:57.255461Z",
+      "kind": "search",
+      "title": "Searched: HMRC OBR behavioural response elasticity of taxable profits corporation tax rate costing",
+      "detail": "Queries: OBR policy costings corporation tax main rate behavioural response elasticity; \"elasticity of taxable profits\" \"corporation tax\" OBR HMRC; HMRC \"corporation tax\" behavioural response costing elasticity. 5 grounded sources: obr.uk, ox.ac.uk, service.gov.uk, svdcdn.com.",
+      "tool": "google_search",
+      "query": "OBR policy costings corporation tax main rate behavioural response elasticity",
+      "source_ids": [
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 7507
+    },
+    {
+      "step_id": 4,
+      "ts": "2026-11-08T00:15:57.389123Z",
+      "kind": "search",
+      "title": "Searched: OBR medium term forecast corporation tax receipts Economic and fiscal outlook",
+      "detail": "Queries: OBR medium term forecast corporation tax receipts Economic and fiscal outlook October 2024; OBR corporation tax receipts forecast Economic and fiscal outlook March 2024 October 2024; \"Table 3.\" \"corporation tax\" \"October 2024\" site:obr.uk. 6 grounded sources: obr.uk, www.gov.uk.",
+      "tool": "google_search",
+      "query": "OBR medium term forecast corporation tax receipts Economic and fiscal outlook October 2024",
+      "source_ids": [
+        "S10",
+        "S11",
+        "S12",
+        "S13",
+        "S14",
+        "S15"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 7633
+    },
+    {
+      "step_id": 5,
+      "ts": "2026-11-08T00:15:57.389328Z",
+      "kind": "search",
+      "title": "Searched: IFS user cost of capital business investment corporation tax rate increase",
+      "detail": "Queries: IFS user cost of capital corporation tax rate increase business investment; IFS \"cost of capital\" \"corporation tax\" \"investment\". 4 grounded sources: ifs.org.uk, parliament.uk.",
+      "tool": "google_search",
+      "query": "IFS user cost of capital corporation tax rate increase business investment",
+      "source_ids": [
+        "S16",
+        "S17",
+        "S18",
+        "S19"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 5183
+    },
+    {
+      "step_id": 6,
+      "ts": "2026-11-08T00:15:57.389442Z",
+      "kind": "search",
+      "title": "Searched: full expensing capital allowances corporation tax rate effective marginal tax rate IFS OBR",
+      "detail": "Queries: \"full expensing\" \"effective marginal tax rate\" IFS corporation tax; IFS \"full expensing\" marginal effective tax rate 0%. 5 grounded sources: econstor.eu, ifs.org.uk, institute.global, katesmith.me, taxpolicy.org.uk.",
+      "tool": "google_search",
+      "query": "\"full expensing\" \"effective marginal tax rate\" IFS corporation tax",
+      "source_ids": [
+        "S20",
+        "S21",
+        "S22",
+        "S23",
+        "S24"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 5765
+    },
+    {
+      "step_id": 7,
+      "ts": "2026-11-08T00:15:57.389534Z",
+      "kind": "search",
+      "title": "Searched: multinational profit shifting international tax differentials UK corporation tax rate estimation",
+      "detail": "Queries: \"profit shifting\" \"corporation tax\" UK elasticity differential HMRC OBR; multinational profit shifting tax rate differential OBR HMRC. 4 grounded sources: arxiv.org, service.gov.uk, taxfoundation.org.",
+      "tool": "google_search",
+      "query": "\"profit shifting\" \"corporation tax\" UK elasticity differential HMRC OBR",
+      "source_ids": [
+        "S25",
+        "S26",
+        "S27",
+        "S28"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 5487
+    },
+    {
+      "step_id": 8,
+      "ts": "2026-11-08T00:16:05.693053Z",
+      "kind": "fetch",
+      "title": "Fetched GOV.UK: Economic and fiscal outlook – October 2026 - GOV.UK",
+      "detail": "https://www.gov.uk/government/publications/october-2026-economic-and-fiscal-outlook/economic-and-fiscal-outlook-october-2026 (text/html, 400,000 chars)",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S11"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 2875
+    },
+    {
+      "step_id": 9,
+      "ts": "2026-11-08T00:16:06.071909Z",
+      "kind": "fetch",
+      "title": "Fetched Institute for Fiscal Studies: Corporation tax and investment",
+      "detail": "https://ifs.org.uk/sites/default/files/2022-10/Green-Budget-2022-Corporation-tax-and-investment_0.pdf (application/pdf, 94,109 chars)",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S18"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 2140
+    },
+    {
+      "step_id": 10,
+      "ts": "2026-11-08T00:16:06.328617Z",
+      "kind": "fetch",
+      "title": "Fetched GOV.UK: 4069_CT_Dynamic_effects_paper_20130312_IW_v2",
+      "detail": "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/263560/4069_CT_Dynamic_effects_paper_20130312_IW_v2.pdf (application/pdf, 69,260 chars)",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S8"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 2602
+    },
+    {
+      "step_id": 11,
+      "ts": "2026-11-08T00:16:06.807320Z",
+      "kind": "fetch",
+      "title": "Could not fetch Institute for Fiscal Studies",
+      "detail": "https://ifs.org.uk/publications/full-expensing-and-corporation-tax-base: HTTP 403",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S20"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 475
+    },
+    {
+      "step_id": 12,
+      "ts": "2026-11-08T00:16:13.469765Z",
+      "kind": "extract",
+      "title": "Recorded 1 evidence items from GOV.UK",
+      "detail": "1 of 1 quotes verified against the fetched text. 4069_CT_Dynamic_effects_paper_20130312_IW_v2",
+      "tool": "record_evidence",
+      "query": null,
+      "source_ids": [
+        "S8"
+      ],
+      "evidence_ids": [
+        "E1"
+      ],
+      "duration_ms": 0
+    },
+    {
+      "step_id": 13,
+      "ts": "2026-11-08T00:16:13.510949Z",
+      "kind": "extract",
+      "title": "Recorded 1 evidence items from GOV.UK",
+      "detail": "1 of 1 quotes verified against the fetched text. Economic and fiscal outlook – October 2026 - GOV.UK",
+      "tool": "record_evidence",
+      "query": null,
+      "source_ids": [
+        "S11"
+      ],
+      "evidence_ids": [
+        "E2"
+      ],
+      "duration_ms": 0
+    },
+    {
+      "step_id": 14,
+      "ts": "2026-11-08T00:16:13.511105Z",
+      "kind": "warning",
+      "title": "Tool-call budget reached",
+      "detail": "Used 12 of 12 tool calls; moving on to synthesis.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 15,
+      "ts": "2026-11-08T00:16:13.511280Z",
+      "kind": "reason",
+      "title": "Reading more grounded sources",
+      "detail": "3 document(s) read; fetching up to 5 more of 16 unread tier-1/2 sources the searches found.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 16,
+      "ts": "2026-11-08T00:16:14.120308Z",
+      "kind": "fetch",
+      "title": "Could not fetch UK Parliament",
+      "detail": "https://researchbriefings.files.parliament.uk/documents/CBP-9178/CBP-9178.pdf: HTTP 403",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S17"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 607
+    },
+    {
+      "step_id": 17,
+      "ts": "2026-11-08T00:16:14.169910Z",
+      "kind": "fetch",
+      "title": "Could not fetch Office for Budget Responsibility",
+      "detail": "https://obr.uk/fiscal_categories/corporation-tax/: HTTP 403",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S3"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 657
+    },
+    {
+      "step_id": 18,
+      "ts": "2026-11-08T00:16:14.765951Z",
+      "kind": "fetch",
+      "title": "Could not fetch Institute for Fiscal Studies",
+      "detail": "https://ifs.org.uk/publications/full-expensing-and-corporation-tax-base: HTTP 403",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S16"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 634
+    },
+    {
+      "step_id": 19,
+      "ts": "2026-11-08T00:16:14.914493Z",
+      "kind": "fetch",
+      "title": "Could not fetch Office for Budget Responsibility",
+      "detail": "https://obr.uk/box/the-impact-of-corporation-tax-changes-on-business-investment/: HTTP 403",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S4"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 740
+    },
+    {
+      "step_id": 20,
+      "ts": "2026-11-08T00:16:15.150258Z",
+      "kind": "fetch",
+      "title": "Fetched GOV.UK (duplicate page)",
+      "detail": "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/263560/4069_CT_Dynamic_effects_paper_20130312_IW_v2.pdf",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S8"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 1638
+    },
+    {
+      "step_id": 21,
+      "ts": "2026-11-08T00:16:16.626001Z",
+      "kind": "fetch",
+      "title": "Fetched Oxford University Centre for Business Taxation: ox.ac.uk",
+      "detail": "https://oxfordtax.sbs.ox.ac.uk/sites/g/files/vzsiac2436/files/oxfordtax/documents/media/wp1223a.pdf (application/pdf, 98,029 chars)",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S9"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 2773
+    },
+    {
+      "step_id": 22,
+      "ts": "2026-11-08T00:16:17.231856Z",
+      "kind": "fetch",
+      "title": "Fetched GOV.UK (duplicate page)",
+      "detail": "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/263560/4069_CT_Dynamic_effects_paper_20130312_IW_v2.pdf",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S8"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 2081
+    },
+    {
+      "step_id": 23,
+      "ts": "2026-11-08T00:16:19.091969Z",
+      "kind": "fetch",
+      "title": "Fetched GOV.UK: Fiscal sustainability report",
+      "detail": "https://assets.publishing.service.gov.uk/media/5a7cc072ed915d682236254f/9780108511844.pdf (application/pdf, 126,714 chars)",
+      "tool": "fetch_url",
+      "query": null,
+      "source_ids": [
+        "S27"
+      ],
+      "evidence_ids": [],
+      "duration_ms": 1422
+    },
+    {
+      "step_id": 24,
+      "ts": "2026-11-08T00:16:23.481176Z",
+      "kind": "extract",
+      "title": "Recorded 2 evidence items from GOV.UK",
+      "detail": "2 of 2 quotes verified against the fetched text. Fiscal sustainability report",
+      "tool": "extract",
+      "query": null,
+      "source_ids": [
+        "S27"
+      ],
+      "evidence_ids": [
+        "E3",
+        "E4"
+      ],
+      "duration_ms": 4311
+    },
+    {
+      "step_id": 25,
+      "ts": "2026-11-08T00:16:25.463546Z",
+      "kind": "extract",
+      "title": "Recorded 5 evidence items from GOV.UK",
+      "detail": "5 of 5 quotes verified against the fetched text. Economic and fiscal outlook – October 2026 - GOV.UK",
+      "tool": "extract",
+      "query": null,
+      "source_ids": [
+        "S11"
+      ],
+      "evidence_ids": [
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "duration_ms": 6164
+    },
+    {
+      "step_id": 26,
+      "ts": "2026-11-08T00:16:25.896595Z",
+      "kind": "extract",
+      "title": "Recorded 5 evidence items from Oxford University Centre for Business Taxation",
+      "detail": "5 of 5 quotes verified against the fetched text. ox.ac.uk",
+      "tool": "extract",
+      "query": null,
+      "source_ids": [
+        "S9"
+      ],
+      "evidence_ids": [
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14"
+      ],
+      "duration_ms": 6717
+    },
+    {
+      "step_id": 27,
+      "ts": "2026-11-08T00:16:26.453527Z",
+      "kind": "extract",
+      "title": "Recorded 5 evidence items from Institute for Fiscal Studies",
+      "detail": "4 of 5 quotes verified against the fetched text. Corporation tax and investment",
+      "tool": "extract",
+      "query": null,
+      "source_ids": [
+        "S18"
+      ],
+      "evidence_ids": [
+        "E15",
+        "E16",
+        "E17",
+        "E18",
+        "E19"
+      ],
+      "duration_ms": 7276
+    },
+    {
+      "step_id": 28,
+      "ts": "2026-11-08T00:16:27.095638Z",
+      "kind": "extract",
+      "title": "Recorded 6 evidence items from GOV.UK",
+      "detail": "6 of 6 quotes verified against the fetched text. 4069_CT_Dynamic_effects_paper_20130312_IW_v2",
+      "tool": "extract",
+      "query": null,
+      "source_ids": [
+        "S8"
+      ],
+      "evidence_ids": [
+        "E20",
+        "E21",
+        "E22",
+        "E23",
+        "E24",
+        "E25"
+      ],
+      "duration_ms": 7939
+    },
+    {
+      "step_id": 29,
+      "ts": "2026-11-08T00:16:51.634410Z",
+      "kind": "synthesis",
+      "title": "Synthesised findings",
+      "detail": "3 interpretations, 1 parameter links and 4 confounders from 24 verified evidence items.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [
+        "E1",
+        "E2",
+        "E5",
+        "E9",
+        "E10",
+        "E11",
+        "E12",
+        "E14",
+        "E15",
+        "E17",
+        "E19",
+        "E20",
+        "E21",
+        "E22",
+        "E24",
+        "E25"
+      ],
+      "duration_ms": 24538
+    },
+    {
+      "step_id": 30,
+      "ts": "2026-11-08T00:16:51.636819Z",
+      "kind": "warning",
+      "title": "Post-processing removed 4 unsupported item(s)",
+      "detail": "Removed 1 sentence(s) with unsupported numbers from I1. Dropped interpretation I1: no verified supporting evidence or text. Removed unsupported numbers from the note on taxable_profit_elasticity. Removed 3 summary sentence(s) with numbers not found in the evidence they cite.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": null
+    },
+    {
+      "step_id": 31,
+      "ts": "2026-11-08T00:16:51.636895Z",
+      "kind": "reason",
+      "title": "Research complete",
+      "detail": "28 sources, 25 evidence items (24 verified) in 68 s.",
+      "tool": null,
+      "query": null,
+      "source_ids": [],
+      "evidence_ids": [],
+      "duration_ms": null
+    }
+  ],
+  "started_at": "2026-11-08T00:15:43.602240Z",
+  "completed_at": "2026-11-08T00:16:51.636925Z",
+  "cache_key": "66934036daf89aabd2c2b4610bda5054af06f29b2a070bc362956298d89b0c31"
+}

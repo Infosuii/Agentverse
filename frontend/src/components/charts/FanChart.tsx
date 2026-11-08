@@ -215,7 +215,7 @@ export function FanChart({
           <Area
             type="monotone"
             dataKey={(d: InternalFanRow) => [d.p5, d.p95]}
-            name={`p5–p95 (${intervalNote})`}
+            name="p5–p95 range"
             stroke="none"
             fill={MC_BAND_STYLE.color}
             fillOpacity={MC_BAND_STYLE.p5_p95_opacity}

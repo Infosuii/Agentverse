@@ -151,3 +151,8 @@ def test_sample_bundle_fixture_matches_the_contract():
     assert [s.scenario.name for s in bundle.scenarios] == ["central", "optimistic", "pessimistic"]
     assert bundle.monte_carlo and bundle.monte_carlo.interval_note.startswith(VERBATIM_NOTE)
     assert len(bundle.sensitivity) == 3
+
+
+def test_negative_seed_is_rejected_with_a_clear_message(full_engine, demo_policy, params, baseline):
+    with pytest.raises(ValueError, match="seed must be a non-negative integer, not -1"):
+        simulate(demo_policy, params, baseline, draws=10, seed=-1)

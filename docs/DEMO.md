@@ -8,7 +8,7 @@
 
 ## Pre-Demo Checklist (T-10 minutes)
 
-1. Ensure `.env` has `GEMINI_API_KEY` set and `JANE_RESEARCH_CACHE_DIR=data/research_cache` populated with the 3 bundled golden-path runs (`25% -> 28%`, `25% -> 23%`, and `25% -> 45%`).
+1. Ensure `.env` has `GEMINI_API_KEY` set and `JANE_RESEARCH_CACHE_DIR=data/research_cache` populated with the 4 bundled cached research runs (`25% -> 28%`, `25% -> 23%`, `25% -> 26%`, and the `25% -> 45%` guardrail demo). Any other query has no cached run: in `cached` mode it shows the labelled mock fixture ("No cached research for this policy") and a **Placeholder (unverified)** badge, so stick to the scripted queries.
 2. Start backend and frontend via `.\scripts\dev.ps1` (Windows) or `./scripts/dev.sh` (macOS/Linux).
 3. Run the smoke check to confirm sub-second simulation and verified golden path:
    ```powershell
@@ -20,14 +20,15 @@
 
 ## Click-by-Click Walkthrough & Talking Points
 
-### 0:00 – 0:40 · Policy Input, Parse Preview & Scope Gate (`/new` — New Analysis)
+### 0:00 – 0:40 · Policy Input, Parse Preview & Scope Gate (`/` — New Analysis)
 
-1. **Click:** On `/new`, click the example chip **"Raise CT main rate 25% -> 28% from April 2027"** (or type *"What would happen if the UK increased corporation tax from 25% to 28%?"* into the policy input).
+1. **Click:** On `/`, click the example chip **"What would happen if the UK increased corporation tax from 25% to 28%?"** (or type *"What would happen if the UK increased corporation tax from 25% to 28%?"* into the policy input).
 2. **Observe:** Within 300 ms, the **Parsed Policy Specification & Scope Gate** card appears:
    - Policy Type: `corporation_tax_main_rate`
    - Baseline Rate: `25%` -> Proposed Rate: `28%` (`+3pp`)
    - Effective Date: `2027-04-01`, Horizon: `5 years` (`2027-28` to `2031-32`)
-   - Badge: **Supported scope** (validated against historical UK CT changes `1983–2023`, rate bounds `17%–52%`, single-reform step limit `15pp`).
+   - **If presenting on or after 1 January 2027:** a query with no date defaults to 1 April of the *next* year (2028), which shifts every figure in this script by a year. Type *"What would happen if the UK increased corporation tax from 25% to 28% from April 2027?"* instead (the cached research is still used: its key does not include the date).
+   - Badge: **Supported scope** (validated against historical UK CT changes `1983–2023`, rate bounds `19%–52%`, single-reform step limit `15pp`).
    - Ambiguities & Defaults panel explicitly lists defaults assumed by the parser.
 3. **Talking Point (Judging Criterion — Guardrails & Scope):**
    > *"Jane Avenue never guesses silently. Before touching an econometric model, it parses plain English into a structured `PolicyMeasure`, exposes every default assumption as an editable field, and checks the proposal against the historical range of UK Corporation Tax changes."*
@@ -59,15 +60,15 @@
 
 ---
 
-### 2:00 – 2:50 · Scenarios, Honest Uncertainty & Live Sliders (`Scenarios & Sensitivity` & `Assumptions & Lab`)
+### 2:00 – 2:50 · Scenarios, Honest Uncertainty & Live Sliders (`Scenarios` & `Assumptions`)
 
-1. **Click:** Click the **Scenarios & Sensitivity** tab.
+1. **Click:** Click the **Scenarios** tab.
 2. **Observe:**
    - **3 Scenario Cards:** **Optimistic**, **Central**, and **Pessimistic** projections satisfying strict revenue ordering (`pessimistic <= central <= optimistic`).
    - **Tornado Chart:** Ranks which uncertain parameters (`taxable_profit_elasticity`, `profit_base_deviation_pct`, `user_cost_elasticity`, `full_expensing_coverage`) drive the largest swing in Year-5 revenue and investment.
-3. **Click:** Switch to the **Assumptions & Lab** tab.
-   - **Drag a Slider:** Move `taxable_profit_elasticity` or set `full_expensing_coverage = 1.0`. Within `< 50 ms`, `POST /api/v1/simulate` recomputes the engine and displays the live **Custom Scenario Delta Banner**.
-   - Scroll to the **Calculation Inspector** and expand `cost_of_capital_pct` (`+0.97%`), `eatr_pct` (`21.7% -> 24.3%`), and `business_investment_pct` (`-0.29%` in Year 1, `-0.56%` in Year 5).
+3. **Click:** On the same **Scenarios** tab, scroll down to the **Live Assumption Sliders** panel.
+   - **Drag a Slider:** Move `taxable_profit_elasticity` or set `full_expensing_coverage = 1.0`. Within `< 50 ms`, `POST /api/simulate` recomputes the engine and overlays the **custom** scenario on the fan chart and tornado.
+   - Switch to the **Assumptions** tab and scroll to the **Calculation Inspector** and expand `cost_of_capital_pct` (`+0.97%`), `eatr_pct` (`21.7% -> 24.3%`), and `business_investment_pct` (`-0.29%` in Year 1, `-0.56%` in Year 5).
 4. **Talking Point (Judging Criterion — Transparency & Honest Uncertainty):**
    > *"The LLM never calculates a single projection. Every forecast comes from a pure-NumPy Hall–Jorgenson / King–Fullerton user-cost-of-capital and taxable-profit elasticity engine. Notice a crucial UK policy insight: under 100% full expensing (`z = 1`), plant & machinery is marginal-rate neutral, so a CT hike bites through structures and intangibles. Every number can be inspected down to its exact equation and literature source."*
 
@@ -78,7 +79,7 @@
 1. **Click:** Click the **Verification** tab on the `25% -> 28%` analysis, then click the **Report** tab.
    - Show the **18-check audit catalogue** (`16 passed, 1 warning (DATA-002), 1 non-blocking citation error (CITE-002 on E19)`): independent engine recompute within `1e-9` (`CALC-001`), zero data placeholders (`DATA-001`), causal language audit (`CAUSAL-001`), and `REPORT-001` verifying that every number in the narrative report traces to code, cited evidence, or the policy.
    - On the **Report** tab, show clickable inline provenance chips and click **Download .md**.
-2. **Click:** Navigate back to **New Analysis** (`/new`), click the third example chip **"Raise CT main rate to 45% (out-of-scope guardrail demo)"**, and click **Run analysis ->**.
+2. **Click:** Navigate back to **New Analysis** (`/`), click the third example chip **"Raise corporation tax to 45%"**, and click **Run analysis ->**.
    - Show the **`forecast_withheld` banner ("Quantitative forecast withheld")**: because a `+20pp` hike exceeds the validated historical precedent envelope (`SCOPE-001` blocking failure, limit `15pp`), Jane Avenue refuses to fabricate a quantitative forecast while still delivering historical context and research.
 3. **Talking Point (Judging Criterion — Trustworthy AI & Refusal):**
    > *"When a policy proposal falls outside historical UK evidence—like a jump to 45%—or if a blocking verification check fails, Jane Avenue withholds the quantitative forecast rather than extrapolating blindly."*
@@ -89,7 +90,7 @@
 
 1. **Click:** Click **Evaluation** in the top navigation bar (`/evaluation`).
 2. **Observe:**
-   - **Conditional Backtest Table (`FY2008-09..FY2024-25`, $n = 17$ unseen years):** Compares `jane_behavioural` (**Test MAE £5.54bn, MAPE 9.36%**) against `static` (**£5.71bn, MAPE 9.53%**), `naive_growth` (**£6.56bn**), and `linear_regression` (**£8.35bn**), plus **14/17 (82.4%)** leave-one-out 90% empirical interval coverage.
+   - **Conditional Backtest Table (`FY2008-09..FY2024-25`, $n = 17$ unseen years):** Compares `jane_behavioural` (**Test MAE £5.54bn, MAPE 9.36%**) against `static` (**£5.71bn, MAPE 9.53%**), `naive_growth` (**£6.56bn**), and `linear_regression` (**£8.35bn**), plus **14/17 (82.3%)** leave-one-out 90% empirical interval coverage.
    - **ML Honesty Card (`LightGBMRegressor`, `adopted = False`):** Shows that LightGBM achieved £3.27bn train MAE (`FY1983-84..FY2007-08`) but **£6.33bn** out-of-sample test MAE—worse than both `static` (£5.71bn) and `jane_behavioural` (£5.54bn)—and is therefore transparently rejected (`adopted = False`) and not wired into the live simulator.
    - **Research & Verifier Evaluation Cards:** **15/15 (100%)** fact accuracy, **15/15 (100%)** HTTP-200 URL validity, **15/15 (100%)** verbatim quote verification, **0** hallucinated sources, and **18/18 (100%)** fault-injection detection across the verifier suite.
 3. **Talking Point (Judging Criterion — Testing on Unseen Data):**
@@ -101,6 +102,6 @@
 
 | Failure Scenario | Immediate Action |
 |---|---|
-| **Live Gemini API latency / quota / Wi-Fi drop** | Ensure **Use cached research** is checked on `/new`, or start with `JANE_MODE=cached`. The committed `data/research_cache/` replays real verified Gemini traces with zero network dependency. |
+| **Live Gemini API latency / quota / Wi-Fi drop** | Ensure **Use cached research** is checked on `/`, or start with `JANE_MODE=cached`. The committed `data/research_cache/` replays real verified Gemini traces with zero network dependency. |
 | **Cache miss on an ad-hoc judge query** | `run_research` automatically falls back `live -> cache -> mock` without raising an exception, emitting a transparent warning step in the timeline. |
 | **Local machine / browser failure** | Play the pre-recorded 4-minute MP4 screen capture of the full golden path + withheld path + evaluation walkthrough while narrating live. |

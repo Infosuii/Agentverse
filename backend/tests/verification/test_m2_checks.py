@@ -261,7 +261,7 @@ FIG = KeyFigure(figure_id="rev_y1", label="Behavioural revenue, 2027-28", value=
 
 @pytest.mark.parametrize(("body", "ok"), [
     ("Behavioural revenue is estimated at £3.1bn in 2027-28.", True),                 # key figure + modelled year
-    ("Raising the rate from 25% to 28% from 1 April 2027 is a 3 point rise.", True),  # policy numbers
+    ("Raising the rate from 25% to 28% from {EFFECTIVE} is a 3 point rise.", True),   # policy numbers and date
     ("The OBR costed the 2023 rise at around £12bn a year [E1].", True),              # cited evidence value
     ("The OBR costed the 2023 rise at around £12bn a year.", False),                  # same number, no citation
     ("1. Revenue rises under these assumptions (see CALC-001 and p95).", True),       # numbering, IDs, percentiles
@@ -273,6 +273,10 @@ FIG = KeyFigure(figure_id="rev_y1", label="Behavioural revenue, 2027-28", value=
 ])
 def test_report_001_whitelist(clean_analysis: Analysis, body: str, ok: bool) -> None:
     body = body.replace("{X}", untraceable_number(clean_analysis))
+    # The fixture's effective date defaults to 1 April of next year, so the sentence follows it (a hard-coded
+    # "1 April 2027" started failing on 1 January 2027).
+    effective = clean_analysis.policy.effective_date
+    body = body.replace("{EFFECTIVE}", f"{effective.day} {effective:%B %Y}")
     result = report_001(_report_with(clean_analysis, body, [FIG]))
     assert result.status == ("pass" if ok else "fail"), result.detail
 

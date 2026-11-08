@@ -300,7 +300,7 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
           actions={
             analysis.sources && analysis.sources.length > 0 ? (
               <span className="text-xs text-slate-500">
-                {analysis.sources.length} cited sources
+                {analysis.sources.length} sources in total (research, precedents, data)
               </span>
             ) : undefined
           }

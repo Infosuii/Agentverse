@@ -38,18 +38,80 @@ _OTHER_TAX = re.compile(r"\b(income tax|national insurance|capital gains tax|inh
                         r"council tax|business rates|alcohol duty|tobacco duty|wealth tax|carbon tax|"
                         r"digital services tax|bank levy|windfall tax|energy profits levy)\b")
 
+# Jurisdiction. The model is the UK's. A change to another country's corporation tax ("US corporate tax",
+# "corporation tax in France") is refused; any other mention of another country ("as in Ireland", "match Ireland's
+# corporation tax") is only noted; naming the UK anywhere overrides both. Matched on the normalised (lower-case)
+# text, except "US", which is matched case-sensitively on the raw query so that the pronoun "us" never counts.
+_UK = re.compile(r"\b(uk|u\.k\.|united kingdom|great britain|britain|british|england|scotland|wales|"
+                 r"northern ireland|hmrc|obr|hm treasury)\b")
+# Every word that names another country, mapped to how the country is named in a note.
+_PLACES = {
+    "france": "France", "germany": "Germany", "ireland": "Ireland", "the netherlands": "the Netherlands",
+    "netherlands": "the Netherlands", "spain": "Spain", "italy": "Italy", "portugal": "Portugal",
+    "belgium": "Belgium", "luxembourg": "Luxembourg", "austria": "Austria", "switzerland": "Switzerland",
+    "sweden": "Sweden", "norway": "Norway", "denmark": "Denmark", "finland": "Finland", "poland": "Poland",
+    "japan": "Japan", "china": "China", "india": "India", "singapore": "Singapore", "hong kong": "Hong Kong",
+    "south korea": "South Korea", "canada": "Canada", "mexico": "Mexico", "brazil": "Brazil",
+    "australia": "Australia", "new zealand": "New Zealand", "america": "the US", "the united states": "the US",
+    "united states": "the US", "the usa": "the US", "usa": "the US", "the eu": "the EU", "european union": "the EU",
+}
+_DEMONYMS = {  # no "polish": it is also an ordinary verb
+    "french": "France", "german": "Germany", "irish": "Ireland", "dutch": "the Netherlands", "spanish": "Spain",
+    "italian": "Italy", "portuguese": "Portugal", "belgian": "Belgium", "austrian": "Austria",
+    "swiss": "Switzerland", "swedish": "Sweden", "norwegian": "Norway", "danish": "Denmark", "finnish": "Finland",
+    "japanese": "Japan", "chinese": "China", "indian": "India", "singaporean": "Singapore", "korean": "South Korea",
+    "canadian": "Canada", "mexican": "Mexico", "brazilian": "Brazil", "australian": "Australia",
+    "american": "the US", "eu": "the EU", "european": "the EU",
+}
+_COUNTRY_NAME = {**_PLACES, **_DEMONYMS}
+_PLACE_RE = "|".join(sorted(map(re.escape, _PLACES), key=len, reverse=True))
+_COUNTRY_RE = "|".join(sorted(map(re.escape, _COUNTRY_NAME), key=len, reverse=True))
+_TAX_WORDS = r"(?:corporation|corporate|company)\s+(?:income\s+|profits?\s+)?tax"
+# "French corporation tax", "Ireland's corporate tax", "corporation tax (rate) in France".
+_FOREIGN_TAX = re.compile(rf"\b(?P<a>{_COUNTRY_RE})(?:'s)?\s+(?:main\s+)?{_TAX_WORDS}"
+                          rf"|\b{_TAX_WORDS}\s+(?:main\s+)?(?:rate\s+)?(?:in|of)\s+(?P<b>{_PLACE_RE})\b")
+_US_TAX = re.compile(rf"\bU\.?S\.?A?(?:'s)?\s+(?i:(?:main\s+)?{_TAX_WORDS})"
+                     rf"|(?i:{_TAX_WORDS}\s+(?:rate\s+)?(?:in|of)\s+the\s+)U\.?S\.?A?\b")
+_FOREIGN_MENTION = re.compile(rf"\b({_COUNTRY_RE})\b")
+_US_MENTION = re.compile(r"\bU\.?S\.?A?\b")
+# "Match Ireland's corporation tax", "as low as Ireland's corporate tax": a comparison, not a foreign policy.
+_COMPARISON = re.compile(r"\b(match\w*|like|as|than|with|versus|vs|compared|similar|equal\w*|level\s+of|"
+                         r"in\s+line\s+with)\W*\w*\W*$")
+
+
+def _foreign_jurisdiction(raw: str, t: str) -> tuple[str | None, bool]:
+    """(the other country, as named in a note; whether the request changes that country's corporation tax).
+    (None, False) when the UK is named or no other country is."""
+    if _UK.search(t):
+        return None, False
+    for pattern, text in ((_FOREIGN_TAX, t), (_US_TAX, raw)):
+        for m in pattern.finditer(text):
+            if not _COMPARISON.search(text[max(0, m.start() - 30):m.start()].lower()):
+                word = m.groupdict().get("a") or m.groupdict().get("b")
+                return (_COUNTRY_NAME[word] if word else "the US"), True
+    if m := _FOREIGN_MENTION.search(t):
+        return _COUNTRY_NAME[m.group(1)], False
+    if _US_MENTION.search(raw):
+        return "the US", False
+    return None, False
+
+
 # Rates. Text is normalised first: "per cent" -> "%", "percentage points" / "points" -> "pp", number words -> digits.
 _FROM_TO = (
     re.compile(rf"\bfrom\s+{_NUM}\s*%?\s*{_ARROW}\s*{_NUM}\s*%"),        # from 25(%) to 28%
     re.compile(rf"\bfrom\s+{_NUM}\s*%\s*{_ARROW}\s*{_NUM}(?![\d.]|\s*pp)"),  # from 25% to 28
-    re.compile(rf"(?<![\d.]){_NUM}\s*%\s*{_ARROW}\s*{_NUM}\s*%"),         # 25% to 28%
+    re.compile(rf"(?<![\w.]){_NUM}\s*%\s*{_ARROW}\s*{_NUM}\s*%"),         # 25% to 28%
+    re.compile(rf"(?<![\w.]){_NUM}\s*%?\s*(?:->|→|=>)\s*{_NUM}\s*%?(?![\d.]|\s*pp)"),  # 25 -> 24.5 (symbolic arrow)
 )
 # A "strong" target names the new rate ("to 28%"); a "weak" one may name the current rate ("the rate is 25%").
 _TO_STRONG = re.compile(rf"\b(?:to|reach(?:es|ing)?|becomes?|set\s+at|fixed\s+at)\s+(?:a\s+rate\s+of\s+)?{_NUM}\s*%")
 _TO_WEAK = re.compile(rf"\b(?:at|of|be|were|was|is|stood\s+at)\s+(?:a\s+rate\s+of\s+)?{_NUM}\s*%")
-_BY = re.compile(rf"\bby\s+(?:an?\s+)?(?:extra\s+|additional\s+|further\s+|another\s+)?{_NUM}\s*(pp|%)")
-_DELTA_PP = re.compile(rf"(?<![\d.]){_NUM}\s*-?\s*pp\b")
-_ANY_PCT = re.compile(rf"(?<![\d.]){_NUM}\s*%")
+# Group 1 is a minus sign ("by -2%"), read as a cut.
+_BY = re.compile(rf"\bby\s+(?:an?\s+)?(?:extra\s+|additional\s+|further\s+|another\s+)?(-\s*|minus\s+)?{_NUM}\s*(pp|%)")
+_DELTA_PP = re.compile(rf"(?<![\w.]){_NUM}\s*-?\s*pp\b")
+_ANY_PCT = re.compile(rf"(?<![\w.]){_NUM}\s*%")
+# "from April 2027, then to 30% in 2029": a second change, which is not modelled.
+_SEQUENCE = re.compile(r"\b(then|later|thereafter|subsequently|followed\s+by|after\s+that|and\s+again)\b")
 
 _UP = re.compile(r"\b(rais\w*|increas\w*|hik\w*|lift\w*|up|ris(?:e|es|ing)|rose|higher|boost\w*|put\s+up)\b")
 _DOWN = re.compile(r"\b(cut\w*|reduc\w*|lower\w*|decreas\w*|slash\w*|drop\w*|fall\w*|fell|trim\w*)\b")
@@ -150,13 +212,17 @@ def _rates(t: str, current: float | None, st: _State) -> tuple[float | None, flo
     strong = _TO_STRONG.search(t)
     weak = None if strong else _TO_WEAK.search(t)
     by = _BY.search(t)
-    delta_text, delta_unit = (by.group(1), by.group(2)) if by else (None, None)
+    delta_text, delta_unit = (by.group(2), by.group(3)) if by else (None, None)
+    negative = bool(by and by.group(1))  # "by -2%": a cut of 2, whatever the verb says
     if delta_text is None and (d := _DELTA_PP.search(t)):
         delta_text, delta_unit = d.group(1), "pp"
     delta = _num(delta_text) if delta_text is not None else None
     if delta_unit == "%":
         st.note(f"Read 'by {delta_text}%' as {delta_text} percentage points, not a {delta_text}% proportional "
                 "change.", 0.1)
+    if negative:
+        unit = "percentage point" if delta == 1 else "percentage points"
+        st.note(f"Read the negative change (-{delta_text}) as a cut of {delta_text} {unit}.", 0.2)
 
     # "The rate is 25%; raise it by 3 points": with a change stated, a weak target is the starting rate.
     start = _num(weak.group(1)) if weak and delta is not None and _is_rate(_num(weak.group(1))) else None
@@ -172,7 +238,7 @@ def _rates(t: str, current: float | None, st: _State) -> tuple[float | None, flo
     if target is not None and _is_rate(_num(target.group(1))):
         proposed = _num(target.group(1))
         if delta is not None:  # "raise by 3pp to 28%": the starting rate is implied by the two numbers.
-            sign = _direction(t) or (1 if current is None or proposed >= current else -1)
+            sign = -1 if negative else _direction(t) or (1 if current is None or proposed >= current else -1)
             implied_start = round(proposed - sign * delta, 6)
             if _is_rate(implied_start):
                 if current is not None and implied_start != current:
@@ -193,7 +259,7 @@ def _rates(t: str, current: float | None, st: _State) -> tuple[float | None, flo
         if baseline is None:
             st.note("A change was stated but the starting rate is unknown, so the new rate is unknown.", 0.1)
             return None, None
-        sign = _direction(t)
+        sign = -1 if negative else _direction(t)
         if sign == 0:
             sign = 1
             st.note("Direction of the change not stated; assumed an increase.", 0.25)
@@ -289,6 +355,14 @@ def parse_rules(query: str, *, baseline: BaselineProjection | None = None, today
     st = _State()
 
     policy_type = _policy_type(t, st)
+    if policy_type in ("corporation_tax_main_rate", "corporation_tax_small_profits_rate"):
+        country, refused = _foreign_jurisdiction(raw, t)
+        if country is not None and refused:
+            st.note(f"The request is about corporation tax in {country}: only UK corporation tax is modelled.", 0.0)
+            policy_type = "unsupported"
+        elif country is not None:
+            st.note(f"The request mentions {country}; only UK corporation tax is modelled, so the results are for "
+                    "the UK.", 0.1)
     tax: TaxName | None = {"vat_standard_rate": "vat", "unsupported": None}.get(policy_type, "corporation_tax")  # type: ignore[assignment]
 
     # Only corporation tax has a known current rate (from the baseline); never borrow it for another tax.
@@ -298,6 +372,10 @@ def parse_rules(query: str, *, baseline: BaselineProjection | None = None, today
                    else baseline.current_main_rate_pct)
 
     rate_from, rate_to = _rates(t, current, st)
+    targets = list(dict.fromkeys(_num(m.group(1)) for m in _TO_STRONG.finditer(t)))
+    if _SEQUENCE.search(t) and len(targets) > 1:
+        st.note(f"The request describes more than one rate change ({', '.join(f'{x:g}%' for x in targets)}); only "
+                "the first is modelled.", 0.15)
     effective = _effective_date(t, today, st)
     horizon = _horizon(t, st)
 
