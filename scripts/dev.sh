@@ -23,7 +23,7 @@ if [ -f "frontend/package.json" ] && [ ! -d "frontend/node_modules" ]; then
 fi
 
 export PYTHONPATH="$REPO_ROOT/backend"
-export JANE_MODE="${JANE_MODE:-mock}"
+# JANE_MODE is not forced: .env or auto-detection decides (live when GEMINI_API_KEY is set, mock otherwise).
 
 echo "Starting backend on http://localhost:8000..."
 (cd backend && "$VENV_PY" -m uvicorn jane_avenue.api.app:app --reload --port 8000) &

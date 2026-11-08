@@ -25,7 +25,7 @@ if (Test-Path "frontend\package.json") {
 
 Write-Host "Starting backend on http://localhost:8000 and frontend on http://localhost:5173..."
 $env:PYTHONPATH = Join-Path $RepoRoot "backend"
-if (-not $env:JANE_MODE) { $env:JANE_MODE = "mock" }
+# JANE_MODE is not forced: .env or auto-detection decides (live when GEMINI_API_KEY is set, mock otherwise).
 
 $BackendProc = Start-Process -FilePath $VenvPython `
     -ArgumentList "-m", "uvicorn", "jane_avenue.api.app:app", "--reload", "--port", "8000" `
