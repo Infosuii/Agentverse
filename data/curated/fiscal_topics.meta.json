@@ -1,0 +1,14 @@
+{
+  "dataset_id": "fiscal_topics",
+  "title": "Fiscal policy topics",
+  "description": "Every policy the product can analyse, with counts of its precedents.",
+  "publisher": "OBR, HMRC, DWP, HM Treasury",
+  "source_url": "https://obr.uk/data/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-08",
+  "vintage": "Sources current at build date",
+  "file": "curated/fiscal_topics.csv",
+  "source_id": "D-obr-policy-measures",
+  "is_placeholder": false,
+  "notes": "Curated topic list. The counts are computed by the build, so zero means no measure was found."
+}

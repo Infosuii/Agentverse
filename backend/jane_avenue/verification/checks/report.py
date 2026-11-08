@@ -133,10 +133,19 @@ def allowed_numbers(analysis: Analysis, report: PolicyAssessment) -> set[float]:
         allowed |= _numbers(policy.raw_query)
     allowed |= _numbers(analysis.request.query)
     if analysis.precedents:
+        if analysis.precedents.policy_key:  # the summary is fixed text from the matcher (contract 1.2.0)
+            allowed |= _numbers(analysis.precedents.summary)
         for m in analysis.precedents.matches:
             c = m.change
-            allowed |= {c.old_rate_pct, c.new_rate_pct, round(abs(c.new_rate_pct - c.old_rate_pct), 6),
-                        float(c.effective_date.year)}
+            allowed.add(float(c.effective_date.year))
+            if c.old_rate_pct is not None and c.new_rate_pct is not None:
+                allowed |= {c.old_rate_pct, c.new_rate_pct, round(abs(c.new_rate_pct - c.old_rate_pct), 6),
+                            round(abs(c.new_rate_pct - c.old_rate_pct), 2)}
+            elif c.new_rate_pct is not None:
+                allowed.add(c.new_rate_pct)
+            if c.policy_key:  # the OBR's own wording and event names, quoted in the precedents section (contract 1.2.0)
+                for text in (c.title, c.fiscal_event, *m.comparability_notes):
+                    allowed |= _numbers(text or "")
             allowed |= {abs(x.value_gbp_bn) for x in c.official_costings}
             if c.announced_date:
                 allowed.add(float(c.announced_date.year))

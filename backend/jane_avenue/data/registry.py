@@ -143,6 +143,62 @@ def load_baseline(vintage: str = 'latest') -> BaselineProjection:
                               ' Years after the official horizon extrapolate each series at its last annual growth rate.')
 
 
+# ---- Every other fiscal policy (contract 1.2.0): built by data/scripts/build_fiscal_precedents.py ------------------------
+
+def load_fiscal_topics() -> list[dict]:
+    """One dict per policy the product can analyse, most specific first. Copies, so callers cannot change the cache."""
+    return [dict(r) for r in _rows('fiscal_topics')]
+
+
+def _optional_float(value) -> float | None:
+    return None if value == '' else float(value)
+
+
+@lru_cache(maxsize=128)
+def _fiscal_changes(policy_key: str) -> tuple[PolicyChange, ...]:
+    topic = next((t for t in _rows('fiscal_topics') if t['policy_key'] == policy_key), None)
+    if topic is None:
+        return ()
+    outturns = [r for r in _rows('fiscal_outturns') if topic['outturn_id'] and r['outturn_id'] == topic['outturn_id']]
+    costings: dict[str, list[Costing]] = {}
+    wanted = {r['change_id'] for r in _rows('fiscal_policy_changes') if r['policy_key'] == policy_key}
+    for r in _rows('fiscal_costings'):
+        if r['change_id'] in wanted:
+            costings.setdefault(r['change_id'], []).append(
+                Costing(**{k: (r[k] if r[k] != '' else None) for k in Costing.model_fields}))
+    result = []
+    for row in _rows('fiscal_policy_changes'):
+        if row['policy_key'] != policy_key:
+            continue
+        year = int(str(row['effective_date'])[:4])
+        reversed_ = str(row['reversed']).lower() == 'true'
+        observed = []
+        for r in outturns if not reversed_ else ():
+            if int(str(r['fiscal_year'])[:4]) in range(year - 1, year + 3):
+                observed.append(ObservedOutcome(metric=f"{r['kind']}_gbp_bn", fiscal_year=r['fiscal_year'],
+                                                value=r['value_gbp_bn'], source_id=r['source_id'], label=r['label']))
+                if r['pct_gdp'] != '':
+                    observed.append(ObservedOutcome(metric=f"{r['kind']}_pct_gdp", fiscal_year=r['fiscal_year'],
+                                                    value=r['pct_gdp'], source_id=r['source_id'], label=r['label']))
+        notes = str(row['notes'])
+        result.append(PolicyChange(
+            change_id=row['change_id'], tax='other', policy_type='tax_measure' if topic['kind'] == 'measure' else 'fiscal_other',
+            announced_date=row['announced_date'] or None, fiscal_event=row['fiscal_event'] or None,
+            effective_date=row['effective_date'], old_rate_pct=_optional_float(row['old_value']),
+            new_rate_pct=_optional_float(row['new_value']), other_measures=_split(row['other_measures']),
+            macro_context=load_macro_context(fiscal_year_range(f'{year - 1}-00', 1)[0]),
+            official_costings=costings.get(row['change_id'], []), observed_outcomes=observed,
+            notes=('Reversed: ' + notes) if reversed_ else notes, source_ids=_split(row['source_ids']),
+            is_placeholder=_meta('fiscal_policy_changes').is_placeholder, policy_key=policy_key, title=row['series'],
+            value_unit=row['value_unit'] or None, kind=row['kind']))
+    return tuple(sorted(result, key=lambda c: (c.effective_date, c.change_id)))
+
+
+def load_fiscal_changes(policy_key: str) -> list[PolicyChange]:
+    """Historical changes for one fiscal topic, oldest first."""
+    return list(_fiscal_changes(policy_key))
+
+
 _SERIES = {
     'ct_receipts': ('ct_receipts', 'ct_receipts_gbp_bn', '£bn'),
     'ct_main_rate': ('ct_main_rate_history', 'main_rate_pct', '%'),

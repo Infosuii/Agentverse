@@ -15,6 +15,10 @@ MACRO_FIELDS = ('real_gdp_growth_pct', 'cpi_inflation_pct', 'bank_rate_pct')
 def find_precedents(spec: PolicySpec, *, k: int = 5) -> PrecedentAnalysis:
     if k < 0:
         raise ValueError('k must be nonnegative')
+    if spec.policy_type in ('tax_measure', 'fiscal_other'):
+        from .fiscal import find_fiscal_precedents
+
+        return find_fiscal_precedents(spec, k=k)
     changes = [c for c in registry.load_policy_changes(spec.tax or 'corporation_tax')
                if c.policy_type == spec.policy_type]
     prop = spec.change_pp()

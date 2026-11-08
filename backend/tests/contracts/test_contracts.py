@@ -10,7 +10,7 @@ from jane_avenue import contracts as c
 def test_every_public_name_is_exported():
     for name in c.__all__:
         assert hasattr(c, name), name
-    assert c.CONTRACT_VERSION == "1.1.0"
+    assert c.CONTRACT_VERSION == "1.2.0"
     assert c.STAGES == ("parsing", "researching", "precedents", "modelling", "verifying", "reporting")
     assert "revenue_behavioural_gbp_bn" in c.METRIC_NAMES
 

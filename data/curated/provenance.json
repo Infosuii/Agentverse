@@ -188,5 +188,85 @@
     "url": "https://www.gov.uk/child-benefit/what-youll-get",
     "sha256": "28526902be4b543ca03b087ed0ed2d33d4aa1e20f4b071d0ec9887b4413a5dd4",
     "retrieved_at": "2026-11-08"
+  },
+  "obr_policy_measures.xlsx": {
+    "url": "https://obr.uk/download/policy-measures-database/",
+    "sha256": "1364c625a62daab8ec9b97a81ca5f93044a067fdf471e1645a62d73fdfa498f6",
+    "retrieved_at": "2026-11-08"
+  },
+  "obr_databank_oct_2026.xlsx": {
+    "url": "https://obr.uk/download/public-finances-databank-october-2026-efo/",
+    "sha256": "16a4bf46d8692e18790e87add342c6c44aa909cebb19f68ae857126a36d36459",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_table_a1.ods": {
+    "url": "https://assets.publishing.service.gov.uk/media/6a54c97ba4890e65cce64db8/Table_a1_-_Income_Tax_-_personal_allowances_and_reliefs.ods",
+    "sha256": "5b91e2bb93f0bc69c36a8dacb5605497fe169b5632dc4bdef255502daed8bde4",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_table_a2.ods": {
+    "url": "https://assets.publishing.service.gov.uk/media/6a54ca0b9e9c95844ae64d9a/Table_a2_-_Income_Tax_-_rates_and_allowances.ods",
+    "sha256": "31281efc152adf8c0e8ab56f73dcb80282f9542ec83b0289c93cd279dbb7eba2",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_table_a4.ods": {
+    "url": "https://assets.publishing.service.gov.uk/media/6a54ca0fa4890e65cce64db9/Table_a4_-_National_Insurance_Contributions_-_rates_and_allowances.ods",
+    "sha256": "0928355419d32ea47fd79cc7e2774e59b3559f7cbcd0a954d4d7abc573ce744d",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_oil_duty_history.html": {
+    "url": "https://www.gov.uk/government/statistics/hydrocarbon-oils-bulletin/historical-hydrocarbon-oils-duty-rates--2",
+    "sha256": "4c59921e72ef1f053e59cafee879030ac56407f82a56e1b4b96556f63fa644ca",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_alcohol_duty_history.html": {
+    "url": "https://www.gov.uk/government/statistics/alcohol-bulletin/alcohol-bulletin-historic-duty-rates",
+    "sha256": "0922f3e6eca2fed0d5fe5055ac1351b26f5101adc17e2b3d672bbdcd22ddabab",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_tobacco_duty_history.html": {
+    "url": "https://www.gov.uk/government/statistics/tobacco-bulletin/historical-tobacco-duty-rates",
+    "sha256": "4779d926fdaa1ba0b9646d3271789ef2aac7dc885f0dfd2243515bef8bf47f1d",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_ipt_history.html": {
+    "url": "https://www.gov.uk/government/statistics/insurance-premium-tax-ipt-bulletin/historical-insurance-premium-tax-rates--2",
+    "sha256": "ee41c23e076408311ad7223cddda752653bb1dd60335650533a23009d2666f3c",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_apd_history.html": {
+    "url": "https://www.gov.uk/government/statistics/air-passenger-duty-bulletin/air-passenger-duty-rates",
+    "sha256": "ba583cbfe5f128586615a079f081d414afde13268f834e78d1c4af3f7c0d9de7",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmrc_iht_thresholds.html": {
+    "url": "https://www.gov.uk/government/publications/rates-and-allowances-inheritance-tax-thresholds-and-interest-rates/inheritance-tax-thresholds-and-interest-rates",
+    "sha256": "937a4ea39e6b97cd5fd3b0d114a193e03a289863c42afe82a6363d8445a5778d",
+    "retrieved_at": "2026-11-08"
+  },
+  "govuk_minimum_wage.html": {
+    "url": "https://www.gov.uk/national-minimum-wage-rates",
+    "sha256": "6e8b3b0ee5eed8007ffb735442e17e6e2eb6424f0b266912d20e93512c7a57f1",
+    "retrieved_at": "2026-11-08"
+  },
+  "dwp_abstract_2025.ods": {
+    "url": "https://assets.publishing.service.gov.uk/media/697391a9276692606c0137af/data-tables-abstract-of-dwp-benefit-rate-statistics-2025.ods",
+    "sha256": "88418e37624a12186fbbd90f24f5dd31907b5743b1357e027f7b8bfd77da85d3",
+    "retrieved_at": "2026-11-08"
+  },
+  "dwp_expenditure_2026.xlsx": {
+    "url": "https://assets.publishing.service.gov.uk/media/69dcdc8c6b695d635c34dcc4/outturn-and-forecast-tables-spring-forecast-2026.xlsx",
+    "sha256": "11a591e4a2144ed6a686be6a9ded4e5d5b3b8d4887bd57c1ff0632bd251009de",
+    "retrieved_at": "2026-11-08"
+  },
+  "hmt_pesa_2026_ch4.xlsx": {
+    "url": "https://assets.publishing.service.gov.uk/media/6a5772e09e63154454413700/PESA_2026_CP_Chapter_4_tables.xlsx",
+    "sha256": "50ae80d95c4e542c34a17dfa8bc302858ca6508b6753e27bb31920cec9bb75c4",
+    "retrieved_at": "2026-11-08"
+  },
+  "commons_sn00701.pdf": {
+    "url": "https://researchbriefings.files.parliament.uk/documents/SN00701/SN00701.pdf",
+    "sha256": "a08762d127ae8ddeebdc2aa832cc3d584241f4c74384ed96a3226adda6576f43",
+    "retrieved_at": "2026-11-08"
   }
 }

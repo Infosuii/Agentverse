@@ -1765,12 +1765,29 @@
             "title": "Fiscal Year",
             "type": "string"
           },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
           "metric": {
             "enum": [
               "ct_receipts_gbp_bn",
               "ct_receipts_pct_gdp",
               "business_investment_gbp_bn",
-              "real_gdp_growth_pct"
+              "real_gdp_growth_pct",
+              "receipts_gbp_bn",
+              "receipts_pct_gdp",
+              "spending_gbp_bn",
+              "spending_pct_gdp",
+              "borrowing_gbp_bn",
+              "borrowing_pct_gdp"
             ],
             "title": "Metric",
             "type": "string"
@@ -2064,6 +2081,22 @@
             "title": "Is Placeholder",
             "type": "boolean"
           },
+          "kind": {
+            "anyOf": [
+              {
+                "enum": [
+                  "rate_series",
+                  "announced_measure",
+                  "fiscal_event"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "macro_context": {
             "anyOf": [
               {
@@ -2075,8 +2108,15 @@
             ]
           },
           "new_rate_pct": {
-            "title": "New Rate Pct",
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "New Rate Pct"
           },
           "notes": {
             "default": "",
@@ -2098,8 +2138,15 @@
             "type": "array"
           },
           "old_rate_pct": {
-            "title": "Old Rate Pct",
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Old Rate Pct"
           },
           "other_measures": {
             "items": {
@@ -2107,6 +2154,17 @@
             },
             "title": "Other Measures",
             "type": "array"
+          },
+          "policy_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Key"
           },
           "policy_type": {
             "enum": [
@@ -2130,10 +2188,33 @@
           "tax": {
             "enum": [
               "corporation_tax",
-              "vat"
+              "vat",
+              "other"
             ],
             "title": "Tax",
             "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "value_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Unit"
           }
         },
         "required": [
@@ -2287,7 +2368,8 @@
               {
                 "enum": [
                   "corporation_tax",
-                  "vat"
+                  "vat",
+                  "other"
                 ],
                 "type": "string"
               },
@@ -2332,6 +2414,28 @@
           "method": {
             "title": "Method",
             "type": "string"
+          },
+          "policy_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Key"
+          },
+          "policy_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Label"
           },
           "sources": {
             "items": {
@@ -3942,6 +4046,22 @@
               "default": "corporation_tax",
               "title": "Tax",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "policy_key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Policy Key"
             }
           }
         ],

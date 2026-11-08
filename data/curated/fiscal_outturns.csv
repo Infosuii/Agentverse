@@ -1,0 +1,1079 @@
+outturn_id,label,kind,fiscal_year,value_gbp_bn,pct_gdp,source_id
+alcohol,Alcohol duty receipts,receipts,1999-00,6.5,0.612645,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2000-01,6.612,0.591607,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2001-02,6.975,0.601508,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2002-03,7.382,0.610009,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2003-04,7.61,0.595651,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2004-05,7.889,0.585925,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2005-06,7.876,0.553262,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2006-07,7.914,0.529915,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2007-08,8.215,0.522607,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2008-09,8.598,0.539646,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2009-10,9.246,0.590018,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2010-11,9.434,0.577736,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2011-12,10.18,0.605615,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2012-13,10.139,0.584882,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2013-14,10.308,0.568778,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2014-15,10.449,0.553409,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2015-16,10.697,0.550303,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2016-17,11.117,0.548414,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2017-18,11.585,0.547853,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2018-19,12.097,0.552415,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2019-20,12.024,0.531246,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2020-21,12.156,0.576115,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2021-22,13.179,0.549034,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2022-23,12.384,0.470099,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2023-24,12.515,0.448646,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2024-25,12.545,0.42758,D-obr-databank-2026
+alcohol,Alcohol duty receipts,receipts,2025-26,12.432,0.404978,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,1999-00,0.882,0.083131,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2000-01,0.956,0.085538,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2001-02,0.802,0.069163,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2002-03,0.804,0.066438,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2003-04,0.799,0.062539,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2004-05,0.872,0.064764,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2005-06,0.906,0.063643,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2006-07,1.112,0.074459,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2007-08,1.949,0.123988,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2008-09,1.835,0.115172,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2009-10,1.87,0.119331,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2010-11,2.183,0.133686,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2011-12,2.637,0.156877,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2012-13,2.818,0.16256,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2013-14,3.003,0.1657,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2014-15,3.205,0.169746,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2015-16,3.04,0.156392,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2016-17,3.211,0.158402,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2017-18,3.36,0.158894,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2018-19,3.645,0.166451,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2019-20,3.546,0.15667,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2020-21,0.59,0.027962,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2021-22,1.199,0.04995,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2022-23,3.269,0.124092,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2023-24,3.846,0.137874,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2024-25,4.141,0.141141,D-obr-databank-2026
+apd,Air Passenger Duty receipts,receipts,2025-26,4.616,0.150368,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2010-11,0.042,0.002572,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2011-12,2.382,0.141707,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2012-13,1.773,0.102278,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2013-14,2.43,0.134083,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2014-15,3.117,0.165085,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2015-16,3.198,0.16452,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2016-17,3,0.147993,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2017-18,2.604,0.123143,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2018-19,2.523,0.115214,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2019-20,2.523,0.111472,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2020-21,1.902,0.090142,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2021-22,1.29,0.053741,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2022-23,1.284,0.048741,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2023-24,1.509,0.054096,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2024-25,1.329,0.045297,D-obr-databank-2026
+bank_levy,Bank levy receipts,receipts,2025-26,1.515,0.049352,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1946-47,0.629,,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1947-48,0.079,,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1948-49,-0.496,-4.341357,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1949-50,-0.587,-4.823732,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1950-51,-0.466,-3.657771,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1951-52,-0.069,-0.482416,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1952-53,0.209,1.345263,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1953-54,0.418,2.505244,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1954-55,0.257,1.460144,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1955-56,-0.038,-0.194125,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1956-57,0.082,0.38745,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1957-58,0.006,0.026652,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1958-59,0.071,0.304212,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1959-60,0.569,2.287161,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1960-61,0.662,2.484612,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1961-62,0.61,2.167194,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1962-63,0.538,1.826391,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1963-64,0.863,2.702872,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1964-65,0.651,1.867256,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1965-66,0.571,1.523764,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1966-67,0.957,2.394775,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1967-68,1.637,3.849953,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1968-69,0.27,0.577182,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1969-70,-0.872,-1.714645,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1970-71,-0.323,-0.559414,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1971-72,0.634,0.981561,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1972-73,1.913,2.587163,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1973-74,3.383,4.082248,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1974-75,5.592,5.694965,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1975-76,7.651,6.331303,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1976-77,7.004,4.929895,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1977-78,6.424,3.867852,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1978-79,8.685,4.515418,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1979-80,8.546,3.674798,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1980-81,11.537,4.312123,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1981-82,5.999,2.008107,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1982-83,8.542,2.604983,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1983-84,11.802,3.290728,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1984-85,12.535,3.24138,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1985-86,9.034,2.127855,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1986-87,8.74,1.915805,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1987-88,5.074,0.989408,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1988-89,-5.53,-0.966731,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1989-90,0.124,0.019632,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1990-91,7.315,1.073424,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1991-92,23.764,3.31629,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1992-93,46.347,6.252918,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1993-94,51.342,6.555246,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1994-95,43.924,5.332718,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1995-96,35.535,4.101999,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1996-97,28.924,3.121675,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1997-98,10.626,1.095026,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1998-99,0.123,0.012129,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,1999-00,-11.406,-1.075051,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2000-01,-16.305,-1.458887,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2001-02,5.641,0.486467,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2002-03,35.015,2.893453,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2003-04,43.51,3.40562,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2004-05,51.665,3.837221,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2005-06,45.385,3.188141,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2006-07,40.926,2.74037,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2007-08,45.057,2.866354,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2008-09,116.333,7.301538,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2009-10,159.644,10.18742,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2010-11,141.973,8.694393,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2011-12,122.1,7.263806,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2012-13,123.61,7.130611,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2013-14,102.446,5.652798,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2014-15,98.064,5.193754,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2015-16,80.101,4.120767,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2016-17,57.1,2.816807,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2017-18,61.413,2.904214,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2018-19,44.073,2.012614,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2019-20,58.763,2.596276,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2020-21,310.834,14.731497,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2021-22,115.978,4.831615,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2022-23,123.816,4.700084,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2023-24,135.234,4.847957,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2024-25,149.769,5.104681,D-obr-databank-2026
+borrowing,Public sector net borrowing,borrowing,2025-26,134.286,4.374423,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2001-02,0.822,0.070887,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2002-03,0.813,0.067182,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2003-04,0.816,0.06387,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2004-05,0.75,0.055703,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2005-06,0.741,0.052053,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2006-07,0.696,0.046604,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2007-08,0.705,0.044849,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2008-09,0.711,0.044625,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2009-10,0.687,0.04384,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2010-11,0.66,0.040418,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2011-12,0.678,0.040335,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2012-13,0.654,0.037727,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2013-14,1.188,0.065552,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2014-15,1.647,0.08723,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2015-16,1.773,0.091211,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2016-17,1.911,0.094272,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2017-18,1.869,0.088385,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2018-19,1.908,0.08713,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2019-20,2.001,0.088409,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2020-21,1.791,0.084882,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2021-22,1.947,0.081112,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2022-23,2.064,0.07835,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2023-24,1.857,0.066571,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2024-25,1.842,0.062782,D-obr-databank-2026
+carbon,Climate change levy and carbon price floor receipts,receipts,2025-26,1.74,0.056681,D-obr-databank-2026
+carers,Carer's Allowance spending,spending,1976-77,0.0019,0.001337,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1977-78,0.0029,0.001746,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1978-79,0.004,0.00208,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1979-80,0.004,0.00172,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1980-81,0.005,0.001869,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1981-82,0.006,0.002008,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1982-83,0.008,0.00244,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1983-84,0.01,0.002788,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1984-85,0.011,0.002844,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1985-86,0.013,0.003062,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1986-87,0.104,0.022797,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1987-88,0.183723,0.035825,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1988-89,0.173418,0.030316,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1989-90,0.183632,0.029074,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1990-91,0.20802,0.030525,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1991-92,0.284647,0.039723,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1992-93,0.345297,0.046586,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1993-94,0.44175,0.056402,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1994-95,0.526322,0.0639,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1995-96,0.61735,0.071264,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1996-97,0.736401,0.079477,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1997-98,0.745907,0.076867,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1998-99,0.782372,0.07715,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,1999-00,0.834528,0.078657,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2000-01,0.867011,0.077576,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2001-02,0.931781,0.080355,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2002-03,0.993108,0.082065,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2003-04,1.053669,0.082473,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2004-05,1.096041,0.081404,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2005-06,1.149139,0.080723,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2006-07,1.181264,0.079096,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2007-08,1.279885,0.081421,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2008-09,1.362996,0.085547,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2009-10,1.494898,0.095394,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2010-11,1.572083,0.096274,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2011-12,1.732977,0.103096,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2012-13,1.927223,0.111174,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2013-14,2.088267,0.115227,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2014-15,2.319212,0.122832,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2015-16,2.545444,0.130949,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2016-17,2.666974,0.131565,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2017-18,2.830015,0.133831,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2018-19,2.885011,0.131745,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2019-20,2.940799,0.129931,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2020-21,3.038584,0.144009,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2021-22,3.074766,0.128094,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2022-23,3.249815,0.123364,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2023-24,3.737836,0.133996,D-dwp-expenditure-2026
+carers,Carer's Allowance spending,spending,2024-25,4.239296,0.144491,D-dwp-expenditure-2026
+cgt,Capital Gains Tax receipts,receipts,1999-00,2.122,0.200005,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2000-01,3.236,0.28954,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2001-02,3.034,0.261645,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2002-03,1.596,0.131885,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2003-04,2.225,0.174155,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2004-05,2.282,0.169487,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2005-06,3.042,0.21369,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2006-07,3.83,0.256454,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2007-08,5.268,0.33513,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2008-09,7.852,0.492824,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2009-10,2.491,0.158959,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2010-11,3.601,0.220524,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2011-12,4.337,0.258011,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2012-13,3.927,0.226534,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2013-14,3.908,0.215637,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2014-15,5.559,0.294421,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2015-16,7.06,0.363199,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2016-17,8.561,0.422324,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2017-18,7.793,0.36853,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2018-19,9.191,0.419711,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2019-20,9.827,0.434178,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2020-21,11.131,0.527537,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2021-22,15.267,0.63602,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2022-23,16.928,0.642591,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2023-24,14.493,0.519555,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2024-25,13.686,0.466469,D-obr-databank-2026
+cgt,Capital Gains Tax receipts,receipts,2025-26,24.31,0.791909,D-obr-databank-2026
+child_benefit,Child Benefit spending,spending,2003-04,9.116271,0.71355,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2004-05,9.279948,0.689233,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2005-06,9.453751,0.664094,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2006-07,9.825894,0.657933,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2007-08,10.261521,0.652799,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2008-09,10.900407,0.684154,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2009-10,11.445824,0.730396,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2010-11,11.771077,0.720858,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2011-12,11.787967,0.701274,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2012-13,11.780395,0.679568,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2013-14,11.062286,0.610398,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2014-15,11.198377,0.593099,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2015-16,11.294499,0.581041,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2016-17,11.255342,0.555239,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2017-18,11.216142,0.53041,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2018-19,11.169537,0.510062,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2019-20,11.080885,0.489577,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2020-21,11.11563,0.526808,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2021-22,10.985516,0.457654,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2022-23,11.21644,0.425779,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2023-24,12.098955,0.433731,D-dwp-expenditure-2026
+child_benefit,Child Benefit spending,spending,2024-25,12.86579,0.438514,D-dwp-expenditure-2026
+council_tax,Council Tax receipts,receipts,1999-00,13.031,1.228212,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2000-01,14.314,1.280742,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2001-02,15.391,1.327285,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2002-03,16.797,1.388014,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2003-04,18.898,1.479187,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2004-05,20.049,1.489063,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2005-06,21.219,1.490562,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2006-07,22.333,1.495399,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2007-08,23.514,1.495871,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2008-09,24.516,1.538725,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2009-10,25.061,1.599227,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2010-11,25.585,1.566819,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2011-12,25.798,1.534739,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2012-13,26.149,1.508441,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2013-14,27.369,1.510175,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2014-15,28.142,1.490482,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2015-16,28.986,1.491174,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2016-17,30.36,1.497693,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2017-18,32.137,1.519755,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2018-19,34.199,1.561713,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2019-20,36.339,1.605535,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2020-21,37.58,1.781046,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2021-22,39.969,1.665099,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2022-23,41.968,1.593115,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2023-24,44.489,1.594871,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2024-25,47.417,1.616147,D-obr-databank-2026
+council_tax,Council Tax receipts,receipts,2025-26,50.444,1.643235,D-obr-databank-2026
+defence,Defence spending,spending,2003-04,28.8,2.254237,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2004-05,29.8,2.213282,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2005-06,31.0,2.177644,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2006-07,32.2,2.156084,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2007-08,33.7,2.143865,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2008-09,36.8,2.30972,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2009-10,37.7,2.405764,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2010-11,39.3,2.406723,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2011-12,38.7,2.302287,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2012-13,36.3,2.094015,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2013-14,36.4,2.008491,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2014-15,36.7,1.943739,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2015-16,36.6,1.882874,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2016-17,37.1,1.830185,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2017-18,38.7,1.830119,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2018-19,40.2,1.835751,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2019-20,42.2,1.864487,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2020-21,44.6,2.113748,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2021-22,48.7,2.02883,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2022-23,55.5,2.106793,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2023-24,56.8,2.036204,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2024-25,63.7,2.171132,D-hmt-pesa-2026-ch4
+defence,Defence spending,spending,2025-26,65.4,2.130433,D-hmt-pesa-2026-ch4
+disability,Disability benefit spending,spending,1971-72,0.006,0.009289,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1972-73,0.0232,0.031376,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1973-74,0.0358,0.0432,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1974-75,0.0624,0.063549,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1975-76,0.0961,0.079524,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1976-77,0.1355,0.095374,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1977-78,0.1865,0.112291,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1978-79,0.215,0.111781,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1979-80,0.28,0.120401,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1980-81,0.385,0.143899,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1981-82,0.503,0.168374,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1982-83,0.639,0.194871,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1983-84,0.799,0.222784,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1984-85,0.932,0.241002,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1985-86,1.108,0.260977,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1986-87,1.293,0.283425,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1987-88,1.493607,0.291247,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1988-89,1.678807,0.293482,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1989-90,1.928026,0.305257,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1990-91,2.265267,0.332412,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1991-92,2.768099,0.386291,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1992-93,3.594979,0.485018,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1993-94,4.567708,0.583196,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1994-95,5.08724,0.617631,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1995-96,5.99595,0.692145,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1996-97,6.890712,0.743692,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1997-98,7.474657,0.770275,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1998-99,7.996108,0.788495,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,1999-00,8.482797,0.79953,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2000-01,8.99876,0.805162,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2001-02,9.704519,0.836896,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2002-03,10.302648,0.851356,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2003-04,11.039132,0.864056,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2004-05,11.752749,0.872891,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2005-06,12.542443,0.881064,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2006-07,13.304852,0.890882,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2007-08,14.311465,0.910441,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2008-09,15.260007,0.957781,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2009-10,16.658767,1.063052,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2010-11,17.20646,1.05372,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2011-12,17.995037,1.070536,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2012-13,18.998116,1.095932,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2013-14,19.392373,1.070039,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2014-15,20.884292,1.106093,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2015-16,21.827406,1.122903,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2016-17,22.263837,1.0983,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2017-18,23.660736,1.118914,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2018-19,24.55935,1.121514,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2019-20,25.799996,1.1399,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2020-21,24.95623,1.182762,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2021-22,26.358502,1.098089,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2022-23,29.456903,1.118191,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2023-24,35.496256,1.272493,D-dwp-expenditure-2026
+disability,Disability benefit spending,spending,2024-25,41.693024,1.421052,D-dwp-expenditure-2026
+education,Education spending,spending,2003-04,61.0,4.7746,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2004-05,65.1,4.835055,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2005-06,69.8,4.903211,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2006-07,73.0,4.888018,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2007-08,78.7,5.006594,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2008-09,83.0,5.209422,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2009-10,88.5,5.647482,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2010-11,91.5,5.603438,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2011-12,86.5,5.145939,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2012-13,84.1,4.851423,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2013-14,84.7,4.673604,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2014-15,85.1,4.507143,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2015-16,84.9,4.36765,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2016-17,84.9,4.188212,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2017-18,86.1,4.071659,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2018-19,88.1,4.023127,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2019-20,90.6,4.002904,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2020-21,95.5,4.526075,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2021-22,100.1,4.170142,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2022-23,107.3,4.073133,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2023-24,114.2,4.093916,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2024-25,123.0,4.192295,D-hmt-pesa-2026-ch4
+education,Education spending,spending,2025-26,125.7,4.094731,D-hmt-pesa-2026-ch4
+epl,Energy Profits Levy receipts,receipts,2022-23,4.256,0.161559,D-obr-databank-2026
+epl,Energy Profits Levy receipts,receipts,2023-24,3.169,0.113604,D-obr-databank-2026
+epl,Energy Profits Levy receipts,receipts,2024-25,2.548,0.086845,D-obr-databank-2026
+epl,Energy Profits Levy receipts,receipts,2025-26,2.756,0.089778,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,1999-00,22.515,2.122109,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2000-01,22.63,2.024815,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2001-02,21.916,1.889987,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2002-03,22.147,1.83011,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2003-04,22.786,1.783509,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2004-05,23.313,1.731484,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2005-06,23.438,1.646439,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2006-07,23.585,1.579231,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2007-08,24.905,1.584361,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2008-09,24.615,1.544939,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2009-10,26.197,1.671719,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2010-11,27.256,1.669151,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2011-12,26.798,1.59423,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2012-13,26.571,1.532784,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2013-14,26.882,1.483304,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2014-15,27.156,1.438261,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2015-16,27.622,1.421004,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2016-17,27.937,1.378163,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2017-18,27.878,1.318347,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2018-19,28.146,1.2853,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2019-20,27.502,1.215098,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2020-21,21.175,1.003556,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2021-22,25.972,1.081987,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2022-23,25.105,0.952992,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2023-24,24.922,0.89342,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2024-25,24.359,0.830245,D-obr-databank-2026
+fuel,Fuel duty receipts,receipts,2025-26,24.559,0.80002,D-obr-databank-2026
+health,Health spending,spending,2003-04,74.9,5.862582,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2004-05,82.9,6.157082,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2005-06,89.8,6.308142,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2006-07,94.7,6.341031,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2007-08,101.1,6.431596,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2008-09,108.7,6.82246,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2009-10,116.9,7.459782,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2010-11,119.9,7.342647,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2011-12,121.3,7.216213,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2012-13,124.3,7.170415,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2013-14,129.4,7.140075,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2014-15,134.1,7.102325,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2015-16,138.5,7.125083,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2016-17,142.6,7.034618,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2017-18,147.3,6.9658,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2018-19,152.9,6.982248,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2019-20,164.1,7.250292,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2020-21,218.6,10.360209,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2021-22,216.2,9.00684,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2022-23,212.7,8.074141,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2023-24,222.0,7.958401,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2024-25,242.4,8.261888,D-hmt-pesa-2026-ch4
+health,Health spending,spending,2025-26,257.5,8.388171,D-hmt-pesa-2026-ch4
+housing_benefit,Housing benefit spending,spending,1970-71,0.022,0.038102,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1971-72,0.02,0.030964,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1972-73,0.105,0.142003,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1973-74,0.225,0.271506,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1974-75,0.138,0.140541,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1975-76,0.194,0.160538,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1976-77,0.201,0.141478,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1977-78,0.684,0.411832,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1978-79,0.721,0.374855,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1979-80,0.793,0.340992,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1980-81,1.024,0.382735,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1981-82,1.6556,0.554196,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1982-83,2.128,0.648959,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1983-84,2.516,0.701531,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1984-85,2.833,0.732575,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1985-86,3.177,0.748306,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1986-87,3.415,0.748567,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1987-88,3.536,0.689505,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1988-89,3.723449,0.650917,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1989-90,4.232537,0.670122,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1990-91,5.095341,0.747705,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1991-92,6.358652,0.887356,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1992-93,7.812096,1.053971,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1993-94,9.216845,1.176789,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1994-95,10.103236,1.226612,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1995-96,10.874667,1.255322,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1996-97,11.379762,1.228181,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1997-98,11.176396,1.151745,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1998-99,11.064804,1.091098,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,1999-00,11.064104,1.042826,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2000-01,11.162369,0.998751,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2001-02,11.588695,0.999383,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2002-03,12.63622,1.04419,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2003-04,12.347373,0.966455,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2004-05,13.15757,0.977228,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2005-06,13.928205,0.978409,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2006-07,14.840548,0.99371,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2007-08,15.731801,1.000797,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2008-09,17.103441,1.073482,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2009-10,19.989231,1.27558,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2010-11,21.42699,1.312184,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2011-12,22.82029,1.357593,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2012-13,23.899632,1.378683,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2013-14,24.169808,1.333649,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2014-15,24.316566,1.287876,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2015-16,24.243714,1.247209,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2016-17,23.4406,1.156351,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2017-18,22.30122,1.054622,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2018-19,20.729822,0.946637,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2019-20,24.422977,1.07906,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2020-21,29.07768,1.378092,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2021-22,29.524957,1.230003,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2022-23,29.727642,1.128468,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2023-24,32.187942,1.153894,D-dwp-expenditure-2026
+housing_benefit,Housing benefit spending,spending,2024-25,36.017756,1.227618,D-dwp-expenditure-2026
+iht,Inheritance Tax receipts,receipts,1999-00,2.047,0.192936,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2000-01,2.223,0.198903,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2001-02,2.357,0.203262,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2002-03,2.356,0.194687,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2003-04,2.504,0.195993,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2004-05,2.924,0.217169,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2005-06,3.258,0.228863,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2006-07,3.545,0.23737,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2007-08,3.824,0.243268,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2008-09,2.837,0.178062,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2009-10,2.386,0.152259,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2010-11,2.716,0.166327,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2011-12,2.905,0.17282,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2012-13,3.106,0.179174,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2013-14,3.401,0.187661,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2014-15,3.802,0.201365,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2015-16,4.65,0.239218,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2016-17,4.823,0.237924,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2017-18,5.204,0.246097,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2018-19,5.36,0.244767,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2019-20,5.122,0.226301,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2020-21,5.327,0.252465,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2021-22,6.056,0.252291,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2022-23,7.086,0.268986,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2023-24,7.499,0.268829,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2024-25,8.25,0.281191,D-obr-databank-2026
+iht,Inheritance Tax receipts,receipts,2025-26,8.466,0.275784,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,1999-00,96.696,9.113898,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2000-01,107.088,9.581678,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2001-02,108.654,9.370076,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2002-03,110.777,9.154019,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2003-04,116.921,9.151655,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2004-05,126.432,9.390256,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2005-06,136.074,9.558732,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2006-07,146.495,9.80918,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2007-08,157.092,9.993594,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2008-09,150.839,9.467277,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2009-10,147.148,9.390008,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2010-11,153.246,9.384749,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2011-12,152.702,9.084338,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2012-13,152.291,8.785114,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2013-14,157.618,8.697096,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2014-15,163.619,8.665737,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2015-16,168.874,8.687663,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2016-17,176.951,8.729191,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2017-18,180.609,8.540979,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2018-19,192.505,8.790829,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2019-20,192.537,8.5067,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2020-21,195.263,9.254188,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2021-22,224.779,9.364239,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2022-23,251.987,9.565484,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2023-24,276.998,9.930006,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2024-25,305.905,10.426373,D-obr-databank-2026
+income_tax,Income Tax receipts,receipts,2025-26,329.338,10.728325,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,1999-00,1.511,0.142416,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2000-01,1.751,0.15667,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2001-02,1.921,0.165663,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2002-03,2.189,0.180887,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2003-04,2.313,0.181043,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2004-05,2.353,0.17476,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2005-06,2.347,0.164869,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2006-07,2.304,0.154274,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2007-08,2.302,0.146444,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2008-09,2.271,0.142537,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2009-10,2.262,0.144346,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2010-11,2.509,0.153651,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2011-12,3.002,0.178591,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2012-13,3.033,0.174963,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2013-14,3.018,0.166528,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2014-15,2.973,0.157459,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2015-16,3.717,0.19122,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2016-17,4.907,0.242068,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2017-18,5.898,0.278916,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2018-19,6.306,0.287966,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2019-20,6.48,0.2863,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2020-21,6.306,0.298863,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2021-22,6.792,0.282953,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2022-23,7.455,0.282994,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2023-24,8.382,0.300483,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2024-25,8.94,0.304708,D-obr-databank-2026
+ipt,Insurance Premium Tax receipts,receipts,2025-26,9.039,0.294449,D-obr-databank-2026
+nics,National Insurance receipts,receipts,1999-00,56.935,5.366301,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2000-01,62.068,5.553522,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2001-02,63.162,5.446949,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2002-03,63.529,5.249697,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2003-04,75.148,5.881994,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2004-05,80.923,6.010248,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2005-06,85.559,6.010226,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2006-07,90.916,6.087658,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2007-08,95.437,6.071338,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2008-09,96.613,6.06383,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2009-10,96.638,6.166795,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2010-11,97.747,5.986003,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2011-12,101.597,6.044069,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2012-13,104.483,6.027244,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2013-14,107.306,5.920965,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2014-15,110.26,5.83969,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2015-16,114.061,5.867827,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2016-17,125.784,6.205066,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2017-18,131.547,6.220843,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2018-19,137.461,6.277219,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2019-20,143.674,6.347828,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2020-21,144.213,6.834752,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2021-22,160.846,6.700805,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2022-23,179.368,6.808851,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2023-24,179.081,6.419813,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2024-25,171.402,5.842014,D-obr-databank-2026
+nics,National Insurance receipts,receipts,2025-26,204.429,6.659361,D-obr-databank-2026
+pension_credit,Pension Credit spending,spending,1978-79,0.561,0.291669,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1979-80,0.624,0.268321,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1980-81,0.729,0.272474,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1981-82,0.92413,0.309344,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1982-83,0.941,0.286969,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1983-84,0.985,0.274646,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1984-85,1.189,0.307459,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1985-86,1.371,0.322923,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1986-87,1.458,0.319593,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1987-88,1.574,0.306923,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1988-89,1.853977,0.324104,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1989-90,2.050058,0.324578,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1990-91,2.305185,0.33827,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1991-92,2.758,0.384882,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1992-93,3.728,0.502964,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1993-94,3.939,0.502924,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1994-95,3.969,0.481868,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1995-96,3.888,0.448813,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1996-97,3.815,0.411741,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1997-98,3.773,0.388814,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1998-99,3.619,0.356869,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,1999-00,3.781,0.356371,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2000-01,4.095,0.366399,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2001-02,4.486,0.386863,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2002-03,4.484,0.370534,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2003-04,4.851185,0.379713,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2004-05,6.099314,0.453003,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2005-06,6.50856,0.457204,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2006-07,6.954725,0.465682,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2007-08,7.455203,0.474272,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2008-09,7.793517,0.489153,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2009-10,8.225126,0.524873,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2010-11,8.242157,0.504748,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2011-12,8.052153,0.479028,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2012-13,7.510875,0.433275,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2013-14,7.041523,0.388539,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2014-15,6.57608,0.348288,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2015-16,6.078706,0.312717,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2016-17,5.665586,0.27949,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2017-18,5.367648,0.253835,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2018-19,5.139877,0.234715,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2019-20,5.060887,0.223601,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2020-21,5.070937,0.240329,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2021-22,4.834399,0.2014,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2022-23,4.93531,0.187346,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2023-24,5.467138,0.19599,D-dwp-expenditure-2026
+pension_credit,Pension Credit spending,spending,2024-25,6.007695,0.204764,D-dwp-expenditure-2026
+stamp,Stamp duty receipts (land and shares),receipts,1999-00,6.898,0.650158,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2000-01,8.165,0.730562,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2001-02,6.983,0.602198,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2002-03,7.549,0.623809,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2003-04,7.544,0.590485,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2004-05,8.966,0.665916,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2005-06,10.918,0.766952,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2006-07,13.393,0.896784,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2007-08,14.123,0.898451,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2008-09,8.002,0.502238,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2009-10,7.904,0.504381,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2010-11,8.931,0.546932,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2011-12,8.919,0.530597,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2012-13,9.14,0.527253,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2013-14,12.481,0.688681,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2014-15,13.779,0.729776,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2015-16,14.597,0.750937,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2016-17,16.123,0.795366,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2017-18,17.114,0.809319,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2018-19,16.507,0.7538,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2019-20,16.166,0.714249,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2020-21,13.204,0.625783,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2021-22,19.788,0.824363,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2022-23,20.477,0.777312,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2023-24,15.996,0.573435,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2024-25,19.549,0.666302,D-obr-databank-2026
+stamp,Stamp duty receipts (land and shares),receipts,2025-26,21.362,0.695876,D-obr-databank-2026
+state_pension,State Pension spending,spending,1948-49,0.1764,1.543982,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1949-50,0.2489,2.045361,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1950-51,0.2486,1.951334,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1951-52,0.2752,1.924072,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1952-53,0.3155,2.030767,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1953-54,0.3341,2.002397,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1954-55,0.3481,1.977729,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1955-56,0.4325,2.209451,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1956-57,0.4479,2.11633,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1957-58,0.4821,2.141525,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1958-59,0.6174,2.645358,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1959-60,0.657,2.640888,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1960-61,0.6769,2.540534,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1961-62,0.7839,2.785021,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1962-63,0.8071,2.739926,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1963-64,0.9588,3.002913,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1964-65,1.0147,2.910452,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1965-66,1.2378,3.303178,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1966-67,1.2716,3.182023,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1967-68,1.3846,3.25635,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1968-69,1.5433,3.29913,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1969-70,1.6269,3.199033,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1970-71,1.7852,3.091844,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1971-72,2.0682,3.201994,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1972-73,2.3956,3.239837,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1973-74,2.7798,3.35437,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1974-75,3.609,3.675452,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1975-76,4.8249,3.992668,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1976-77,5.6871,4.00297,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1977-78,6.6275,3.990379,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1978-79,7.589,3.945597,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1979-80,8.852,3.806379,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1980-81,10.564,3.94845,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1981-82,12.165,4.072116,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1982-83,13.589,4.144125,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1983-84,14.654,4.085946,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1984-85,15.307,3.958181,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1985-86,16.625,3.915828,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1986-87,17.816453,3.905361,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1987-88,18.685545,3.6436,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1988-89,19.27372,3.369349,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1989-90,20.731936,3.282411,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1990-91,22.734863,3.33618,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1991-92,25.578864,3.569556,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1992-93,26.741489,3.607835,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1993-94,28.21928,3.602983,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1994-95,28.779506,3.494058,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1995-96,29.998344,3.462872,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1996-97,32.024286,3.456278,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1997-98,33.586,3.46109,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1998-99,35.603291,3.510833,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,1999-00,37.802438,3.562997,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2000-01,38.7452,3.466719,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2001-02,41.921603,3.615225,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2002-03,44.367259,3.666273,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2003-04,46.506352,3.640151,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2004-05,48.801805,3.624568,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2005-06,51.422463,3.612252,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2006-07,53.663457,3.593259,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2007-08,57.593742,3.663894,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2008-09,61.58435,3.865287,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2009-10,66.895842,4.268848,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2010-11,69.835141,4.276687,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2011-12,74.15052,4.411261,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2012-13,79.809006,4.603891,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2013-14,83.11034,4.585889,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2014-15,86.515831,4.58213,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2015-16,89.367861,4.597498,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2016-17,91.58029,4.517758,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2017-18,93.800447,4.435813,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2018-19,96.74337,4.41783,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2019-20,98.807419,4.365525,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2020-21,102.034155,4.835751,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2021-22,104.69167,4.36143,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2022-23,110.533357,4.195872,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2023-24,124.106079,4.449036,D-dwp-expenditure-2026
+state_pension,State Pension spending,spending,2024-25,136.584368,4.6553,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,1999-00,1.055193,0.099455,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2000-01,4.298396,0.384598,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2001-02,5.456063,0.470519,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2002-03,6.393346,0.528312,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2003-04,12.874042,1.007679,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2004-05,15.327745,1.13841,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2005-06,16.712419,1.17399,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2006-07,18.031167,1.207352,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2007-08,19.342612,1.230503,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2008-09,23.268818,1.460447,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2009-10,26.651727,1.700736,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2010-11,27.878191,1.707254,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2011-12,28.78215,1.712268,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2012-13,28.831585,1.663189,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2013-14,28.653771,1.581067,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2014-15,28.669152,1.518402,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2015-16,27.519381,1.415725,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2016-17,26.43285,1.303962,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2017-18,24.978385,1.181225,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2018-19,22.005061,1.004871,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2019-20,17.289709,0.763897,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2020-21,14.608861,0.692364,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2021-22,10.315716,0.42975,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2022-23,8.490062,0.322285,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2023-24,7.033724,0.25215,D-dwp-expenditure-2026
+tax_credits,Personal tax credits spending,spending,2024-25,1.763603,0.06011,D-dwp-expenditure-2026
+tme,Total managed expenditure,spending,1946-47,4.277,,D-obr-databank-2026
+tme,Total managed expenditure,spending,1947-48,4.028,,D-obr-databank-2026
+tme,Total managed expenditure,spending,1948-49,4.41,38.599562,D-obr-databank-2026
+tme,Total managed expenditure,spending,1949-50,4.682,38.474813,D-obr-databank-2026
+tme,Total managed expenditure,spending,1950-51,4.992,39.183673,D-obr-databank-2026
+tme,Total managed expenditure,spending,1951-52,5.814,40.648815,D-obr-databank-2026
+tme,Total managed expenditure,spending,1952-53,6.412,41.271885,D-obr-databank-2026
+tme,Total managed expenditure,spending,1953-54,6.758,40.503446,D-obr-databank-2026
+tme,Total managed expenditure,spending,1954-55,6.851,38.923925,D-obr-databank-2026
+tme,Total managed expenditure,spending,1955-56,7.002,35.770115,D-obr-databank-2026
+tme,Total managed expenditure,spending,1956-57,7.61,35.957286,D-obr-databank-2026
+tme,Total managed expenditure,spending,1957-58,7.922,35.190121,D-obr-databank-2026
+tme,Total managed expenditure,spending,1958-59,8.39,35.948413,D-obr-databank-2026
+tme,Total managed expenditure,spending,1959-60,8.941,35.939384,D-obr-databank-2026
+tme,Total managed expenditure,spending,1960-61,9.575,35.936796,D-obr-databank-2026
+tme,Total managed expenditure,spending,1961-62,10.59,37.623903,D-obr-databank-2026
+tme,Total managed expenditure,spending,1962-63,10.987,37.298435,D-obr-databank-2026
+tme,Total managed expenditure,spending,1963-64,11.919,37.3297,D-obr-databank-2026
+tme,Total managed expenditure,spending,1964-65,12.908,37.023864,D-obr-databank-2026
+tme,Total managed expenditure,spending,1965-66,14.417,38.473034,D-obr-databank-2026
+tme,Total managed expenditure,spending,1966-67,15.994,40.023022,D-obr-databank-2026
+tme,Total managed expenditure,spending,1967-68,18.252,42.925682,D-obr-databank-2026
+tme,Total managed expenditure,spending,1968-69,19.353,41.371128,D-obr-databank-2026
+tme,Total managed expenditure,spending,1969-70,20.407,40.127025,D-obr-databank-2026
+tme,Total managed expenditure,spending,1970-71,22.794,39.477649,D-obr-databank-2026
+tme,Total managed expenditure,spending,1971-72,25.414,39.346039,D-obr-databank-2026
+tme,Total managed expenditure,spending,1972-73,28.437,38.458522,D-obr-databank-2026
+tme,Total managed expenditure,spending,1973-74,33.357,40.251717,D-obr-databank-2026
+tme,Total managed expenditure,spending,1974-75,43.895,44.703234,D-obr-databank-2026
+tme,Total managed expenditure,spending,1975-76,56.133,46.450796,D-obr-databank-2026
+tme,Total managed expenditure,spending,1976-77,64.132,45.140492,D-obr-databank-2026
+tme,Total managed expenditure,spending,1977-78,70.183,42.256769,D-obr-databank-2026
+tme,Total managed expenditure,spending,1978-79,79.669,41.420706,D-obr-databank-2026
+tme,Total managed expenditure,spending,1979-80,95.223,40.946091,D-obr-databank-2026
+tme,Total managed expenditure,spending,1980-81,114.521,42.803908,D-obr-databank-2026
+tme,Total managed expenditure,spending,1981-82,127.921,42.820321,D-obr-databank-2026
+tme,Total managed expenditure,spending,1982-83,141.421,43.127992,D-obr-databank-2026
+tme,Total managed expenditure,spending,1983-84,153.163,42.706138,D-obr-databank-2026
+tme,Total managed expenditure,spending,1984-85,163.9,42.382304,D-obr-databank-2026
+tme,Total managed expenditure,spending,1985-86,171.279,40.342803,D-obr-databank-2026
+tme,Total managed expenditure,spending,1986-87,178.961,39.228198,D-obr-databank-2026
+tme,Total managed expenditure,spending,1987-88,189.995,37.048195,D-obr-databank-2026
+tme,Total managed expenditure,spending,1988-89,196.993,34.437469,D-obr-databank-2026
+tme,Total managed expenditure,spending,1989-90,218.564,34.60443,D-obr-databank-2026
+tme,Total managed expenditure,spending,1990-91,237.479,34.848356,D-obr-databank-2026
+tme,Total managed expenditure,spending,1991-92,263.186,36.727864,D-obr-databank-2026
+tme,Total managed expenditure,spending,1992-93,283.035,38.185741,D-obr-databank-2026
+tme,Total managed expenditure,spending,1993-94,295.829,37.770869,D-obr-databank-2026
+tme,Total managed expenditure,spending,1994-95,308.253,37.424333,D-obr-databank-2026
+tme,Total managed expenditure,spending,1995-96,322.636,37.243632,D-obr-databank-2026
+tme,Total managed expenditure,spending,1996-97,328.243,35.426214,D-obr-databank-2026
+tme,Total managed expenditure,spending,1997-98,344.205,35.470863,D-obr-databank-2026
+tme,Total managed expenditure,spending,1998-99,354.819,34.98863,D-obr-databank-2026
+tme,Total managed expenditure,spending,1999-00,367.112,34.601446,D-obr-databank-2026
+tme,Total managed expenditure,spending,2000-01,390.115,34.905465,D-obr-databank-2026
+tme,Total managed expenditure,spending,2001-02,418.048,36.051518,D-obr-databank-2026
+tme,Total managed expenditure,spending,2002-03,452.805,37.417386,D-obr-databank-2026
+tme,Total managed expenditure,spending,2003-04,494.413,38.698757,D-obr-databank-2026
+tme,Total managed expenditure,spending,2004-05,534.903,39.727885,D-obr-databank-2026
+tme,Total managed expenditure,spending,2005-06,565.142,39.699288,D-obr-databank-2026
+tme,Total managed expenditure,spending,2006-07,592.445,39.66961,D-obr-databank-2026
+tme,Total managed expenditure,spending,2007-08,629.204,40.027559,D-obr-databank-2026
+tme,Total managed expenditure,spending,2008-09,685.79,43.043005,D-obr-databank-2026
+tme,Total managed expenditure,spending,2009-10,720.331,45.96674,D-obr-databank-2026
+tme,Total managed expenditure,spending,2010-11,743.04,45.503593,D-obr-databank-2026
+tme,Total managed expenditure,spending,2011-12,745.755,44.365434,D-obr-databank-2026
+tme,Total managed expenditure,spending,2012-13,759.546,43.815445,D-obr-databank-2026
+tme,Total managed expenditure,spending,2013-14,765.389,42.232879,D-obr-databank-2026
+tme,Total managed expenditure,spending,2014-15,787.749,41.721474,D-obr-databank-2026
+tme,Total managed expenditure,spending,2015-16,794.365,40.865824,D-obr-databank-2026
+tme,Total managed expenditure,spending,2016-17,812.735,40.093127,D-obr-databank-2026
+tme,Total managed expenditure,spending,2017-18,842.25,39.829908,D-obr-databank-2026
+tme,Total managed expenditure,spending,2018-19,857.627,39.163929,D-obr-databank-2026
+tme,Total managed expenditure,spending,2019-20,886.838,39.182418,D-obr-databank-2026
+tme,Total managed expenditure,spending,2020-21,1103.793,52.312564,D-obr-databank-2026
+tme,Total managed expenditure,spending,2021-22,1038.195,43.250953,D-obr-databank-2026
+tme,Total managed expenditure,spending,2022-23,1158.392,43.972827,D-obr-databank-2026
+tme,Total managed expenditure,spending,2023-24,1231.793,44.158121,D-obr-databank-2026
+tme,Total managed expenditure,spending,2024-25,1290.348,43.979831,D-obr-databank-2026
+tme,Total managed expenditure,spending,2025-26,1365.598,44.484932,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,1999-00,7.796,0.734797,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2000-01,7.638,0.683409,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2001-02,7.639,0.65877,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2002-03,8.02,0.66273,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2003-04,8.595,0.672749,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2004-05,8.071,0.599443,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2005-06,8.438,0.592741,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2006-07,7.641,0.511635,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2007-08,7.982,0.507784,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2008-09,7.896,0.495585,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2009-10,9.462,0.603802,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2010-11,9.305,0.569836,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2011-12,9.878,0.587648,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2012-13,9.59,0.553212,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2013-14,9.556,0.527284,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2014-15,9.251,0.48996,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2015-16,9.106,0.468455,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2016-17,8.681,0.428243,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2017-18,8.766,0.414543,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2018-19,9.152,0.41793,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2019-20,9.693,0.428258,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2020-21,9.788,0.463887,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2021-22,10.191,0.424555,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2022-23,9.375,0.355877,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2023-24,8.969,0.321527,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2024-25,7.909,0.269568,D-obr-databank-2026
+tobacco,Tobacco duty receipts,receipts,2025-26,7.468,0.243273,D-obr-databank-2026
+unemployment,Unemployment benefit spending,spending,1948-49,0.0152,0.133042,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1949-50,0.0192,0.157778,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1950-51,0.017,0.133438,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1951-52,0.0148,0.103475,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1952-53,0.0268,0.172503,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1953-54,0.0222,0.133054,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1954-55,0.0157,0.089199,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1955-56,0.0157,0.080204,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1956-57,0.0209,0.098753,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1957-58,0.0254,0.112829,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1958-59,0.0494,0.211663,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1959-60,0.0419,0.168422,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1960-61,0.0302,0.113346,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1961-62,0.0363,0.128966,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1962-63,0.0645,0.218963,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1963-64,0.0646,0.202324,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1964-65,0.0449,0.128786,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1965-66,0.0492,0.131295,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1966-67,0.0783,0.195936,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1967-68,0.1217,0.286218,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1968-69,0.1233,0.26358,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1969-70,0.1271,0.249921,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1970-71,0.1504,0.260483,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1971-72,0.2394,0.37064,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1972-73,0.2091,0.282789,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1973-74,0.17409,0.210073,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1974-75,0.214122,0.218065,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1975-76,0.454385,0.37601,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1976-77,0.558846,0.393354,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1977-78,0.628826,0.378612,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1978-79,1.147,0.596337,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1979-80,1.176,0.505682,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1980-81,2.074,0.775188,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1981-82,3.21404,1.075869,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1982-83,4.067,1.240279,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1983-84,4.754,1.325548,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1984-85,5.308,1.372576,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1985-86,5.803,1.36683,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1986-87,6.07,1.330542,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1987-88,5.452928,1.063297,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1988-89,4.151745,0.72579,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1989-90,3.36441,0.532675,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1990-91,3.810318,0.559137,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1991-92,5.803815,0.809928,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1992-93,7.139158,0.963181,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1993-94,7.388764,0.943383,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1994-95,6.482483,0.787024,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1995-96,5.924827,0.683935,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1996-97,5.112221,0.551746,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1997-98,3.893466,0.401228,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1998-99,3.557693,0.350823,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,1999-00,3.255086,0.306802,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2000-01,2.88222,0.257886,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2001-02,2.605571,0.224699,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2002-03,2.624116,0.216843,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2003-04,2.559188,0.200313,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2004-05,2.204483,0.16373,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2005-06,2.311204,0.162354,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2006-07,2.439798,0.163367,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2007-08,2.241488,0.142595,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2008-09,2.856828,0.179306,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2009-10,4.684018,0.298903,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2010-11,4.473485,0.273955,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2011-12,4.933985,0.293526,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2012-13,5.169807,0.298227,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2013-14,4.343103,0.239645,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2014-15,3.115682,0.165016,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2015-16,2.770625,0.142534,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2016-17,2.768846,0.13659,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2017-18,2.992676,0.141523,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2018-19,3.26357,0.149032,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2019-20,3.741323,0.1653,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2020-21,17.599348,0.834094,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2021-22,13.453215,0.560458,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2022-23,10.165742,0.385894,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2023-24,11.442834,0.41021,D-dwp-expenditure-2026
+unemployment,Unemployment benefit spending,spending,2024-25,13.639557,0.464887,D-dwp-expenditure-2026
+universal_credit,Universal Credit and equivalents spending,spending,2019-20,64.221353,2.837438,D-dwp-expenditure-2026
+universal_credit,Universal Credit and equivalents spending,spending,2020-21,79.909907,3.787207,D-dwp-expenditure-2026
+universal_credit,Universal Credit and equivalents spending,spending,2021-22,75.289544,3.136544,D-dwp-expenditure-2026
+universal_credit,Universal Credit and equivalents spending,spending,2022-23,73.403838,2.786427,D-dwp-expenditure-2026
+universal_credit,Universal Credit and equivalents spending,spending,2023-24,81.994441,2.93939,D-dwp-expenditure-2026
+universal_credit,Universal Credit and equivalents spending,spending,2024-25,90.0416,3.068951,D-dwp-expenditure-2026
+vat,VAT receipts (net of refunds),receipts,1999-00,56.923,5.36517,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2000-01,59.04,5.282593,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2001-02,61.738,5.324146,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2002-03,63.988,5.287626,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2003-04,70.46,5.515054,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2004-05,72.311,5.370624,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2005-06,73.303,5.149285,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2006-07,78.903,5.283277,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2007-08,80.853,5.143559,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2008-09,75.817,4.758587,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2009-10,73.544,4.69309,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2010-11,86.291,5.28444,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2011-12,98.098,5.835912,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2012-13,100.694,5.80867,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2013-14,106.455,5.874008,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2014-15,111.176,5.888204,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2015-16,116.152,5.975398,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2016-17,121.973,6.017065,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2017-18,126.291,5.972287,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2018-19,133.497,6.096202,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2019-20,134.743,5.953237,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2020-21,117.411,5.564513,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2021-22,143.394,5.973759,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2022-23,160.126,6.07842,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2023-24,168.305,6.033508,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2024-25,173.14,5.901251,D-obr-databank-2026
+vat,VAT receipts (net of refunds),receipts,2025-26,180.326,5.874196,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,1999-00,4.855,0.457599,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2000-01,4.269,0.381968,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2001-02,4.291,0.370046,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2002-03,4.336,0.358304,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2003-04,4.689,0.367018,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2004-05,4.737,0.351823,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2005-06,4.95,0.347721,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2006-07,5.139,0.344103,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2007-08,5.393,0.343082,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2008-09,5.582,0.350349,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2009-10,5.675,0.362141,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2010-11,5.773,0.353537,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2011-12,5.921,0.352244,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2012-13,5.987,0.345368,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2013-14,6.105,0.336864,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2014-15,5.894,0.312163,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2015-16,5.906,0.303832,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2016-17,5.981,0.295049,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2017-18,6.362,0.300858,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2018-19,6.651,0.303721,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2019-20,6.984,0.308568,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2020-21,6.898,0.32692,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2021-22,7.133,0.297159,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2022-23,7.325,0.278059,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2023-24,7.837,0.280946,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2024-25,8.362,0.285008,D-obr-databank-2026
+ved,Vehicle Excise Duty receipts,receipts,2025-26,9.031,0.294189,D-obr-databank-2026
+welfare,UK welfare spending,spending,2013-14,210.845164,11.634082,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2014-15,215.332726,11.404646,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2015-16,217.944187,11.212061,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2016-17,218.927762,10.799952,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2017-18,220.99835,10.450987,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2018-19,224.560746,10.254669,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2019-20,228.698352,10.104387,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2020-21,247.468024,11.728365,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2021-22,247.431084,10.307919,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2022-23,253.775355,9.633371,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2023-24,286.963922,10.28727,D-dwp-expenditure-2026
+welfare,UK welfare spending,spending,2024-25,314.923099,10.733744,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,1997-98,0.19064,0.019646,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,1998-99,0.194422,0.019172,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,1999-00,0.759476,0.071583,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2000-01,1.749268,0.156515,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2001-02,1.680563,0.144928,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2002-03,1.705436,0.140928,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2003-04,1.915596,0.149938,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2004-05,1.96234,0.145745,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2005-06,1.981747,0.139211,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2006-07,2.015023,0.134924,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2007-08,2.070252,0.131702,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2008-09,2.700695,0.169507,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2009-10,2.734813,0.174518,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2010-11,2.759482,0.16899,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2011-12,2.149239,0.12786,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2012-13,2.14409,0.123685,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2013-14,2.140081,0.118086,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2014-15,2.116906,0.112117,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2015-16,2.073163,0.106653,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2016-17,2.048819,0.101071,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2017-18,2.022527,0.095645,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2018-19,1.995383,0.09112,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2019-20,1.973552,0.087196,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2020-21,1.957207,0.092759,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2021-22,1.974149,0.082243,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2022-23,2.0349,0.077245,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2023-24,2.031926,0.072842,D-dwp-expenditure-2026
+winter_fuel,Winter Fuel Payments spending,spending,2024-25,0.301685,0.010283,D-dwp-expenditure-2026

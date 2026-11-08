@@ -901,11 +901,13 @@ export interface components {
         ObservedOutcome: {
             /** Fiscal Year */
             fiscal_year: string;
+            /** Label */
+            label?: string | null;
             /**
              * Metric
              * @enum {string}
              */
-            metric: "ct_receipts_gbp_bn" | "ct_receipts_pct_gdp" | "business_investment_gbp_bn" | "real_gdp_growth_pct";
+            metric: "ct_receipts_gbp_bn" | "ct_receipts_pct_gdp" | "business_investment_gbp_bn" | "real_gdp_growth_pct" | "receipts_gbp_bn" | "receipts_pct_gdp" | "spending_gbp_bn" | "spending_pct_gdp" | "borrowing_gbp_bn" | "borrowing_pct_gdp";
             /** Source Id */
             source_id: string;
             /** Value */
@@ -1009,9 +1011,11 @@ export interface components {
              * @default false
              */
             is_placeholder: boolean;
+            /** Kind */
+            kind?: ("rate_series" | "announced_measure" | "fiscal_event") | null;
             macro_context?: components["schemas"]["MacroContext"] | null;
             /** New Rate Pct */
-            new_rate_pct: number;
+            new_rate_pct: number | null;
             /**
              * Notes
              * @default
@@ -1022,9 +1026,11 @@ export interface components {
             /** Official Costings */
             official_costings?: components["schemas"]["Costing"][];
             /** Old Rate Pct */
-            old_rate_pct: number;
+            old_rate_pct: number | null;
             /** Other Measures */
             other_measures?: string[];
+            /** Policy Key */
+            policy_key?: string | null;
             /**
              * Policy Type
              * @enum {string}
@@ -1036,7 +1042,11 @@ export interface components {
              * Tax
              * @enum {string}
              */
-            tax: "corporation_tax" | "vat";
+            tax: "corporation_tax" | "vat" | "other";
+            /** Title */
+            title?: string | null;
+            /** Value Unit */
+            value_unit?: string | null;
         };
         /** PolicySpec */
         PolicySpec: {
@@ -1092,7 +1102,7 @@ export interface components {
              */
             raw_query: string;
             /** Tax */
-            tax?: ("corporation_tax" | "vat") | null;
+            tax?: ("corporation_tax" | "vat" | "other") | null;
             /** Value Unit */
             value_unit?: string | null;
         };
@@ -1104,6 +1114,10 @@ export interface components {
             matches: components["schemas"]["PrecedentMatch"][];
             /** Method */
             method: string;
+            /** Policy Key */
+            policy_key?: string | null;
+            /** Policy Label */
+            policy_label?: string | null;
             /** Sources */
             sources?: components["schemas"]["Source"][];
             /**
@@ -1960,6 +1974,7 @@ export interface operations {
         parameters: {
             query?: {
                 tax?: string;
+                policy_key?: string | null;
             };
             header?: never;
             path?: never;

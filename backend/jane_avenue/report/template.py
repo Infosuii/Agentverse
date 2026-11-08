@@ -427,6 +427,18 @@ def _revenue_subject(policy) -> str:
     return "Exchequer revenue (behavioural)"
 
 
+def _change_text(change) -> str:
+    """", 20% to 21%" or ", £12,500 to £12,570"; empty when the source states no values (contract 1.2.0)."""
+    old, new, unit = change.old_rate_pct, change.new_rate_pct, change.value_unit or "%"
+    if old is None or new is None:
+        return ""
+    if unit == "%":
+        return f", {old:g}% to {new:g}%"
+    if unit == "£":
+        return f", £{old:,g} to £{new:,g}"
+    return f", {old:g} to {new:g} {unit}"
+
+
 def build_template_report(
     analysis: Analysis,
     figures: list[KeyFigure] | None = None,
@@ -625,6 +637,10 @@ def build_template_report(
     prec_fig_ids: list[str] = []
     if analysis.precedents and analysis.precedents.matches:
         p_lines = [
+            f"Historical changes to {_policy_label(policy)} ranked by direction, magnitude, starting rate level, "
+            "macroeconomic context, and recency (official costings and observed outcomes are distinct evidence; "
+            "similarity does not establish causation):"
+            if not _is_ct(policy) else
             "Historical UK corporation tax changes ranked by direction, magnitude, starting rate level, "
             "macroeconomic context, and recency (official costings and observed outcomes are distinct evidence; "
             "similarity does not establish causation):"
@@ -634,8 +650,12 @@ def build_template_report(
             valid_c_srcs = _filter_source_ids(c.source_ids, source_map)
             prec_src_ids.extend(valid_c_srcs)
             cite_str = " ".join(f"[{sid}]" for sid in valid_c_srcs)
-            delta_pp = fmt_pp(c.new_rate_pct - c.old_rate_pct)
             notes_str = f" — Confounders: {'; '.join(m.comparability_notes)}" if m.comparability_notes else ""
+            if c.policy_key:  # every policy other than corporation tax (contract 1.2.0)
+                p_lines.append(f"- **{c.title or c.change_id}** ({c.effective_date.year}{_change_text(c)}): "
+                               f"{c.fiscal_event or 'official rate history'} {cite_str}{notes_str}".strip())
+                continue
+            delta_pp = fmt_pp(c.new_rate_pct - c.old_rate_pct)
             p_lines.append(
                 f"- **{c.change_id}** ({c.effective_date.year}, {c.old_rate_pct:g}% → {c.new_rate_pct:g}%, "
                 f"{delta_pp}): {c.fiscal_event or 'UK Corporation Tax reform'} {cite_str}{notes_str}".strip()
@@ -649,7 +669,8 @@ def build_template_report(
             )
         prec_body = "\n".join(p_lines)
     else:
-        prec_body = (f"No matching historical precedents for {_policy_label(policy)} were identified in the curated "
+        prec_body = (analysis.precedents.summary if analysis.precedents and analysis.precedents.policy_key else
+                     f"No matching historical precedents for {_policy_label(policy)} were identified in the curated "
                      "precedent library. No causal conclusion is drawn.")
 
     precedents_section = ReportSection(

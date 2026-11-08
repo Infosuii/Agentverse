@@ -1,0 +1,14 @@
+{
+  "dataset_id": "fiscal_costings",
+  "title": "Fiscal policy costings",
+  "description": "Original Treasury scorecard costings, positive means revenue gained.",
+  "publisher": "OBR, HMRC, DWP, HM Treasury",
+  "source_url": "https://obr.uk/data/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-08",
+  "vintage": "Sources current at build date",
+  "file": "curated/fiscal_costings.csv",
+  "source_id": "D-obr-policy-measures",
+  "is_placeholder": false,
+  "notes": "Copied from the OBR policy measures database, \u00a3m / 1000. Years the OBR extrapolated with nominal GDP are excluded. A costing is linked to a rate change only when exactly one measure matches its event, first year and sign. Whether a costing includes behaviour is not stated, so it is blank, not guessed."
+}

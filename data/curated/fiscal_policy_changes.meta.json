@@ -1,0 +1,14 @@
+{
+  "dataset_id": "fiscal_policy_changes",
+  "title": "Fiscal policy changes",
+  "description": "Historical UK tax, benefit and spending changes other than corporation tax.",
+  "publisher": "OBR, HMRC, DWP, HM Treasury",
+  "source_url": "https://obr.uk/data/",
+  "licence": "Open Government Licence v3.0",
+  "retrieved_at": "2026-11-08",
+  "vintage": "Sources current at build date",
+  "file": "curated/fiscal_policy_changes.csv",
+  "source_id": "D-obr-policy-measures",
+  "is_placeholder": false,
+  "notes": "rate_series rows are implemented changes from official rate tables. announced_measure rows come from the OBR policy measures database and may later have been changed. VAT standard-rate rows are verified by exact quote from House of Commons Library SN00701; the old rate of the 1991 rise is the rate set in 1979."
+}
