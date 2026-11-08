@@ -17,7 +17,7 @@ export function ChartsGallery() {
       subtitle="Typed Recharts wrappers owned by agent-8 for Scenarios, Precedents, and Evaluation views."
     >
       <div className="space-y-6">
-        <div className="flex flex-wrap items-center gap-2 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+        <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-muted/40 p-3 text-xs text-foreground/85">
           <span>Interactive number provenance popover example:</span>
           <ProvenanceNumber
             value={3.14}

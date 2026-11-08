@@ -80,10 +80,10 @@ export function DevUiPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">
+        <h1 className="font-display text-2xl font-semibold text-foreground">
           UI Primitives & Design System Gallery (`/dev/ui`)
         </h1>
-        <p className="mt-1 text-xs text-slate-600">
+        <p className="mt-1 text-xs text-muted-foreground">
           Reference gallery for shared primitives in <code>src/components/ui/</code>,
           tokens in <code>src/lib/theme.ts</code>, and formatters in{' '}
           <code>src/lib/format.ts</code>.
@@ -101,7 +101,7 @@ export function DevUiPage() {
             {(Object.keys(SCENARIO_COLORS) as ScenarioColorKey[]).map((key) => (
               <span
                 key={key}
-                className="inline-flex items-center gap-1.5 rounded border border-slate-200 px-2.5 py-1 font-medium"
+                className="inline-flex items-center gap-1.5 rounded border border-border px-2.5 py-1 font-medium"
               >
                 <span
                   className="h-2.5 w-2.5 rounded-full"
@@ -144,7 +144,7 @@ export function DevUiPage() {
           <SourceChip sourceId="D-obr-baseline" sources={SAMPLE_SOURCES} />
           <SourceChip sourceId="S99" sources={SAMPLE_SOURCES} />
           <Tooltip content="Explicit provenance hover tooltip">
-            <span className="cursor-help underline decoration-dotted text-xs text-slate-700">
+            <span className="cursor-help underline decoration-dotted text-xs text-foreground/85">
               Hover or focus for tooltip
             </span>
           </Tooltip>
@@ -192,14 +192,14 @@ export function DevUiPage() {
             onChange={setActiveTab}
           />
           <Table>
-            <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase">
+            <thead className="bg-muted/40 text-xs font-semibold text-muted-foreground uppercase">
               <tr>
                 <th className="px-4 py-2.5">Helper</th>
                 <th className="px-4 py-2.5">Input</th>
                 <th className="px-4 py-2.5">Output</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 text-xs">
+            <tbody className="divide-y divide-border text-xs">
               <tr>
                 <td className="px-4 py-2 font-mono">fmtGbpBn(-0.4)</td>
                 <td className="px-4 py-2">-0.4</td>
@@ -250,8 +250,8 @@ export function DevUiPage() {
               description="Adjust the policy parameters to find comparable historical UK tax changes."
             />
             <ErrorBoundary>
-              <div className="space-y-3 rounded-lg border border-slate-200 p-4">
-                <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+              <div className="space-y-3 rounded-lg border border-border p-4">
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                   <Spinner size="xs" />
                   <span>Skeleton loading state preview</span>
                 </div>

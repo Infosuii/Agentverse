@@ -11,7 +11,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartFrame, formatChartValue, formatXAxisTick, type ChartUnit } from './ChartFrame';
-import { EVIDENCE_CLASS_COLORS, type EvidenceClassKey } from '../../lib/theme';
+import { CHART_THEME, EVIDENCE_CLASS_COLORS, type EvidenceClassKey } from '../../lib/theme';
 
 export interface BarCompareSeries {
   id: string;
@@ -84,47 +84,45 @@ export function BarCompare({
           data={data}
           margin={{ top: 10, right: 20, left: 12, bottom: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis
             dataKey="category"
             tickFormatter={(x) => formatXAxisTick(x as string | number)}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             label={{
               value: xLabel,
               position: 'insideBottom',
               offset: -10,
               fontSize: 11,
-              fill: '#64748b',
+              fill: CHART_THEME.axisLabel,
             }}
           />
           <YAxis
             tickFormatter={(v: number) => valFormatter(Number(v))}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             width={72}
             label={{
               value: yLabel ?? unit,
               angle: -90,
               position: 'insideLeft',
-              style: { textAnchor: 'middle', fontSize: 11, fill: '#64748b' },
+              style: { textAnchor: 'middle', fontSize: 11, fill: CHART_THEME.axisLabel },
             }}
           />
           {showZeroReference && (
-            <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="4 4" />
+            <ReferenceLine y={0} stroke={CHART_THEME.reference} strokeDasharray="4 4" />
           )}
           <RechartsTooltip
+            cursor={{ fill: CHART_THEME.cursor }}
             labelFormatter={(label) => `${xLabel}: ${formatXAxisTick(label as string | number)}`}
             formatter={(value: unknown, name: string) => {
               const s = series.find((item) => item.id === name || item.label === name);
               const num = typeof value === 'number' ? value : Number(value);
               return [valFormatter(num), s?.label ?? name];
             }}
-            contentStyle={{
-              fontSize: 12,
-              borderRadius: 6,
-              borderColor: '#cbd5e1',
-            }}
+            contentStyle={CHART_THEME.tooltip}
+            labelStyle={CHART_THEME.tooltipLabel}
           />
-          <Legend verticalAlign="top" height={28} wrapperStyle={{ fontSize: 12 }} />
+          <Legend verticalAlign="top" height={28} wrapperStyle={CHART_THEME.legend} />
           {series.map((s) => {
             const fill =
               s.color ??

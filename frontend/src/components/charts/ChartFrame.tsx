@@ -68,19 +68,19 @@ export function ChartFrame({
   return (
     <div
       className={clsx(
-        'flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-xs',
+        'flex flex-col rounded-lg border border-border bg-card p-4',
         className,
       )}
     >
       <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div className="space-y-0.5">
           {title && (
-            <h4 className="text-sm font-semibold tracking-tight text-slate-900">
+            <h4 className="font-display text-sm font-semibold tracking-tight text-foreground">
               {title}
             </h4>
           )}
           {caption && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted-foreground">
               {caption}
               {unitLabel ? ` (Unit: ${unitLabel})` : ''}
             </p>
@@ -95,9 +95,9 @@ export function ChartFrame({
       {empty ? (
         <div
           style={{ minHeight: Math.min(height, 220) }}
-          className="flex flex-col items-center justify-center rounded-md border border-dashed border-slate-200 bg-slate-50/70 px-4 py-8 text-center"
+          className="flex flex-col items-center justify-center rounded-md border border-dashed border-border bg-muted/30 px-4 py-8 text-center"
         >
-          <p className="text-xs font-medium text-slate-500">{emptyMessage}</p>
+          <p className="text-xs font-medium text-muted-foreground">{emptyMessage}</p>
         </div>
       ) : (
         <div style={{ width: '100%', height }} className="min-w-0">
@@ -106,7 +106,7 @@ export function ChartFrame({
       )}
 
       {footer && (
-        <div className="mt-3 border-t border-slate-100 pt-2.5 text-xs text-slate-600">
+        <div className="mt-3 border-t border-border/60 pt-2.5 text-xs text-muted-foreground">
           {footer}
         </div>
       )}

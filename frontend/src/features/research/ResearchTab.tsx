@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
-import { useOutletContext, useParams } from 'react-router';
+import { useOutletContext, useParams, useSearchParams } from 'react-router';
 import clsx from 'clsx';
 import {
   useAnalysis,
@@ -32,53 +32,28 @@ export interface ResearchTabProps {
   liveSteps?: ResearchStep[];
 }
 
-const STEP_ICONS: Record<
-  ResearchStepKind,
-  { icon: string; label: string; color: string }
-> = {
-  plan: { icon: '📋', label: 'Plan', color: 'bg-blue-50 text-blue-800 border-blue-200' },
-  search: {
-    icon: '🔍',
-    label: 'Search',
-    color: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-  },
-  fetch: {
-    icon: '📄',
-    label: 'Fetch URL',
-    color: 'bg-cyan-50 text-cyan-800 border-cyan-200',
-  },
+const STEP_ICONS: Record<ResearchStepKind, { label: string; color: string }> = {
+  plan: { label: 'Plan', color: 'bg-primary/10 text-primary border-primary/25' },
+  search: { label: 'Search', color: 'bg-indigo-500/10 text-indigo-300 border-indigo-400/25' },
+  fetch: { label: 'Fetch URL', color: 'bg-cyan-500/10 text-cyan-300 border-cyan-400/25' },
   extract: {
-    icon: '❝',
     label: 'Extract Quote',
-    color: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    color: 'bg-emerald-500/10 text-emerald-300 border-emerald-400/25',
   },
   dataset_lookup: {
-    icon: '📊',
     label: 'Dataset',
-    color: 'bg-violet-50 text-violet-800 border-violet-200',
+    color: 'bg-violet-500/10 text-violet-300 border-violet-400/25',
   },
-  reason: {
-    icon: '🧠',
-    label: 'Reason',
-    color: 'bg-slate-100 text-slate-800 border-slate-300',
-  },
-  synthesis: {
-    icon: '✦',
-    label: 'Synthesise',
-    color: 'bg-blue-50 text-blue-800 border-blue-300',
-  },
-  warning: {
-    icon: '⚠',
-    label: 'Warning',
-    color: 'bg-amber-50 text-amber-900 border-amber-300',
-  },
-  error: { icon: '✕', label: 'Error', color: 'bg-red-50 text-red-900 border-red-300' },
+  reason: { label: 'Reason', color: 'bg-secondary text-foreground border-input' },
+  synthesis: { label: 'Synthesise', color: 'bg-primary/10 text-primary border-primary/35' },
+  warning: { label: 'Warning', color: 'bg-amber-500/10 text-amber-200 border-amber-400/35' },
+  error: { label: 'Error', color: 'bg-red-500/10 text-red-200 border-red-400/35' },
 };
 
 function scrollToEvidence(evidenceId: string) {
   const el = document.getElementById(`evidence-${evidenceId}`);
   if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
     el.focus({ preventScroll: true });
   }
 }
@@ -95,7 +70,7 @@ function renderTextWithEvidenceRefs(text: string): React.ReactNode {
           type="button"
           onClick={() => scrollToEvidence(evId)}
           aria-label={`Jump to evidence ${evId}`}
-          className="mx-0.5 inline-flex items-center rounded border border-blue-300 bg-blue-50 px-1.5 py-0 font-mono text-xs font-semibold text-blue-800 hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+          className="mx-0.5 inline-flex items-center rounded border border-primary/35 bg-primary/10 px-1.5 py-0 font-mono text-xs font-semibold text-primary hover:bg-primary/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           [{evId}]
         </button>
@@ -150,17 +125,31 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedSource, setSelectedSource] = useState<Source | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [highlightedEvidence, setHighlightedEvidence] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const evidenceParam = searchParams.get('evidence');
+  const handledEvidenceRef = useRef<string | null>(null);
+  const drawerCloseRef = useRef<HTMLButtonElement | null>(null);
+  const drawerReturnFocusRef = useRef<HTMLElement | null>(null);
 
+  const selectedSourceId = selectedSource?.source_id ?? null;
   useEffect(() => {
-    if (!selectedSource) return;
+    if (!selectedSourceId) return;
+    // Move focus into the drawer and give it back to the opener when it closes.
+    drawerReturnFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    drawerCloseRef.current?.focus();
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setSelectedSource(null);
       }
     };
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [selectedSource]);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      drawerReturnFocusRef.current?.focus?.();
+    };
+  }, [selectedSourceId]);
 
   const allSources = useMemo<Source[]>(() => {
     const map = new Map<string, Source>();
@@ -190,6 +179,28 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
     () => research?.evidence ?? [],
     [research?.evidence],
   );
+
+  // Deep link: /analyses/:id/research?evidence=E3 clears filters, scrolls to and highlights E3.
+  useEffect(() => {
+    if (!evidenceParam || handledEvidenceRef.current === evidenceParam) return;
+    if (!evidenceList.some((ev) => ev.evidence_id === evidenceParam)) return;
+    handledEvidenceRef.current = evidenceParam;
+    setTopicFilter('all');
+    setStatusFilter('all');
+    setKindFilter('all');
+    setSearchQuery('');
+    setHighlightedEvidence(evidenceParam);
+  }, [evidenceParam, evidenceList]);
+
+  useEffect(() => {
+    if (!highlightedEvidence) return;
+    const scrollTimer = setTimeout(() => scrollToEvidence(highlightedEvidence), 0);
+    const clearTimer = setTimeout(() => setHighlightedEvidence(null), 2600);
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [highlightedEvidence]);
 
   const filteredEvidence = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -263,7 +274,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
         subtitle="Autonomous Google Search grounding, document fetches, and verbatim quote extraction"
         actions={
           isRunningResearch ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-700">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary">
               <Spinner size="xs" />
               <span>Streaming research steps…</span>
             </span>
@@ -288,24 +299,23 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
               return (
                 <li
                   key={step.step_id}
-                  className="rounded-lg border border-slate-200 bg-slate-50/60 p-3 text-xs"
+                  className="rounded-lg border border-border bg-muted/30 p-3 text-xs"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span
                         className={clsx(
-                          'inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[11px] font-semibold',
+                          'inline-flex items-center rounded-sm border px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-wide uppercase',
                           meta.color,
                         )}
                       >
-                        <span aria-hidden="true">{meta.icon}</span>
-                        <span>{meta.label}</span>
+                        {meta.label}
                       </span>
-                      <span className="font-semibold text-slate-900">{step.title}</span>
+                      <span className="font-semibold text-foreground">{step.title}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {typeof step.duration_ms === 'number' && (
-                        <span className="font-mono text-[11px] text-slate-500">
+                        <span className="font-mono text-[11px] text-muted-foreground">
                           {step.duration_ms}ms
                         </span>
                       )}
@@ -322,18 +332,18 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                   </div>
 
                   {step.query && (
-                    <div className="mt-1.5 font-mono text-[11px] text-slate-600">
+                    <div className="mt-1.5 font-mono text-[11px] text-muted-foreground">
                       Query:{' '}
-                      <code className="rounded bg-slate-200/70 px-1">{step.query}</code>
+                      <code className="rounded bg-muted px-1">{step.query}</code>
                     </div>
                   )}
 
                   {step.detail && (
                     <details className="mt-1.5">
-                      <summary className="cursor-pointer text-[11px] font-medium text-blue-700 hover:underline">
+                      <summary className="cursor-pointer text-[11px] font-medium text-primary hover:underline">
                         Step detail
                       </summary>
-                      <p className="mt-1 rounded border border-slate-200 bg-white p-2 text-xs whitespace-pre-wrap text-slate-700">
+                      <p className="mt-1 rounded border border-border bg-card p-2 text-xs whitespace-pre-wrap text-foreground/85">
                         {step.detail}
                       </p>
                     </details>
@@ -351,7 +361,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <Card title="Research Questions" className="lg:col-span-1">
               {research.research_questions && research.research_questions.length > 0 ? (
-                <ol className="list-decimal space-y-1.5 pl-4 text-xs text-slate-700">
+                <ol className="list-decimal space-y-1.5 pl-4 text-xs text-foreground/85">
                   {research.research_questions.map((q, idx) => (
                     <li key={idx} className="leading-relaxed">
                       {q}
@@ -359,7 +369,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                   ))}
                 </ol>
               ) : (
-                <p className="text-xs text-slate-500">No research questions listed.</p>
+                <p className="text-xs text-muted-foreground">No research questions listed.</p>
               )}
             </Card>
 
@@ -368,7 +378,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
               subtitle="Click any [E#] chip to jump to the underlying verbatim quote"
               className="lg:col-span-2"
             >
-              <div className="text-xs leading-relaxed whitespace-pre-line text-slate-800">
+              <div className="text-xs leading-relaxed whitespace-pre-line text-foreground">
                 {renderTextWithEvidenceRefs(research.summary)}
               </div>
             </Card>
@@ -396,7 +406,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                       setKindFilter('all');
                       setSearchQuery('');
                     }}
-                    className="ml-1 rounded border border-slate-300 bg-white px-2 py-0.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                    className="ml-1 rounded border border-input bg-card px-2 py-0.5 text-xs font-medium text-foreground/85 hover:bg-accent"
                   >
                     Clear filters
                   </button>
@@ -410,7 +420,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                 <div>
                   <label
                     htmlFor="evidence-search"
-                    className="block text-[11px] font-semibold text-slate-600"
+                    className="block text-[11px] font-semibold text-muted-foreground"
                   >
                     Search claims or quotes
                   </label>
@@ -420,14 +430,14 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Filter by keyword, E1, S1…"
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-input bg-card px-2.5 py-1.5 text-xs text-foreground focus:border-primary focus:ring-2 focus:ring-ring/30 focus:outline-none"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="filter-topic"
-                    className="block text-[11px] font-semibold text-slate-600"
+                    className="block text-[11px] font-semibold text-muted-foreground"
                   >
                     Topic
                   </label>
@@ -435,7 +445,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     id="filter-topic"
                     value={topicFilter}
                     onChange={(e) => setTopicFilter(e.target.value as Topic | 'all')}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-input bg-card px-2.5 py-1.5 text-xs text-foreground focus:border-primary focus:ring-2 focus:ring-ring/30 focus:outline-none"
                   >
                     <option value="all">All topics</option>
                     <option value="revenue">Revenue</option>
@@ -453,7 +463,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                 <div>
                   <label
                     htmlFor="filter-verification"
-                    className="block text-[11px] font-semibold text-slate-600"
+                    className="block text-[11px] font-semibold text-muted-foreground"
                   >
                     Verification Status
                   </label>
@@ -463,7 +473,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     onChange={(e) =>
                       setStatusFilter(e.target.value as VerificationStatus | 'all')
                     }
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-input bg-card px-2.5 py-1.5 text-xs text-foreground focus:border-primary focus:ring-2 focus:ring-ring/30 focus:outline-none"
                   >
                     <option value="all">All statuses</option>
                     <option value="verified">Verified</option>
@@ -475,7 +485,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                 <div>
                   <label
                     htmlFor="filter-kind"
-                    className="block text-[11px] font-semibold text-slate-600"
+                    className="block text-[11px] font-semibold text-muted-foreground"
                   >
                     Evidence Kind
                   </label>
@@ -485,7 +495,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     onChange={(e) =>
                       setKindFilter(e.target.value as EvidenceKind | 'all')
                     }
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-input bg-card px-2.5 py-1.5 text-xs text-foreground focus:border-primary focus:ring-2 focus:ring-ring/30 focus:outline-none"
                   >
                     <option value="all">All kinds</option>
                     <option value="quantitative">Quantitative</option>
@@ -510,11 +520,16 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                         key={ev.evidence_id}
                         id={`evidence-${ev.evidence_id}`}
                         tabIndex={-1}
-                        className="rounded-lg border border-slate-200 bg-white p-4 shadow-2xs transition-shadow focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className={clsx(
+                          'rounded-lg border bg-card p-4 transition-colors focus:ring-1 focus:ring-ring focus:outline-none',
+                          highlightedEvidence === ev.evidence_id
+                            ? 'border-primary ring-1 ring-primary'
+                            : 'border-border',
+                        )}
                       >
                         <div className="flex flex-wrap items-start justify-between gap-2">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="rounded bg-slate-900 px-2 py-0.5 font-mono text-xs font-bold text-white">
+                            <span className="rounded-sm bg-primary/15 px-2 py-0.5 font-mono text-xs font-semibold text-primary">
                               {ev.evidence_id}
                             </span>
                             <Badge variant="slate">{ev.topic}</Badge>
@@ -542,26 +557,26 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                                   formatCitation(ev, source),
                                 )
                               }
-                              className="rounded border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                              className="rounded border border-input bg-muted/40 px-2 py-0.5 text-[11px] font-medium text-foreground/85 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                             >
                               {copiedId === ev.evidence_id ? '✓ Copied' : 'Copy citation'}
                             </button>
                           </div>
                         </div>
 
-                        <p className="mt-2.5 text-sm font-medium text-slate-900">
+                        <p className="mt-2.5 text-sm font-medium text-foreground">
                           {ev.claim}
                         </p>
 
                         {ev.quote && (
-                          <blockquote className="mt-2 border-l-3 border-blue-500 bg-slate-50 px-3 py-2 text-xs italic text-slate-700">
+                          <blockquote className="mt-2 border-l-3 border-primary bg-muted/40 px-3 py-2 text-xs italic text-foreground/85">
                             &ldquo;{ev.quote}&rdquo;
                           </blockquote>
                         )}
 
-                        <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-slate-500">
+                        <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                           {ev.value != null && (
-                            <span className="font-semibold text-slate-800 tabular-nums">
+                            <span className="font-semibold text-foreground tabular-nums">
                               Value: {ev.value}
                               {ev.unit ? ` ${ev.unit}` : ''}
                             </span>
@@ -569,7 +584,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                           {ev.period && <span>Period: {ev.period}</span>}
                           {ev.location && <span>Location: {ev.location}</span>}
                           {ev.verification_note && (
-                            <span className="text-slate-500">
+                            <span className="text-muted-foreground">
                               Note: {ev.verification_note}
                             </span>
                           )}
@@ -589,7 +604,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
               subtitle="Empirical parameter ranges extracted from cited documents for comparison with model assumptions"
             >
               <Table>
-                <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase">
+                <thead className="bg-muted/40 text-xs font-semibold text-muted-foreground uppercase">
                   <tr>
                     <th className="px-4 py-2.5">Parameter</th>
                     <th className="px-4 py-2.5">Central / Point</th>
@@ -598,10 +613,10 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     <th className="px-4 py-2.5">Note</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 text-xs">
+                <tbody className="divide-y divide-border text-xs">
                   {research.parameter_evidence.map((pe, idx) => (
                     <tr key={`${pe.parameter}-${idx}`}>
-                      <td className="px-4 py-2.5 font-mono font-semibold text-slate-900">
+                      <td className="px-4 py-2.5 font-mono font-semibold text-foreground">
                         {pe.parameter}
                       </td>
                       <td className="px-4 py-2.5 tabular-nums">
@@ -619,14 +634,14 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                               key={evId}
                               type="button"
                               onClick={() => scrollToEvidence(evId)}
-                              className="rounded border border-blue-300 bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-blue-800 hover:bg-blue-100"
+                              className="rounded border border-primary/35 bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-primary hover:bg-primary/20"
                             >
                               [{evId}]
                             </button>
                           ))}
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 text-slate-600">{pe.note || '—'}</td>
+                      <td className="px-4 py-2.5 text-muted-foreground">{pe.note || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -644,26 +659,26 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                 {research.interpretations.map((interp) => (
                   <div
                     key={interp.interpretation_id}
-                    className="rounded-lg border-2 border-rose-300 bg-rose-50/40 p-4"
+                    className="rounded-lg border-2 border-rose-400/35 bg-rose-500/5 p-4"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-mono text-xs font-bold text-rose-900">
+                      <span className="font-mono text-xs font-bold text-rose-200">
                         {interp.interpretation_id}
                       </span>
                       <EvidenceBadge evidenceClass="ai_interpretation" />
                     </div>
-                    <p className="mt-2 text-xs leading-relaxed text-slate-900">
+                    <p className="mt-2 text-xs leading-relaxed text-foreground">
                       {interp.statement}
                     </p>
                     {interp.supporting_evidence_ids.length > 0 && (
-                      <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-600">
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
                         <span className="font-medium">Relies on evidence:</span>
                         {interp.supporting_evidence_ids.map((evId) => (
                           <button
                             key={evId}
                             type="button"
                             onClick={() => scrollToEvidence(evId)}
-                            className="rounded border border-rose-300 bg-white px-1.5 py-0.5 font-mono text-xs font-semibold text-rose-800 hover:bg-rose-100"
+                            className="rounded border border-rose-400/35 bg-card px-1.5 py-0.5 font-mono text-xs font-semibold text-rose-300 hover:bg-rose-500/15"
                           >
                             [{evId}]
                           </button>
@@ -674,7 +689,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No interpretations recorded.</p>
+              <p className="text-xs text-muted-foreground">No interpretations recorded.</p>
             )}
           </Card>
 
@@ -689,10 +704,10 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                   {research.confounders.map((conf, idx) => (
                     <div
                       key={idx}
-                      className="rounded-md border border-slate-200 bg-slate-50/60 p-3 text-xs"
+                      className="rounded-md border border-border bg-muted/30 p-3 text-xs"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="font-semibold text-slate-900">
+                        <span className="font-semibold text-foreground">
                           {conf.name}
                         </span>
                         <Badge
@@ -704,10 +719,10 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                                 : 'amber'
                           }
                         >
-                          {conf.likely_direction.replace('_', ' ')}
+                          {conf.likely_direction.replace(/_/g, ' ')}
                         </Badge>
                       </div>
-                      <p className="mt-1 text-slate-700">{conf.description}</p>
+                      <p className="mt-1 text-foreground/85">{conf.description}</p>
                       {conf.evidence_ids && conf.evidence_ids.length > 0 && (
                         <div className="mt-2 flex flex-wrap items-center gap-1">
                           {conf.evidence_ids.map((evId) => (
@@ -715,7 +730,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                               key={evId}
                               type="button"
                               onClick={() => scrollToEvidence(evId)}
-                              className="rounded border border-slate-300 bg-white px-1.5 py-0.5 font-mono text-[11px] text-blue-700 hover:bg-blue-50"
+                              className="rounded border border-input bg-card px-1.5 py-0.5 font-mono text-[11px] text-primary hover:bg-primary/10"
                             >
                               [{evId}]
                             </button>
@@ -726,7 +741,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-slate-500">No confounders recorded.</p>
+                <p className="text-xs text-muted-foreground">No confounders recorded.</p>
               )}
             </Card>
 
@@ -735,7 +750,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
               subtitle="Remaining uncertainties identified by the research agent"
             >
               {research.open_questions && research.open_questions.length > 0 ? (
-                <ul className="list-disc space-y-1.5 pl-4 text-xs text-slate-700">
+                <ul className="list-disc space-y-1.5 pl-4 text-xs text-foreground/85">
                   {research.open_questions.map((oq, idx) => (
                     <li key={idx} className="leading-relaxed">
                       {oq}
@@ -743,7 +758,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                   ))}
                 </ul>
               ) : (
-                <p className="text-xs text-slate-500">No open questions listed.</p>
+                <p className="text-xs text-muted-foreground">No open questions listed.</p>
               )}
             </Card>
           </div>
@@ -754,27 +769,27 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
             subtitle="Grouped by publisher type with reliability tier badges. Click any source to inspect all extracted evidence."
           >
             {sourcesByPublisherType.length === 0 ? (
-              <p className="text-xs text-slate-500">No sources registered.</p>
+              <p className="text-xs text-muted-foreground">No sources registered.</p>
             ) : (
               <div className="space-y-4">
                 {sourcesByPublisherType.map(([pubType, sources]) => (
                   <div key={pubType} className="space-y-2">
-                    <h4 className="text-xs font-bold tracking-wide text-slate-600 uppercase">
-                      {pubType.replace('_', ' ')} ({sources.length})
+                    <h4 className="text-xs font-bold tracking-wide text-muted-foreground uppercase">
+                      {pubType.replace(/_/g, ' ')} ({sources.length})
                     </h4>
                     <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
                       {sources.map((src) => (
                         <div
                           key={src.source_id}
-                          className="flex flex-col justify-between rounded-md border border-slate-200 bg-slate-50/50 p-3 text-xs"
+                          className="flex flex-col justify-between rounded-md border border-border bg-muted/30 p-3 text-xs"
                         >
                           <div className="space-y-1">
                             <div className="flex flex-wrap items-center justify-between gap-1.5">
                               <div className="flex items-center gap-1.5">
-                                <span className="font-mono font-bold text-slate-900">
+                                <span className="font-mono font-bold text-foreground">
                                   [{src.source_id}]
                                 </span>
-                                <span className="font-semibold text-slate-700">
+                                <span className="font-semibold text-foreground/85">
                                   {src.publisher}
                                 </span>
                               </div>
@@ -799,13 +814,13 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                               href={src.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="block font-medium text-blue-700 hover:underline"
+                              className="block font-medium text-primary hover:underline"
                             >
                               {src.title} ↗
                             </a>
                           </div>
 
-                          <div className="mt-2 flex items-center justify-between border-t border-slate-200/70 pt-2 text-[11px] text-slate-500">
+                          <div className="mt-2 flex items-center justify-between border-t border-border/70 pt-2 text-[11px] text-muted-foreground">
                             <span>
                               {src.url_verified ? '✓ URL verified' : '• Unverified URL'} ·{' '}
                               {src.access_method}
@@ -813,7 +828,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                             <button
                               type="button"
                               onClick={() => setSelectedSource(src)}
-                              className="font-semibold text-blue-700 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded"
+                              className="font-semibold text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded"
                             >
                               View evidence →
                             </button>
@@ -835,46 +850,47 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
           role="dialog"
           aria-modal="true"
           aria-label={`Source details for ${selectedSource.source_id}`}
-          className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-xs"
           onClick={() => setSelectedSource(null)}
         >
           <div
-            className="flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white p-6 shadow-2xl"
+            className="flex h-full w-full max-w-lg flex-col overflow-y-auto bg-card p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-3 border-b border-slate-200 pb-4">
+            <div className="flex items-start justify-between gap-3 border-b border-border pb-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="rounded bg-slate-900 px-2 py-0.5 font-mono text-xs font-bold text-white">
+                  <span className="rounded-sm bg-primary/15 px-2 py-0.5 font-mono text-xs font-semibold text-primary">
                     {selectedSource.source_id}
                   </span>
                   <Badge variant="blue">Tier {selectedSource.reliability_tier}</Badge>
                   {selectedSource.is_placeholder && <PlaceholderBadge />}
                 </div>
-                <h3 className="mt-2 text-base font-bold text-slate-900">
+                <h3 className="mt-2 text-base font-bold text-foreground">
                   {selectedSource.title}
                 </h3>
-                <p className="mt-0.5 text-xs text-slate-600">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Publisher: {selectedSource.publisher} ({selectedSource.publisher_type})
                 </p>
               </div>
               <button
                 type="button"
+                ref={drawerCloseRef}
                 onClick={() => setSelectedSource(null)}
                 aria-label="Close source drawer"
-                className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+                className="rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-accent"
               >
                 Close ✕
               </button>
             </div>
 
             <div className="mt-4 space-y-4 text-xs">
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-slate-50 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/40 p-3">
                 <a
                   href={selectedSource.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="max-w-xs truncate font-mono text-blue-700 hover:underline"
+                  className="max-w-xs truncate font-mono text-primary hover:underline"
                 >
                   {selectedSource.url} ↗
                 </a>
@@ -886,7 +902,7 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                       `[${selectedSource.source_id}] ${selectedSource.publisher}, "${selectedSource.title}", ${selectedSource.url}`,
                     )
                   }
-                  className="rounded border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                  className="rounded border border-input bg-card px-2.5 py-1 text-xs font-medium text-foreground/85 hover:bg-accent"
                 >
                   {copiedId === `src-${selectedSource.source_id}`
                     ? '✓ Copied'
@@ -894,12 +910,12 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                 </button>
               </div>
 
-              <h4 className="font-semibold text-slate-900">
+              <h4 className="font-semibold text-foreground">
                 Evidence extracted from [{selectedSource.source_id}]
               </h4>
               {evidenceList.filter((e) => e.source_id === selectedSource.source_id)
                 .length === 0 ? (
-                <p className="text-slate-500">
+                <p className="text-muted-foreground">
                   No direct evidence items linked to this source ID in this analysis.
                 </p>
               ) : (
@@ -909,17 +925,17 @@ export function ResearchTab({ analysis: propAnalysis, liveSteps }: ResearchTabPr
                     .map((ev) => (
                       <div
                         key={ev.evidence_id}
-                        className="space-y-1.5 rounded-md border border-slate-200 p-3"
+                        className="space-y-1.5 rounded-md border border-border p-3"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-mono font-bold text-slate-900">
+                          <span className="font-mono font-bold text-foreground">
                             {ev.evidence_id}
                           </span>
                           <EvidenceVerificationBadge status={ev.verification_status} />
                         </div>
-                        <p className="font-medium text-slate-900">{ev.claim}</p>
+                        <p className="font-medium text-foreground">{ev.claim}</p>
                         {ev.quote && (
-                          <blockquote className="border-l-2 border-blue-500 pl-2 italic text-slate-600">
+                          <blockquote className="border-l-2 border-primary pl-2 italic text-muted-foreground">
                             &ldquo;{ev.quote}&rdquo;
                           </blockquote>
                         )}

@@ -22,7 +22,7 @@
 
 ### 0:00 – 0:40 · Policy Input, Parse Preview & Scope Gate (`/` — New Analysis)
 
-1. **Click:** On `/`, click the example chip **"What would happen if the UK increased corporation tax from 25% to 28%?"** (or type *"What would happen if the UK increased corporation tax from 25% to 28%?"* into the policy input).
+1. **Click:** On the landing page (`/`), click the example prompt **"25% → 28% hike (Golden path)"** (or type *"What would happen if the UK increased corporation tax from 25% to 28%?"* into the prompt box). The parsed policy and scope gate appear below the prompt for review.
 2. **Observe:** Within 300 ms, the **Parsed Policy Specification & Scope Gate** card appears:
    - Policy Type: `corporation_tax_main_rate`
    - Baseline Rate: `25%` -> Proposed Rate: `28%` (`+3pp`)
@@ -79,7 +79,7 @@
 1. **Click:** Click the **Verification** tab on the `25% -> 28%` analysis, then click the **Report** tab.
    - Show the **18-check audit catalogue** (`16 passed, 1 warning (DATA-002), 1 non-blocking citation error (CITE-002 on E19)`): independent engine recompute within `1e-9` (`CALC-001`), zero data placeholders (`DATA-001`), causal language audit (`CAUSAL-001`), and `REPORT-001` verifying that every number in the narrative report traces to code, cited evidence, or the policy.
    - On the **Report** tab, show clickable inline provenance chips and click **Download .md**.
-2. **Click:** Navigate back to **New Analysis** (`/`), click the third example chip **"Raise corporation tax to 45%"**, and click **Run analysis ->**.
+2. **Click:** Navigate back with **New Policy Analysis** (`/`), click the third example prompt **"Raise CT to 45% (Scope gate)"**, and click **Run analysis** (or press Enter in the prompt box).
    - Show the **`forecast_withheld` banner ("Quantitative forecast withheld")**: because a `+20pp` hike exceeds the validated historical precedent envelope (`SCOPE-001` blocking failure, limit `15pp`), Jane Avenue refuses to fabricate a quantitative forecast while still delivering historical context and research.
 3. **Talking Point (Judging Criterion — Trustworthy AI & Refusal):**
    > *"When a policy proposal falls outside historical UK evidence—like a jump to 45%—or if a blocking verification check fails, Jane Avenue withholds the quantitative forecast rather than extrapolating blindly."*

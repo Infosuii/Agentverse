@@ -28,15 +28,15 @@ import {
   VerificationBadge,
 } from '../../components/ui';
 import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct } from '../../lib/format';
-import { EVIDENCE_CLASS_COLORS, SCENARIO_COLORS } from '../../lib/theme';
+import { CHART_THEME, EVIDENCE_CLASS_COLORS, SCENARIO_COLORS } from '../../lib/theme';
 
 const METHOD_COLORS: Record<string, string> = {
   observed: EVIDENCE_CLASS_COLORS.observed_outcome,
   jane_behavioural: SCENARIO_COLORS.central,
   jane_calibrated: SCENARIO_COLORS.optimistic,
-  static: '#64748b',
-  naive_growth: '#94a3b8',
-  linear_regression: '#d97706',
+  static: '#94a3b8',
+  naive_growth: '#64748b',
+  linear_regression: '#f59e0b',
   lightgbm: SCENARIO_COLORS.custom,
 };
 
@@ -120,6 +120,7 @@ export function EvaluationPage() {
       jane_calibrated: c.predictions?.jane_calibrated ?? null,
       static: c.predictions?.static ?? null,
       naive_growth: c.predictions?.naive_growth ?? null,
+      linear_regression: c.predictions?.linear_regression ?? null,
       lightgbm: c.predictions?.lightgbm ?? null,
     }));
   }, [evaluation?.cases]);
@@ -194,47 +195,50 @@ export function EvaluationPage() {
   return (
     <div className="space-y-6">
       {/* Page Header & Conditional Backtest Framing */}
-      <div className="flex flex-wrap items-start justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-xs sm:p-5">
-        <div className="max-w-4xl space-y-1.5">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-lg font-bold tracking-tight text-slate-900">
-              Historical Backtesting, ML Experiment & Trust Evaluation
-            </h1>
-            <Badge variant="blue">Dataset {evaluation.dataset_version}</Badge>
-            <Badge variant="slate">Generated {fmtDate(evaluation.generated_at)}</Badge>
-            {evaluation.is_placeholder && <PlaceholderBadge />}
-          </div>
-          <p className="text-xs leading-relaxed text-slate-600">
-            <strong className="font-semibold text-slate-800">
-              Conditional backtest methodology:
-            </strong>{' '}
-            {evaluation.target_description}
-          </p>
+      <header className="border-b border-border pb-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="slate">Evaluation &amp; Model Reliability</Badge>
+          <Badge variant="blue">Dataset {evaluation.dataset_version}</Badge>
+          <Badge variant="outline">Generated {fmtDate(evaluation.generated_at)}</Badge>
+          {evaluation.is_placeholder && <PlaceholderBadge />}
         </div>
-      </div>
+        <h1 className="mt-3 max-w-4xl font-display text-2xl leading-snug font-semibold text-foreground sm:text-3xl">
+          Historical Backtesting, ML Experiment & Trust Evaluation
+        </h1>
+        <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground">
+          <strong className="font-semibold text-foreground">
+            Conditional backtest methodology:
+          </strong>{' '}
+          {evaluation.target_description}
+        </p>
+        <p className="mt-2 font-mono text-xs text-muted-foreground">
+          {evaluation.methods.length} method results · {evaluation.cases.length} backtest cases ·
+          out-of-sample test split FY ≥ 2008
+        </p>
+      </header>
 
       {/* Prominent Placeholder Banner when is_placeholder is set */}
       {evaluation.is_placeholder && (
         <div
           role="alert"
           aria-label="Placeholder evaluation warning"
-          className="rounded-lg border-2 border-amber-400 bg-amber-50 p-4 text-amber-950 shadow-xs"
+          className="rounded-lg border-2 border-amber-400/50 bg-amber-500/10 p-4 text-amber-200"
         >
           <div className="flex items-start gap-3">
             <span
               aria-hidden="true"
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-600 text-xs font-bold text-white"
+              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-background"
             >
               ⚠
             </span>
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-sm font-bold text-amber-950">
+                <h2 className="text-sm font-bold text-amber-200">
                   Placeholder Evaluation Data Active
                 </h2>
                 <PlaceholderBadge label="is_placeholder=true" />
               </div>
-              <p className="text-xs leading-relaxed text-amber-900">
+              <p className="text-xs leading-relaxed text-amber-200">
                 One or more underlying series in this evaluation report come from unverified
                 placeholder fixtures rather than curated official HMRC/OBR/ONS releases. Do not
                 rely on these metrics as empirical validation until placeholder flags are cleared.
@@ -364,58 +368,56 @@ export function EvaluationPage() {
                 data={chartData}
                 margin={{ top: 14, right: 20, left: 12, bottom: 20 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
                 {firstTestYear && lastTestYear && (
                   <ReferenceArea
                     x1={firstTestYear}
                     x2={lastTestYear}
-                    fill="#dbeafe"
-                    fillOpacity={0.45}
+                    fill="#60a5fa"
+                    fillOpacity={0.08}
                     label={{
                       value: 'Out-of-sample test split (FY ≥ 2008)',
                       position: 'insideTopRight',
                       fontSize: 11,
-                      fill: '#1e40af',
+                      fill: '#93c5fd',
                     }}
                   />
                 )}
                 {firstTestYear && (
                   <ReferenceLine
                     x={firstTestYear}
-                    stroke="#1d4ed8"
+                    stroke="#60a5fa"
                     strokeWidth={1.5}
                     strokeDasharray="4 4"
                   />
                 )}
                 <XAxis
                   dataKey="fiscal_year"
-                  tick={{ fontSize: 11, fill: '#475569' }}
+                  tick={{ fontSize: 11, fill: CHART_THEME.tick }}
                   label={{
                     value: 'Policy fiscal year (y)',
                     position: 'insideBottom',
                     offset: -10,
                     fontSize: 11,
-                    fill: '#64748b',
+                    fill: CHART_THEME.axisLabel,
                   }}
                 />
                 <YAxis
                   tickFormatter={(v: number) => fmtGbpBn(Number(v), 0)}
-                  tick={{ fontSize: 11, fill: '#475569' }}
+                  tick={{ fontSize: 11, fill: CHART_THEME.tick }}
                   width={68}
                 />
                 <RechartsTooltip
+                  cursor={{ stroke: CHART_THEME.reference, strokeDasharray: '3 3' }}
                   formatter={(val: unknown, name: string) => [
                     fmtGbpBn(typeof val === 'number' ? val : Number(val), 2),
                     name,
                   ]}
                   labelFormatter={(label) => `Policy year: ${String(label)}`}
-                  contentStyle={{
-                    fontSize: 12,
-                    borderRadius: 6,
-                    borderColor: '#cbd5e1',
-                  }}
+                  contentStyle={CHART_THEME.tooltip}
+            labelStyle={CHART_THEME.tooltipLabel}
                 />
-                <Legend verticalAlign="top" height={28} wrapperStyle={{ fontSize: 12 }} />
+                <Legend verticalAlign="top" height={28} wrapperStyle={CHART_THEME.legend} />
                 <Line
                   type="monotone"
                   dataKey="observed"
@@ -464,6 +466,16 @@ export function EvaluationPage() {
                   dot={false}
                   isAnimationActive={false}
                 />
+                <Line
+                  type="monotone"
+                  dataKey="linear_regression"
+                  name="Log-change OLS baseline"
+                  stroke={METHOD_COLORS.linear_regression}
+                  strokeWidth={1.5}
+                  strokeDasharray="4 2"
+                  dot={false}
+                  isAnimationActive={false}
+                />
                 {ml && (
                   <Line
                     type="monotone"
@@ -495,7 +507,7 @@ export function EvaluationPage() {
               {
                 id: 'train_mae',
                 label: 'In-sample Train MAE (£bn)',
-                color: '#94a3b8',
+                color: CHART_THEME.neutralMuted,
               },
             ]}
             unit="£bn"
@@ -520,8 +532,8 @@ export function EvaluationPage() {
                 onClick={() => setSplitFilter(sp)}
                 className={`rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
                   splitFilter === sp
-                    ? 'border-blue-600 bg-blue-50 text-blue-800'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : 'border-border bg-card text-muted-foreground hover:bg-accent/60'
                 }`}
               >
                 {sp === 'all' ? 'All splits' : sp === 'test' ? 'Test (FY ≥ 2008)' : 'Train (FY ≤ 2007)'}
@@ -531,7 +543,7 @@ export function EvaluationPage() {
         }
       >
         <Table aria-label="Backtest methods table">
-          <thead className="bg-slate-50 text-xs font-semibold tracking-wide text-slate-600 uppercase">
+          <thead className="bg-muted/40 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             <tr>
               <th className="px-3 py-2.5">Split</th>
               <th className="px-3 py-2.5">Method</th>
@@ -543,14 +555,14 @@ export function EvaluationPage() {
               <th className="px-3 py-2.5 text-right">Policy-Effect Dir. Accuracy</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 text-xs">
+          <tbody className="divide-y divide-border text-xs">
             {displayedMethods.map((m) => {
               const isBestTest =
                 m.split === 'test' && bestTestMethod?.method === m.method;
               return (
                 <tr
                   key={`${m.split}-${m.method}`}
-                  className={isBestTest ? 'bg-blue-50/40' : 'hover:bg-slate-50/80'}
+                  className={isBestTest ? 'bg-primary/5' : 'hover:bg-muted/30'}
                 >
                   <td className="px-3 py-2.5 whitespace-nowrap">
                     <Badge variant={m.split === 'test' ? 'blue' : 'slate'}>
@@ -558,13 +570,13 @@ export function EvaluationPage() {
                     </Badge>
                   </td>
                   <td className="px-3 py-2.5">
-                    <div className="font-semibold text-slate-900">
+                    <div className="font-semibold text-foreground">
                       {m.label}{' '}
-                      <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[11px] text-slate-700">
+                      <code className="rounded bg-secondary px-1 py-0.5 font-mono text-[11px] text-foreground/85">
                         {m.method}
                       </code>
                     </div>
-                    <div className="mt-0.5 text-[11px] text-slate-500">{m.description}</div>
+                    <div className="mt-0.5 text-[11px] text-muted-foreground">{m.description}</div>
                   </td>
                   <td className="px-3 py-2.5 whitespace-nowrap">
                     <div className="flex flex-wrap items-center gap-1">
@@ -576,31 +588,31 @@ export function EvaluationPage() {
                       <EvidenceBadge evidenceClass="model_scenario" short />
                     </div>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-700">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground/85">
                     {m.n}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono font-semibold tabular-nums text-slate-900">
+                  <td className="px-3 py-2.5 text-right font-mono font-semibold tabular-nums text-foreground">
                     <Tooltip
                       content={`Mean absolute error across n=${m.n} ${m.split}-split fiscal years (${m.label}).`}
                     >
-                      <span className="cursor-help underline decoration-slate-300 decoration-dotted underline-offset-2">
+                      <span className="cursor-help underline decoration-muted-foreground/50 decoration-dotted underline-offset-2">
                         {fmtGbpBn(m.mae, 2)}
                       </span>
                     </Tooltip>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-700">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground/85">
                     <Tooltip
                       content={`Root mean squared error across n=${m.n} ${m.split}-split fiscal years.`}
                     >
-                      <span className="cursor-help underline decoration-slate-300 decoration-dotted underline-offset-2">
+                      <span className="cursor-help underline decoration-muted-foreground/50 decoration-dotted underline-offset-2">
                         {fmtGbpBn(m.rmse, 2)}
                       </span>
                     </Tooltip>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-700">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground/85">
                     {m.mape_pct != null ? fmtPct(m.mape_pct, 2) : '—'}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-700">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground/85">
                     {m.directional_accuracy != null
                       ? `${fmtPct(m.directional_accuracy * 100, 1)}${m.method === 'naive_growth' ? '*' : ''}`
                       : '—'}
@@ -610,7 +622,7 @@ export function EvaluationPage() {
             })}
           </tbody>
         </Table>
-        <p className="mt-2.5 text-[11px] leading-relaxed text-slate-500">
+        <p className="mt-2.5 text-[11px] leading-relaxed text-muted-foreground">
           * Policy-effect directional accuracy compares the sign of each method&apos;s predicted
           rate effect (method minus <code>naive_growth</code>) against the observed excess movement
           on rate-change years. For <code>naive_growth</code>, directional accuracy is 0.0% by
@@ -632,8 +644,8 @@ export function EvaluationPage() {
               onClick={() => setCasesFilter('changes')}
               className={`rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
                 casesFilter === 'changes'
-                  ? 'border-blue-600 bg-blue-50 text-blue-800'
-                  : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-border bg-card text-muted-foreground hover:bg-accent/60'
               }`}
             >
               Rate-change years ({evaluation.cases.filter((c) => c.case_id.startsWith('CT-MAIN-')).length})
@@ -643,8 +655,8 @@ export function EvaluationPage() {
               onClick={() => setCasesFilter('all')}
               className={`rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
                 casesFilter === 'all'
-                  ? 'border-blue-600 bg-blue-50 text-blue-800'
-                  : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-border bg-card text-muted-foreground hover:bg-accent/60'
               }`}
             >
               All panel years ({evaluation.cases.length})
@@ -652,20 +664,20 @@ export function EvaluationPage() {
           </div>
         }
       >
-        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
-          <span className="font-semibold text-slate-800">Column evidence classes:</span>
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground">Column evidence classes:</span>
           <EvidenceBadge evidenceClass="observed_outcome" />
           <span>= Outturn CT receipts R_{'{y+1}'} (£bn)</span>
-          <span className="text-slate-300">|</span>
+          <span className="text-muted-foreground">|</span>
           <EvidenceBadge evidenceClass="official_costing" />
           <span>= Ex-ante HMT/OBR Budget costing ΔR (£bn, reference only)</span>
-          <span className="text-slate-300">|</span>
+          <span className="text-muted-foreground">|</span>
           <EvidenceBadge evidenceClass="model_scenario" />
           <span>= Conditional backtest prediction R̂_{'{y+1}'} (£bn)</span>
         </div>
 
         <Table aria-label="Rate-change backtest cases table">
-          <thead className="bg-slate-50 text-xs font-semibold tracking-wide text-slate-600 uppercase">
+          <thead className="bg-muted/40 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             <tr>
               <th className="px-3 py-2.5">Case / Event</th>
               <th className="px-3 py-2.5">Policy FY</th>
@@ -722,20 +734,20 @@ export function EvaluationPage() {
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 text-xs">
+          <tbody className="divide-y divide-border text-xs">
             {highlightCases.map((c) => {
               const p = c.predictions ?? {};
               return (
-                <tr key={c.case_id} className="hover:bg-slate-50/80">
+                <tr key={c.case_id} className="hover:bg-muted/30">
                   <td className="px-3 py-2.5">
                     <Tooltip content={c.notes || c.target}>
-                      <span className="cursor-help font-mono font-semibold text-slate-900 underline decoration-slate-300 decoration-dotted underline-offset-2">
+                      <span className="cursor-help font-mono font-semibold text-foreground underline decoration-muted-foreground/50 decoration-dotted underline-offset-2">
                         {c.case_id}
                       </span>
                     </Tooltip>
-                    <div className="text-[11px] text-slate-500">{c.target}</div>
+                    <div className="text-[11px] text-muted-foreground">{c.target}</div>
                   </td>
-                  <td className="px-3 py-2.5 font-mono whitespace-nowrap text-slate-700">
+                  <td className="px-3 py-2.5 font-mono whitespace-nowrap text-foreground/85">
                     {fmtFiscalYear(c.fiscal_year)}
                   </td>
                   <td className="px-3 py-2.5 whitespace-nowrap">
@@ -743,47 +755,47 @@ export function EvaluationPage() {
                       {c.split}
                     </Badge>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono font-semibold tabular-nums text-slate-900">
+                  <td className="px-3 py-2.5 text-right font-mono font-semibold tabular-nums text-foreground">
                     <Tooltip
                       content={`Observed outturn UK CT receipts for ${c.target} (curated HMRC/OBR dataset).`}
                     >
                       <span className="cursor-help">{fmtGbpBn(c.observed, 2)}</span>
                     </Tooltip>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-violet-800">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-violet-300">
                     {c.official_costing_gbp_bn != null ? (
                       <Tooltip content="Ex-ante HMT/OBR Budget policy costing (revenue change ΔR vs Budget baseline, not total receipts).">
-                        <span className="cursor-help font-medium underline decoration-violet-300 decoration-dotted underline-offset-2">
+                        <span className="cursor-help font-medium underline decoration-violet-400/50 decoration-dotted underline-offset-2">
                           {c.official_costing_gbp_bn > 0
                             ? `+${fmtGbpBn(c.official_costing_gbp_bn, 2)}`
                             : fmtGbpBn(c.official_costing_gbp_bn, 2)}
                         </span>
                       </Tooltip>
                     ) : (
-                      <span className="text-slate-400">—</span>
+                      <span className="text-muted-foreground/70">—</span>
                     )}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-600">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
                     {fmtGbpBn(p.naive_growth, 2)}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-700">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground/85">
                     {fmtGbpBn(p.static, 2)}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono font-semibold tabular-nums text-blue-800">
+                  <td className="px-3 py-2.5 text-right font-mono font-semibold tabular-nums text-blue-300">
                     <Tooltip content={c.notes || 'Jane Avenue behavioural engine prediction'}>
-                      <span className="cursor-help underline decoration-blue-300 decoration-dotted underline-offset-2">
+                      <span className="cursor-help underline decoration-blue-400/50 decoration-dotted underline-offset-2">
                         {fmtGbpBn(p.jane_behavioural, 2)}
                       </span>
                     </Tooltip>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-emerald-800">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-emerald-300">
                     {fmtGbpBn(p.jane_calibrated, 2)}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-slate-600">
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
                     {fmtGbpBn(p.linear_regression, 2)}
                   </td>
                   {ml && (
-                    <td className="px-3 py-2.5 text-right font-mono tabular-nums text-purple-800">
+                    <td className="px-3 py-2.5 text-right font-mono tabular-nums text-purple-300">
                       {fmtGbpBn(p.lightgbm, 2)}
                     </td>
                   )}
@@ -810,22 +822,22 @@ export function EvaluationPage() {
         >
           {ml ? (
             <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2.5 rounded-md border border-slate-200 bg-slate-50 p-3">
+              <div className="grid grid-cols-2 gap-2.5 rounded-md border border-border bg-muted/40 p-3">
                 <div>
-                  <div className="text-[11px] text-slate-500">LightGBM Test MAE</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-slate-900">
+                  <div className="text-[11px] text-muted-foreground">LightGBM Test MAE</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-foreground">
                     {fmtGbpBn(ml.test_mae, 2)}
                   </div>
-                  <div className="text-[10px] text-slate-500">{ml.test_period}</div>
+                  <div className="text-[10px] text-muted-foreground">{ml.test_period}</div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-[11px] text-muted-foreground">
                     Best Baseline ({ml.best_baseline})
                   </div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-800">
+                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-300">
                     {fmtGbpBn(ml.best_baseline_mae, 2)}
                   </div>
-                  <div className="text-[10px] text-slate-500">
+                  <div className="text-[10px] text-muted-foreground">
                     In-sample Train MAE:{' '}
                     {fmtGbpBn(
                       trainMethods.find((m) => m.method === 'lightgbm')?.mae ?? null,
@@ -836,14 +848,14 @@ export function EvaluationPage() {
               </div>
 
               <div>
-                <span className="font-semibold text-slate-700">Model spec: </span>
-                <code className="break-all rounded bg-slate-100 px-1 py-0.5 font-mono text-[11px] text-slate-700">
+                <span className="font-semibold text-foreground/85">Model spec: </span>
+                <code className="break-all rounded bg-secondary px-1 py-0.5 font-mono text-[11px] text-foreground/85">
                   {ml.model}
                 </code>
               </div>
 
               <div>
-                <span className="font-semibold text-slate-700">Features: </span>
+                <span className="font-semibold text-foreground/85">Features: </span>
                 <div className="mt-1 flex flex-wrap gap-1">
                   {ml.features.map((f) => (
                     <Badge key={f} variant="slate">
@@ -853,13 +865,13 @@ export function EvaluationPage() {
                 </div>
               </div>
 
-              <div className="rounded-md border border-amber-200 bg-amber-50/70 p-3 leading-relaxed text-slate-800">
-                <strong className="font-semibold text-amber-950">Verdict & reasoning: </strong>
+              <div className="rounded-md border border-amber-400/25 bg-amber-500/10 p-3 leading-relaxed text-foreground">
+                <strong className="font-semibold text-amber-200">Verdict & reasoning: </strong>
                 {ml.conclusion}
               </div>
             </div>
           ) : (
-            <p className="text-xs text-slate-500">ML experiment has not been run yet.</p>
+            <p className="text-xs text-muted-foreground">ML experiment has not been run yet.</p>
           )}
         </Card>
 
@@ -871,42 +883,42 @@ export function EvaluationPage() {
         >
           {reval ? (
             <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2.5 rounded-md border border-slate-200 bg-slate-50 p-3">
+              <div className="grid grid-cols-2 gap-2.5 rounded-md border border-border bg-muted/40 p-3">
                 <div>
-                  <div className="text-[11px] text-slate-500">Fact Accuracy (n={reval.n_questions})</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-slate-900">
+                  <div className="text-[11px] text-muted-foreground">Fact Accuracy (n={reval.n_questions})</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-foreground">
                     {reval.fact_accuracy != null ? fmtPct(reval.fact_accuracy * 100, 1) : '—'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500">Citation URL Validity</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-800">
+                  <div className="text-[11px] text-muted-foreground">Citation URL Validity</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-300">
                     {reval.citation_url_valid_rate != null
                       ? fmtPct(reval.citation_url_valid_rate * 100, 1)
                       : '—'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500">Quote Match Rate</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-slate-900">
+                  <div className="text-[11px] text-muted-foreground">Quote Match Rate</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-foreground">
                     {reval.quote_match_rate != null
                       ? fmtPct(reval.quote_match_rate * 100, 1)
                       : '—'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500">Hallucinated Sources</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-800">
+                  <div className="text-[11px] text-muted-foreground">Hallucinated Sources</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-300">
                     {reval.hallucinated_sources ?? 0}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded border border-slate-200 px-3 py-2">
-                <span className="font-medium text-slate-700">
+              <div className="flex items-center justify-between rounded border border-border px-3 py-2">
+                <span className="font-medium text-foreground/85">
                   Official Tier-1 Source Share (HMRC/OBR/HMT/ONS)
                 </span>
-                <span className="font-mono font-bold text-blue-800">
+                <span className="font-mono font-bold text-primary">
                   {reval.official_source_share != null
                     ? fmtPct(reval.official_source_share * 100, 1)
                     : '—'}
@@ -914,11 +926,11 @@ export function EvaluationPage() {
               </div>
 
               {reval.notes && (
-                <p className="leading-relaxed text-slate-600">{reval.notes}</p>
+                <p className="leading-relaxed text-muted-foreground">{reval.notes}</p>
               )}
             </div>
           ) : (
-            <p className="text-xs text-slate-500">Research evaluation has not been run yet.</p>
+            <p className="text-xs text-muted-foreground">Research evaluation has not been run yet.</p>
           )}
         </Card>
 
@@ -940,40 +952,40 @@ export function EvaluationPage() {
         >
           {veval ? (
             <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2.5 rounded-md border border-slate-200 bg-slate-50 p-3">
+              <div className="grid grid-cols-2 gap-2.5 rounded-md border border-border bg-muted/40 p-3">
                 <div>
-                  <div className="text-[11px] text-slate-500">Faults Detected</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-800">
+                  <div className="text-[11px] text-muted-foreground">Faults Detected</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-emerald-300">
                     {veval.detected}/{veval.n_fault_cases} (
                     {verifierRate != null ? fmtPct(verifierRate, 1) : '—'})
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500">Clean-Case False Positives</div>
-                  <div className="mt-0.5 font-mono text-base font-bold text-slate-900">
+                  <div className="text-[11px] text-muted-foreground">Clean-Case False Positives</div>
+                  <div className="mt-0.5 font-mono text-base font-bold text-foreground">
                     {veval.false_positives}/{veval.n_clean_cases}
                   </div>
                 </div>
               </div>
 
-              <div className="max-h-44 overflow-y-auto rounded border border-slate-200 divide-y divide-slate-100">
+              <div className="max-h-44 overflow-y-auto rounded border border-border divide-y divide-border/60">
                 {Object.entries(veval.by_fault).map(([faultName, detected]) => (
                   <div
                     key={faultName}
                     className="flex items-center justify-between px-2.5 py-1.5"
                   >
-                    <code className="font-mono text-[11px] text-slate-800">{faultName}</code>
+                    <code className="font-mono text-[11px] text-foreground">{faultName}</code>
                     <VerificationBadge status={detected ? 'pass' : 'fail'} />
                   </div>
                 ))}
               </div>
 
               {veval.notes && (
-                <p className="leading-relaxed text-slate-600">{veval.notes}</p>
+                <p className="leading-relaxed text-muted-foreground">{veval.notes}</p>
               )}
             </div>
           ) : (
-            <p className="text-xs text-slate-500">Verifier evaluation has not been run yet.</p>
+            <p className="text-xs text-muted-foreground">Verifier evaluation has not been run yet.</p>
           )}
         </Card>
       </div>
@@ -983,15 +995,15 @@ export function EvaluationPage() {
         title="Methodological Limitations & Honest Caveats"
         subtitle="Explicit econometric, historical, and data limitations that analysts must weigh alongside model outputs."
       >
-        <ul className="space-y-2.5 text-xs leading-relaxed text-slate-700">
+        <ul className="space-y-2.5 text-xs leading-relaxed text-foreground/85">
           {(evaluation.limitations ?? []).map((lim, idx) => (
             <li
               key={idx}
-              className="flex items-start gap-2.5 rounded-md border border-slate-200 bg-slate-50/70 p-3"
+              className="flex items-start gap-2.5 rounded-md border border-border bg-muted/30 p-3"
             >
               <span
                 aria-hidden="true"
-                className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-200 font-mono text-[11px] font-bold text-slate-700"
+                className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-[11px] font-bold text-foreground/85"
               >
                 {idx + 1}
               </span>

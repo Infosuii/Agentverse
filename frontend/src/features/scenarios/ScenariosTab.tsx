@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import clsx from 'clsx';
 import {
   ApiClientError,
@@ -15,6 +15,7 @@ import {
   Card,
   EmptyState,
   EvidenceBadge,
+  InlineError,
   PlaceholderBadge,
   Skeleton,
   Spinner,
@@ -52,9 +53,16 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
   const { data: fetchedAnalysis, isLoading } = useAnalysis(propAnalysis ? undefined : id);
   const analysis = propAnalysis ?? fetchedAnalysis;
 
+  // Deep links (e.g. from verification findings) may pre-select a metric: ?metric=gdp_level_pct
+  const [searchParams] = useSearchParams();
+  const metricParam = searchParams.get('metric');
+  const linkedMetric = METRIC_DESCRIPTORS.find((m) => m.metric === metricParam)?.metric;
   const [selectedMetric, setSelectedMetric] = useState<MetricName>(
-    'revenue_behavioural_gbp_bn',
+    linkedMetric ?? 'revenue_behavioural_gbp_bn',
   );
+  useEffect(() => {
+    if (linkedMetric) setSelectedMetric(linkedMetric);
+  }, [linkedMetric]);
   const [showEmpiricalBand, setShowEmpiricalBand] = useState<boolean>(false);
   const [useCustomDistributions, setUseCustomDistributions] = useState<boolean>(false);
   const [sliderValues, setSliderValues] = useState<Record<string, number>>({});
@@ -310,10 +318,10 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
 
   const scenarioDescriptionsContent = (
     <span className="block space-y-1.5">
-      <span className="block font-semibold text-white">Scenario definitions</span>
+      <span className="block font-semibold text-foreground">Scenario definitions</span>
       {simulation.scenarios.map((s) => (
-        <span key={s.scenario.name} className="block text-[11px] text-slate-200">
-          <strong className="text-white">{s.scenario.label}:</strong>{' '}
+        <span key={s.scenario.name} className="block text-[11px] text-foreground/90">
+          <strong className="text-foreground">{s.scenario.label}:</strong>{' '}
           {s.scenario.description}
         </span>
       ))}
@@ -354,14 +362,14 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                   aria-checked={isSelected}
                   onClick={() => setSelectedMetric(m.metric)}
                   className={clsx(
-                    'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-xs font-medium transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none',
+                    'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-xs font-medium transition-colors focus:ring-2 focus:ring-ring focus:outline-none',
                     isSelected
-                      ? 'border-blue-600 bg-blue-50 text-blue-900 shadow-xs'
-                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50',
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border bg-card text-foreground/85 hover:border-input hover:bg-accent/60',
                   )}
                 >
                   <span>{meta.shortLabel}</span>
-                  <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
+                  <span className="rounded bg-secondary px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
                     {meta.unit}
                   </span>
                 </button>
@@ -369,10 +377,10 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             })}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-slate-100 bg-slate-50 px-3 py-2 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-semibold text-slate-900">{descriptor.label}</span>
-              <span className="text-slate-500">({descriptor.unit})</span>
+              <span className="font-semibold text-foreground">{descriptor.label}</span>
+              <span className="text-muted-foreground">({descriptor.unit})</span>
               <Badge
                 variant={
                   descriptor.confidence === 'high'
@@ -390,7 +398,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             </div>
 
             {finalYear && finalCentralVal !== undefined && (
-              <div className="flex items-center gap-1.5 text-slate-600">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
                 <span>Central ({fmtFiscalYear(finalYear)}):</span>
                 <ProvenanceNumber
                   value={finalCentralVal}
@@ -421,7 +429,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
               <Tooltip content={scenarioDescriptionsContent}>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                  className="inline-flex items-center gap-1 rounded border border-border bg-muted/40 px-2 py-0.5 text-xs font-medium text-foreground/85 hover:bg-accent"
                 >
                   <span aria-hidden="true">ℹ</span>
                   <span>Scenario rules</span>
@@ -429,7 +437,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
               </Tooltip>
             }
             footer={
-              <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500">
+              <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
                 {(['central', 'optimistic', 'pessimistic', 'custom'] as ScenarioColorKey[]).map(
                   (key) => {
                     const scen = simulation.scenarios.find((s) => s.scenario.name === key);
@@ -440,7 +448,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                           className="h-2 w-2 rounded-full"
                           style={{ backgroundColor: SCENARIO_COLORS[key] }}
                         />
-                        <span className="font-medium capitalize text-slate-700">{key}:</span>
+                        <span className="font-medium capitalize text-foreground/85">{key}:</span>
                         <span>
                           {scen?.scenario.description ??
                             'Live re-simulation with slider overrides.'}
@@ -464,12 +472,12 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             empiricalLabel="Empirical prediction interval (backtest-calibrated)"
             actions={
               hasEmpiricalBand ? (
-                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded border border-teal-300 bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-900">
+                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded border border-teal-400/35 bg-teal-500/10 px-2 py-0.5 text-xs font-medium text-teal-200">
                   <input
                     type="checkbox"
                     checked={showEmpiricalBand}
                     onChange={(e) => setShowEmpiricalBand(e.target.checked)}
-                    className="rounded border-teal-400 text-teal-700 focus:ring-teal-500"
+                    className="h-3.5 w-3.5 accent-teal-400"
                   />
                   <span>Show backtest-calibrated interval</span>
                 </label>
@@ -480,13 +488,13 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                 {hasEmpiricalBand ? (
                   showEmpiricalBand &&
                   fanData.empiricalCalibrationNote && (
-                    <p className="font-medium text-teal-800">
+                    <p className="font-medium text-teal-300">
                       Empirical prediction interval (backtest-calibrated):{' '}
                       {fanData.empiricalCalibrationNote}
                     </p>
                   )
                 ) : (
-                  <p className="text-slate-500">
+                  <p className="text-muted-foreground">
                     {activeDistributionBundle?.warnings?.find(
                       (w) =>
                         w.toLowerCase().includes('no empirical prediction interval') ||
@@ -541,10 +549,10 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             title="Reading the uncertainty"
             subtitle="How to interpret scenario paths, Monte Carlo assumption ranges, and sensitivity swings."
           >
-            <div className="space-y-2.5 text-xs leading-relaxed text-slate-700">
+            <div className="space-y-2.5 text-xs leading-relaxed text-foreground/85">
               {activeDistributionBundle?.warnings &&
                 activeDistributionBundle.warnings.length > 0 && (
-                  <div className="rounded-md border border-amber-300 bg-amber-50/70 p-2.5 text-amber-950">
+                  <div className="rounded-md border border-amber-400/35 bg-amber-500/10 p-2.5 text-amber-200">
                     <div className="font-semibold">Simulation notes &amp; warnings:</div>
                     <ul className="mt-1 list-disc space-y-0.5 pl-4">
                       {activeDistributionBundle.warnings.map((w, idx) => (
@@ -555,7 +563,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                 )}
               <ul className="list-disc space-y-1.5 pl-4">
                 <li>
-                  <strong className="text-slate-900">Scenarios.</strong>{' '}
+                  <strong className="text-foreground">Scenarios.</strong>{' '}
                   <em>Central</em> has every assumption at its central value.{' '}
                   <em>Optimistic</em> and <em>pessimistic</em> take each uncertain
                   assumption, one at a time, to the end of its range that gives
@@ -566,7 +574,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                   at once.
                 </li>
                 <li>
-                  <strong className="text-slate-900">Monte Carlo bands.</strong>{' '}
+                  <strong className="text-foreground">Monte Carlo bands.</strong>{' '}
                   2,000 draws vary all uncertain assumptions together (independently,
                   from their stated distributions) and rerun the model. The shaded
                   bands show the 5th–95th and 25th–75th percentiles of the results,
@@ -575,14 +583,14 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                   Monte Carlo standard error of the median.
                 </li>
                 <li>
-                  <strong className="text-slate-900">Tornado.</strong> Each uncertain
+                  <strong className="text-foreground">Tornado.</strong> Each uncertain
                   assumption moves from its low to its high value with the others at
                   central, for the final year. Bars are sorted by the size of the
                   swing, so the top bars are the assumptions the result depends on
                   most. Interactions between assumptions are not shown.
                 </li>
                 <li>
-                  <strong className="text-slate-900">
+                  <strong className="text-foreground">
                     Why these are not forecasts.
                   </strong>{' '}
                   Every range shows what the model implies under its assumptions.
@@ -607,7 +615,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                 <button
                   type="button"
                   onClick={handleResetAllSliders}
-                  className="rounded border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  className="rounded border border-input bg-card px-2.5 py-1 text-xs font-medium text-foreground/85 hover:bg-accent/60"
                 >
                   Reset all
                 </button>
@@ -616,31 +624,31 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
           >
             <div className="space-y-4">
               {/* Status & Custom toggle bar */}
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs">
                 <div className="flex items-center gap-2">
                   {simulateMutation.isPending ? (
-                    <span className="inline-flex items-center gap-1.5 text-blue-700">
+                    <span className="inline-flex items-center gap-1.5 text-primary">
                       <Spinner size="xs" />
                       <span>Simulating…</span>
                     </span>
                   ) : recomputedMs !== null ? (
-                    <span className="font-medium text-violet-800">
+                    <span className="font-medium text-violet-300">
                       recomputed in {recomputedMs} ms
                     </span>
                   ) : (
-                    <span className="text-slate-500">
+                    <span className="text-muted-foreground">
                       Drag any slider to overlay custom scenario
                     </span>
                   )}
                 </div>
 
                 {customBundle && (
-                  <label className="inline-flex cursor-pointer items-center gap-1.5 font-medium text-violet-800">
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 font-medium text-violet-300">
                     <input
                       type="checkbox"
                       checked={useCustomDistributions}
                       onChange={(e) => setUseCustomDistributions(e.target.checked)}
-                      className="rounded border-violet-400 text-violet-700 focus:ring-violet-500"
+                      className="h-3.5 w-3.5 accent-violet-400"
                     />
                     <span>Custom fan &amp; tornado</span>
                   </label>
@@ -651,7 +659,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
               {scopeErrorReasons.length > 0 && (
                 <div
                   role="alert"
-                  className="rounded-md border border-amber-400 bg-amber-50 p-3 text-xs text-amber-950"
+                  className="rounded-md border border-amber-400/50 bg-amber-500/10 p-3 text-xs text-amber-200"
                 >
                   <div className="font-semibold">
                     Out-of-scope rate or override (keeping last valid chart):
@@ -666,20 +674,20 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
 
               {/* Proposed Rate Slider */}
               {policy && policy.proposed_rate_pct != null && (
-                <div className="rounded-md border border-blue-200 bg-blue-50/40 p-3">
+                <div className="rounded-md border border-primary/25 bg-primary/5 p-3">
                   <div className="flex items-center justify-between gap-2 text-xs">
                     <label
                       htmlFor="slider-proposed-rate"
-                      className="font-semibold text-slate-900"
+                      className="font-semibold text-foreground"
                     >
                       Proposed CT main rate
                     </label>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-mono font-bold text-blue-800 tabular-nums">
+                      <span className="font-mono font-bold text-primary tabular-nums">
                         {(proposedRateOverride ?? policy.proposed_rate_pct).toFixed(1)}%
                       </span>
                       {policy.baseline_rate_pct != null && (
-                        <span className="text-[11px] text-slate-500">
+                        <span className="text-[11px] text-muted-foreground">
                           (
                           {fmtPp(
                             (proposedRateOverride ?? policy.proposed_rate_pct) -
@@ -695,7 +703,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                           onClick={() =>
                             setProposedRateOverride(policy.proposed_rate_pct ?? null)
                           }
-                          className="text-[11px] text-blue-700 hover:underline"
+                          className="text-[11px] text-primary hover:underline"
                         >
                           Reset
                         </button>
@@ -710,9 +718,9 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                     step={0.5}
                     value={proposedRateOverride ?? policy.proposed_rate_pct}
                     onChange={(e) => setProposedRateOverride(Number(e.target.value))}
-                    className="mt-2 w-full accent-blue-600"
+                    className="mt-2 w-full accent-primary"
                   />
-                  <div className="mt-1 flex justify-between text-[10px] text-slate-500">
+                  <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
                     <span>10%</span>
                     <span>Default: {policy.proposed_rate_pct}%</span>
                     <span>40%</span>
@@ -744,19 +752,19 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                       className={clsx(
                         'rounded-md border p-2.5 text-xs transition-colors',
                         isOverridden
-                          ? 'border-violet-300 bg-violet-50/40'
-                          : 'border-slate-200 bg-white',
+                          ? 'border-violet-400/35 bg-violet-500/5'
+                          : 'border-border bg-card',
                       )}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <label
                           htmlFor={`slider-${assumption.name}`}
-                          className="font-medium text-slate-800"
+                          className="font-medium text-foreground"
                         >
                           {assumption.label}
                         </label>
                         <div className="flex items-center gap-1.5">
-                          <span className="font-mono font-semibold text-slate-900 tabular-nums">
+                          <span className="font-mono font-semibold text-foreground tabular-nums">
                             {formatChartValue(currentVal, assumption.unit)}
                           </span>
                           {isOverridden && (
@@ -768,7 +776,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                                   [assumption.name]: assumption.value,
                                 }))
                               }
-                              className="text-[11px] font-medium text-violet-700 hover:underline"
+                              className="text-[11px] font-medium text-violet-300 hover:underline"
                             >
                               Reset
                             </button>
@@ -791,18 +799,18 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
                               [assumption.name]: val,
                             }));
                           }}
-                          className="w-full accent-violet-600"
+                          className="w-full accent-violet-500"
                         />
                         {/* Default tick indicator */}
                         <span
                           aria-hidden="true"
                           title={`Default: ${assumption.value}`}
                           style={{ left: `${defaultPct}%` }}
-                          className="pointer-events-none absolute -top-0.5 h-2 w-0.5 -translate-x-1/2 bg-slate-500"
+                          className="pointer-events-none absolute -top-0.5 h-2 w-0.5 -translate-x-1/2 bg-muted-foreground"
                         />
                       </div>
 
-                      <div className="mt-0.5 flex justify-between text-[10px] text-slate-500 tabular-nums">
+                      <div className="mt-0.5 flex justify-between text-[10px] text-muted-foreground tabular-nums">
                         <span>{min}</span>
                         <span>Default: {assumption.value}</span>
                         <span>{max}</span>
@@ -813,25 +821,42 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
               </div>
 
               {/* Full Re-run Button */}
-              <div className="border-t border-slate-200 pt-3">
+              <div className="border-t border-border pt-3">
                 <button
                   type="button"
                   disabled={!hasAnyOverride || createAnalysisMutation.isPending}
                   onClick={handleFullRerun}
                   className={clsx(
-                    'flex w-full items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition-colors focus:ring-2 focus:ring-violet-500 focus:outline-none',
+                    'flex w-full items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition-colors focus:ring-2 focus:ring-violet-400 focus:outline-none',
                     hasAnyOverride
-                      ? 'bg-violet-700 text-white hover:bg-violet-800'
-                      : 'cursor-not-allowed bg-slate-100 text-slate-400',
+                      ? 'bg-violet-600 text-white hover:bg-violet-700'
+                      : 'cursor-not-allowed bg-secondary text-muted-foreground/70',
                   )}
                 >
                   {createAnalysisMutation.isPending && <Spinner size="xs" />}
                   <span>Re-run full analysis with these assumptions</span>
                 </button>
-                <p className="mt-1 text-[11px] text-slate-500">
+                <p className="mt-1 text-[11px] text-muted-foreground">
                   Reuses existing research findings (<code>reuse_research_from</code>) and
                   runs full verification and report generation.
                 </p>
+                {createAnalysisMutation.isError && (
+                  <InlineError
+                    className="mt-3"
+                    title="Could not start the re-run"
+                    message={
+                      createAnalysisMutation.error instanceof Error
+                        ? createAnalysisMutation.error.message
+                        : 'Unexpected error creating analysis'
+                    }
+                    reasons={
+                      createAnalysisMutation.error instanceof ApiClientError
+                        ? createAnalysisMutation.error.reasons
+                        : []
+                    }
+                    onRetry={handleFullRerun}
+                  />
+                )}
               </div>
             </div>
           </Card>

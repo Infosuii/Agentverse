@@ -11,7 +11,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartFrame, formatChartValue, type ChartUnit } from './ChartFrame';
-import { SCENARIO_COLORS, type EvidenceClassKey } from '../../lib/theme';
+import { CHART_THEME, SCENARIO_COLORS, type EvidenceClassKey } from '../../lib/theme';
 
 export interface TornadoInputItem {
   label: string;
@@ -118,25 +118,25 @@ export function Tornado({
           layout="vertical"
           margin={{ top: 10, right: 24, left: 16, bottom: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis
             type="number"
             domain={['auto', 'auto']}
             tickFormatter={(v: number) => valFormatter(Number(v))}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             label={{
               value: `Output (${unit})`,
               position: 'insideBottom',
               offset: -10,
               fontSize: 11,
-              fill: '#64748b',
+              fill: CHART_THEME.axisLabel,
             }}
           />
           <YAxis
             type="category"
             dataKey="label"
             width={175}
-            tick={{ fontSize: 11, fill: '#334155' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
           />
           <ReferenceLine
             x={base}
@@ -145,23 +145,24 @@ export function Tornado({
             strokeDasharray="4 3"
           />
           <RechartsTooltip
+            cursor={{ fill: CHART_THEME.cursor }}
             content={({ active, payload }) => {
               if (!active || !payload || payload.length === 0) return null;
               const row = payload[0]?.payload as InternalTornadoRow | undefined;
               if (!row) return null;
               return (
-                <div className="rounded-md border border-slate-300 bg-white p-2.5 text-xs shadow-md">
-                  <div className="font-semibold text-slate-900">{row.label}</div>
-                  <div className="mt-1 space-y-0.5 text-slate-600 tabular-nums">
+                <div className="rounded-sm border border-border bg-popover p-2.5 text-xs text-popover-foreground shadow-lg shadow-black/40">
+                  <div className="font-semibold text-foreground">{row.label}</div>
+                  <div className="mt-1 space-y-0.5 text-muted-foreground tabular-nums">
                     <div>
                       At low input
                       {row.lowInput !== undefined ? ` (${row.lowInput})` : ''}:{' '}
-                      <strong className="text-slate-900">{valFormatter(row.low)}</strong>
+                      <strong className="text-foreground">{valFormatter(row.low)}</strong>
                     </div>
                     <div>
                       At high input
                       {row.highInput !== undefined ? ` (${row.highInput})` : ''}:{' '}
-                      <strong className="text-slate-900">{valFormatter(row.high)}</strong>
+                      <strong className="text-foreground">{valFormatter(row.high)}</strong>
                     </div>
                     <div>
                       Central base: <strong>{valFormatter(base)}</strong> · Swing:{' '}
