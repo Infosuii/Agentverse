@@ -1,4 +1,5 @@
-import { Link, useParams } from 'react-router';
+import type { ReactNode } from 'react';
+import { Link, useOutletContext, useParams } from 'react-router';
 import {
   useAnalysis,
   type Analysis,
@@ -6,6 +7,7 @@ import {
   type MetricProjection,
   type PercentileBand,
 } from '../../api/hooks';
+import type { AnalysisOutletContext } from './AnalysisShell';
 import {
   Badge,
   Card,
@@ -38,8 +40,21 @@ function findBand(
   return bands.find((b) => b.fiscal_year === fiscalYear);
 }
 
+function OverviewHeading({ number, children }: { number: string; children: ReactNode }) {
+  return (
+    <h2 className="flex items-baseline gap-3 font-display text-lg font-semibold text-foreground">
+      <span aria-hidden="true" className="font-mono text-sm text-primary">
+        {number}
+      </span>
+      {children}
+    </h2>
+  );
+}
+
 export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
   const { id } = useParams<{ id: string }>();
+  const outletCtx = useOutletContext<AnalysisOutletContext | undefined>();
+  const activityEvents = outletCtx?.eventsState?.events ?? [];
   const { data: fetchedAnalysis, isLoading } = useAnalysis(propAnalysis ? undefined : id);
   const analysis = propAnalysis ?? fetchedAnalysis;
 
@@ -156,9 +171,7 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
       {/* Headline Stat Tiles */}
       <section aria-label="Headline model projections">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-slate-800">
-            Headline Projections (Central Scenario)
-          </h2>
+          <OverviewHeading number="01">Headline Projections (Central Scenario)</OverviewHeading>
           <div className="flex items-center gap-2">
             <EvidenceBadge evidenceClass="model_scenario" />
             {hasPlaceholderAssumptions && <PlaceholderBadge />}
@@ -243,37 +256,40 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
       </section>
 
       {/* Policy & Research Summary */}
+      <div className="border-t border-border pt-6">
+        <OverviewHeading number="02">Policy &amp; Evidence Summary</OverviewHeading>
+      </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card title="Policy Specification" className="lg:col-span-1">
           {analysis.policy ? (
             <dl className="space-y-2 text-xs">
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Policy type:</dt>
-                <dd className="font-medium text-slate-900">
+                <dt className="text-muted-foreground">Policy type:</dt>
+                <dd className="font-medium text-foreground">
                   {analysis.policy.policy_type}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Rate change:</dt>
-                <dd className="font-semibold text-slate-900 tabular-nums">
+                <dt className="text-muted-foreground">Rate change:</dt>
+                <dd className="font-semibold text-foreground tabular-nums">
                   {analysis.policy.baseline_rate_pct ?? '—'}% →{' '}
                   {analysis.policy.proposed_rate_pct ?? '—'}% ({fmtPp(changePp)})
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Effective date:</dt>
-                <dd className="font-medium text-slate-900">
+                <dt className="text-muted-foreground">Effective date:</dt>
+                <dd className="font-medium text-foreground">
                   {fmtDate(analysis.policy.effective_date)}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Horizon:</dt>
-                <dd className="font-medium text-slate-900">
+                <dt className="text-muted-foreground">Horizon:</dt>
+                <dd className="font-medium text-foreground">
                   {analysis.policy.horizon_years} years
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Scope status:</dt>
+                <dt className="text-muted-foreground">Scope status:</dt>
                 <dd>
                   <Badge
                     variant={
@@ -299,29 +315,29 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
           className="lg:col-span-2"
           actions={
             analysis.sources && analysis.sources.length > 0 ? (
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-muted-foreground">
                 {analysis.sources.length} sources in total (research, precedents, data)
               </span>
             ) : undefined
           }
         >
-          <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+          <div className="space-y-3 text-xs leading-relaxed text-foreground/85">
             {analysis.research?.summary ? (
               <p>{analysis.research.summary}</p>
             ) : (
-              <p className="text-slate-500">
+              <p className="text-muted-foreground">
                 Research summary will appear here once the research stage completes.
               </p>
             )}
             {analysis.precedents?.summary && (
-              <p className="border-t border-slate-100 pt-2 text-slate-600">
-                <strong className="text-slate-800">Historical precedents: </strong>
+              <p className="border-t border-border/60 pt-2 text-muted-foreground">
+                <strong className="text-foreground">Historical precedents: </strong>
                 {analysis.precedents.summary}
               </p>
             )}
             {analysis.sources && analysis.sources.length > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[11px] font-medium text-slate-500">
+                <span className="text-[11px] font-medium text-muted-foreground">
                   Key sources:
                 </span>
                 {analysis.sources.slice(0, 6).map((src) => (
@@ -337,26 +353,60 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
         </Card>
       </div>
 
-      {/* Quick Links to All Analysis Tabs */}
-      <Card title="Explore Analysis Workstreams">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {quickLinks.map((item) => (
+      {/* Quick Links to All Analysis Tabs (studio ruled rows) */}
+      <section aria-label="Explore Analysis Workstreams" className="border-t border-border pt-6">
+        <OverviewHeading number="03">Explore Analysis Workstreams</OverviewHeading>
+        <div className="mt-3 grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+          {quickLinks.map((item, idx) => (
             <Link
               key={item.tab}
               to={`/analyses/${analysis.analysis_id}/${item.tab}`}
-              className="group flex flex-col justify-between rounded-lg border border-slate-200 bg-slate-50/60 p-3.5 transition-colors hover:border-blue-400 hover:bg-blue-50/40 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="group block border-t border-border py-3 transition-colors hover:border-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
             >
-              <div>
-                <div className="flex items-center justify-between text-xs font-semibold text-slate-900 group-hover:text-blue-700">
+              <span className="flex items-center justify-between gap-2">
+                <span className="flex items-baseline gap-2 text-sm font-medium text-foreground group-hover:text-primary">
+                  <span aria-hidden="true" className="font-mono text-[11px] text-primary/80">
+                    {String(idx + 2).padStart(2, '0')}
+                  </span>
                   <span>{item.title}</span>
-                  <span aria-hidden="true">→</span>
-                </div>
-                <p className="mt-1 text-xs text-slate-600">{item.description}</p>
-              </div>
+                </span>
+                <span aria-hidden="true" className="text-muted-foreground group-hover:text-primary">
+                  →
+                </span>
+              </span>
+              <span className="mt-1 block text-xs text-muted-foreground">{item.description}</span>
             </Link>
           ))}
         </div>
-      </Card>
+      </section>
+
+      {/* Studio activity log: the pipeline's own event stream, newest last */}
+      {activityEvents.length > 0 && (
+        <section aria-label="Analysis activity" className="rounded-lg border border-border bg-muted/40 p-4">
+          <p className="mb-2 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">
+            Analysis activity
+          </p>
+          <ul className="max-h-56 space-y-1 overflow-y-auto font-mono text-xs">
+            {activityEvents.map((ev) => (
+              <li
+                key={ev.seq}
+                className={
+                  ev.type === 'error' || ev.type === 'failed'
+                    ? 'text-red-300'
+                    : ev.type === 'warning'
+                      ? 'text-amber-300'
+                      : 'text-muted-foreground'
+                }
+              >
+                <span aria-hidden="true" className="text-primary">
+                  ›
+                </span>{' '}
+                {ev.message}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

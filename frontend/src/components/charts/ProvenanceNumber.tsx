@@ -81,7 +81,7 @@ export function ProvenanceNumber({
             setOpen((prev) => !prev);
           }
         }}
-        className="inline-flex cursor-pointer items-baseline gap-1 rounded px-0.5 font-semibold tabular-nums underline decoration-slate-400 decoration-dotted underline-offset-2 transition-colors hover:bg-blue-50 hover:text-blue-700 hover:decoration-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="inline-flex cursor-pointer items-baseline gap-1 rounded px-0.5 font-semibold tabular-nums underline decoration-muted-foreground/50 decoration-dotted underline-offset-2 transition-colors hover:bg-primary/10 hover:text-primary hover:decoration-primary focus:ring-2 focus:ring-ring focus:outline-none"
       >
         <span>{formatted}</span>
       </button>
@@ -91,10 +91,10 @@ export function ProvenanceNumber({
           id={popoverId}
           role="dialog"
           aria-label="Number provenance details"
-          className="absolute bottom-full left-1/2 z-50 mb-1.5 w-72 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-3 text-left text-xs text-slate-700 shadow-lg"
+          className="absolute bottom-full left-1/2 z-50 mb-1.5 w-72 -translate-x-1/2 rounded-sm border border-border bg-popover p-3 text-left text-xs text-popover-foreground shadow-lg shadow-black/40"
         >
-          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
-            <span className="font-semibold text-slate-900 tabular-nums">
+          <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2">
+            <span className="font-semibold text-foreground tabular-nums">
               {formatted}
             </span>
             <EvidenceBadge evidenceClass={evidenceClass} short />
@@ -103,14 +103,14 @@ export function ProvenanceNumber({
           <div className="mt-2 space-y-2">
             {calcStepIds.length > 0 && (
               <div>
-                <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                   Calculation Steps
                 </div>
                 <div className="mt-1 flex flex-wrap gap-1">
                   {calcStepIds.map((stepId) => (
                     <code
                       key={stepId}
-                      className="rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] text-blue-800"
+                      className="rounded border border-primary/25 bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] text-primary"
                     >
                       {stepId}
                     </code>
@@ -121,7 +121,7 @@ export function ProvenanceNumber({
 
             {normalizedSourceIds.length > 0 && (
               <div>
-                <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                   Sources
                 </div>
                 <div className="mt-1 flex flex-wrap gap-1">
@@ -137,17 +137,17 @@ export function ProvenanceNumber({
             )}
 
             {calcStepIds.length === 0 && normalizedSourceIds.length === 0 && (
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-muted-foreground">
                 Traceable model output ({evidenceClass.replace(/_/g, ' ')}).
               </p>
             )}
 
             {(inspectorHref || onInspectCalculation) && (
-              <div className="border-t border-slate-100 pt-2">
+              <div className="border-t border-border/60 pt-2">
                 {inspectorHref ? (
                   <Link
                     to={inspectorHref}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                   >
                     <span>Inspect in Calculation Inspector</span>
                     <span aria-hidden="true">→</span>
@@ -156,7 +156,7 @@ export function ProvenanceNumber({
                   <button
                     type="button"
                     onClick={() => onInspectCalculation?.(metric, year, calcStepIds)}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                   >
                     <span>Inspect in Calculation Inspector</span>
                     <span aria-hidden="true">→</span>

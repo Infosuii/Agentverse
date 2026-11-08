@@ -10,7 +10,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartFrame, formatChartValue, type ChartUnit } from './ChartFrame';
-import { SCENARIO_COLORS, type EvidenceClassKey } from '../../lib/theme';
+import { CHART_THEME, SCENARIO_COLORS, type EvidenceClassKey } from '../../lib/theme';
 
 export interface HistogramMarkers {
   central?: number;
@@ -102,46 +102,46 @@ export function Histogram({
           margin={{ top: 12, right: 20, left: 10, bottom: 20 }}
           barCategoryGap={1}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis
             dataKey="midpoint"
             type="number"
             domain={['dataMin', 'dataMax']}
             tickFormatter={(v: number) => valFormatter(Number(v))}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             label={{
               value: `Final-year value (${unit})`,
               position: 'insideBottom',
               offset: -10,
               fontSize: 11,
-              fill: '#64748b',
+              fill: CHART_THEME.axisLabel,
             }}
           />
           <YAxis
             allowDecimals={false}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             width={48}
             label={{
               value: 'Draws',
               angle: -90,
               position: 'insideLeft',
-              style: { textAnchor: 'middle', fontSize: 11, fill: '#64748b' },
+              style: { textAnchor: 'middle', fontSize: 11, fill: CHART_THEME.axisLabel },
             }}
           />
           {markers?.p5 !== undefined && (
             <ReferenceLine
               x={markers.p5}
-              stroke="#64748b"
+              stroke={CHART_THEME.neutral}
               strokeDasharray="4 3"
-              label={{ value: 'p5', position: 'top', fontSize: 10, fill: '#475569' }}
+              label={{ value: 'p5', position: 'top', fontSize: 10, fill: CHART_THEME.tick }}
             />
           )}
           {markers?.p95 !== undefined && (
             <ReferenceLine
               x={markers.p95}
-              stroke="#64748b"
+              stroke={CHART_THEME.neutral}
               strokeDasharray="4 3"
-              label={{ value: 'p95', position: 'top', fontSize: 10, fill: '#475569' }}
+              label={{ value: 'p95', position: 'top', fontSize: 10, fill: CHART_THEME.tick }}
             />
           )}
           {markers?.central !== undefined && (
@@ -172,17 +172,18 @@ export function Histogram({
             />
           )}
           <RechartsTooltip
+            cursor={{ fill: CHART_THEME.cursor }}
             content={({ active, payload }) => {
               if (!active || !payload || payload.length === 0) return null;
               const bin = payload[0]?.payload as InternalBinRow | undefined;
               if (!bin) return null;
               return (
-                <div className="rounded-md border border-slate-300 bg-white p-2.5 text-xs shadow-md">
-                  <div className="font-semibold text-slate-900">
+                <div className="rounded-sm border border-border bg-popover p-2.5 text-xs text-popover-foreground shadow-lg shadow-black/40">
+                  <div className="font-semibold text-foreground">
                     Bin: {valFormatter(bin.low)} to {valFormatter(bin.high)}
                   </div>
-                  <div className="mt-0.5 text-slate-600 tabular-nums">
-                    Frequency: <strong className="text-slate-900">{bin.count}</strong> draws
+                  <div className="mt-0.5 text-muted-foreground tabular-nums">
+                    Frequency: <strong className="text-foreground">{bin.count}</strong> draws
                   </div>
                 </div>
               );
