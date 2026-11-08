@@ -94,7 +94,8 @@ export function HistoryPage() {
             {analyses.map((item, i) => (
               <tr key={item.analysis_id} className="transition-colors hover:bg-muted/30">
                 <td className="px-3 py-3.5 align-top whitespace-nowrap">
-                  <span className="mr-2 font-mono text-[11px] text-primary/80">
+                  {/* decorative row number: hidden from screen readers so the date is not read as "018 Nov" */}
+                  <span aria-hidden="true" className="mr-2 font-mono text-[11px] text-primary/80">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className="font-mono text-xs text-muted-foreground">
