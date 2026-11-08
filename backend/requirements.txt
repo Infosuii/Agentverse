@@ -13,3 +13,4 @@ httpx
 beautifulsoup4
 pypdf
 openpyxl
+matplotlib

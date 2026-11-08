@@ -6,6 +6,7 @@ assumption-driven ranges, never prediction intervals.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -54,8 +55,20 @@ def _unit(metric: str) -> str:
     return "£bn" if metric.endswith("_gbp_bn") else "%"
 
 
-def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *,
-                draws: int = 2000, seed: int = 42) -> MonteCarloResult:
+@dataclass
+class Draws:
+    """Every Monte Carlo draw: `metrics[name]` has shape (draws, years). The single source of the bands, the
+    histograms and the trajectory chart, so a plotted path is always a real draw."""
+    fiscal_years: list[str]
+    metrics: dict[str, np.ndarray]
+    sampled_parameters: list[str]
+    draws: int
+    seed: int
+
+
+def simulate_draws(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *,
+                   draws: int = 2000, seed: int = 42) -> Draws:
+    """Sample the uncertain parameters with `default_rng(seed)` and run ONE vectorised `compute` call."""
     if draws < 1:
         raise ValueError("monte_carlo needs draws >= 1")
     rng = np.random.default_rng(seed)
@@ -65,12 +78,21 @@ def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: Ba
         values[name] = sample(params[name], draws, rng)
     out = engine_core.compute(spec, values, baseline)
     years = list(out.fiscal_years)
+    metrics = {m: np.broadcast_to(np.asarray(out.metrics[m], dtype=float), (draws, len(years)))
+               for m in METRIC_NAMES if m in out.metrics}  # ready-reckoner measures model revenue only (#93)
+    return Draws(fiscal_years=years, metrics=metrics, sampled_parameters=sampled, draws=draws, seed=seed)
+
+
+def monte_carlo(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *,
+                draws: int = 2000, seed: int = 42) -> MonteCarloResult:
+    d = simulate_draws(spec, params, baseline, draws=draws, seed=seed)
+    years, sampled = d.fiscal_years, d.sampled_parameters
     distributions, histograms = [], []
     se_note = ""
     for metric in METRIC_NAMES:
-        if metric not in out.metrics:  # e.g. ready-reckoner measures model revenue only (contract-change #93)
+        if metric not in d.metrics:
             continue
-        arr = np.broadcast_to(np.asarray(out.metrics[metric], dtype=float), (draws, len(years)))
+        arr = d.metrics[metric]
         q = np.percentile(arr, PERCENTILES, axis=0).tolist()
         mean = arr.mean(axis=0).tolist()
         bands = [PercentileBand(fiscal_year=fy, p5=q[0][i], p10=q[1][i], p25=q[2][i], p50=q[3][i], p75=q[4][i],

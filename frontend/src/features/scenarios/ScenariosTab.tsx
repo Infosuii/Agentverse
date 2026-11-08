@@ -8,6 +8,7 @@ import {
   useSimulate,
   type Analysis,
   type MetricName,
+  type SimulateRequest,
   type SimulationBundle,
 } from '../../api/hooks';
 import {
@@ -23,9 +24,9 @@ import {
   WithheldBanner,
 } from '../../components/ui';
 import {
-  FanChart,
   Histogram,
   LineChart,
+  MonteCarloChart,
   ProvenanceNumber,
   Tornado,
   formatChartValue,
@@ -70,6 +71,7 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
   const [sliderValues, setSliderValues] = useState<Record<string, number>>({});
   const [proposedRateOverride, setProposedRateOverride] = useState<number | null>(null);
   const [customBundle, setCustomBundle] = useState<SimulationBundle | null>(null);
+  const [lastSimRequest, setLastSimRequest] = useState<SimulateRequest | null>(null);
   const [recomputedMs, setRecomputedMs] = useState<number | null>(null);
   const [scopeErrorReasons, setScopeErrorReasons] = useState<string[]>([]);
 
@@ -138,16 +140,16 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
       const effectivePolicy = buildPolicyWithRateOverride(policy, proposedRateOverride);
       const t0 = performance.now();
 
-      simulateMutation.mutate(
-        {
-          policy: effectivePolicy,
-          parameter_overrides: parameterOverrides,
-          monte_carlo_draws: 2000,
-          seed: 42,
-          include_sensitivity: true,
-        },
-        {
+      const request: SimulateRequest = {
+        policy: effectivePolicy,
+        parameter_overrides: parameterOverrides,
+        monte_carlo_draws: 2000,
+        seed: 42,
+        include_sensitivity: true,
+      };
+      simulateMutation.mutate(request, {
           onSuccess: (data) => {
+            setLastSimRequest(request);
             const elapsed = Math.max(1, Math.round(performance.now() - t0));
             setCustomBundle(data);
             setRecomputedMs(elapsed);
@@ -468,15 +470,17 @@ export function ScenariosTab({ analysis: propAnalysis }: ScenariosTabProps) {
             }
           />
 
-          {/* 3. Monte Carlo FanChart */}
-          <FanChart
-            title={`Monte Carlo Uncertainty — ${descriptor.label}`}
-            caption={`Shaded p5–p95 and p25–p75 assumption-driven bands across ${activeDistributionBundle?.monte_carlo?.n_draws ?? 2000} draws (model scenario).`}
-            unit={descriptor.unit}
-            bands={fanData.bands}
-            intervalNote={fanData.intervalNote}
-            empiricalBands={showEmpiricalBand ? fanData.empiricalBands : undefined}
-            empiricalLabel="Empirical prediction interval (backtest-calibrated)"
+          {/* 3. Monte Carlo trajectories (matplotlib, real draws: issue #98) */}
+          <MonteCarloChart
+            source={
+              useCustomDistributions && lastSimRequest
+                ? { kind: 'simulate', request: lastSimRequest }
+                : { kind: 'analysis', analysisId: analysis.analysis_id }
+            }
+            metric={selectedMetric}
+            empirical={showEmpiricalBand}
+            title={`Monte Carlo trajectories — ${descriptor.label}`}
+            caption={`${(activeDistributionBundle?.monte_carlo?.n_draws ?? 2000).toLocaleString('en-GB')} draws${useCustomDistributions ? ' with your slider overrides' : ''}. Each grey line is one real simulated path; bands, percentile lines and the mean use every draw.`}
             actions={
               hasEmpiricalBand ? (
                 <label className="inline-flex cursor-pointer items-center gap-1.5 rounded border border-teal-400/35 bg-teal-500/10 px-2 py-0.5 text-xs font-medium text-teal-200">
