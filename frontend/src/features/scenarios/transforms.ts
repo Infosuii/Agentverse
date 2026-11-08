@@ -166,10 +166,13 @@ export function buildFanBands(
   const bands: FanBandPoint[] = (dist?.bands ?? []).map((b) => ({
     x: b.fiscal_year,
     p5: b.p5,
+    p10: b.p10,
     p25: b.p25,
     p50: b.p50,
     p75: b.p75,
+    p90: b.p90,
     p95: b.p95,
+    mean: b.mean,
   }));
 
   // Empirical intervals are calibrated only for revenue_behavioural_gbp_bn per MASTER_PROMPT §9.6

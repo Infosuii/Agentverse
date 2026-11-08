@@ -19,6 +19,7 @@ import {
   Stat,
   WithheldBanner,
 } from '../../components/ui';
+import { FanChart } from '../../components/charts';
 import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct } from '../../lib/format';
 import { isResearchOnly, policyArea, policyChangeLabel, policyChangeText, policyTypeLabel } from '../../lib/policy';
 import { withheldReasons } from '../../lib/reasons';
@@ -248,6 +249,31 @@ export function OverviewTab({ analysis: propAnalysis }: OverviewTabProps) {
           />
           )}
         </div>
+
+        {forecastAllowed && mcRevDist && mcRevDist.bands.length > 0 && (
+          <div className="mt-4">
+            <FanChart
+              title={`Monte Carlo Simulation Trajectories — ${revBehav?.label ?? 'Behavioural Revenue Change'}`}
+              caption={`Simulated draws (${analysis.simulation?.monte_carlo?.n_draws ?? 2000} trajectories), pale green p5–p95 band, upper 95% bound (green), lower 5% bound (red), and average path (bold black).`}
+              unit={mcRevDist.unit}
+              bands={mcRevDist.bands.map((b) => ({
+                x: b.fiscal_year,
+                p5: b.p5,
+                p10: b.p10,
+                p25: b.p25,
+                p50: b.p50,
+                p75: b.p75,
+                p90: b.p90,
+                p95: b.p95,
+                mean: b.mean,
+              }))}
+              intervalNote={
+                analysis.simulation?.monte_carlo?.interval_note ??
+                'assumption-driven ranges, not statistical prediction intervals; exclude model and data uncertainty'
+              }
+            />
+          </div>
+        )}
       </section>
 
       {/* Policy & Research Summary */}
