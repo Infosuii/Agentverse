@@ -88,10 +88,9 @@ test.describe('Jane Avenue End-to-End Flows (mock mode)', () => {
     await expect(page.locator('main')).toContainText(/Executive summary/i);
     await expect(page.locator('main')).toContainText(/Modelled impacts/i);
 
-    // Verify markdown report download endpoint works and returns attachment
-    const reportResp = await request.get(
-      `http://localhost:8000/api/analyses/${analysisId}/report.md`,
-    );
+    // Verify markdown report download endpoint works and returns attachment. Relative to baseURL, through the
+    // frontend's /api proxy (the same path the Download .md button uses), so it always reaches the test backend.
+    const reportResp = await request.get(`/api/analyses/${analysisId}/report.md`);
     expect(reportResp.ok()).toBeTruthy();
     expect(reportResp.headers()['content-type']).toContain('text/markdown');
     const reportMd = await reportResp.text();

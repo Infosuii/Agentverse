@@ -194,6 +194,9 @@ def create_app(store: AnalysisStore | None = None, *, use_executor: bool | None 
                 engine.apply_overrides(engine.default_parameters(body.policy_override), body.parameter_overrides)
             except ValueError as exc:
                 raise ApiError(422, "Invalid parameter override", [str(exc)]) from exc
+        if body.options.seed < 0:  # would otherwise fail the run at the modelling stage
+            raise ApiError(422, "Invalid request", [f"options.seed: must be a non-negative integer, not "
+                                                    f"{body.options.seed}"])
         analysis = pipeline.create_analysis(get_store(), body)
         background.add_task(_run, analysis.analysis_id)
         return AnalysisCreated(analysis_id=analysis.analysis_id, status=analysis.status)

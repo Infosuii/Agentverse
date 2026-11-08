@@ -252,3 +252,12 @@ def test_create_analysis_rejects_bad_override_up_front(client):
         assert r.status_code == 422, r.text
         assert any(word in reason for reason in r.json()["reasons"])
     assert client.get("/api/analyses").json() == []  # nothing was created
+
+
+def test_negative_seed_is_a_422_on_both_endpoints(client, demo_policy):
+    # A negative seed used to be accepted (202) and then fail the run inside numpy.
+    r = client.post("/api/analyses", json={"query": GOLDEN, "options": {"seed": -1}})
+    assert r.status_code == 422 and "options.seed" in " ".join(r.json()["reasons"])
+    assert client.get("/api/analyses").json() == []
+    r = client.post("/api/simulate", json={"policy": demo_policy.model_dump(mode="json"), "seed": -1})
+    assert r.status_code == 422 and "seed must be a non-negative integer" in " ".join(r.json()["reasons"])

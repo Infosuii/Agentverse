@@ -57,6 +57,18 @@ TABLE: list[tuple[str, str, float | None, float | None, date, int]] = [
     ("Raise corporation tax to twenty-eight per cent", MAIN, 25, 28, NEXT_APRIL, 5),
     ("Cut corporation tax from thirty one percent to twenty five percent", MAIN, 31, 25, NEXT_APRIL, 5),
     ("Raise corporation tax by two and a half points", MAIN, 25, 27.5, NEXT_APRIL, 5),
+    # agent-4 audit (#89)
+    ("Raise corporation tax by -2%", MAIN, 25, 23, NEXT_APRIL, 5),                       # negative change = cut
+    ("Raise CT by -2pp to 23%", MAIN, 25, 23, NEXT_APRIL, 5),
+    ("Cut corporation tax by minus 1 point", MAIN, 25, 24, NEXT_APRIL, 5),
+    ("corporation tax 25 -> 24.5", MAIN, 25, 24.5, NEXT_APRIL, 5),                       # symbolic arrow, no %
+    ("corporation tax 25 → 28% from 2028", MAIN, 25, 28, date(2028, 4, 1), 5),
+    ("Raise corporation tax from 1e3% to 28%", MAIN, 25, 28, NEXT_APRIL, 5),             # "1e3%" is not a rate
+    ("Increase corporation tax in France from 25% to 28%", UNSUP, 25, 28, NEXT_APRIL, 5),
+    ("Raise US corporate tax from 21% to 28%", UNSUP, 21, 28, NEXT_APRIL, 5),
+    ("What if French corporation tax rose to 30%?", UNSUP, None, 30, NEXT_APRIL, 5),
+    ("Match Ireland's corporation tax rate of 12.5%", MAIN, 25, 12.5, NEXT_APRIL, 5),    # comparison: UK, noted
+    ("Raise corporation tax in Northern Ireland to 28%", MAIN, 25, 28, NEXT_APRIL, 5),   # part of the UK
 ]
 
 
@@ -157,6 +169,62 @@ def test_prompt_injection_text_is_only_data() -> None:
 def test_normalise_rewrites_units_and_number_words() -> None:
     assert normalise("A Three Point rise to 28 per cent") == "a 3 pp rise to 28 %"
     assert normalise("by a point") == "by 1 pp"
+
+
+def _notes(query: str) -> list[str]:
+    return parse_rules(query, baseline=BASELINE, today=TODAY).ambiguities
+
+
+def test_negative_change_is_read_as_a_cut_with_a_note() -> None:
+    assert any("negative change (-2) as a cut of 2 percentage points" in a for a in _notes("Raise CT by -2%"))
+    assert any("cut of 1 percentage point." in a for a in _notes("Cut corporation tax by minus 1 point"))
+
+
+@pytest.mark.parametrize(("query", "country"), [
+    ("Increase corporation tax in France from 25% to 28%", "France"),
+    ("Raise US corporate tax from 21% to 28%", "the US"),
+    ("corporation tax rate in the US to 28%", "the US"),
+    ("Raise german corporation tax to 33%", "Germany"),
+])
+def test_another_countrys_corporation_tax_is_refused(query: str, country: str) -> None:
+    spec = parse_rules(query, baseline=BASELINE, today=TODAY)
+    assert spec.policy_type == UNSUP and spec.tax is None
+    assert f"The request is about corporation tax in {country}: only UK corporation tax is modelled." in spec.ambiguities
+
+
+@pytest.mark.parametrize(("query", "country"), [
+    ("What if France raised corporation tax to 28%?", "France"),     # the country is not the tax's owner
+    ("Match Ireland's corporation tax rate of 12.5%", "Ireland"),    # a comparison
+    ("Cut corporation tax to 12.5% as in Ireland", "Ireland"),
+    ("Raise corporation tax to 28% in the U.S.", "the US"),
+])
+def test_a_passing_mention_of_another_country_is_noted_not_refused(query: str, country: str) -> None:
+    spec = parse_rules(query, baseline=BASELINE, today=TODAY)
+    assert spec.policy_type == MAIN
+    assert any(a.startswith(f"The request mentions {country};") for a in spec.ambiguities)
+
+
+@pytest.mark.parametrize("query", [
+    "What would happen if the UK raised corporation tax to 28%, like France?",   # the UK is named
+    "How would US firms react if UK corporation tax rose to 28%?",
+    "What would it mean for us if corporation tax rose to 28%?",                 # the pronoun "us"
+    "Polish the plan: raise corporation tax to 28%",                             # the verb "polish"
+    "Raise corporation tax in Francesca's model to 28%",                         # a word containing "france"
+    "Raise corporation tax in Northern Ireland to 28%",                          # part of the UK
+])
+def test_uk_requests_get_no_jurisdiction_note(query: str) -> None:
+    spec = parse_rules(query, baseline=BASELINE, today=TODAY)
+    assert spec.policy_type == MAIN
+    assert not any("only UK corporation tax is modelled" in a for a in spec.ambiguities)
+
+
+def test_a_second_rate_change_is_noted_and_only_the_first_is_modelled() -> None:
+    spec = parse_rules("Raise corporation tax from 25% to 28% from April 2027, then to 30% in 2029",
+                       baseline=BASELINE, today=TODAY)
+    assert (spec.baseline_rate_pct, spec.proposed_rate_pct, spec.effective_date) == (25, 28, date(2027, 4, 1))
+    assert any("more than one rate change (28%, 30%); only the first is modelled" in a for a in spec.ambiguities)
+    # a second tax's rate is not a second change
+    assert not any("more than one" in a for a in _notes("Raise corporation tax from 25% to 28% and cut VAT to 15%"))
 
 
 def test_parse_policy_uses_the_registry_baseline() -> None:

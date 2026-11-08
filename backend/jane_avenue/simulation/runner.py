@@ -38,6 +38,8 @@ def _registry_base(spec: PolicySpec, params: Mapping[str, Assumption]) -> Mappin
 def simulate(spec: PolicySpec, params: Mapping[str, Assumption], baseline: BaselineProjection, *, draws: int = 2000,
              seed: int = 42, include_sensitivity: bool = True,
              empirical_residuals: Callable[[], list[float] | None] | None = None) -> SimulationBundle:
+    if seed < 0:  # numpy's own message ("expected non-negative integer") does not say which input is wrong
+        raise ValueError(f"The Monte Carlo seed must be a non-negative integer, not {seed}.")
     validate_parameters(params)
     warnings: list[str] = []
     base = _registry_base(spec, params)

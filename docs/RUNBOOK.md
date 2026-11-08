@@ -97,6 +97,7 @@ Runs the golden query (*"What would happen if the UK increased corporation tax f
 ```
 
 ### Playwright End-to-End Tests (`e2e/`)
+The tests start their own mock-mode backend on port 8000 and never reuse a running one (it could be a live-mode server making real Gemini calls), so stop `dev.ps1` / `dev.sh` first.
 ```powershell
 cd e2e
 npm ci
@@ -136,6 +137,9 @@ $env:JANE_MODE = "live"
 
 # 3. Modest hike scenario (25% -> 26%, horizon 5)
 .\.venv\Scripts\python.exe backend\scripts\smoke.py --mode live --no-cache --query "Increase corporation tax from 25% to 26% from April 2027"
+
+# 4. Out-of-scope guardrail demo (25% -> 45%, horizon 5): the forecast is withheld, but the research is shown
+.\.venv\Scripts\python.exe backend\scripts\smoke.py --mode live --no-cache --query "Raise corporation tax to 45%"
 ```
 Inspect the generated JSON files in `data/research_cache/` to verify that `verification_status == "verified"` on quantitative quotes and that at least 6 Tier-1/Tier-2 sources are present before committing.
 

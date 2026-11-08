@@ -36,7 +36,9 @@ export default defineConfig({
       command: `${pythonBin} -m uvicorn jane_avenue.api.app:app --port 8000`,
       cwd: path.join(repoRoot, 'backend'),
       url: 'http://localhost:8000/api/health',
-      reuseExistingServer: !process.env.CI,
+      // Never reuse a running backend: it may be a live-mode dev server (real Gemini calls, other code). The tests
+      // must run against their own mock-mode server; stop anything on :8000 first.
+      reuseExistingServer: false,
       timeout: 60_000,
       env: {
         ...process.env,
