@@ -35,7 +35,7 @@ import {
   Tooltip,
 } from '../../components/ui';
 import { fmtDate, fmtFiscalYear, fmtGbpBn, fmtPct, fmtPp } from '../../lib/format';
-import { EVIDENCE_CLASS_COLORS } from '../../lib/theme';
+import { CHART_THEME, EVIDENCE_CLASS_COLORS } from '../../lib/theme';
 
 export interface PrecedentsTabProps {
   analysis?: Analysis;
@@ -199,16 +199,16 @@ function PrecedentComparisonCharts({
   }
 
   return (
-    <div className="mt-4 space-y-4 border-t border-slate-100 pt-4">
+    <div className="mt-4 space-y-4 border-t border-border/60 pt-4">
       {/* Legend explaining ex-ante costing vs observed outturn vs model scenario */}
-      <div className="rounded-md border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-700">
-        <div className="flex flex-wrap items-center gap-2 font-semibold text-slate-900">
+      <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-foreground/85">
+        <div className="flex flex-wrap items-center gap-2 font-semibold text-foreground">
           <span>Evidence comparison notes:</span>
           <EvidenceBadge evidenceClass="official_costing" short />
           <EvidenceBadge evidenceClass="observed_outcome" short />
           {modelY1Rev !== null && <EvidenceBadge evidenceClass="model_scenario" short />}
         </div>
-        <p className="mt-1 leading-relaxed text-slate-600">
+        <p className="mt-1 leading-relaxed text-muted-foreground">
           <strong>Ex-ante official costings</strong> (violet) are original HMT/OBR policy-table estimates for the
           package scope. <strong>Observed outcomes</strong> (slate) are ONS outturn CT receipts levels and derived
           year-on-year changes, which include macroeconomic cycles, profit growth, and simultaneous base/allowance
@@ -232,9 +232,9 @@ function PrecedentComparisonCharts({
         )}
 
         {pctGdpOutcomes.length > 0 && (
-          <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <div className="rounded-lg border border-border bg-card p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <h5 className="text-xs font-semibold text-slate-900">
+              <h5 className="text-xs font-semibold text-foreground">
                 Observed CT Receipts (% of GDP, t−1 to t+2)
               </h5>
               <EvidenceBadge evidenceClass="observed_outcome" short />
@@ -248,18 +248,21 @@ function PrecedentComparisonCharts({
                   }))}
                   margin={{ top: 8, right: 12, left: 4, bottom: 8 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="fiscalYear" tick={{ fontSize: 11, fill: '#475569' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
+                  <XAxis dataKey="fiscalYear" tick={{ fontSize: 11, fill: CHART_THEME.tick }} />
                   <YAxis
                     tickFormatter={(v: number) => fmtPct(v, 1)}
-                    tick={{ fontSize: 11, fill: '#475569' }}
+                    tick={{ fontSize: 11, fill: CHART_THEME.tick }}
                     width={54}
                   />
                   <RechartsTooltip
+                    cursor={{ stroke: CHART_THEME.reference, strokeDasharray: '3 3' }}
                     formatter={(val: unknown) => [
                       fmtPct(typeof val === 'number' ? val : Number(val), 2),
                       'Observed CT receipts (% GDP)',
                     ]}
+                    contentStyle={CHART_THEME.tooltip}
+                    labelStyle={CHART_THEME.tooltipLabel}
                   />
                   <Line
                     type="monotone"
@@ -283,13 +286,13 @@ function PrecedentComparisonCharts({
           {costings.length > 0 && (
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-800">
+                <span className="text-xs font-semibold text-foreground">
                   Official Policy Costings (Ex-ante)
                 </span>
                 <EvidenceBadge evidenceClass="official_costing" short />
               </div>
               <Table>
-                <thead className="bg-violet-50/60 text-[11px] font-semibold text-violet-950 uppercase">
+                <thead className="bg-violet-500/10 text-[11px] font-semibold text-violet-200 uppercase">
                   <tr>
                     <th className="px-2.5 py-1.5">Fiscal year</th>
                     <th className="px-2.5 py-1.5">Body / Event</th>
@@ -297,17 +300,17 @@ function PrecedentComparisonCharts({
                     <th className="px-2.5 py-1.5">Behavioural?</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 text-xs">
+                <tbody className="divide-y divide-border text-xs">
                   {costings.map((c, idx) => (
                     <tr key={`${c.fiscal_year}-${idx}`}>
                       <td className="px-2.5 py-1.5 font-mono">{fmtFiscalYear(c.fiscal_year)}</td>
                       <td className="px-2.5 py-1.5">
                         {c.costing_body} · {c.fiscal_event}
                       </td>
-                      <td className="px-2.5 py-1.5 font-semibold text-violet-900 tabular-nums">
+                      <td className="px-2.5 py-1.5 font-semibold text-violet-200 tabular-nums">
                         {fmtGbpBn(c.value_gbp_bn)}
                       </td>
-                      <td className="px-2.5 py-1.5 text-slate-600">
+                      <td className="px-2.5 py-1.5 text-muted-foreground">
                         {c.includes_behavioural === true
                           ? 'Yes'
                           : c.includes_behavioural === false
@@ -324,29 +327,29 @@ function PrecedentComparisonCharts({
           {receiptsLevels.length > 0 && (
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-800">
+                <span className="text-xs font-semibold text-foreground">
                   Observed CT Receipts Outturn (Levels)
                 </span>
                 <EvidenceBadge evidenceClass="observed_outcome" short />
               </div>
               <Table>
-                <thead className="bg-slate-100 text-[11px] font-semibold text-slate-800 uppercase">
+                <thead className="bg-secondary text-[11px] font-semibold text-foreground uppercase">
                   <tr>
                     <th className="px-2.5 py-1.5">Fiscal year</th>
                     <th className="px-2.5 py-1.5">Receipts level (£bn)</th>
                     <th className="px-2.5 py-1.5">Derived YoY Δ (£bn)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 text-xs">
+                <tbody className="divide-y divide-border text-xs">
                   {receiptsLevels.map((o) => {
                     const diff = derivedChangesByFy.get(o.fiscal_year);
                     return (
                       <tr key={o.fiscal_year}>
                         <td className="px-2.5 py-1.5 font-mono">{fmtFiscalYear(o.fiscal_year)}</td>
-                        <td className="px-2.5 py-1.5 font-semibold text-slate-900 tabular-nums">
+                        <td className="px-2.5 py-1.5 font-semibold text-foreground tabular-nums">
                           {fmtGbpBn(o.value)}
                         </td>
-                        <td className="px-2.5 py-1.5 text-slate-600 tabular-nums">
+                        <td className="px-2.5 py-1.5 text-muted-foreground tabular-nums">
                           {diff !== undefined ? fmtGbpBn(diff) : '— (base year)'}
                         </td>
                       </tr>
@@ -385,17 +388,17 @@ function PrecedentCard({
 
   const breakdownTooltip = (
     <div className="space-y-1.5">
-      <div className="font-semibold text-white">
+      <div className="font-semibold text-foreground">
         Similarity score breakdown ({simPct}%)
       </div>
       {Object.entries(similarity_breakdown).map(([key, score]) => {
         const meta = BREAKDOWN_LABELS[key] ?? { label: key, weight: '' };
         return (
           <div key={key} className="flex items-center justify-between gap-2 text-[11px]">
-            <span className="text-slate-300">
+            <span className="text-muted-foreground">
               {meta.label} {meta.weight ? `(${meta.weight})` : ''}
             </span>
-            <span className="font-mono font-semibold text-white tabular-nums">
+            <span className="font-mono font-semibold text-foreground tabular-nums">
               {Math.round(Number(score) * 100)}%
             </span>
           </div>
@@ -409,12 +412,12 @@ function PrecedentCard({
       title={
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="blue">#{rank}</Badge>
-          <span className="font-mono text-xs text-slate-500">{change.change_id}</span>
+          <span className="font-mono text-xs text-muted-foreground">{change.change_id}</span>
           <span>
             {change.old_rate_pct}% → {change.new_rate_pct}% ({fmtPp(deltaPp)})
           </span>
           {change.fiscal_event && (
-            <span className="text-xs font-normal text-slate-500">· {change.fiscal_event}</span>
+            <span className="text-xs font-normal text-muted-foreground">· {change.fiscal_event}</span>
           )}
         </div>
       }
@@ -426,16 +429,16 @@ function PrecedentCard({
             <div
               tabIndex={0}
               aria-label={`Similarity score ${simPct}%. Hover for component breakdown.`}
-              className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs"
+              className="flex items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs"
             >
-              <span className="font-medium text-slate-600">Similarity:</span>
-              <div className="h-2 w-20 overflow-hidden rounded-full bg-slate-200">
+              <span className="font-medium text-muted-foreground">Similarity:</span>
+              <div className="h-2 w-20 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full rounded-full bg-blue-600"
+                  className="h-full rounded-full bg-primary"
                   style={{ width: `${Math.max(4, Math.min(100, simPct))}%` }}
                 />
               </div>
-              <span className="font-bold text-slate-900 tabular-nums">{simPct}%</span>
+              <span className="font-bold text-foreground tabular-nums">{simPct}%</span>
             </div>
           </Tooltip>
         </div>
@@ -443,18 +446,18 @@ function PrecedentCard({
     >
       <div className="space-y-4">
         {change.notes && (
-          <p className="text-xs leading-relaxed text-slate-700">{change.notes}</p>
+          <p className="text-xs leading-relaxed text-foreground/85">{change.notes}</p>
         )}
 
         {/* Comparability notes / Confounders as Amber Chips */}
         {confounders.length > 0 && (
           <div>
-            <div className="mb-1.5 text-[11px] font-semibold tracking-wide text-amber-900 uppercase">
+            <div className="mb-1.5 text-[11px] font-semibold tracking-wide text-amber-200 uppercase">
               Comparability Notes &amp; Policy Confounders
             </div>
             <div className="flex flex-wrap gap-1.5">
               {confounders.map((note, idx) => (
-                <Badge key={idx} variant="amber" dotColor="#b45309">
+                <Badge key={idx} variant="amber" dotColor="#fbbf24">
                   {note}
                 </Badge>
               ))}
@@ -465,14 +468,14 @@ function PrecedentCard({
         {/* Macro Context Mini-Table */}
         <div>
           <div className="mb-1.5 flex items-center justify-between">
-            <span className="text-[11px] font-semibold tracking-wide text-slate-600 uppercase">
+            <span className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
               Macroeconomic Context ({macro?.period ? fmtFiscalYear(macro.period) : 'Pre-reform fiscal year'})
             </span>
             <EvidenceBadge evidenceClass="observed_outcome" short />
           </div>
           {macro ? (
             <Table>
-              <thead className="bg-slate-50 text-[11px] font-semibold text-slate-600 uppercase">
+              <thead className="bg-muted/40 text-[11px] font-semibold text-muted-foreground uppercase">
                 <tr>
                   <th className="px-3 py-1.5">Period</th>
                   <th className="px-3 py-1.5">Real GDP growth</th>
@@ -481,7 +484,7 @@ function PrecedentCard({
                   <th className="px-3 py-1.5">Unemployment</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 text-xs">
+              <tbody className="divide-y divide-border text-xs">
                 <tr>
                   <td className="px-3 py-2 font-mono font-medium">
                     {fmtFiscalYear(macro.period)}
@@ -502,7 +505,7 @@ function PrecedentCard({
               </tbody>
             </Table>
           ) : (
-            <p className="rounded border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-500">
+            <p className="rounded border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
               Macroeconomic outturn indicators for this period are not populated in the current dataset slice.
             </p>
           )}
@@ -513,8 +516,8 @@ function PrecedentCard({
 
         {/* Sources */}
         {change.source_ids && change.source_ids.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2.5">
-            <span className="text-[11px] font-medium text-slate-500">Sources:</span>
+          <div className="flex flex-wrap items-center gap-1.5 border-t border-border/60 pt-2.5">
+            <span className="text-[11px] font-medium text-muted-foreground">Sources:</span>
             {change.source_ids.map((sid) => (
               <SourceChip key={sid} sourceId={sid} sources={sources} />
             ))}
@@ -566,7 +569,8 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
     ) {
       return null;
     }
-    const central = analysis?.simulation?.scenarios?.[0]?.result;
+    const scenarios = analysis?.simulation?.scenarios ?? [];
+    const central = (scenarios.find((s) => s.scenario.name === 'central') ?? scenarios[0])?.result;
     const revBehav = central?.metrics.find((m) => m.metric === 'revenue_behavioural_gbp_bn');
     return revBehav?.values?.[0]?.value ?? null;
   }, [analysis]);
@@ -603,7 +607,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
           </div>
         }
       >
-        <p className="text-sm leading-relaxed text-slate-800">
+        <p className="text-sm leading-relaxed text-foreground">
           {precedentsSlice?.summary ||
             'Comparable historical UK corporation tax changes ranked by direction, magnitude, statutory rate level, macroeconomic context, and recency.'}
         </p>
@@ -635,7 +639,7 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
                   y: pt.ratePct,
                   label: `${pt.changeId}: ${pt.oldRatePct}% → ${pt.newRatePct}%`,
                   detail: pt.fiscalEvent ?? undefined,
-                  color: pt.isMatched ? '#2563eb' : '#64748b',
+                  color: pt.isMatched ? '#60a5fa' : '#64748b',
                 }))}
               unit="%"
               seriesLabel="Implemented CT main rate (%)"
@@ -646,10 +650,10 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
               caption="Historical UK statutory corporation tax main rate step-line (1982–present)."
             />
 
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
               <div className="flex flex-wrap items-center gap-4">
                 <span className="inline-flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded-full bg-blue-600" />
+                  <span className="h-3 w-3 rounded-full bg-blue-400" />
                   <span>Matched precedent ({matchedIds.size})</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
@@ -675,10 +679,10 @@ export function PrecedentsTab({ analysis: propAnalysis }: PrecedentsTabProps) {
       {/* Ranked Precedent Cards */}
       <section aria-label="Ranked precedent matches" className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-800">
+          <h2 className="text-sm font-semibold text-foreground">
             Ranked Precedent Matches ({matches.length})
           </h2>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-muted-foreground">
             Sorted by weighted 5-component similarity score
           </span>
         </div>

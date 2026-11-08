@@ -16,6 +16,7 @@ import {
   Skeleton,
   VerificationBadge,
   WithheldBanner,
+  buttonClasses,
   type BadgeVariant,
 } from '../../components/ui';
 import { fmtDate } from '../../lib/format';
@@ -81,11 +82,19 @@ function resolveAffectedLink(
   }
   const base = `/analyses/${analysisId}`;
 
+  const evidenceMatch = /^(?:evidence:)?(E\d+)$/i.exec(rawId);
+  if (evidenceMatch) {
+    return {
+      href: `${base}/research?evidence=${encodeURIComponent(evidenceMatch[1].toUpperCase())}`,
+      label: rawId,
+      tabLabel: 'Research',
+    };
+  }
+
   if (
     rawId.startsWith('source:') ||
     /^S\d+$/i.test(rawId) ||
     rawId.startsWith('D-') ||
-    /^E\d+$/i.test(rawId) ||
     /^I\d+$/i.test(rawId)
   ) {
     return {
@@ -224,10 +233,10 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
   const uniqueDeclineReasons = Array.from(new Set(declineReasons));
 
   const statusOrder: { key: CheckStatus; label: string; colorClass: string }[] = [
-    { key: 'pass', label: 'Passed', colorClass: 'border-emerald-200 bg-emerald-50/70 text-emerald-900' },
-    { key: 'warn', label: 'Warnings', colorClass: 'border-amber-200 bg-amber-50/70 text-amber-900' },
-    { key: 'fail', label: 'Failed', colorClass: 'border-red-200 bg-red-50/70 text-red-900' },
-    { key: 'skipped', label: 'Skipped', colorClass: 'border-slate-200 bg-slate-50 text-slate-700' },
+    { key: 'pass', label: 'Passed', colorClass: 'border-emerald-400/25 bg-emerald-500/10 text-emerald-200' },
+    { key: 'warn', label: 'Warnings', colorClass: 'border-amber-400/25 bg-amber-500/10 text-amber-200' },
+    { key: 'fail', label: 'Failed', colorClass: 'border-red-400/25 bg-red-500/10 text-red-200' },
+    { key: 'skipped', label: 'Skipped', colorClass: 'border-border bg-muted/40 text-foreground/85' },
   ];
 
   return (
@@ -256,7 +265,7 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
         }
       >
         <div className="space-y-4">
-          <p className="text-sm font-medium text-slate-800">{verification.summary}</p>
+          <p className="text-sm font-medium text-foreground">{verification.summary}</p>
 
           <div
             aria-label="Verification check counts by status"
@@ -291,8 +300,8 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
               className={clsx(
                 'rounded-md border px-2.5 py-1 text-xs font-medium transition-colors',
                 selectedCategory === 'all'
-                  ? 'border-blue-600 bg-blue-50 text-blue-800'
-                  : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-border bg-card text-muted-foreground hover:bg-accent/60',
               )}
             >
               All categories ({checks.length})
@@ -308,22 +317,22 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
                   className={clsx(
                     'rounded-md border px-2.5 py-1 text-xs font-medium transition-colors capitalize',
                     isSelected
-                      ? 'border-blue-600 bg-blue-50 text-blue-800'
-                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border bg-card text-muted-foreground hover:bg-accent/60',
                   )}
                 >
-                  {cat.replace('_', ' ')} ({count})
+                  {cat.replace(/_/g, ' ')} ({count})
                 </button>
               );
             })}
           </div>
 
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 select-none hover:bg-slate-100">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium text-foreground/85 select-none hover:bg-accent">
             <input
               type="checkbox"
               checked={onlyFlagged}
               onChange={(e) => setOnlyFlagged(e.target.checked)}
-              className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              className="h-3.5 w-3.5 accent-primary"
             />
             <span>Failed or warnings only ({counts.fail + counts.warn})</span>
           </label>
@@ -342,7 +351,7 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
                 setOnlyFlagged(false);
                 setSelectedCategory('all');
               }}
-              className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+              className={buttonClasses('primary', 'xs')}
             >
               Reset filters
             </button>
@@ -357,16 +366,16 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
               subtitle={`Category: ${group.category} · ${group.items.length} check${group.items.length === 1 ? '' : 's'}`}
               padding="none"
             >
-              <ul className="divide-y divide-slate-200">
+              <ul className="divide-y divide-border">
                 {group.items.map((chk) => (
                   <li key={chk.check_id} className="p-4 sm:px-5">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">
                         <VerificationBadge status={chk.status} />
-                        <span className="font-mono text-xs font-bold text-slate-900">
+                        <span className="font-mono text-xs font-bold text-foreground">
                           {chk.check_id}
                         </span>
-                        <h4 className="text-sm font-semibold text-slate-900">{chk.title}</h4>
+                        <h4 className="text-sm font-semibold text-foreground">{chk.title}</h4>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-1.5">
@@ -382,11 +391,11 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
                       </div>
                     </div>
 
-                    <p className="mt-2 text-xs leading-relaxed text-slate-700">{chk.detail}</p>
+                    <p className="mt-2 text-xs leading-relaxed text-foreground/85">{chk.detail}</p>
 
                     {chk.affected_ids && chk.affected_ids.length > 0 && (
                       <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                        <span className="text-[11px] font-medium text-slate-500">
+                        <span className="text-[11px] font-medium text-muted-foreground">
                           Affected items:
                         </span>
                         {chk.affected_ids.map((affId, idx) => {
@@ -395,7 +404,7 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
                             return (
                               <span
                                 key={`${affId}-${idx}`}
-                                className="rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-600"
+                                className="rounded border border-border bg-secondary px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground"
                               >
                                 {resolved.label}
                               </span>
@@ -405,10 +414,10 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
                             <Link
                               key={`${affId}-${idx}`}
                               to={resolved.href}
-                              className="inline-flex items-center gap-1 rounded border border-blue-200 bg-blue-50 px-2 py-0.5 font-mono text-[11px] font-medium text-blue-800 transition-colors hover:bg-blue-100"
+                              className="inline-flex items-center gap-1 rounded border border-primary/25 bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-medium text-primary transition-colors hover:bg-primary/20"
                             >
                               <span>{resolved.label}</span>
-                              <span className="font-sans text-[10px] text-blue-600">
+                              <span className="font-sans text-[10px] text-primary">
                                 → {resolved.tabLabel}
                               </span>
                             </Link>
@@ -429,9 +438,9 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
         title="Governance, Risk Controls & Execution Boundaries"
         subtitle="Explicit human-in-the-loop oversight, model execution boundaries, anti-prompt-injection isolation, and data privacy controls."
       >
-        <div className="grid grid-cols-1 gap-4 text-xs leading-relaxed text-slate-700 sm:grid-cols-2">
-          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3.5">
-            <h4 className="font-semibold text-slate-900">
+        <div className="grid grid-cols-1 gap-4 text-xs leading-relaxed text-foreground/85 sm:grid-cols-2">
+          <div className="rounded-lg border border-border bg-muted/40 p-3.5">
+            <h4 className="font-semibold text-foreground">
               1. What the Agent May Do Alone vs. Human Approval
             </h4>
             <p className="mt-1">
@@ -442,17 +451,17 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
             </p>
             <p className="mt-1.5">
               <strong>Requires Human Approval:</strong> Confirming or editing the parsed policy
-              specification before running (<code className="font-mono text-[11px]">New Analysis</code>{' '}
-              Stage 2), overriding structural or market-regime parameters (
-              <code className="font-mono text-[11px]">Assumptions &amp; Lab</code>), and any downstream
-              policy briefing use. Forecasts are automatically withheld (
+              specification before running (the parsed-policy card on{' '}
+              <code className="font-mono text-[11px]">New Analysis</code>), overriding adjustable model
+              assumptions (<code className="font-mono text-[11px]">Live Assumption Sliders</code> on the
+              Scenarios tab), and any downstream policy briefing use. Forecasts are automatically withheld (
               <code className="font-mono text-[11px]">forecast_withheld</code>) if any blocking check
               fails.
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3.5">
-            <h4 className="font-semibold text-slate-900">
+          <div className="rounded-lg border border-border bg-muted/40 p-3.5">
+            <h4 className="font-semibold text-foreground">
               2. Where Each Model Runs &amp; What Data Leaves the Device
             </h4>
             <p className="mt-1">
@@ -468,12 +477,13 @@ export function VerificationTab({ analysis: propAnalysis }: VerificationTabProps
               <strong>External Network Calls:</strong> In{' '}
               <code className="font-mono text-[11px]">cached</code> and{' '}
               <code className="font-mono text-[11px]">mock</code> modes,{' '}
-              <strong>zero bytes leave the device</strong>. In{' '}
+              <strong>the backend makes no network calls</strong>; the browser only loads the IBM Plex
+              web fonts from Google Fonts (system fonts are used offline). In{' '}
               <code className="font-mono text-[11px]">live</code> mode, only the public tax policy query
               and search queries are sent to Google Gemini (<code className="font-mono text-[11px]">store=False</code>{' '}
-              enforced — zero prompt retention) and official <code className="font-mono text-[11px]">.gov.uk</code> /{' '}
-              <code className="font-mono text-[11px]">.org.uk</code> URLs. Untrusted prompt text never
-              executes code or injects numbers.
+              enforced — zero prompt retention), and only URLs returned by Gemini&apos;s Google Search
+              grounding (e.g. OBR, HMRC, GOV.UK, Parliament, IFS) are fetched. Untrusted prompt text
+              never executes code or injects numbers.
             </p>
           </div>
         </div>

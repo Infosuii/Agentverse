@@ -12,7 +12,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartFrame, formatChartValue, formatXAxisTick, type ChartUnit } from './ChartFrame';
-import { MC_BAND_STYLE, type EvidenceClassKey } from '../../lib/theme';
+import { CHART_THEME, MC_BAND_STYLE, type EvidenceClassKey } from '../../lib/theme';
 
 export interface FanBandPoint {
   x: string | number;
@@ -139,8 +139,8 @@ export function FanChart({
 
   const defaultFooter = intervalNote ? (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <span className="text-slate-600">
-        <strong className="font-semibold text-slate-700">Interval note:</strong>{' '}
+      <span className="text-muted-foreground">
+        <strong className="font-semibold text-foreground/85">Interval note:</strong>{' '}
         <span>{intervalNote}</span>
       </span>
       {footer}
@@ -167,34 +167,35 @@ export function FanChart({
           data={rows}
           margin={{ top: 10, right: 20, left: 12, bottom: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis
             dataKey="x"
             tickFormatter={(x) => formatXAxisTick(x as string | number)}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             label={{
               value: xLabel,
               position: 'insideBottom',
               offset: -10,
               fontSize: 11,
-              fill: '#64748b',
+              fill: CHART_THEME.axisLabel,
             }}
           />
           <YAxis
             tickFormatter={(v: number) => valFormatter(Number(v))}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             width={72}
             label={{
               value: yLabel ?? unit,
               angle: -90,
               position: 'insideLeft',
-              style: { textAnchor: 'middle', fontSize: 11, fill: '#64748b' },
+              style: { textAnchor: 'middle', fontSize: 11, fill: CHART_THEME.axisLabel },
             }}
           />
           {showZeroReference && (
-            <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="4 4" />
+            <ReferenceLine y={0} stroke={CHART_THEME.reference} strokeDasharray="4 4" />
           )}
           <RechartsTooltip
+            cursor={{ stroke: CHART_THEME.reference, strokeDasharray: '3 3' }}
             labelFormatter={(label) => `Fiscal year: ${formatXAxisTick(label as string | number)}`}
             formatter={(value: unknown, name: string) => {
               if (Array.isArray(value) && value.length === 2) {
@@ -205,13 +206,10 @@ export function FanChart({
               }
               return [valFormatter(Number(value)), name];
             }}
-            contentStyle={{
-              fontSize: 12,
-              borderRadius: 6,
-              borderColor: '#cbd5e1',
-            }}
+            contentStyle={CHART_THEME.tooltip}
+            labelStyle={CHART_THEME.tooltipLabel}
           />
-          <Legend verticalAlign="top" height={28} wrapperStyle={{ fontSize: 11 }} />
+          <Legend verticalAlign="top" height={28} wrapperStyle={{ ...CHART_THEME.legend, fontSize: 11 }} />
           <Area
             type="monotone"
             dataKey={(d: InternalFanRow) => [d.p5, d.p95]}
@@ -245,7 +243,7 @@ export function FanChart({
                 type="monotone"
                 dataKey="empP95"
                 name={`${empiricalLabel} (upper)`}
-                stroke="#0f766e"
+                stroke="#2dd4bf"
                 strokeWidth={1.75}
                 strokeDasharray="5 4"
                 dot={false}
@@ -255,7 +253,7 @@ export function FanChart({
                 type="monotone"
                 dataKey="empP5"
                 name={`${empiricalLabel} (lower)`}
-                stroke="#0f766e"
+                stroke="#2dd4bf"
                 strokeWidth={1.75}
                 strokeDasharray="5 4"
                 dot={false}

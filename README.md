@@ -94,6 +94,7 @@ Run the full CI suite locally (backend `ruff` + `pytest`, frontend `typecheck` +
 - **4-Minute Demo Script:** [docs/DEMO.md](docs/DEMO.md)
 - **Operations & Runbook:** [docs/RUNBOOK.md](docs/RUNBOOK.md)
 - **Historical Backtest & ML Evaluation:** [docs/EVALUATION.md](docs/EVALUATION.md)
+- **UI & Design System (Forecast Confidence Studio look):** [docs/UI.md](docs/UI.md)
 - **Multi-Agent Collaboration Protocol:** [AGENTS.md](AGENTS.md)
 
 ---

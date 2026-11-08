@@ -91,7 +91,7 @@ export function DistributionSparkline({
           y1={height - pad}
           x2={width - pad}
           y2={height - pad}
-          stroke="#cbd5e1"
+          stroke="var(--border)"
           strokeWidth={1}
         />
         <line
@@ -99,7 +99,7 @@ export function DistributionSparkline({
           y1={pad}
           x2={width / 2}
           y2={height - pad}
-          stroke="#475569"
+          stroke="var(--muted-foreground)"
           strokeWidth={2}
         />
       </svg>
@@ -128,11 +128,11 @@ export function DistributionSparkline({
         aria-label={`${distribution.kind} distribution`}
         className="inline-block overflow-visible"
       >
-        <polygon points={areaPts} fill="#d97706" fillOpacity={0.18} />
+        <polygon points={areaPts} fill="#fbbf24" fillOpacity={0.2} />
         <polyline
           points={pts.join(' ')}
           fill="none"
-          stroke="#b45309"
+          stroke="#fbbf24"
           strokeWidth={1.5}
         />
       </svg>
@@ -152,9 +152,9 @@ export function DistributionSparkline({
           y={pad + 3}
           width={w}
           height={h - 3}
-          fill="#2563eb"
+          fill="#60a5fa"
           fillOpacity={0.18}
-          stroke="#2563eb"
+          stroke="#60a5fa"
           strokeWidth={1.2}
         />
       </svg>
@@ -172,9 +172,9 @@ export function DistributionSparkline({
     >
       <polygon
         points={triPts}
-        fill="#2563eb"
+        fill="#60a5fa"
         fillOpacity={0.18}
-        stroke="#2563eb"
+        stroke="#60a5fa"
         strokeWidth={1.5}
       />
       <line
@@ -182,7 +182,7 @@ export function DistributionSparkline({
         y1={pad}
         x2={modeX}
         y2={height - pad}
-        stroke="#1d4ed8"
+        stroke="#93c5fd"
         strokeWidth={1}
         strokeDasharray="2 1"
       />
@@ -496,16 +496,16 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                   return (
                     <div key={category} className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold tracking-wide text-slate-700 uppercase">
+                        <h4 className="text-xs font-bold tracking-wide text-foreground/85 uppercase">
                           {CATEGORY_LABELS[category]}
                         </h4>
-                        <span className="text-[11px] text-slate-500">
+                        <span className="text-[11px] text-muted-foreground">
                           {rows.length} parameter{rows.length === 1 ? '' : 's'}
                         </span>
                       </div>
 
                       <Table>
-                        <thead className="bg-slate-50 text-[11px] font-semibold text-slate-600 uppercase">
+                        <thead className="bg-muted/40 text-[11px] font-semibold text-muted-foreground uppercase">
                           <tr>
                             <th className="px-3 py-2">Parameter</th>
                             <th className="px-3 py-2">Central Value</th>
@@ -517,7 +517,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                             <th className="px-3 py-2">What the research found</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-200 text-xs">
+                        <tbody className="divide-y divide-border text-xs">
                           {rows.map((a) => {
                             const isSelected = selectedAssumption?.name === a.name;
                             const basisMeta =
@@ -533,25 +533,25 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                 className={clsx(
                                   'cursor-pointer transition-colors',
                                   isSelected
-                                    ? 'bg-amber-50/70'
-                                    : 'hover:bg-slate-50',
+                                    ? 'bg-amber-500/10'
+                                    : 'hover:bg-accent/60',
                                 )}
                               >
-                                <td className="px-3 py-2.5 font-medium text-slate-900">
+                                <td className="px-3 py-2.5 font-medium text-foreground">
                                   <div>{a.label}</div>
-                                  <div className="font-mono text-[10px] text-slate-500">
+                                  <div className="font-mono text-[10px] text-muted-foreground">
                                     {a.name}
                                   </div>
                                 </td>
-                                <td className="px-3 py-2.5 font-mono font-semibold text-slate-900 tabular-nums">
+                                <td className="px-3 py-2.5 font-mono font-semibold text-foreground tabular-nums">
                                   {formatChartValue(a.value, a.unit)}
-                                  <span className="ml-1 font-sans text-[10px] font-normal text-slate-500">
+                                  <span className="ml-1 font-sans text-[10px] font-normal text-muted-foreground">
                                     ({a.unit})
                                   </span>
                                 </td>
-                                <td className="px-3 py-2.5 font-mono text-slate-700 tabular-nums">
+                                <td className="px-3 py-2.5 font-mono text-foreground/85 tabular-nums">
                                   {a.distribution.kind === 'fixed' ? (
-                                    <span className="text-slate-400">Fixed</span>
+                                    <span className="text-muted-foreground/70">Fixed</span>
                                   ) : (
                                     `${formatChartValue(a.low, a.unit)} – ${formatChartValue(a.high, a.unit)}`
                                   )}
@@ -564,7 +564,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       value={a.value}
                                       high={a.high}
                                     />
-                                    <span className="text-[10px] text-slate-500">
+                                    <span className="text-[10px] text-muted-foreground">
                                       {a.distribution.kind}
                                     </span>
                                   </div>
@@ -586,7 +586,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       ))}
                                     </div>
                                   ) : (
-                                    <span className="text-[11px] text-slate-400">
+                                    <span className="text-[11px] text-muted-foreground/70">
                                       None cited
                                     </span>
                                   )}
@@ -600,7 +600,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       <PlaceholderBadge label="Placeholder" />
                                     )}
                                     {!a.is_user_override && !a.is_placeholder && (
-                                      <span className="text-[11px] text-emerald-700">
+                                      <span className="text-[11px] text-emerald-300">
                                         Verified
                                       </span>
                                     )}
@@ -612,9 +612,9 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       {researchMatches.map((pe, idx) => (
                                         <div
                                           key={idx}
-                                          className="rounded border border-blue-200 bg-blue-50/50 px-2 py-1 text-[11px] text-slate-700"
+                                          className="rounded border border-primary/25 bg-primary/5 px-2 py-1 text-[11px] text-foreground/85"
                                         >
-                                          <div className="font-mono font-medium text-blue-900 tabular-nums">
+                                          <div className="font-mono font-medium text-primary tabular-nums">
                                             {pe.value !== null && pe.value !== undefined
                                               ? `Central: ${pe.value}`
                                               : ''}
@@ -626,7 +626,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                               : ''}
                                           </div>
                                           {pe.note && (
-                                            <div className="text-[10px] text-slate-600">
+                                            <div className="text-[10px] text-muted-foreground">
                                               {pe.note}
                                             </div>
                                           )}
@@ -634,7 +634,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       ))}
                                     </div>
                                   ) : (
-                                    <span className="text-[11px] text-slate-400">
+                                    <span className="text-[11px] text-muted-foreground/70">
                                       No direct research match
                                     </span>
                                   )}
@@ -663,9 +663,9 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
             subtitle="Description, economic rationale, and linked research evidence."
           >
             {selectedAssumption ? (
-              <div className="space-y-3 text-xs text-slate-700">
-                <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 p-2.5">
-                  <span className="font-mono text-[11px] font-semibold text-slate-800">
+              <div className="space-y-3 text-xs text-foreground/85">
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border bg-muted/40 p-2.5">
+                  <span className="font-mono text-[11px] font-semibold text-foreground">
                     {selectedAssumption.name}
                   </span>
                   <div className="flex items-center gap-1.5">
@@ -684,29 +684,29 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                 </div>
 
                 <div>
-                  <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                  <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                     Description
                   </div>
-                  <p className="mt-1 leading-relaxed text-slate-800">
+                  <p className="mt-1 leading-relaxed text-foreground">
                     {selectedAssumption.description}
                   </p>
                 </div>
 
                 {selectedAssumption.rationale && (
                   <div>
-                    <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                       Economic Rationale
                     </div>
-                    <p className="mt-1 leading-relaxed text-slate-700">
+                    <p className="mt-1 leading-relaxed text-foreground/85">
                       {selectedAssumption.rationale}
                     </p>
                   </div>
                 )}
 
-                <div className="grid grid-cols-3 gap-2 rounded-md border border-slate-100 bg-slate-50 p-2.5 text-center tabular-nums">
+                <div className="grid grid-cols-3 gap-2 rounded-md border border-border/60 bg-muted/40 p-2.5 text-center tabular-nums">
                   <div>
-                    <div className="text-[10px] text-slate-500 uppercase">Low</div>
-                    <div className="font-mono font-semibold text-slate-800">
+                    <div className="text-[10px] text-muted-foreground uppercase">Low</div>
+                    <div className="font-mono font-semibold text-foreground">
                       {formatChartValue(
                         selectedAssumption.low,
                         selectedAssumption.unit,
@@ -714,8 +714,8 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-slate-500 uppercase">Central</div>
-                    <div className="font-mono font-bold text-blue-800">
+                    <div className="text-[10px] text-muted-foreground uppercase">Central</div>
+                    <div className="font-mono font-bold text-primary">
                       {formatChartValue(
                         selectedAssumption.value,
                         selectedAssumption.unit,
@@ -723,8 +723,8 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-slate-500 uppercase">High</div>
-                    <div className="font-mono font-semibold text-slate-800">
+                    <div className="text-[10px] text-muted-foreground uppercase">High</div>
+                    <div className="font-mono font-semibold text-foreground">
                       {formatChartValue(
                         selectedAssumption.high,
                         selectedAssumption.unit,
@@ -735,7 +735,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
 
                 {/* Sources */}
                 <div>
-                  <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                  <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                     Cited Sources
                   </div>
                   {(selectedAssumption.source_ids ?? []).length > 0 ? (
@@ -749,7 +749,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-1 text-slate-400">
+                    <p className="mt-1 text-muted-foreground/70">
                       No curated or research sources linked yet.
                     </p>
                   )}
@@ -757,7 +757,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
 
                 {/* Linked Evidence IDs -> Research Tab */}
                 <div>
-                  <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                  <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                     Linked Research Evidence IDs
                   </div>
                   {(selectedAssumption.evidence_ids ?? []).length > 0 ? (
@@ -766,7 +766,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                         <Link
                           key={eid}
                           to={`/analyses/${analysis.analysis_id}/research?evidence=${encodeURIComponent(eid)}`}
-                          className="inline-flex items-center gap-1 rounded border border-blue-300 bg-blue-50 px-2 py-0.5 font-mono text-xs font-medium text-blue-800 hover:bg-blue-100"
+                          className="inline-flex items-center gap-1 rounded border border-primary/35 bg-primary/10 px-2 py-0.5 font-mono text-xs font-medium text-primary hover:bg-primary/20"
                         >
                           <span>[{eid}]</span>
                           <span aria-hidden="true">→</span>
@@ -774,15 +774,15 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-1 text-slate-400">
+                    <p className="mt-1 text-muted-foreground/70">
                       No specific evidence IDs attached.
                     </p>
                   )}
                 </div>
 
                 {/* What the research found cross-check */}
-                <div className="border-t border-slate-100 pt-3">
-                  <div className="text-[11px] font-semibold tracking-wide text-slate-600 uppercase">
+                <div className="border-t border-border/60 pt-3">
+                  <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                     What the research found (comparison only)
                   </div>
                   {(parameterEvidenceMap.get(selectedAssumption.name) ?? []).length >
@@ -792,14 +792,14 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                         (pe, i) => (
                           <div
                             key={i}
-                            className="rounded-md border border-blue-200 bg-blue-50/40 p-2.5"
+                            className="rounded-md border border-primary/25 bg-primary/5 p-2.5"
                           >
-                            <div className="font-mono text-xs font-semibold text-blue-900 tabular-nums">
+                            <div className="font-mono text-xs font-semibold text-primary tabular-nums">
                               Value: {pe.value ?? '—'} · Range: [{pe.low ?? '—'} to{' '}
                               {pe.high ?? '—'}]
                             </div>
                             {pe.note && (
-                              <p className="mt-1 text-xs text-slate-700">{pe.note}</p>
+                              <p className="mt-1 text-xs text-foreground/85">{pe.note}</p>
                             )}
                             {pe.evidence_ids.length > 0 && (
                               <div className="mt-1.5 flex flex-wrap gap-1">
@@ -807,7 +807,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                   <Link
                                     key={eid}
                                     to={`/analyses/${analysis.analysis_id}/research?evidence=${encodeURIComponent(eid)}`}
-                                    className="rounded border border-blue-300 bg-white px-1.5 py-0.5 font-mono text-[11px] text-blue-700 hover:underline"
+                                    className="rounded border border-primary/35 bg-card px-1.5 py-0.5 font-mono text-[11px] text-primary hover:underline"
                                   >
                                     [{eid}]
                                   </Link>
@@ -819,7 +819,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       )}
                     </div>
                   ) : (
-                    <p className="mt-1 text-slate-400">
+                    <p className="mt-1 text-muted-foreground/70">
                       No parameter evidence extracted for{' '}
                       <code>{selectedAssumption.name}</code> in this research run.
                     </p>
@@ -827,7 +827,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Select a parameter row from the table to inspect its details.
               </p>
             )}
@@ -844,11 +844,11 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
         >
           <div className="space-y-4">
             {/* Metric & Fiscal Year Selectors */}
-            <div className="flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs">
+            <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-muted/40 p-3 text-xs">
               <div className="flex items-center gap-2">
                 <label
                   htmlFor="inspector-metric-select"
-                  className="font-semibold text-slate-700"
+                  className="font-semibold text-foreground/85"
                 >
                   Metric:
                 </label>
@@ -861,7 +861,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       inspectorYear,
                     )
                   }
-                  className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="rounded-md border border-input bg-card px-2.5 py-1.5 text-xs font-medium text-foreground focus:border-primary focus:ring-1 focus:ring-ring focus:outline-none"
                 >
                   {METRIC_DESCRIPTORS.map((m) => (
                     <option key={m.metric} value={m.metric}>
@@ -874,7 +874,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
               <div className="flex items-center gap-2">
                 <label
                   htmlFor="inspector-year-select"
-                  className="font-semibold text-slate-700"
+                  className="font-semibold text-foreground/85"
                 >
                   Fiscal Year:
                 </label>
@@ -884,7 +884,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                   onChange={(e) =>
                     handleMetricYearChange(inspectorMetric, e.target.value)
                   }
-                  className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="rounded-md border border-input bg-card px-2.5 py-1.5 text-xs font-medium text-foreground focus:border-primary focus:ring-1 focus:ring-ring focus:outline-none"
                 >
                   {(fiscalYears.length > 0 ? fiscalYears : ['2027-28']).map(
                     (fy) => (
@@ -896,7 +896,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                 </select>
               </div>
 
-              <div className="ml-auto text-slate-500">
+              <div className="ml-auto text-muted-foreground">
                 Showing <strong>{orderedCalcSteps.length}</strong> step
                 {orderedCalcSteps.length === 1 ? '' : 's'} in dependency order
                 (user-cost → base → static → behavioural → investment → capital →
@@ -915,25 +915,25 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                 {orderedCalcSteps.map((step, index) => (
                   <div
                     key={step.step_id}
-                    className="rounded-lg border border-slate-200 bg-white p-4 shadow-2xs"
+                    className="rounded-lg border border-border bg-card p-4"
                   >
-                    <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-100 pb-2.5">
+                    <div className="flex flex-wrap items-start justify-between gap-2 border-b border-border/60 pb-2.5">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-[11px] font-bold text-blue-800">
+                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/15 text-[11px] font-bold text-primary">
                           {index + 1}
                         </span>
                         <div>
-                          <h5 className="text-xs font-bold text-slate-900">
+                          <h5 className="text-xs font-bold text-foreground">
                             {step.label}
                           </h5>
-                          <code className="font-mono text-[11px] text-slate-500">
+                          <code className="font-mono text-[11px] text-muted-foreground">
                             {step.step_id}
                           </code>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="text-slate-500">Output:</span>
+                        <span className="text-muted-foreground">Output:</span>
                         <ProvenanceNumber
                           value={step.output}
                           unit={step.unit}
@@ -942,32 +942,32 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                           allSources={analysis.sources}
                           evidenceClass="model_scenario"
                         />
-                        <span className="font-mono text-[11px] text-slate-500">
+                        <span className="font-mono text-[11px] text-muted-foreground">
                           ({step.unit})
                         </span>
                       </div>
                     </div>
 
                     {/* Monospace Formula */}
-                    <div className="mt-2.5 rounded-md border border-slate-200 bg-slate-900 px-3 py-2 font-mono text-xs text-slate-100">
+                    <div className="mt-2.5 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs text-primary">
                       {step.formula}
                     </div>
 
                     {/* Inputs Table & Sources */}
                     <div className="mt-3 grid grid-cols-1 gap-4 lg:grid-cols-3">
                       <div className="lg:col-span-2">
-                        <div className="mb-1 text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                        <div className="mb-1 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                           Step Inputs
                         </div>
                         <Table>
-                          <thead className="bg-slate-50 text-[10px] font-semibold text-slate-600 uppercase">
+                          <thead className="bg-muted/40 text-[10px] font-semibold text-muted-foreground uppercase">
                             <tr>
                               <th className="px-2.5 py-1.5">Symbol / Input</th>
                               <th className="px-2.5 py-1.5">Value</th>
                               <th className="px-2.5 py-1.5">Linked Parameter</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100 text-xs">
+                          <tbody className="divide-y divide-border/60 text-xs">
                             {Object.entries(step.inputs).map(([symbol, val]) => {
                               const matchingParam =
                                 assumptions.find((a) => a.name === symbol) ??
@@ -979,10 +979,10 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
 
                               return (
                                 <tr key={symbol}>
-                                  <td className="px-2.5 py-1.5 font-mono font-medium text-slate-800">
+                                  <td className="px-2.5 py-1.5 font-mono font-medium text-foreground">
                                     {symbol}
                                   </td>
-                                  <td className="px-2.5 py-1.5 font-mono text-slate-900 tabular-nums">
+                                  <td className="px-2.5 py-1.5 font-mono text-foreground tabular-nums">
                                     {Number(val.toFixed(6))}
                                   </td>
                                   <td className="px-2.5 py-1.5">
@@ -1001,12 +1001,12 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                             block: 'center',
                                           });
                                         }}
-                                        className="font-mono text-[11px] font-medium text-blue-700 hover:underline"
+                                        className="font-mono text-[11px] font-medium text-primary hover:underline"
                                       >
                                         {matchingParam.name} ({matchingParam.label})
                                       </button>
                                     ) : (
-                                      <span className="text-[11px] text-slate-400">
+                                      <span className="text-[11px] text-muted-foreground/70">
                                         —
                                       </span>
                                     )}
@@ -1021,7 +1021,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                       <div className="space-y-2.5 text-xs">
                         {(step.parameter_names ?? []).length > 0 && (
                           <div>
-                            <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                            <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                               Parameters Used
                             </div>
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -1039,7 +1039,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
                                       block: 'center',
                                     });
                                   }}
-                                  className="rounded border border-amber-300 bg-amber-50 px-2 py-0.5 font-mono text-[11px] font-medium text-amber-900 hover:bg-amber-100"
+                                  className="rounded border border-amber-400/35 bg-amber-500/10 px-2 py-0.5 font-mono text-[11px] font-medium text-amber-200 hover:bg-amber-500/15"
                                 >
                                   {pname}
                                 </button>
@@ -1050,7 +1050,7 @@ export function AssumptionsTab({ analysis: propAnalysis }: AssumptionsTabProps) 
 
                         {(step.source_ids ?? []).length > 0 && (
                           <div>
-                            <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                            <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                               Baseline / Step Sources
                             </div>
                             <div className="mt-1 flex flex-wrap gap-1">

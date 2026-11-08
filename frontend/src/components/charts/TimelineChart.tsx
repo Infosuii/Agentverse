@@ -11,7 +11,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartFrame, formatChartValue, formatXAxisTick, type ChartUnit } from './ChartFrame';
-import { EVIDENCE_CLASS_COLORS, type EvidenceClassKey } from '../../lib/theme';
+import { CHART_THEME, EVIDENCE_CLASS_COLORS, type EvidenceClassKey } from '../../lib/theme';
 
 export interface TimelinePoint {
   x: string | number;
@@ -96,62 +96,63 @@ export function TimelineChart({
           data={points}
           margin={{ top: 18, right: 24, left: 12, bottom: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis
             dataKey="x"
             tickFormatter={(x) => formatXAxisTick(x as string | number)}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             label={{
               value: xLabel,
               position: 'insideBottom',
               offset: -10,
               fontSize: 11,
-              fill: '#64748b',
+              fill: CHART_THEME.axisLabel,
             }}
           />
           <YAxis
             tickFormatter={(v: number) => valFormatter(Number(v))}
-            tick={{ fontSize: 11, fill: '#475569' }}
+            tick={{ fontSize: 11, fill: CHART_THEME.tick }}
             width={64}
             label={{
               value: yLabel ?? unit,
               angle: -90,
               position: 'insideLeft',
-              style: { textAnchor: 'middle', fontSize: 11, fill: '#64748b' },
+              style: { textAnchor: 'middle', fontSize: 11, fill: CHART_THEME.axisLabel },
             }}
           />
           {events.map((ev, idx) => (
             <ReferenceLine
               key={`line-${ev.x}-${idx}`}
               x={ev.x}
-              stroke={ev.color ?? '#94a3b8'}
+              stroke={ev.color ?? CHART_THEME.neutral}
               strokeDasharray="3 3"
               label={{
                 value: ev.label,
                 position: 'top',
                 fontSize: 10,
-                fill: '#334155',
+                fill: CHART_THEME.tick,
               }}
             />
           ))}
           <RechartsTooltip
+            cursor={{ stroke: CHART_THEME.reference, strokeDasharray: '3 3' }}
             content={({ active, payload, label }) => {
               if (!active || !payload || payload.length === 0) return null;
               const pt = payload[0]?.payload as TimelinePoint | undefined;
               const ev = eventMap.get(label as string | number);
               if (!pt) return null;
               return (
-                <div className="rounded-md border border-slate-300 bg-white p-2.5 text-xs shadow-md">
-                  <div className="font-semibold text-slate-900">
+                <div className="rounded-sm border border-border bg-popover p-2.5 text-xs text-popover-foreground shadow-lg shadow-black/40">
+                  <div className="font-semibold text-foreground">
                     {formatXAxisTick(pt.x)}
                   </div>
-                  <div className="mt-0.5 text-slate-700 tabular-nums">
+                  <div className="mt-0.5 text-foreground/85 tabular-nums">
                     {seriesLabel}: <strong>{valFormatter(pt.y)}</strong>
                   </div>
                   {ev && (
-                    <div className="mt-1 border-t border-slate-100 pt-1 text-[11px] text-blue-800">
+                    <div className="mt-1 border-t border-border/60 pt-1 text-[11px] text-primary">
                       <span className="font-semibold">{ev.label}</span>
-                      {ev.detail && <span className="block text-slate-600">{ev.detail}</span>}
+                      {ev.detail && <span className="block text-muted-foreground">{ev.detail}</span>}
                     </div>
                   )}
                 </div>
@@ -176,8 +177,8 @@ export function TimelineChart({
                 x={ev.x}
                 y={ev.y}
                 r={4.5}
-                fill={ev.color ?? '#2563eb'}
-                stroke="#ffffff"
+                fill={ev.color ?? EVIDENCE_CLASS_COLORS.model_scenario}
+                stroke="var(--background)"
                 strokeWidth={1.5}
               />
             );
