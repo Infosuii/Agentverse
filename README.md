@@ -1,344 +1,399 @@
-# Jane Avenue
+<div align="center">
 
-**Jane Avenue** is an AI-powered UK fiscal policy simulator and economic research platform built for HM Treasury, HMRC, and OBR policy analysts.
+<img src="docs/assets/banner.svg" alt="Jane Avenue. UK fiscal policy simulator, with a Monte Carlo fan chart of the 25% to 28% corporation tax scenario" width="100%">
 
-Analysts enter a proposed UK fiscal reform in plain English—for example, *"What would happen if the UK increased corporation tax from 25% to 28%?"* or *"Cut the basic rate of income tax from 20% to 19%"*. Jane Avenue parses the proposal against a historical scope gate, dispatches an autonomous Gemini research agent grounded in official UK primary sources, matches historical UK fiscal precedents, runs a deterministic pure-NumPy econometric and ready-reckoner simulation engine with Monte Carlo uncertainty, audits every claim and calculation through an independent 18-check verifier, and compiles a publication-grade policy assessment.
+<br>
 
-Every displayed number is traceable to an explicit calculation step, a SHA-256 verified verbatim quote, or a curated official dataset (`ONS`, `OBR`, `HMRC`, `BoE`, `IFS`). When a proposal falls outside validated historical bounds or fails a blocking verification check, the system **withholds the quantitative forecast (`forecast_withheld`)** rather than extrapolating blindly.
+### Plain-English tax reforms in. Verified, evidence-backed forecasts out.
 
----
+Jane Avenue is an AI-powered UK fiscal policy simulator for HM Treasury, HMRC and OBR analysts.<br>
+**Gemini researches. NumPy calculates. An independent verifier decides whether you see a forecast at all.**
 
-## Why Jane Avenue?
+<br>
 
-| Approach | Strength | Failure Mode for Policy Analysts |
-|---|---|---|
-| **General-Purpose Chatbots** | Fast prose synthesis | Hallucinate £bn figures, fabricate URLs, and conflate ex-ante costings with observed tax receipts. |
-| **Static Treasury Spreadsheets** | Transparent arithmetic | Miss qualitative institutional confounders (e.g., the April 2023 introduction of 100% *Full Expensing*) and hide parameter uncertainty behind single point estimates. |
-| **Jane Avenue** | **Hybrid AI Research + Structural Econometrics + Independent Verification** | **Gemini never calculates a number.** Pure-NumPy engines compute every projection, Python verifies every verbatim quote against fetched document snapshots, and an 18-check verifier blocks unsupported forecasts. |
+[![CI](https://img.shields.io/github/actions/workflow/status/Infosuii/Jane-Avenue/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white&labelColor=0e1411&color=60ba8d)](https://github.com/Infosuii/Jane-Avenue/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-480%2B-60ba8d?style=for-the-badge&logo=pytest&logoColor=white&labelColor=0e1411)](#testing)
+[![Verifier](https://img.shields.io/badge/verifier-18%20checks-60ba8d?style=for-the-badge&labelColor=0e1411)](#how-it-works)
+[![License](https://img.shields.io/badge/license-MIT-60ba8d?style=for-the-badge&labelColor=0e1411)](LICENSE)
 
----
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white)](https://numpy.org/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?style=flat-square&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+[![Gemini](https://img.shields.io/badge/Google%20Gemini-Interactions%20API-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
+[![React](https://img.shields.io/badge/React-19-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev/)
+[![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 
-## System Architecture: The 6-Stage Guardrailed Pipeline
+<p>
+  <a href="#quickstart"><b>Quickstart</b></a> ·
+  <a href="#how-it-works"><b>How it works</b></a> ·
+  <a href="#a-tour-of-the-app"><b>Tour</b></a> ·
+  <a href="#the-golden-path"><b>Results</b></a> ·
+  <a href="#evaluation-backtesting-and-honest-ml"><b>Evaluation</b></a> ·
+  <a href="#documentation"><b>Docs</b></a>
+</p>
 
-```text
-Plain-English Policy Query
-   │
-   ▼
-1. Policy Parser & Scope Gate (backend/jane_avenue/policy/)
-   │  • Parses natural language into a structured PolicySpec (Contract v1.2.0)
-   │  • Surfaces all parser defaults & ambiguities as editable fields before running
-   │  • Validates against UK historical bounds, rejecting negative rates, non-UK taxes & devolved rates
-   ▼
-2. Autonomous Gemini Research Agent (backend/jane_avenue/research/ + llm/)
-   │  • Uses google-genai Interactions API (gemini-3.8-flash / gemini-4-argon, store=False)
-   │  • Google Search grounding + official URL fetch (gov.uk, obr.uk, ons.gov.uk, ifs.org.uk, parliament.uk)
-   │  • Verifies every quantitative quote verbatim in Python against SHA-256 document text snapshots
-   │  • Surfaces conflicting evidence explicitly rather than averaging it away
-   ▼
-3. Historical Precedents Matcher (backend/jane_avenue/precedents/ + data/)
-   │  • Scores reforms by direction (0.30), magnitude (0.25), rate level (0.15), macro z-score (0.20), recency (0.10)
-   │  • Covers 16 implemented UK CT rate reforms (1983–2023) + 1,736 wider UK fiscal reforms,
-   │    6,928 Treasury scorecard costings, and 1,164 ONS/OBR outturns (back to 1967–68)
-   │  • Strictly separates ex-ante Official Costings (OBR/HMT) from ex-post Observed Outcomes (ONS/HMRC)
-   ▼
-4. Econometric & Ready-Reckoner Simulation Engines (backend/jane_avenue/engine/ + simulation/)
-   │  • Pure NumPy — deterministic, zero I/O, zero LLM involvement
-   │  • Corporation Tax Structural Engine (engine-1.0.0): Static yield, isoelastic taxable-profit shifting
-   │    (ε = 0.20), Hall–Jorgenson / King–Fullerton user cost of capital across Plant & Machinery
-   │    (capturing 100% Full Expensing marginal neutrality), Structures (3% SBA), and Intangibles,
-   │    capital accumulation, partial-equilibrium GDP feedback, and Devereux–Griffith EMTR/EATR steps
-   │  • HMRC Ready-Reckoner Engine (reckoner-1.0.0): 17 UK tax & benefit measures (225 HMRC June 2025 rows)
-   │    with piecewise-linear scaling, nonlinear CGT Laffer responses, and nominal GDP uprating
-   │  • 2,000-draw Monte Carlo simulation with yearly stochastic profit-base shocks + Tornado sensitivity (< 30 ms)
-   ▼
-5. Independent 18-Check Verifier (backend/jane_avenue/verification/)
-   │  • Recomputes central engine outputs to within 1e-9 (CALC-001)
-   │  • Audits source tiers & verbatim quotes (CITE-001..003), evidence sufficiency (EVID-001..004),
-   │    assumption bounds (ASSUMP-001..002), zero data placeholders (DATA-001..002), causal wording (CAUSAL-001),
-   │    uncertainty bands (UNC-001), and report digit provenance (REPORT-001)
-   │  • Enforces forecast_withheld whenever any blocking check fails
-   ▼
-6. Evidence-Backed Policy Assessment (backend/jane_avenue/report/)
-      • Gemini drafts neutral analyst prose using {{fig:id}} placeholders
-      • Python substitutes every figure from the engine and verifies zero raw numbers were invented
-```
+<br>
 
----
+<img src="docs/assets/demo.gif" alt="Demo: typing a corporation tax query, watching the six-stage pipeline run, then browsing the overview, Monte Carlo chart, research, scenarios, verification and report views" width="100%">
 
-## Policy Scope & Economic Modelling Coverage
+<sub>The golden path in cached mode: a query is parsed, researched, simulated, verified and written up in about five seconds.</sub>
 
-Since Contract `1.2.0`, Jane Avenue supports three tiers of UK fiscal policy analysis:
+</div>
 
-1. **UK Corporation Tax Main Rate & Small Profits Rate (`engine-1.0.0`):**
-   - Full structural multi-channel simulation over 1–10 fiscal years against the **OBR October 2026 Economic and Fiscal Outlook** baseline (`2025-26` to `2031-32`).
-   - Captures the **Full-Expensing Neutrality Theorem**: under a 100% first-year capital allowance ($z = 1$), the Hall–Jorgenson user cost of capital $c_a(t) = (r + \delta_a)(1 - t \cdot z_a)/(1 - t)$ simplifies to $r + \delta_a$, making covered plant & machinery investment invariant to the statutory CT rate at the margin while the investment drag operates through structures ($z = 0.299$) and intangibles ($z = 0.720$).
-   - **Golden-Path Benchmark (`25% → 28%` CT from April 2027, 5-year horizon):**
-     - **Static Revenue:** `+£7.28bn` (Year 1) → `+£14.39bn` (Year 5)
-     - **Behavioural Revenue ($\varepsilon = 0.20$):** `+£7.00bn` (Year 1) → `+£13.30bn` (Year 5)
-     - **Dynamic Revenue:** `+£6.99bn` (Year 1) → `+£13.16bn` (Year 5)
-     - **Business Investment:** `-0.29%` / `-£1.00bn` (Year 1) → `-0.56%` / `-£2.19bn` (Year 5)
-     - **Real GDP Level:** `-0.016%` (Year 1) → `-0.104%` (Year 5)
-     - **User Cost of Capital:** `+0.97%` (`Devereux–Griffith EATR: 21.7% → 24.3%`)
-2. **17 HMRC Ready-Reckoner Tax & Benefit Measures (`reckoner-1.0.0`):**
-   - Reconciled to `1e-9` against HMRC's *Direct effects of illustrative tax changes (June 2025)* (`225` official costing rows):
-     - **Income Tax:** Basic Rate (`20%`), Higher Rate (`40%`), Additional Rate (`45%`, asymmetric), Personal Allowance (`£12,570`, piecewise linear)
-     - **National Insurance Contributions:** Employee Main Rate (`8%`), Employer Rate (`15%`), Self-Employed Class 4 (`6%`)
-     - **Capital & Wealth Taxes:** CGT Lower Rate (`18%`) & Higher Rate (`24%`, nonlinear Laffer curve), Inheritance Tax (`40%`)
-     - **Indirect Taxes & Duties:** VAT Standard (`20%`) & Reduced (`5%`), Insurance Premium Tax (`12%`), Fuel Duty (`52.95p/L`), Alcohol Duty, Tobacco Duty
-     - **Benefits:** Child Benefit (`£27.05/wk`, asymmetric)
-3. **Wider UK Fiscal Proposals (`fiscal_other` — Guardrailed Research Mode):**
-   - Public spending proposals, minimum wage changes, and uncosted tax reforms (or extreme CT proposals such as `Raise corporation tax to 45%`, exceeding the `15pp` single-reform historical step limit) still receive live Gemini research and historical precedent matching, while `SCOPE-001` **withholds the quantitative forecast (`forecast_withheld = True`)**.
+<br>
 
----
+## Why Jane Avenue
 
-## Out-of-Sample Evaluation, Backtesting & Honest ML Rejection
+Ask a general-purpose chatbot *“What happens if the UK raises corporation tax from 25% to 28%?”* and you get confident, plausible and **unverifiable** £bn figures. Ask a Treasury spreadsheet and you get transparent arithmetic that misses the context, for example how April 2023's 100% *Full Expensing* changed the investment channel. Jane Avenue combines the strengths of both and adds a referee.
 
-All evaluation metrics are reproducible offline via `python -m jane_avenue.evaluation.run` and viewable in the app at `/evaluation` (see [docs/EVALUATION.md](docs/EVALUATION.md) and [docs/HMRC_CALIBRATION_AND_STRESS_TEST.md](docs/HMRC_CALIBRATION_AND_STRESS_TEST.md)):
+<table>
+<tr>
+<th></th>
+<th>Strength</th>
+<th>Failure mode for policy analysts</th>
+</tr>
+<tr>
+<td><b>General-purpose chatbots</b></td>
+<td>Fast prose synthesis</td>
+<td>Invent £bn figures, fabricate URLs, and conflate ex-ante costings with observed receipts</td>
+</tr>
+<tr>
+<td><b>Static spreadsheets</b></td>
+<td>Transparent arithmetic</td>
+<td>Miss institutional confounders and hide parameter uncertainty behind single point estimates</td>
+</tr>
+<tr>
+<td><b>Jane&nbsp;Avenue</b></td>
+<td colspan="2"><b>Grounded AI research + structural econometrics + independent verification.</b> Gemini never calculates a number. NumPy engines compute every projection, Python verifies every quote against fetched documents, and an 18-check verifier blocks unsupported forecasts.</td>
+</tr>
+</table>
 
-- **Chronological Corporation Tax Backtest (`FY1983-84..FY2007-08` Train → `FY2008-09..FY2024-25` Unseen Test, $n = 17$):**
-  - Evaluates 1-year-ahead CT receipts conditional on realised profit growth (`pnfc_gos`) across the 2008–2017 rate cuts and the April 2023 `19% → 25%` hike.
-  - **`jane_behavioural` ($\varepsilon = 0.20, s = 0.87$):** **£5.54bn Test MAE (9.36% MAPE)**, outperforming `static` (**£5.71bn**, 9.53% MAPE), `naive_growth` (**£6.56bn**), and `linear_regression` (**£8.35bn**).
-  - **Empirical Interval Coverage:** Leave-one-out 90% empirical residual interval covers **14/17 (82.3%)** of unseen post-2008 outcomes.
-  - **External HMRC Calibration (`+1pp` CT Main Rate):** Matches HMRC's June 2025 Ready Reckoner within **3.6% (`£3.76bn` vs `£3.90bn`)** in Year 2 and **1.0% (`£3.96bn` vs `£4.00bn`)** in Year 3.
-- **ML Honesty Rule (`LightGBMRegressor`, `adopted = False`):**
-  - A regularised gradient-boosted tree model (`max_depth=2, num_leaves=3, L1=1.0, L2=2.0`) achieves a lower in-sample train MAE (**£3.27bn**) on `FY <= 2007` but degrades to **£6.33bn** out-of-sample test MAE (`+93%` error growth) because $n = 24$ annual observations cannot support piecewise-constant tree extrapolation across post-2008 fiscal regime shifts. Per project rules, LightGBM is **transparently rejected (`adopted = False`)** and not wired into the live simulator.
-- **Research Agent & Verifier Benchmarks:**
-  - **15 / 15 (100%)** factual accuracy on the 15-question UK CT benchmark.
-  - **15 / 15 (100%)** HTTP-200 URL validity and **15 / 15 (100%)** verbatim quote verification (`0` hallucinated sources, `100%` Tier-1 official source share).
-  - **18 / 18 (100%)** fault-injection detection across all 18 verifier checks with **0%** clean-case false positives.
+## Highlights
 
----
+<table>
+<tr>
+<td width="33%" valign="top">
 
-## Governance, Privacy & Execution Boundaries
+**🔎 Grounded research agent**<br>
+<sub>An autonomous Gemini agent searches and fetches only official sources (gov.uk, OBR, ONS, IFS, Parliament). Every quantitative quote is checked **verbatim** in Python against a SHA-256 snapshot of the document it came from.</sub>
 
-- **Local Execution:** The econometric engines (`engine/`), Monte Carlo & tornado simulator (`simulation/`), 18-check verifier (`verification/`), and SQLite persistence (`store/`) run **100% locally on-device**.
-- **Cloud Boundary (`live` mode only):** Only the parsed policy query is sent to the Google Gemini API (`google-genai`) with **`store=False`**, ensuring zero prompt or user-data retention.
-- **Human-in-the-Loop Oversight:** Analysts inspect and can override every parsed policy parameter before execution, adjust any of the 19 structural assumptions via live sliders, and audit every verification check and source snapshot before exporting a report.
+</td>
+<td width="33%" valign="top">
 
----
+**📐 Transparent econometrics**<br>
+<sub>A pure-NumPy structural model: static, behavioural and dynamic revenue; a Hall–Jorgenson user cost of capital across three asset classes; and Devereux–Griffith EMTR/EATR. Deterministic, with no I/O and no LLM.</sub>
 
-## Prerequisites
+</td>
+<td width="33%" valign="top">
 
-- **Python 3.13** (`py -3.13 --version` on Windows, `python3.13 --version` on macOS/Linux)
-- **Node.js 22+** and `npm`
-- **Git** (and `gh` CLI if using multi-agent collaboration workflows)
+**🎲 Honest uncertainty**<br>
+<sub>A 2,000-draw Monte Carlo with yearly profit-base shocks, so the uncertainty widens with the horizon. Tornado sensitivity and live assumption sliders re-simulate in milliseconds.</sub>
 
----
+</td>
+</tr>
+<tr>
+<td valign="top">
 
-## How to Run the Project
+**🛡️ Independent 18-check verifier**<br>
+<sub>Recomputes the engine to within 1e-9, audits citations, evidence, assumptions, data placeholders, causal wording and every digit in the report. If a blocking check fails, it sets <code>forecast_withheld</code>.</sub>
 
-### Step 1: Clone & Configure Environment
+</td>
+<td valign="top">
 
-```powershell
-# 1. Clone the repository
-git clone https://github.com/Infosuii/Agentverse.git
-cd Agentverse
+**🏛️ 40 years of precedent**<br>
+<sub>16 UK corporation tax reforms (1983–2023), 1,736 wider fiscal reforms, 6,928 Treasury scorecard costings and 1,164 ONS/OBR outturns. Official costings are kept strictly separate from observed outcomes.</sub>
 
-# 2. Create your local .env from the template (never commit .env!)
-Copy-Item .env.example .env
-```
-*(On macOS/Linux: `cp .env.example .env`)*
+</td>
+<td valign="top">
 
-If you want to run live Gemini research, open `.env` and paste your API key:
-```ini
-GEMINI_API_KEY=your_gemini_api_key_here
-```
+**🧾 Every number has a receipt**<br>
+<sub>Each figure is labelled as an observed outcome, official costing, model scenario, assumption or AI interpretation, and links back to its calculation step, quote or dataset row.</sub>
 
-### Step 2: One-Command Quickstart (`scripts/dev.ps1` / `scripts/dev.sh`)
+</td>
+</tr>
+</table>
 
-The development launcher script **automatically creates `.venv`**, installs all Python backend dependencies (`backend/requirements-dev.txt`, including `fastapi`, `numpy`, `scipy`, `statsmodels`, `lightgbm`, `matplotlib`, `google-genai`), installs `frontend/node_modules` if missing, and starts both the **FastAPI backend (`http://localhost:8000`)** and the **Vite React frontend (`http://localhost:5173`)**.
+## How it works
 
-By default, if `JANE_MODE` is not set in the environment, Jane Avenue **auto-detects the runtime mode**:
-- **`live` mode** if `GEMINI_API_KEY` is set in `.env`
-- **`mock` mode** if `GEMINI_API_KEY` is empty
+<div align="center">
+<img src="docs/assets/pipeline.svg" alt="Six-stage pipeline: parse and scope gate, grounded Gemini research, historical precedents, econometric simulation, independent verification, evidence-backed report" width="100%">
+</div>
 
-Choose any of the three modes below:
+<details>
+<summary><b>Stage-by-stage detail</b></summary>
 
-#### Option A: Live Mode (Real-Time Gemini Interactions API + Google Search Grounding)
-Requires `GEMINI_API_KEY` in `.env`:
-```powershell
-# Windows PowerShell
-$env:JANE_MODE = "live"
-.\scripts\dev.ps1
-```
+<br>
+
+| # | Stage | Where | What happens |
+|:-:|---|---|---|
+| 1 | **Parse & scope gate** | [`policy/`](backend/jane_avenue/policy/) | Natural language becomes a typed `PolicySpec` (contract v1.2.0). Every parser default and ambiguity is shown as an editable field before anything runs. The gate rejects negative rates, non-UK taxes, devolved rates and steps beyond historical bounds. |
+| 2 | **Grounded research** | [`research/`](backend/jane_avenue/research/), [`llm/`](backend/jane_avenue/llm/) | Uses the `google-genai` Interactions API (`gemini-3.8-flash` / `gemini-4-argon`, `store=False`) with Google Search grounding and official URL fetches. Conflicting evidence is shown, not averaged away. |
+| 3 | **Precedents** | [`precedents/`](backend/jane_avenue/precedents/), [`data/`](data/) | Weighted similarity: direction 0.30, magnitude 0.25, rate level 0.15, macro z-score 0.20, recency 0.10. Ex-ante costings (OBR/HMT) are kept separate from ex-post outcomes (ONS/HMRC). |
+| 4 | **Simulate** | [`engine/`](backend/jane_avenue/engine/), [`simulation/`](backend/jane_avenue/simulation/) | Corporation tax structural engine (`engine-1.0.0`) and HMRC ready-reckoner engine (`reckoner-1.0.0`). Central, optimistic and pessimistic scenarios, a 2,000-draw Monte Carlo and a tornado, in under 30 ms. |
+| 5 | **Verify** | [`verification/`](backend/jane_avenue/verification/) | `SCOPE`, `CITE-001..003`, `EVID-001..004`, `ASSUMP-001..002`, `CALC-001`, `DATA-001..002`, `CAUSAL-001`, `UNC-001`, `REPORT-001`. Any blocking failure sets `forecast_withheld`. |
+| 6 | **Report** | [`report/`](backend/jane_avenue/report/) | Gemini drafts neutral analyst prose with `{{fig:id}}` placeholders. Python substitutes every figure from the engine and checks that no raw number was invented. |
+
+</details>
+
+<details>
+<summary><b>The Full-Expensing Neutrality Theorem</b> (why the investment channel isn't where you'd expect)</summary>
+
+<br>
+
+Under a 100% first-year capital allowance ($z = 1$), the Hall–Jorgenson user cost of capital
+
+$$c_a(t) = \frac{(r + \delta_a)(1 - t \cdot z_a)}{1 - t}$$
+
+simplifies to $r + \delta_a$. Covered plant and machinery investment is therefore **invariant to the statutory CT rate at the margin**. The investment drag works through structures ($z = 0.299$, 3% SBA) and intangibles ($z = 0.720$) instead. A spreadsheet that applies one elasticity to all investment gets this wrong.
+
+</details>
+
+## A tour of the app
+
+<table>
+<tr>
+<td width="50%"><img src="docs/assets/screenshots/landing.png" alt="Search-first landing page"><br><sub><b>Ask in plain English.</b> A search-first landing page with curated example prompts, including ones that deliberately trip the scope gate.</sub></td>
+<td width="50%"><img src="docs/assets/screenshots/parse-review.png" alt="Parsed policy review"><br><sub><b>Review before you run.</b> Parser defaults and ambiguities are shown as editable fields, and the scope gate's verdict appears before anything executes.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/assets/screenshots/overview.png" alt="Overview with headline projections"><br><sub><b>Headline projections.</b> Each figure carries its evidence class, p5–p95 range and confidence level.</sub></td>
+<td><img src="docs/assets/screenshots/monte-carlo.png" alt="Monte Carlo trajectory chart"><br><sub><b>Real Monte Carlo draws.</b> Every grey line is one simulated path. The bands, percentiles and mean use all 2,000 draws.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/assets/screenshots/research.png" alt="Research agent timeline"><br><sub><b>Live research timeline.</b> Watch the agent plan, search, fetch and extract quotes. Every source is a numbered, checkable citation.</sub></td>
+<td><img src="docs/assets/screenshots/scenarios.png" alt="Scenario paths and live sliders"><br><sub><b>Scenarios and live sliders.</b> Drag any of the 19 structural assumptions and re-simulate in under a second.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/assets/screenshots/verification.png" alt="Verification summary"><br><sub><b>Independent verification.</b> 18 audit checks, each with its severity and method. Warnings are shown, never hidden.</sub></td>
+<td><img src="docs/assets/screenshots/report.png" alt="Policy report"><br><sub><b>Publication-grade report.</b> Numbered sections, traceable key figures and a source directory. Exports to Markdown or PDF.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/assets/screenshots/precedents.png" alt="Historical precedents timeline"><br><sub><b>Historical precedents.</b> UK corporation tax main rate since 1982, with matched reforms ranked by a five-component similarity score.</sub></td>
+<td><img src="docs/assets/screenshots/report-light.png" alt="Report in light theme"><br><sub><b>Light and dark themes</b>, plus a print stylesheet built for ink.</sub></td>
+</tr>
+</table>
+
+## The golden path
+
+> **Query:** *“What would happen if the UK increased corporation tax from 25% to 28%?”*: 25% → 28% from April 2027, 5-year horizon, against the **OBR October 2026 EFO** baseline.
+
+| Metric (central scenario) | Year 1 · 2027-28 | Year 5 · 2031-32 |
+|---|--:|--:|
+| Static revenue | **+£7.28bn** | **+£14.39bn** |
+| Behavioural revenue (ε = 0.20) | **+£7.00bn** | **+£13.30bn** |
+| Dynamic revenue | **+£6.99bn** | **+£13.16bn** |
+| Business investment | −0.29% · −£1.00bn | −0.56% · −£2.19bn |
+| Real GDP level | −0.016% | −0.104% |
+| User cost of capital | +0.97% | EATR 21.7% → 24.3% |
+
+<sub>Monte Carlo p5–p95 for Year 5 behavioural revenue: £10.1bn to £15.9bn. These are assumption-driven ranges, not prediction intervals.</sub>
+
+## What it can model
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+#### 🟢 Full structural model
+`engine-1.0.0`
+
+UK corporation tax main rate and small profits rate. A multi-channel simulation over 1–10 fiscal years covering revenue, investment by asset, GDP and the cost of capital.
+
+</td>
+<td width="33%" valign="top">
+
+#### 🔵 HMRC ready reckoner
+`reckoner-1.0.0`
+
+**17 tax and benefit measures**, reconciled to `1e-9` against 225 rows of HMRC's June 2025 costings: income tax rates and personal allowance, NICs, CGT (non-linear Laffer), IHT, VAT, IPT, fuel, alcohol and tobacco duties, and Child Benefit.
+
+</td>
+<td width="33%" valign="top">
+
+#### 🟡 Guardrailed research
+`fiscal_other`
+
+Spending, the minimum wage, uncosted taxes, and extreme proposals such as *“Raise CT to 45%”*. These get full research and precedents, but `SCOPE-001` **withholds the number**.
+
+</td>
+</tr>
+</table>
+
+## Evaluation, backtesting and honest ML
+
+Every metric is reproducible offline with `python -m jane_avenue.evaluation.run` and can be viewed in the app at `/evaluation`.
+
+<div align="center">
+
+| | Result |
+|---|---|
+| 📉 **Out-of-sample CT backtest** (train FY1983–2007, test FY2008–2024, *n* = 17) | **£5.54bn MAE** (9.36% MAPE). Beats static £5.71bn, naive growth £6.56bn and linear regression £8.35bn |
+| 🎯 **Empirical interval coverage** (leave-one-out 90%) | **14 / 17** (82.3%) of unseen post-2008 outcomes |
+| 🏛️ **External HMRC calibration** (+1pp CT) | Within **3.6%** in Year 2 and **1.0%** in Year 3 of HMRC's June 2025 ready reckoner |
+| 📚 **Research agent** (15-question benchmark) | **15 / 15** factual accuracy · **15 / 15** valid URLs · **15 / 15** verbatim quotes · **0** hallucinated sources |
+| 🛡️ **Verifier fault injection** | **18 / 18** faults detected · **0%** clean-case false positives |
+
+</div>
+
+> [!IMPORTANT]
+> **ML honesty rule.** A regularised LightGBM challenger reached a lower *in-sample* MAE (£3.27bn), but degraded to **£6.33bn out-of-sample** (+93%), because 24 annual observations cannot support tree extrapolation across post-2008 regime shifts. It was therefore **transparently rejected (`adopted = False`)** and is not wired into the live simulator.
+
+<div align="center">
+<img src="docs/assets/screenshots/evaluation-charts.png" alt="Backtest chart of predicted vs observed corporation tax receipts and MAE by method" width="90%">
+</div>
+
+See [docs/EVALUATION.md](docs/EVALUATION.md) and [docs/HMRC_CALIBRATION_AND_STRESS_TEST.md](docs/HMRC_CALIBRATION_AND_STRESS_TEST.md) for the full reports.
+
+## Trust and governance
+
+- **On-device by default.** The engines, Monte Carlo, verifier and SQLite store run 100% locally.
+- **Minimal cloud boundary.** In `live` mode only the parsed policy query goes to Gemini, with `store=False`, so no prompts or user data are retained.
+- **Human in the loop.** Analysts can override every parsed parameter, adjust all 19 structural assumptions, and audit every check and source snapshot before export.
+- **No invented data.** Anything unverified is marked `is_placeholder=True`, and the verifier surfaces it.
+
+## Quickstart
+
+> **Prerequisites:** Python 3.13 · Node.js 22+ · Git
+
 ```bash
-# macOS / Linux
-JANE_MODE=live ./scripts/dev.sh
+git clone https://github.com/Infosuii/Jane-Avenue.git
+cd Jane-Avenue
+cp .env.example .env            # Windows: Copy-Item .env.example .env
 ```
 
-#### Option B: Cached Mode (Recommended for Demos — Instant Replay of Verified Live Gemini Runs)
-Replays committed SHA-256 verified Gemini research traces from `data/research_cache/` (including the `25% → 28%` golden path, `25% → 23%` cut, `25% → 26%` hike, and `25% → 45%` guardrail refusal) in ~5 seconds with zero network dependency, falling back automatically (`live → cache → mock`) on uncached queries:
-```powershell
-# Windows PowerShell
-$env:JANE_MODE = "cached"
-.\scripts\dev.ps1
-```
+Then start the backend (`:8000`) and frontend (`:5173`) with one command. It creates `.venv` and installs everything on first run:
+
 ```bash
-# macOS / Linux
-JANE_MODE=cached ./scripts/dev.sh
+JANE_MODE=cached ./scripts/dev.sh          # macOS / Linux
 ```
-*(You can also toggle **"Use cached research"** directly on the New Analysis page in the UI.)*
 
-#### Option C: Mock Mode (Deterministic Offline Mode — No API Key Required)
-Runs the full 6-stage pipeline with real curated datasets and the real econometric engine against deterministic mock research fixtures in under 1 second:
 ```powershell
-# Windows PowerShell
-$env:JANE_MODE = "mock"
-.\scripts\dev.ps1
-```
-```bash
-# macOS / Linux
-JANE_MODE=mock ./scripts/dev.sh
+$env:JANE_MODE = "cached"; .\scripts\dev.ps1   # Windows PowerShell
 ```
 
-Once running, open:
-- **Frontend Application:** `http://localhost:5173`
-- **Backend Health Check:** `http://localhost:8000/api/health`
-- **Interactive OpenAPI / Swagger Docs:** `http://localhost:8000/docs`
+Open **http://localhost:5173**. The API docs are at http://localhost:8000/docs.
 
----
+<table>
+<tr><th>Mode</th><th>Needs</th><th>What you get</th></tr>
+<tr><td><code>cached</code> ⭐</td><td>Nothing</td><td>Replays committed, SHA-256-verified live Gemini traces (golden path, a cut, a small hike and a guardrail refusal) in about 5 s. Best for demos. Falls back <code>live → cache → mock</code>.</td></tr>
+<tr><td><code>mock</code></td><td>Nothing</td><td>The full pipeline with real data and the real engine against deterministic research fixtures, in under 1 s. This is what CI uses.</td></tr>
+<tr><td><code>live</code></td><td><code>GEMINI_API_KEY</code></td><td>Real-time Gemini Interactions API with Google Search grounding and official document fetches.</td></tr>
+</table>
 
-### Alternative: Running Backend & Frontend in Separate Terminals
+<sub>If <code>JANE_MODE</code> is unset, it is detected automatically: <code>live</code> when <code>GEMINI_API_KEY</code> is set in <code>.env</code>, otherwise <code>mock</code>.</sub>
 
-If you prefer to manage the backend and frontend processes separately:
+<details>
+<summary><b>Run the backend and frontend in separate terminals</b></summary>
 
-**1. First-time dependency installation:**
+<br>
+
 ```powershell
-# Create virtual environment and install backend dependencies
+# one-time setup
 py -3.13 -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
 pip install -r backend/requirements-dev.txt
-
-# Install frontend dependencies
-cd frontend
-npm ci
-cd ..
+cd frontend; npm ci; cd ..
 ```
 
-**2. Start Terminal 1 — Backend API (`http://localhost:8000`):**
 ```powershell
-# Windows PowerShell (omit $env:JANE_MODE to auto-detect from .env, or set "live" / "cached" / "mock")
+# terminal 1: API on :8000
 $env:PYTHONPATH = "backend"
-.\.venv\Scripts\python.exe -m uvicorn jane_avenue.api.app:app --reload --port 8000
+python -m uvicorn jane_avenue.api.app:app --reload --port 8000
 ```
+
 ```bash
-# macOS / Linux
+# terminal 1 on macOS / Linux
 PYTHONPATH=backend ./.venv/bin/python -m uvicorn jane_avenue.api.app:app --reload --port 8000
 ```
 
-**3. Start Terminal 2 — Frontend UI (`http://localhost:5173`):**
-```powershell
-cd frontend
-npm run dev
+```bash
+# terminal 2: UI on :5173
+cd frontend && npm run dev
 ```
 
----
+</details>
 
-## Testing, Verification & Data Scripts
+## Testing
 
-### 1. Full CI Check Suite (`scripts/check`)
-Runs backend `ruff check` + `pytest -m "not live"`, frontend `tsc --noEmit` + `eslint` + `vitest` + `vite build`, and the OpenAPI schema drift check:
-```powershell
-.\scripts\check.ps1      # Windows PowerShell
-./scripts/check.sh       # macOS / Linux
-```
+**423** backend tests, **58** frontend tests and **4** end-to-end browser flows, all run in deterministic mock mode with no secrets.
 
-### 2. Golden-Path Pipeline Smoke Check (`backend/scripts/smoke.py`)
-Runs the `25% → 28%` Corporation Tax golden query end-to-end against an in-memory SQLite store and prints stage timings, verification status, central projections, and placeholder counts:
-```powershell
-# Human-readable summary table
-.\.venv\Scripts\python.exe backend\scripts\smoke.py --mode mock
+| What | Command |
+|---|---|
+| Full CI suite: ruff, pytest, tsc, eslint, vitest, vite build and OpenAPI drift check | `./scripts/check.sh` · `.\scripts\check.ps1` |
+| Golden-path smoke test with timings | `python backend/scripts/smoke.py --mode cached --json --expect-approved --max-seconds 20` |
+| Backtest, ML experiment and evaluation report | `PYTHONPATH=backend python -m jane_avenue.evaluation.run` |
+| HMRC calibration and stress suite | `pytest backend/tests/evaluation/test_hmrc_calibration_and_stress.py -v` |
+| Playwright E2E (stop the dev servers first) | `cd e2e && npm ci && npx playwright install --with-deps chromium && npx playwright test` |
+| Rebuild curated datasets | `python data/scripts/build_all.py --offline` |
+| Regenerate OpenAPI types | `python backend/scripts/export_openapi.py && cd frontend && npm run gen:api` |
 
-# Strict CI / pre-demo assertion (verifies forecast approved and runtime < 20s)
-.\.venv\Scripts\python.exe backend\scripts\smoke.py --mode cached --json --expect-approved --max-seconds 20
-```
+## Tech stack
 
-### 3. Re-running the Historical Backtest, ML Experiment & HMRC Calibration Suite
-```powershell
-$env:PYTHONPATH = "backend"
+| Layer | Technology |
+|---|---|
+| **Modelling** | Python 3.13 · NumPy · pandas · SciPy · statsmodels · LightGBM (evaluated, rejected) · Matplotlib |
+| **API** | FastAPI · Pydantic v2 frozen contracts · Server-Sent Events · SQLite · rate limiting |
+| **AI** | Google Gemini via `google-genai` Interactions API · Google Search grounding · `store=False` |
+| **Frontend** | React 19 · Vite · TypeScript · Tailwind v4 · TanStack Query · React Router · Recharts · OpenAPI-generated types |
+| **Quality** | pytest · ruff · Vitest · ESLint · Playwright · GitHub Actions |
 
-# Run the offline evaluation suite (writes backend/jane_avenue/evaluation/results/latest.json & docs/EVALUATION.md)
-.\.venv\Scripts\python.exe -m jane_avenue.evaluation.run
+<details>
+<summary><b>Repository layout</b></summary>
 
-# Run the HMRC June 2025 Ready-Reckoner calibration & stress-test suite
-.\.venv\Scripts\python.exe -m pytest backend/tests/evaluation/test_hmrc_calibration_and_stress.py -v
-```
-
-### 4. Playwright End-to-End Browser Tests (`e2e/`)
-*(Stop `dev.ps1` / `dev.sh` first so port `:8000` is free for Playwright's isolated mock backend.)*
-```powershell
-cd e2e
-npm ci
-npx playwright install --with-deps chromium
-npx playwright test
-```
-
-### 5. Rebuilding Curated Official Datasets & OpenAPI Types
-```powershell
-# Rebuild curated CSVs & provenance metadata in data/curated/ (use --offline to rebuild from cached raw files)
-.\.venv\Scripts\python.exe data\scripts\build_all.py --offline
-
-# Export OpenAPI schema and regenerate TypeScript types in frontend/src/api/
-.\.venv\Scripts\python.exe backend\scripts\export_openapi.py
-cd frontend && npm run gen:api && cd ..
-```
-
----
-
-## Repository Structure
+<br>
 
 ```text
-Agentverse/
-├── backend/
-│   ├── jane_avenue/
-│   │   ├── api/            # FastAPI app, REST routes, SSE event stream, rate limiter
-│   │   ├── charts/         # Server-rendered Matplotlib Monte Carlo trajectory fan charts
-│   │   ├── contracts/      # Frozen Pydantic v2 data contracts (v1.2.0)
-│   │   ├── data/           # Curated dataset loader, provenance registry & source lookup
-│   │   ├── engine/         # Pure-NumPy CT structural model (core.py) & HMRC ready reckoner (reckoner.py)
-│   │   ├── evaluation/     # Chronological CT backtest, LightGBM challenger, citation & verifier evals
-│   │   ├── llm/            # Google GenAI Interactions API gateway (gemini-3.8-flash / gemini-4-argon)
-│   │   ├── orchestrator/   # 6-stage pipeline coordinator & structured log context
-│   │   ├── policy/         # Natural-language policy parser, 17-measure matcher & scope gate
-│   │   ├── precedents/     # Historical UK CT & wider fiscal precedent similarity engines
-│   │   ├── report/         # Template & Gemini narrative report generator with {{fig:id}} substitution
-│   │   ├── research/       # Autonomous Gemini research loop, quote verifier & SHA-256 cache
-│   │   ├── simulation/     # Central/Optimistic/Pessimistic scenarios, 2,000-draw Monte Carlo & Tornado
-│   │   ├── store/          # Thread-safe SQLite repository & LRU cache
-│   │   └── verification/   # Independent 18-check verification engine (SCOPE, CITE, EVID, ASSUMP, CALC, DATA, CAUSAL, UNC, REPORT)
-│   ├── scripts/            # smoke.py and export_openapi.py utilities
-│   └── tests/              # Unit, integration, contract, calibration & stress test suites
+Jane-Avenue/
+├── backend/jane_avenue/
+│   ├── api/            FastAPI app, REST routes, SSE event stream, rate limiter
+│   ├── charts/         Server-rendered Matplotlib Monte Carlo trajectory charts
+│   ├── contracts/      Frozen Pydantic v2 data contracts (v1.2.0)
+│   ├── data/           Curated dataset loader and provenance registry
+│   ├── engine/         Pure-NumPy CT structural model and HMRC ready reckoner
+│   ├── evaluation/     Chronological backtest, LightGBM challenger, citation and verifier evals
+│   ├── llm/            Gemini Interactions API gateway
+│   ├── orchestrator/   Six-stage pipeline coordinator
+│   ├── policy/         Natural-language parser, 17-measure matcher, scope gate
+│   ├── precedents/     Historical CT and wider fiscal precedent similarity
+│   ├── report/         Template and Gemini narrative generator with {{fig:id}} substitution
+│   ├── research/       Autonomous research loop, quote verifier, SHA-256 cache
+│   ├── simulation/     Scenarios, 2,000-draw Monte Carlo, tornado
+│   ├── store/          Thread-safe SQLite repository
+│   └── verification/   Independent 18-check verification engine
 ├── data/
-│   ├── curated/            # Official ONS/OBR/HMRC datasets (.csv + .meta.json + provenance.json)
-│   ├── research_cache/     # Committed SHA-256 verified Gemini research traces for cached mode
-│   └── scripts/            # Reproducible official data fetch & build pipelines
-├── docs/                   # Architecture, evaluation, data provenance, UI design & demo documentation
-├── e2e/                    # Playwright end-to-end browser test suite
-├── frontend/
-│   └── src/
-│       ├── api/            # OpenAPI-generated TypeScript schema & typed API client
-│       ├── app/            # Router, layout & Forecast Confidence Studio shell
-│       ├── components/     # Recharts fan/tornado charts, ProvenanceNumber popover, UI primitives & theme toggle
-│       └── features/       # New Analysis, Overview, Research, Precedents, Scenarios, Assumptions, Verification, Report, Evaluation, History
-└── scripts/                # Cross-platform dev.ps1 / dev.sh and check.ps1 / check.sh scripts
+│   ├── curated/        Official ONS / OBR / HMRC datasets with .meta.json provenance
+│   ├── research_cache/ Committed SHA-256-verified Gemini traces for cached mode
+│   └── scripts/        Reproducible fetch-and-build pipelines
+├── frontend/src/       React app: api, app shell, charts, features (10 views)
+├── e2e/                Playwright end-to-end suite
+├── docs/               Architecture, evaluation, data, UI, demo and runbook
+└── scripts/            dev.sh / dev.ps1 and check.sh / check.ps1
 ```
 
----
+</details>
 
-## Documentation Index
+## Documentation
 
-- **Product & Workstream Ownership:** [PROJECT.md](PROJECT.md)
-- **Full Technical Build Specification:** [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md)
-- **Architecture Decision Log & Econometric Model Card:** [docs/ARCHITECTURE_NOTES.md](docs/ARCHITECTURE_NOTES.md)
-- **4-Minute Live Demo Script:** [docs/DEMO.md](docs/DEMO.md)
-- **Pitch Notes & Judging Criteria Mapping:** [docs/PITCH_NOTES.md](docs/PITCH_NOTES.md)
-- **Operations & Developer Runbook:** [docs/RUNBOOK.md](docs/RUNBOOK.md)
-- **Historical Backtest & ML Evaluation Report:** [docs/EVALUATION.md](docs/EVALUATION.md)
-- **HMRC Ready-Reckoner Calibration & Stress-Test Report:** [docs/HMRC_CALIBRATION_AND_STRESS_TEST.md](docs/HMRC_CALIBRATION_AND_STRESS_TEST.md)
-- **Curated Data Provenance & Official Sources:** [docs/DATA.md](docs/DATA.md)
-- **UI & Design System (Forecast Confidence Studio + Light/Dark Theme):** [docs/UI.md](docs/UI.md)
-- **Multi-Agent Collaboration Protocol:** [AGENTS.md](AGENTS.md)
+| | |
+|---|---|
+| 🧭 [Architecture notes & model card](docs/ARCHITECTURE_NOTES.md) | 📊 [Evaluation report](docs/EVALUATION.md) |
+| 🏛️ [HMRC calibration & stress tests](docs/HMRC_CALIBRATION_AND_STRESS_TEST.md) | 🗂️ [Data provenance](docs/DATA.md) |
+| 🎨 [UI & design system](docs/UI.md) | 🎬 [4-minute demo script](docs/DEMO.md) |
+| 🛠️ [Operations runbook](docs/RUNBOOK.md) | 🎤 [Pitch notes](docs/PITCH_NOTES.md) |
+| 📘 [Full build specification](docs/MASTER_PROMPT.md) | 🤝 [Contributing](CONTRIBUTING.md) |
 
----
+## Built by a team of AI agents
 
-*Prototype built for fiscal policy analysis evaluation. Not official HM Treasury, HMRC, or OBR analysis.*
+Jane Avenue was built by **eleven coordinated AI agents** using Claude Code, OpenAI Codex and Google Antigravity, with no central orchestrator. Each agent owned a workstream and a set of paths, and all coordination happened through GitHub Issues, reviews and **49 merged pull requests**, under a written protocol: [AGENTS.md](AGENTS.md) · [PROJECT.md](PROJECT.md) · [agent prompts](docs/prompts/).
+
+<br>
+
+<div align="center">
+
+**[MIT License](LICENSE)** · <sub>Prototype built for fiscal policy analysis evaluation. Not official HM Treasury, HMRC or OBR analysis.</sub>
+
+</div>

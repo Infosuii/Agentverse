@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="t d">
+  <title id="t">Jane Avenue six-stage guardrailed pipeline</title>
+  <desc id="d">A plain-English policy query flows through parsing, grounded research, precedents, simulation, independent verification and reporting. Gemini never calculates a number.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b120e"/>
+      <stop offset="1" stop-color="#070a08"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0" r="0.75">
+      <stop offset="0" stop-color="#60ba8d" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#60ba8d" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+    <linearGradient id="flow" x1="0" x2="1">
+      <stop offset="0" stop-color="#60ba8d" stop-opacity="0.15"/>
+      <stop offset="0.5" stop-color="#60ba8d" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#60ba8d" stop-opacity="0.15"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#60ba8d"/>
+    </marker>
+    <style>
+      .sans{font-family:'IBM Plex Sans','Inter','Segoe UI',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}
+      .mono{font-family:'IBM Plex Mono','JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .card{fill:#0e1411;stroke:#25312a;stroke-width:1.5}
+      .num{fill:#60ba8d;font-size:15px;letter-spacing:2px}
+      .h{fill:#f2f6f3;font-size:23px;font-weight:600}
+      .b{fill:#97aa9c;font-size:16px}
+      .chip{font-size:12.5px;letter-spacing:1.2px;font-weight:600}
+      .dash{stroke-dasharray:6 10;animation:dash 1.6s linear infinite}
+      @keyframes dash{to{stroke-dashoffset:-32}}
+      .pulse{animation:pulse 2.4s ease-in-out infinite}
+      @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+    </style>
+  </defs>
+
+  <rect width="1200" height="660" rx="18" fill="url(#bg)"/>
+  <rect width="1200" height="660" rx="18" fill="url(#grid)"/>
+  <rect width="1200" height="660" rx="18" fill="url(#glow)"/>
+  <rect x="0.75" y="0.75" width="1198.5" height="658.5" rx="17.5" fill="none" stroke="#25312a" stroke-width="1.5"/>
+
+  <!-- input -->
+  <g class="sans">
+    <rect x="300" y="34" width="600" height="54" rx="27" fill="#111814" stroke="#60ba8d" stroke-opacity="0.55" stroke-width="1.5"/>
+    <circle cx="332" cy="61" r="5" fill="#60ba8d" class="pulse"/>
+    <text x="352" y="67" fill="#f2f6f3" font-size="18" font-style="italic">“What if the UK raised corporation tax from 25% to 28%?”</text>
+  </g>
+  <path d="M600 88V118" stroke="#60ba8d" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- connectors row 1 -->
+  <path d="M396 211H428" stroke="#60ba8d" stroke-width="2" class="dash"/>
+  <path d="M776 211H808" stroke="#60ba8d" stroke-width="2" class="dash"/>
+  <!-- wrap row1 -> row2 -->
+  <path d="M996 302V330Q996 346 980 346H220Q204 346 204 362V384" fill="none" stroke="#60ba8d" stroke-width="2" stroke-opacity="0.8" class="dash"/>
+  <!-- connectors row 2 -->
+  <path d="M396 475H428" stroke="#60ba8d" stroke-width="2" class="dash"/>
+  <path d="M776 475H808" stroke="#60ba8d" stroke-width="2" class="dash"/>
+
+  <!-- ROW 1 -->
+  <g class="sans">
+    <!-- 01 -->
+    <rect class="card" x="36" y="122" width="360" height="180" rx="12"/>
+    <text class="mono num" x="60" y="156">01 · PARSE</text>
+    <text class="h" x="60" y="190">Policy parser &amp; scope gate</text>
+    <text class="b" x="60" y="222">Plain English → typed PolicySpec</text>
+    <text class="b" x="60" y="246">Historical bounds, ambiguity log</text>
+    <rect x="60" y="264" width="134" height="24" rx="12" fill="#60ba8d" fill-opacity="0.12" stroke="#60ba8d" stroke-opacity="0.5"/>
+    <text class="mono chip" x="127" y="281" fill="#60ba8d" text-anchor="middle">DETERMINISTIC</text>
+
+    <!-- 02 -->
+    <rect class="card" x="428" y="122" width="348" height="180" rx="12"/>
+    <text class="mono num" x="452" y="156">02 · RESEARCH</text>
+    <text class="h" x="452" y="190">Grounded Gemini agent</text>
+    <text class="b" x="452" y="222">Google Search + official sources only</text>
+    <text class="b" x="452" y="246">Every quote verified verbatim (SHA-256)</text>
+    <rect x="452" y="264" width="84" height="24" rx="12" fill="#a78bfa" fill-opacity="0.12" stroke="#a78bfa" stroke-opacity="0.55"/>
+    <text class="mono chip" x="494" y="281" fill="#c4b5fd" text-anchor="middle">GEMINI</text>
+    <rect x="544" y="264" width="160" height="24" rx="12" fill="#60ba8d" fill-opacity="0.12" stroke="#60ba8d" stroke-opacity="0.5"/>
+    <text class="mono chip" x="624" y="281" fill="#60ba8d" text-anchor="middle">CHECKED IN CODE</text>
+
+    <!-- 03 -->
+    <rect class="card" x="808" y="122" width="356" height="180" rx="12"/>
+    <text class="mono num" x="832" y="156">03 · PRECEDENTS</text>
+    <text class="h" x="832" y="190">Historical UK reforms</text>
+    <text class="b" x="832" y="222">1,736 reforms · 6,928 costings</text>
+    <text class="b" x="832" y="246">Ex-ante costings ≠ ex-post outturns</text>
+    <rect x="832" y="264" width="134" height="24" rx="12" fill="#94a3b8" fill-opacity="0.12" stroke="#94a3b8" stroke-opacity="0.55"/>
+    <text class="mono chip" x="899" y="281" fill="#cbd5e1" text-anchor="middle">CURATED DATA</text>
+  </g>
+
+  <!-- ROW 2 -->
+  <g class="sans">
+    <!-- 04 -->
+    <rect class="card" x="36" y="386" width="360" height="180" rx="12"/>
+    <text class="mono num" x="60" y="420">04 · SIMULATE</text>
+    <text class="h" x="60" y="454">Econometric engines</text>
+    <text class="b" x="60" y="486">Pure NumPy · Hall–Jorgenson UCC</text>
+    <text class="b" x="60" y="510">2,000-draw Monte Carlo + tornado</text>
+    <rect x="60" y="528" width="134" height="24" rx="12" fill="#60ba8d" fill-opacity="0.12" stroke="#60ba8d" stroke-opacity="0.5"/>
+    <text class="mono chip" x="127" y="545" fill="#60ba8d" text-anchor="middle">DETERMINISTIC</text>
+
+    <!-- 05 -->
+    <rect x="428" y="386" width="348" height="180" rx="12" fill="#0f1a14" stroke="#60ba8d" stroke-opacity="0.7" stroke-width="1.5"/>
+    <text class="mono num" x="452" y="420">05 · VERIFY</text>
+    <text class="h" x="452" y="454">Independent verifier</text>
+    <text class="b" x="452" y="486">18 checks · recomputes outputs to 1e-9</text>
+    <text class="b" x="452" y="510">Blocks unsupported forecasts</text>
+    <rect x="452" y="528" width="114" height="24" rx="12" fill="#f5ae39" fill-opacity="0.12" stroke="#f5ae39" stroke-opacity="0.6"/>
+    <text class="mono chip" x="509" y="545" fill="#f5ae39" text-anchor="middle">GATEKEEPER</text>
+
+    <!-- 06 -->
+    <rect class="card" x="808" y="386" width="356" height="180" rx="12"/>
+    <text class="mono num" x="832" y="420">06 · REPORT</text>
+    <text class="h" x="832" y="454">Evidence-backed assessment</text>
+    <text class="b" x="832" y="486">Gemini writes prose with {{fig:id}}</text>
+    <text class="b" x="832" y="510">Python inserts every single number</text>
+    <rect x="832" y="528" width="84" height="24" rx="12" fill="#a78bfa" fill-opacity="0.12" stroke="#a78bfa" stroke-opacity="0.55"/>
+    <text class="mono chip" x="874" y="545" fill="#c4b5fd" text-anchor="middle">GEMINI</text>
+    <rect x="924" y="528" width="160" height="24" rx="12" fill="#60ba8d" fill-opacity="0.12" stroke="#60ba8d" stroke-opacity="0.5"/>
+    <text class="mono chip" x="1004" y="545" fill="#60ba8d" text-anchor="middle">NUMBERS BY CODE</text>
+  </g>
+
+  <!-- footer legend -->
+  <g class="sans">
+    <line x1="36" y1="596" x2="1164" y2="596" stroke="#25312a"/>
+    <text x="36" y="630" fill="#f2f6f3" font-size="17" font-weight="600">Gemini never calculates a number.</text>
+    <text x="318" y="630" fill="#97aa9c" font-size="16">If a blocking check fails, the forecast is withheld instead of extrapolated.</text>
+    <text class="mono" x="1164" y="630" fill="#60ba8d" font-size="14" text-anchor="end">forecast_withheld</text>
+  </g>
+</svg>

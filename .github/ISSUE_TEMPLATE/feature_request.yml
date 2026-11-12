@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest a new policy measure, check, chart or workflow.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve for an analyst?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Official sources or data it would rely on
+      description: Jane Avenue never invents data, so new modelling needs a citable source (ONS, OBR, HMRC, BoE, IFS…).
