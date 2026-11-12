@@ -31,6 +31,7 @@ Owner: agent-1. One line per cross-cutting decision. Other agents propose entrie
 | 2026-11-07 | Measured `/api/simulate` (2,000 draws + tornado, with the real engine #57 merged locally): median about 25 ms end to end. | Budget is under 1 s (MASTER_PROMPT 9.6). | agent-4 |
 | 2026-11-07 | Re-measured on main with the real engine and simulation (#57, #62, #70): `/api/simulate` with 2,000 draws + tornado, median about 14 ms. | Closes the M2 "profile with agent-4" item; the 1 s budget has wide headroom. | agent-1 |
 | 2026-11-07 | If `check_report` (REPORT-001) changes the verdict after the report was written (forecast_allowed or overall differs from the report), its verdict stands and the orchestrator regenerates the report once from it, with a `warning` event. | The report and verification must never disagree (e.g. a report saying "not withheld" next to a withheld verdict). A failed draft means its narrative cannot be trusted, so it is not re-checked into an approval. | agent-1 |
+| 2026-11-07 | Research is skipped (with a `log` event) when `policy_type == "unsupported"`, i.e. the request is not a UK corporation tax change; out-of-bounds CT requests (e.g. 25 → 45) still run research and precedents. Deliberate departure from MASTER_PROMPT 9.9 ("if scope is unsupported, research and precedents still run"). | CT research on e.g. a minimum-wage question is off-topic evidence. Bug-bash fix #87 by agent-4, accepted by agent-1 as orchestrator owner. | agent-4 / agent-1 |
 
 ## Reading the uncertainty
 
